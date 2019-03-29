@@ -1,29 +1,53 @@
 package com.isamrs.tim14.model;
 
-import java.util.HashSet;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "airline")
 public class Airline {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private int id;
 
+	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "address")
 	private String address;
+	
+	@Column(name = "description")
 	private String description;
-	private HashSet<Destination> destinations;
-	private HashSet<Flight> flights;
-	private HashSet<Ticket> quickReservationTickets;
+	
+	@Column(name = "destinations")
+	private String destinations;
+	
+	@Column(name = "flights")
+	private String flights;
+	
+	@Column(name = "quick_reservation_tickets")
+	private String quickReservationTickets;
+	
 	//TODO: change1
+	@Column(name = "flight_configuration")
 	private String flightConfiguration;
+	
 	//TODO: change2
+	@Column(name = "pricelist")
 	private String pricelist;
 	
 	public Airline() {
-		destinations = new HashSet<Destination>();
-		flights = new HashSet<Flight>();
-		quickReservationTickets = new HashSet<Ticket>();
+		
 	}
 
-	public Airline(String name, String address, String description, HashSet<Destination> destinations,
-			HashSet<Flight> flights, HashSet<Ticket> quickReservationTickets, String flightConfiguration,
-			String pricelist) {
+	public Airline(String name, String address, String description, String destinations, String flights,
+			String quickReservationTickets, String flightConfiguration, String pricelist) {
 		super();
 		this.name = name;
 		this.address = address;
@@ -33,6 +57,14 @@ public class Airline {
 		this.quickReservationTickets = quickReservationTickets;
 		this.flightConfiguration = flightConfiguration;
 		this.pricelist = pricelist;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -59,27 +91,27 @@ public class Airline {
 		this.description = description;
 	}
 
-	public HashSet<Destination> getDestinations() {
+	public String getDestinations() {
 		return destinations;
 	}
 
-	public void setDestinations(HashSet<Destination> destinations) {
+	public void setDestinations(String destinations) {
 		this.destinations = destinations;
 	}
 
-	public HashSet<Flight> getFlights() {
+	public String getFlights() {
 		return flights;
 	}
 
-	public void setFlights(HashSet<Flight> flights) {
+	public void setFlights(String flights) {
 		this.flights = flights;
 	}
 
-	public HashSet<Ticket> getQuickReservationTickets() {
+	public String getQuickReservationTickets() {
 		return quickReservationTickets;
 	}
 
-	public void setQuickReservationTickets(HashSet<Ticket> quickReservationTickets) {
+	public void setQuickReservationTickets(String quickReservationTickets) {
 		this.quickReservationTickets = quickReservationTickets;
 	}
 
@@ -98,8 +130,12 @@ public class Airline {
 	public void setPricelist(String pricelist) {
 		this.pricelist = pricelist;
 	}
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Airline [id=" + id + ", name=" + name + ", address=" + address + ", description=" + description
+				+ ", destinations=" + destinations + ", flights=" + flights + ", quickReservationTickets="
+				+ quickReservationTickets + ", flightConfiguration=" + flightConfiguration + ", pricelist=" + pricelist
+				+ "]";
+	}
 }
