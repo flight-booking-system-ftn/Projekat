@@ -1,7 +1,5 @@
 package com.isamrs.tim14.model;
 
-import java.util.HashSet;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
