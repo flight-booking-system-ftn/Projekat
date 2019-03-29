@@ -2,35 +2,63 @@ package com.isamrs.tim14.model;
 
 import java.util.HashSet;
 
-public class RentACar {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "rentacar")
+public class RentACar {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
+
+	@Column(name = "name")
 	private String name;
 	
-	private Address address;
+	@Column(name = "address")
+	private String address;
 	
+	@Column(name = "description")
 	private String description;
 	
-	private HashSet<Service> services;
+	@Column(name = "services")
+	private String services;
 	
-	private HashSet<Vehicle> vehicles;
+	@Column(name = "vehicles")
+	private String vehicles;
 	
-	private HashSet<Destination> offices;
-	
+	@Column(name = "offices")
+	private String offices;
+
 	public RentACar() {
-		services = new HashSet<Service>();
-		vehicles = new HashSet<Vehicle>();
-		offices = new HashSet<Destination>();
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public RentACar(String name, Address address, String description, HashSet<Service> services,
-			HashSet<Vehicle> vehicles, HashSet<Destination> offices) {
+	public RentACar(Integer id, String name, String address, String description, String services, String vehicles,
+			String offices) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.description = description;
 		this.services = services;
 		this.vehicles = vehicles;
 		this.offices = offices;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -41,11 +69,11 @@ public class RentACar {
 		this.name = name;
 	}
 
-	public Address getAddress() {
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
@@ -57,30 +85,29 @@ public class RentACar {
 		this.description = description;
 	}
 
-	public HashSet<Service> getServices() {
+	public String getServices() {
 		return services;
 	}
 
-	public void setServices(HashSet<Service> services) {
+	public void setServices(String services) {
 		this.services = services;
 	}
 
-	public HashSet<Vehicle> getVehicles() {
+	public String getVehicles() {
 		return vehicles;
 	}
 
-	public void setVehicles(HashSet<Vehicle> vehicles) {
+	public void setVehicles(String vehicles) {
 		this.vehicles = vehicles;
 	}
 
-	public HashSet<Destination> getOffices() {
+	public String getOffices() {
 		return offices;
 	}
 
-	public void setOffices(HashSet<Destination> offices) {
+	public void setOffices(String offices) {
 		this.offices = offices;
 	}
-
 	
 	
 	
