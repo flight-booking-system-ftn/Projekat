@@ -2,27 +2,43 @@ package com.isamrs.tim14.model;
 
 import java.util.HashSet;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "hotel")
 public class Hotel {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
+	
+	@Column(name = "name")
 	private String name;
 	
-	private Address address;
+	@Column(name = "address")
+	private String address;
 	
+	@Column(name = "description")
 	private String description;
 	
-	private HashSet<Service> services;
+	@Column(name = "services")
+	private String services;
 	
-	private HashSet<Room> rooms;
-	
-	public Hotel() {
-		rooms = new HashSet<Room>();
-		services = new HashSet<Service>();
-	}
-	
-	
+	@Column(name = "rooms")
+	private String rooms;
 
-	public Hotel(String name, Address address, String description, HashSet<Service> services,
-			HashSet<Room> rooms) {
+	public Hotel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Hotel(String name, String address, String description, String services, String rooms) {
 		super();
 		this.name = name;
 		this.address = address;
@@ -30,8 +46,6 @@ public class Hotel {
 		this.services = services;
 		this.rooms = rooms;
 	}
-
-
 
 	public String getName() {
 		return name;
@@ -41,11 +55,11 @@ public class Hotel {
 		this.name = name;
 	}
 
-	public Address getAddress() {
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
@@ -57,30 +71,21 @@ public class Hotel {
 		this.description = description;
 	}
 
-	public HashSet<Service> getServices() {
+	public String getServices() {
 		return services;
 	}
 
-	public void setServices(HashSet<Service> services) {
+	public void setServices(String services) {
 		this.services = services;
 	}
 
-	public HashSet<Room> getRooms() {
+	public String getRooms() {
 		return rooms;
 	}
 
-	public void setRooms(HashSet<Room> rooms) {
+	public void setRooms(String rooms) {
 		this.rooms = rooms;
 	}
-
-
-
-	@Override
-	public String toString() {
-		return "Hotel [name=" + name + ", address=" + address + ", description=" + description + ", services="
-				+ services + ", rooms=" + rooms + "]";
-	}
-	
 	
 	
 	
