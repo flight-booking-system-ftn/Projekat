@@ -33,16 +33,14 @@ public class Hotel {
 
 	public Hotel() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	public Hotel(String name, String address, String description, String services, String rooms) {
-		super();
-		this.name = name;
-		this.address = address;
-		this.description = description;
-		this.services = services;
-		this.rooms = rooms;
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -84,11 +82,5 @@ public class Hotel {
 	public void setRooms(String rooms) {
 		this.rooms = rooms;
 	}
-	
-	
-	
-	
-	
-	
 	
 }

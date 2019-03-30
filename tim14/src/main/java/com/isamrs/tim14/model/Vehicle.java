@@ -15,22 +15,15 @@ public class Vehicle {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "registration")
 	private String registration;
-	
+
 	@Column(name = "type")
 	private String type;
-	
-	public Vehicle() {
-		
-	}
 
-	public Vehicle(Integer id, String registration, String type) {
+	public Vehicle() {
 		super();
-		this.id = id;
-		this.registration = registration;
-		this.type = type;
 	}
 
 	public Integer getId() {
@@ -56,13 +49,5 @@ public class Vehicle {
 	public void setType(String type) {
 		this.type = type;
 	}
-
-	@Override
-	public String toString() {
-		return "Vehicle [id=" + id + ", registration=" + registration + ", type=" + type + "]";
-	}
-	
-	
 	
 }
-
