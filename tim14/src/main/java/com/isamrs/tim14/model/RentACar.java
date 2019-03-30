@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "rentacar")
+@Table(name = "rent_a_car")
 public class RentACar {
 	
 	@Id
@@ -36,19 +36,6 @@ public class RentACar {
 
 	public RentACar() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public RentACar(Integer id, String name, String address, String description, String services, String vehicles,
-			String offices) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.description = description;
-		this.services = services;
-		this.vehicles = vehicles;
-		this.offices = offices;
 	}
 
 	public Integer getId() {
@@ -106,8 +93,5 @@ public class RentACar {
 	public void setOffices(String offices) {
 		this.offices = offices;
 	}
-	
-	
-	
 	
 }

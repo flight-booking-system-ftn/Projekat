@@ -34,31 +34,16 @@ public class Airline {
 	@Column(name = "quick_reservation_tickets")
 	private String quickReservationTickets;
 	
-	//TODO: change1
 	@Column(name = "flight_configuration")
 	private String flightConfiguration;
 	
-	//TODO: change2
 	@Column(name = "pricelist")
 	private String pricelist;
 	
 	public Airline() {
-		
+		super();
 	}
 
-	public Airline(String name, String address, String description, String destinations, String flights,
-			String quickReservationTickets, String flightConfiguration, String pricelist) {
-		super();
-		this.name = name;
-		this.address = address;
-		this.description = description;
-		this.destinations = destinations;
-		this.flights = flights;
-		this.quickReservationTickets = quickReservationTickets;
-		this.flightConfiguration = flightConfiguration;
-		this.pricelist = pricelist;
-	}
-	
 	public int getId() {
 		return id;
 	}
@@ -130,12 +115,5 @@ public class Airline {
 	public void setPricelist(String pricelist) {
 		this.pricelist = pricelist;
 	}
-
-	@Override
-	public String toString() {
-		return "Airline [id=" + id + ", name=" + name + ", address=" + address + ", description=" + description
-				+ ", destinations=" + destinations + ", flights=" + flights + ", quickReservationTickets="
-				+ quickReservationTickets + ", flightConfiguration=" + flightConfiguration + ", pricelist=" + pricelist
-				+ "]";
-	}
+	
 }

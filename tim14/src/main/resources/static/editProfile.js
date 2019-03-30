@@ -2,7 +2,7 @@
 function rentacarProfil() {
 	console.log("profil");
 	
-	$.get("/users/user1",function(data){
+	$.get("/users/test",function(data){
 		console.log(data);
 		renderProfile(data);
 	});
@@ -42,7 +42,7 @@ $(document).ready(function() {
 		var friends = $(".field").eq(4).val();
 		$.ajax({
 			type : 'PUT',
-			url : "/users/user1",
+			url : "/users/test",
 			contentType : 'application/json',
 			data : JSON.stringify({
 				"password" : password,

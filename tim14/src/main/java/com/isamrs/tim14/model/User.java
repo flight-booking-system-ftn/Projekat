@@ -1,39 +1,35 @@
 package com.isamrs.tim14.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class User {
 
-	private Integer id;
-	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "username")
 	private String username;
-	
+
+	@Column(name = "password")
 	private String password;
-	
+
+	@Column(name = "first_name")
 	private String firstName;
-	
+
+	@Column(name = "last_name")
 	private String lastName;
-	
+
+	@Column(name = "email")
 	private String email;
-	
+
 	public User() {
-		
-	}
-
-	public User(Integer id, String username, String password, String firstName, String lastName, String email) {
 		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public String getUsername() {
@@ -75,15 +71,5 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + "]";
-	}
-	
-	
-	
-	
 	
 }
