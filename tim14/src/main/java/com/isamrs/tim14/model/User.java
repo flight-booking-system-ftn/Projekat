@@ -1,31 +1,36 @@
 package com.isamrs.tim14.model;
 
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.Inheritance;
+import javax.persistence.MappedSuperclass;
 
-@Entity
-@Table(name = "users")
-public class User {
+@MappedSuperclass
+public abstract class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Integer id;
+
 	@Column(name = "username")
 	private String username;
 
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "first_name")
+	@Column(name = "first_name", nullable = false)
 	private String firstName;
 
-	@Column(name = "last_name")
+	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@Column(name = "email")
+	@Column(name = "email", nullable = false)
 	private String email;
 
 	public User() {
@@ -71,5 +76,4 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
 }

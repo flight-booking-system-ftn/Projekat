@@ -7,14 +7,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "hotel_admin")
-public class HotelAdmin extends User {
+@Table(name = "hotel_service")
+public class HotelService extends Service {
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hotel_id")
+    @JoinColumn(name = "hotel_id")
 	private Hotel hotel;
 
-	public HotelAdmin() {
+	public HotelService() {
 		super();
 	}
 
@@ -25,5 +25,5 @@ public class HotelAdmin extends User {
 	public void setHotel(Hotel hotel) {
 		this.hotel = hotel;
 	}
-	
+
 }
