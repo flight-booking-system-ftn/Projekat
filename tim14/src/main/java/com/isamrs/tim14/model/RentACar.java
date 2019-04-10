@@ -1,38 +1,57 @@
 package com.isamrs.tim14.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "rent_a_car")
 public class RentACar {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-
+	
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "address")
-	private String address;
+	@JoinColumn(name = "destination_id")
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	private Destination destination;
 	
 	@Column(name = "description")
 	private String description;
 	
-	@Column(name = "services")
-	private String services;
+	@ElementCollection(targetClass = RentACarService.class)
+	private Set<RentACarService> services;
 	
-	@Column(name = "vehicles")
-	private String vehicles;
+	@ElementCollection(targetClass = Vehicle.class)
+	private Set<Vehicle> vehicles;
 	
-	@Column(name = "offices")
-	private String offices;
+	@ElementCollection(targetClass = BranchOffice.class)
+	private Set<BranchOffice> offices;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "rent_a_car_id")
+	private Set<Grade> grades;
+	
+	@ElementCollection(targetClass = RentACarAdmin.class)
+	private Set<RentACarAdmin> admins;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "rent_a_car_id")
+	private Set<VehicleReservation> reservations;
 
 	public RentACar() {
 		super();
@@ -54,12 +73,12 @@ public class RentACar {
 		this.name = name;
 	}
 
-	public String getAddress() {
-		return address;
+	public Destination getDestination() {
+		return destination;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setDestination(Destination destination) {
+		this.destination = destination;
 	}
 
 	public String getDescription() {
@@ -70,28 +89,52 @@ public class RentACar {
 		this.description = description;
 	}
 
-	public String getServices() {
+	public Set<RentACarService> getServices() {
 		return services;
 	}
 
-	public void setServices(String services) {
+	public void setServices(Set<RentACarService> services) {
 		this.services = services;
 	}
 
-	public String getVehicles() {
+	public Set<Vehicle> getVehicles() {
 		return vehicles;
 	}
 
-	public void setVehicles(String vehicles) {
+	public void setVehicles(Set<Vehicle> vehicles) {
 		this.vehicles = vehicles;
 	}
 
-	public String getOffices() {
+	public Set<BranchOffice> getOffices() {
 		return offices;
 	}
 
-	public void setOffices(String offices) {
+	public void setOffices(Set<BranchOffice> offices) {
 		this.offices = offices;
+	}
+
+	public Set<Grade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(Set<Grade> grades) {
+		this.grades = grades;
+	}
+
+	public Set<RentACarAdmin> getAdmins() {
+		return admins;
+	}
+
+	public void setAdmins(Set<RentACarAdmin> admins) {
+		this.admins = admins;
+	}
+
+	public Set<VehicleReservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(Set<VehicleReservation> reservations) {
+		this.reservations = reservations;
 	}
 	
 }
