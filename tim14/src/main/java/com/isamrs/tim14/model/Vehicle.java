@@ -1,10 +1,19 @@
 package com.isamrs.tim14.model;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,12 +24,40 @@ public class Vehicle {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-
-	@Column(name = "registration")
-	private String registration;
-
-	@Column(name = "type")
-	private String type;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rent_a_car_id")
+	private RentACar rentACar;
+	
+	@Column(name = "name")
+	private String name;
+	
+	@Column(name = "brand")
+	private String brand;
+	
+	@Column(name = "model")
+	private String model;
+	
+	@Column(name = "production_year")
+	private Integer productionYear;
+	
+	@Enumerated(EnumType.STRING)
+    @Column(name = "type", length = 20)
+	private VehicleType type;
+	
+	@Column(name = "seats_number")
+	private Integer seatsNumber;
+	
+	@Column(name = "price")
+	private Double price;
+	
+	@JoinColumn(name = "vehicle_id")
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<Grade> grades;
+	
+	@JoinColumn(name = "vehicle_id")
+	@OneToMany(cascade = CascadeType.ALL)
+	private Set<VehicleReservation> reservations;
 
 	public Vehicle() {
 		super();
@@ -34,20 +71,88 @@ public class Vehicle {
 		this.id = id;
 	}
 
-	public String getRegistration() {
-		return registration;
+	public RentACar getRentACar() {
+		return rentACar;
 	}
 
-	public void setRegistration(String registration) {
-		this.registration = registration;
+	public void setRentACar(RentACar rentACar) {
+		this.rentACar = rentACar;
 	}
 
-	public String getType() {
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public Integer getProductionYear() {
+		return productionYear;
+	}
+
+	public void setProductionYear(Integer productionYear) {
+		this.productionYear = productionYear;
+	}
+
+	public VehicleType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(VehicleType type) {
 		this.type = type;
 	}
+
+	public Integer getSeatsNumber() {
+		return seatsNumber;
+	}
+
+	public void setSeatsNumber(Integer seatsNumber) {
+		this.seatsNumber = seatsNumber;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Set<Grade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(Set<Grade> grades) {
+		this.grades = grades;
+	}
+
+	public Set<VehicleReservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(Set<VehicleReservation> reservations) {
+		this.reservations = reservations;
+	}
 	
+	
+	
+	
+
 }

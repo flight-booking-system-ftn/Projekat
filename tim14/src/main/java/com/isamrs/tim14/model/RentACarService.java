@@ -7,14 +7,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "rent_a_car_admin")
-public class RentACarAdmin extends User {
+@Table(name = "rent_a_car_service")
+public class RentACarService extends Service {
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rent_a_car_id")
+    @JoinColumn(name = "rent_a_car_id")
 	private RentACar rentACar;
 
-	public RentACarAdmin() {
+	public RentACarService() {
 		super();
 	}
 
@@ -26,4 +26,5 @@ public class RentACarAdmin extends User {
 		this.rentACar = rentACar;
 	}
 
+	
 }
