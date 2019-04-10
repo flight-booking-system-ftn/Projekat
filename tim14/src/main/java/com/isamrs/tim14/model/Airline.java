@@ -1,10 +1,18 @@
 package com.isamrs.tim14.model;
 
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,27 +27,38 @@ public class Airline {
 	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "address")
-	private String address;
+	@JoinColumn(name = "destination_id")
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	private Destination destination;
 	
 	@Column(name = "description")
 	private String description;
 	
-	@Column(name = "destinations")
-	private String destinations;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "airline_id")
+	private Set<Destination> destinations;
 	
-	@Column(name = "flights")
-	private String flights;
+	@ElementCollection(targetClass = Flight.class)
+	private Set<Flight> flights;
 	
-	@Column(name = "quick_reservation_tickets")
-	private String quickReservationTickets;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "airline_id")
+	private Set<FlightTicket> quickReservationTickets;
 	
-	@Column(name = "flight_configuration")
-	private String flightConfiguration;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "airline_id")
+	private List<Seat> flightConfiguration;
 	
-	@Column(name = "pricelist")
-	private String pricelist;
+	@ElementCollection(targetClass = AirlineService.class)
+	private Set<AirlineService> services;
 	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "airline_id")
+	private Set<Grade> grades;
+	
+	@ElementCollection(targetClass = AirlineAdmin.class)
+	private Set<AirlineAdmin> admins;
+
 	public Airline() {
 		super();
 	}
@@ -60,12 +79,12 @@ public class Airline {
 		this.name = name;
 	}
 
-	public String getAddress() {
-		return address;
+	public Destination getDestination() {
+		return destination;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setDestination(Destination destination) {
+		this.destination = destination;
 	}
 
 	public String getDescription() {
@@ -76,44 +95,60 @@ public class Airline {
 		this.description = description;
 	}
 
-	public String getDestinations() {
+	public Set<Destination> getDestinations() {
 		return destinations;
 	}
 
-	public void setDestinations(String destinations) {
+	public void setDestinations(Set<Destination> destinations) {
 		this.destinations = destinations;
 	}
 
-	public String getFlights() {
+	public Set<Flight> getFlights() {
 		return flights;
 	}
 
-	public void setFlights(String flights) {
+	public void setFlights(Set<Flight> flights) {
 		this.flights = flights;
 	}
 
-	public String getQuickReservationTickets() {
+	public Set<FlightTicket> getQuickReservationTickets() {
 		return quickReservationTickets;
 	}
 
-	public void setQuickReservationTickets(String quickReservationTickets) {
+	public void setQuickReservationTickets(Set<FlightTicket> quickReservationTickets) {
 		this.quickReservationTickets = quickReservationTickets;
 	}
 
-	public String getFlightConfiguration() {
+	public List<Seat> getFlightConfiguration() {
 		return flightConfiguration;
 	}
 
-	public void setFlightConfiguration(String flightConfiguration) {
+	public void setFlightConfiguration(List<Seat> flightConfiguration) {
 		this.flightConfiguration = flightConfiguration;
 	}
 
-	public String getPricelist() {
-		return pricelist;
+	public Set<AirlineService> getServices() {
+		return services;
 	}
 
-	public void setPricelist(String pricelist) {
-		this.pricelist = pricelist;
+	public void setServices(Set<AirlineService> services) {
+		this.services = services;
+	}
+
+	public Set<Grade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(Set<Grade> grades) {
+		this.grades = grades;
+	}
+
+	public Set<AirlineAdmin> getAdmins() {
+		return admins;
+	}
+
+	public void setAdmins(Set<AirlineAdmin> admins) {
+		this.admins = admins;
 	}
 	
 }
