@@ -4,6 +4,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,8 +16,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "airline")
@@ -31,8 +30,8 @@ public class Airline {
 	private String name;
 
 	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "address_id")
-	private Destination address;
+	@JoinColumn(name = "destination_id")
+	private Destination destination;
 
 	@Column(name = "description")
 	private String description;
@@ -43,26 +42,19 @@ public class Airline {
 	private Set<Airport> airports;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
-	@JsonIgnoreProperties("airline")
 	private Set<Flight> flights;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<FlightTicket> quickReservationTickets;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
-	@JsonIgnoreProperties("airline")
 	private Set<AirlineService> services;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Grade> grades;
 
-	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "airline")
-	@JsonIgnoreProperties("airline")
+	@ElementCollection(targetClass = AirlineAdmin.class)
 	private Set<AirlineAdmin> admins;
-	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
-	@JsonIgnoreProperties("airline")
-	private Set<Luggage> luggagePricelist;
 
 	public Airline() {
 		super();
@@ -84,12 +76,13 @@ public class Airline {
 		this.name = name;
 	}
 
-	public Destination getAddress() {
-		return address;
+	
+	public Destination getDestination() {
+		return destination;
 	}
 
-	public void setAddress(Destination address) {
-		this.address = address;
+	public void setDestination(Destination destination) {
+		this.destination = destination;
 	}
 
 	public String getDescription() {
@@ -148,12 +141,6 @@ public class Airline {
 		this.admins = admins;
 	}
 
-	public Set<Luggage> getLuggagePricelist() {
-		return luggagePricelist;
-	}
-
-	public void setLuggagePricelist(Set<Luggage> luggagePricelist) {
-		this.luggagePricelist = luggagePricelist;
-	}
-
+	
+	
 }

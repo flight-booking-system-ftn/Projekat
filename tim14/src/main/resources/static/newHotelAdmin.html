@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Adding new hotel administrator</title>
+	<title>Adding new hotel administrator</title>
+	<link rel="stylesheet" type="text/css" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="newHotelAdmin.js"> </script>
 </head>
@@ -14,31 +15,37 @@
 		<table>
 			<tr>
 				<td>Username: </td>
-				<td><input type="text" id="usernameHotelAdmin"></td>
+				<td><input type="text" id="usernameHotelAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Password: </td>
-				<td><input type="password" id="passwordHotelAdmin"></td>
+				<td><input type="password" id="passwordHotelAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Repeat password: </td>
-				<td><input type="password" id="rep_passwordHotelAdmin"></td>
+				<td><input type="password" id="rep_passwordHotelAdmin" required></td>
 			</tr>
 			<tr>
 				<td>First name:</td>
-				<td><input type="text" id="firstNameHotelAdmin"></td>
+				<td><input type="text" id="firstNameHotelAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Last name:</td>
-				<td><input type="text" id="lastNameHotelAdmin"></td>
+				<td><input type="text" id="lastNameHotelAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Email address: </td>
-				<td><input type="text" id="emailHotelAdmin"></td>
+				<td><input type="text" id="emailHotelAdmin" required></td>
+			</tr>
+			<tr>
+				<td>Hotel: </td>
+				<td>
+					<select id="hotelHotelAdmin"></select>
+				</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><input type="submit" value="Register"></td>
+				<td><input type="submit" value="Register" required></td>
 			</tr>
 		</table>
 	</form>
