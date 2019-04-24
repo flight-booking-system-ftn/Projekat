@@ -13,7 +13,9 @@ $(document).ready(function(){
     $(document).on('click','#addRentACarBtn',function(){
         $(location).attr('href',"/rentacar.html");
     });
-   
+    $(document).on('click','#editAirlineBtn',function(){
+        $(location).attr('href',"/editAirline.html");
+    });
     $(document).on('click','#addFlightBtn',function(){
         $(location).attr('href',"/newFlight.html");
     });
