@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="airline.js"> </script>
+	<title>Airline-register</title>
+</head>
+
+<body>
+	<h2>New airline</h2>
+	<form id="add_airline">
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text"  id="airlineNameField"  required></td>
+			</tr>
+			<tr>
+				<td>Description</td>
+				<td colspan="3"><input type="text" id="airlineDescriptionField"  required></td>
+			</tr>
+			<tr>
+				<td rowspan="3">Services</td>
+				<td><input type="checkbox" id="service1option"></td>
+				<td>Airline service 1 </td>
+				<td><input type="number" id="service1price" ></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" id="service2option"></td>
+				<td>Airline service 2 </td>
+				<td><input type="number" id="service2price"></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" id="service3option"></td>
+				<td>Airline service 3 </td>
+				<td><input type="number" id="service3price"></td>
+			</tr>
+			<tr>
+				<td>Destination</td>
+				<td colspan="3"><select id="airlineDestination"></select></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan="3"><input type="submit" value="Add"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+
+</html>

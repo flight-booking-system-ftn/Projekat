@@ -18,45 +18,35 @@ import com.isamrs.tim14.model.AirlineAdmin;
 @RestController
 @RequestMapping("/api")
 public class AirlineAdminRest {
-	
+
 	private AirlineAdminDAO airlineAdminDAO;
-	
+
 	@Autowired
 	public AirlineAdminRest(AirlineAdminDAO airlineAdminDAO) {
 		this.airlineAdminDAO = airlineAdminDAO;
 	}
-	
-	@RequestMapping(
-			value = "/airlineadmins",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<AirlineAdmin>> getAirlineAdmins(){
-		
+
+	@RequestMapping(value = "/airlineadmins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<AirlineAdmin>> getAirlineAdmins() {
+
 		Collection<AirlineAdmin> airlineAdmins = airlineAdminDAO.getAirlineAdmins();
-		
+
 		return new ResponseEntity<Collection<AirlineAdmin>>(airlineAdmins, HttpStatus.OK);
 	}
-	
-	@RequestMapping(
-			value = "/airlineadmins/{airlineAdminID}",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/airlineadmins/{airlineAdminID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AirlineAdmin> getAirlineAdmin(@PathVariable Integer airlineAdminID) {
-		AirlineAdmin airlineAdmin =  airlineAdminDAO.getAirlineAdmin(airlineAdminID);
-		if(airlineAdmin == null) {
+		AirlineAdmin airlineAdmin = airlineAdminDAO.getAirlineAdmin(airlineAdminID);
+		if (airlineAdmin == null) {
 			return new ResponseEntity<AirlineAdmin>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<AirlineAdmin>(airlineAdmin, HttpStatus.OK);
 	}
-	
-	@RequestMapping(
-			value = "/airlineadmins",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/airlineadmins", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AirlineAdmin> saveAirlineAdmin(@RequestBody AirlineAdmin airlineAdmins) {
 		AirlineAdmin newAirlineAdmin = airlineAdminDAO.save(airlineAdmins);
-		if(newAirlineAdmin == null) {
+		if (newAirlineAdmin == null) {
 			return new ResponseEntity<AirlineAdmin>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<AirlineAdmin>(newAirlineAdmin, HttpStatus.CREATED);

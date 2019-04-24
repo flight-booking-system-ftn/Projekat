@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="hotel.js"></script>
+	<title>Hotel-register</title>
+</head>
+
+<body>
+	<h2>New hotel</h2>
+	<form id="add_hotel">
+		<table>
+			<tr>
+				<td>Name</td>
+				<td colspan="3"><input type="text"  id="hotelNameField"  required></td>
+			</tr>
+			<tr>
+				<td>Description</td>
+				<td colspan="3"><input type="text" id="hotelDescriptionField"  required></td>
+			</tr>
+			<tr>
+				<td rowspan="3">Services</td>
+				<td><input type="checkbox" id="service1option"></td>
+				<td>Hotel service 1 </td>
+				<td><input type="number" id="service1price" ></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" id="service2option"></td>
+				<td>Hotel service 2 </td>
+				<td><input type="number" id="service2price"></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" id="service3option"></td>
+				<td>Hotel service 3 </td>
+				<td><input type="number" id="service3price"></td>
+			</tr>
+			<tr>
+				<td>Destination</td>
+				<td colspan="3"><select id="hotelDestination"></select></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan="3"><input type="submit" value="Add"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+
+</html>

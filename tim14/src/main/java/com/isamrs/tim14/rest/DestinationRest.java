@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.DestinationDAO;
-import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Destination;
-import com.isamrs.tim14.model.RentACar;
 
 @RestController
 @RequestMapping("/api")

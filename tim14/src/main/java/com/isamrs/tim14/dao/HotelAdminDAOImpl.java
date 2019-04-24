@@ -16,15 +16,14 @@ import com.isamrs.tim14.service.CustomUserDetailsService;
 public class HotelAdminDAOImpl implements HotelAdminDAO {
 
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	private CustomUserDetailsService customService;
-	
+
 	@Autowired
 	public HotelAdminDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
 
 	@Override
 	@Transactional
@@ -37,17 +36,18 @@ public class HotelAdminDAOImpl implements HotelAdminDAO {
 	@Override
 	@Transactional
 	public HotelAdmin save(HotelAdmin hotelAdmin) {
-		Query query = entityManager.createQuery("SELECT h FROM HotelAdmin h WHERE lower(h.username) LIKE :hUsername OR lower(h.email) LIKE :hEmail");
+		Query query = entityManager.createQuery(
+				"SELECT h FROM HotelAdmin h WHERE lower(h.username) LIKE :hUsername OR lower(h.email) LIKE :hEmail");
 		query.setParameter("hUsername", hotelAdmin.getUsername());
 		query.setParameter("hEmail", hotelAdmin.getEmail());
 		List<HotelAdmin> result = query.getResultList();
-		
-		if(result.size() == 0) {
-			
+
+		if (result.size() == 0) {
+
 			hotelAdmin.setPassword(customService.encodePassword(hotelAdmin.getPassword()));
 			entityManager.persist(hotelAdmin);
 			return hotelAdmin;
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -56,15 +56,13 @@ public class HotelAdminDAOImpl implements HotelAdminDAO {
 	@Transactional
 	public HotelAdmin getHotelAdmin(int id) {
 		Query query = entityManager.createQuery("SELECT h FROM HotelAdmin h WHERE h.id = :hId");
-		query.setParameter("hId",id);
+		query.setParameter("hId", id);
 		List<HotelAdmin> result = query.getResultList();
-		
-		if(result.size() == 0) {
+
+		if (result.size() == 0) {
 			return null;
 		}
 		return result.get(0);
 	}
 
-	
-	
 }

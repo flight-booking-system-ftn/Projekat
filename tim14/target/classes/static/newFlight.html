@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>New flight</title>
+    <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="newFlight.js"></script>
+</head>
+
+<body>
+    <h2>New flight</h2>
+    <form id="newFlightForm">
+        <table>
+            <tr>
+                <td>Departure date</td>
+                <td><input type="date" id="departureDate"></td>
+            </tr>
+            <tr>
+                <td>Return date</td>
+                <td><input type="date" id="returnDate"></td>
+            </tr>
+            <tr>
+                <td>Flight time</td>
+                <td><input type="number" id="flightTime" step="1" min="0" pattern="[0-9]"></td>
+            </tr>
+            <tr>
+                <td>Flight length</td>
+                <td><input type="number" id="flightLength" step="1" min="0" pattern="[0-9]"></td>
+            </tr>
+            <tr>
+                <td>Stop number</td>
+                <td><input type="number" id="stopNumber" step="1" min="0" pattern="[0-9]"></td>
+            </tr>
+            <tr>
+                <td>Number of business class seats</td>
+                <td><input type="number" id="businessClassSeats" step="1" min="0" pattern="[0-9]"></td>
+            </tr>
+            <tr>
+                <td>Number of economy class seats</td>
+                <td><input type="number" id="economyClassSeats" step="1" min="0" pattern="[0-9]"></td>
+            </tr>
+            <tr>
+                <td>Number of first class seats</td>
+                <td><input type="number" id="firstClassSeats" step="1" min="0" pattern="[0-9]"></td>
+            </tr>
+            <tr>
+                <td>Business ticket price</td>
+                <td><input type="number" id="businessTicketPrice" step="0.1" min="0" pattern="[0-9].[0-9]"></td>
+            </tr>
+            <tr>
+                <td>Economy ticket price</td>
+                <td><input type="number" id="economyTicketPrice" step="0.1" min="0" pattern="[0-9].[0-9]"></td>
+            </tr>
+            <tr>
+                <td>First ticket price</td>
+                <td><input type="number" id="firstTicketPrice" step="0.1" min="0" pattern="[0-9].[0-9]"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Add"></td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>

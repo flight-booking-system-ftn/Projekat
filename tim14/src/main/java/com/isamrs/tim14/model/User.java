@@ -5,18 +5,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.MappedSuperclass;
-
-
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
@@ -34,12 +22,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@SuppressWarnings("serial")
 @MappedSuperclass
 public class User implements Serializable, UserDetails {
 
-	
-	private static final long serialVersionUID = 1655113308824460247L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")

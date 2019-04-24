@@ -17,19 +17,17 @@ import com.isamrs.tim14.model.Airport;
 @RequestMapping("/airport")
 public class AirportRest {
 	private AirportDAO airportDAO;
-	
+
 	@Autowired
 	public AirportRest(AirportDAO airportDAO) {
 		this.airportDAO = airportDAO;
 	}
-	
+
 	@PostMapping("/new")
 	public @ResponseBody Airport addAirportToAirline(@RequestBody Airport airport) {
 		return airportDAO.save(airport);
 	}
-	
-	
-	
+
 	@GetMapping("/airportsOfAirline")
 	public Set<Airport> getAirportsOfAirline() {
 		return airportDAO.airportsOfAirline();
