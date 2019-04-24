@@ -37,3 +37,4 @@ $("#new_vehicle").submit(function(e) {
     e.preventDefault();
     window.location.href = "vehicle.html"
 })
+
