@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,24 +27,24 @@ public class Hotel {
 	@Column(name = "name")
 	private String name;
 	
-	@JoinColumn(name = "destination_id")
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	private Destination destination;
+	
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "destination_id")
+    private Destination destination;
 	
 	@Column(name = "description")
 	private String description;
 	
-	@ElementCollection(targetClass = HotelService.class)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
 	private Set<HotelService> services;
 	
 	@ElementCollection(targetClass = Room.class)
 	private Set<Room> rooms;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "hotel_id")
+	@OneToMany(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
 	private Set<Grade> grades;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "hotel_id")
 	private Set<RoomReservation> reservations;
 	

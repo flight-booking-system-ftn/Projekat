@@ -39,7 +39,7 @@ public class Room {
 	@JoinColumn(name = "room_id")
 	private Set<Grade> grades;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
 	private Hotel hotel;
 	

@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,7 +28,7 @@ public class RentACar {
 	private String name;
 	
 	@JoinColumn(name = "destination_id")
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
 	private Destination destination;
 	
 	@Column(name = "description")
@@ -42,8 +43,7 @@ public class RentACar {
 	@ElementCollection(targetClass = BranchOffice.class)
 	private Set<BranchOffice> offices;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "rent_a_car_id")
+	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	private Set<Grade> grades;
 	
 	@ElementCollection(targetClass = RentACarAdmin.class)

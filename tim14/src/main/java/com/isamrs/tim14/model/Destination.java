@@ -15,16 +15,16 @@ public class Destination {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
 	@Column(name = "name")
 	private String name;
 	
 	@Column(name = "country")
 	private String country;
-	
+
 	@Column(name = "longitude")
 	private Double longitude;
-	
+
 	@Column(name = "latitude")
 	private Double latitude;
 

@@ -20,7 +20,7 @@ public class Grade {
 	private Integer id;
 	
 	@JoinColumn(name = "user_id")
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
 	private RegisteredUser user;
 	
 	@Column(name = "grade")

@@ -8,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ticket")
-public class Ticket {
-	
+@Table(name = "airport")
+public class Airport {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -19,7 +19,10 @@ public class Ticket {
 	@Column(name = "name")
 	private String name;
 
-	public Ticket() {
+	@Column(name = "address")
+	private String address;
+
+	public Airport() {
 		super();
 	}
 
@@ -37,6 +40,14 @@ public class Ticket {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 }

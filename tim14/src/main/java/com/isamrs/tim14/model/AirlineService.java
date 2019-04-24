@@ -1,5 +1,6 @@
 package com.isamrs.tim14.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -10,7 +11,8 @@ import javax.persistence.Table;
 @Table(name = "airline_service")
 public class AirlineService extends Service {
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },
+			fetch = FetchType.LAZY)
     @JoinColumn(name = "airline_id")
 	Airline airline;
 
