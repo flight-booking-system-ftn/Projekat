@@ -2,6 +2,7 @@ $(document).ready(function(){
     
     renderAirlineTable();
     renderHotelTable();
+    renderRentACarTable();
 
     $(document).on('click','#addAirlineBtn',function(){
         $(location).attr('href',"/airline.html");
@@ -58,6 +59,17 @@ var renderHotelTable = function(){
             var red = data[i];
             var btnID = "hotelDetailViewBtn" + red.id;
             $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td><td><button id=${btnID}>More details</button></td></tr>`);
+        }
+    });
+}
+
+var renderRentACarTable = function(){
+    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
+    $.get("/api/rentacars", function(data){
+        console.log("Rent-a-cars: ", data);
+        for(var i=0;i<data.length;i++){
+            var red = data[i];
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
         }
     });
 }
