@@ -5,8 +5,6 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "flight_ticket")
 public class FlightTicket {
@@ -24,25 +24,22 @@ public class FlightTicket {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
+
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	private RegisteredUser user;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flight_id")
+	@JoinColumn(name = "flight_id")
+	@JsonIgnoreProperties("tickets")
 	private Flight flight;
-	
+
 	@Column(name = "quick")
 	private Boolean quick;
-	
-	@Enumerated(EnumType.STRING)
-    @Column(name = "type", length = 20)
-	private TicketType type;
-	
+
 	@Column(name = "date_of_purchase")
 	private Date dateOfPurchase;
-	
+
 	@Column(name = "passport_number")
 	private String passportNumber;
 
@@ -80,14 +77,6 @@ public class FlightTicket {
 
 	public void setQuick(Boolean quick) {
 		this.quick = quick;
-	}
-
-	public TicketType getType() {
-		return type;
-	}
-
-	public void setType(TicketType type) {
-		this.type = type;
 	}
 
 	public Date getDateOfPurchase() {

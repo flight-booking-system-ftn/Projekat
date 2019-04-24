@@ -1,18 +1,21 @@
 package com.isamrs.tim14.model;
 
-import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.MappedSuperclass;
 
-@MappedSuperclass
-public abstract class User {
+import org.joda.time.DateTime;
 
+@MappedSuperclass
+public class User {
+
+	
+	private static final long serialVersionUID = 1655113308824460247L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -33,10 +36,19 @@ public abstract class User {
 	@Column(name = "email", nullable = false)
 	private String email;
 
+    @Column(name = "enabled")
+    private boolean enabled = true;
+	
+	@Column(name = "last_password_reset_date")
+	private Timestamp lastPasswordResetDate;
 	public User() {
 		super();
 	}
 
+	public Integer getId() {
+		return id;
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -49,9 +61,11 @@ public abstract class User {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        Timestamp now = new Timestamp(DateTime.now().getMillis());
+        this.setLastPasswordResetDate( now );
+        this.password = password;
+    }
 
 	public String getFirstName() {
 		return firstName;
@@ -76,4 +90,16 @@ public abstract class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+    public Timestamp getLastPasswordResetDate() {
+        return lastPasswordResetDate;
+    }
+
+    public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
+        this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+	
+    public void setEnabled(boolean enabled) {
+        this.enabled = true;
+    }
 }

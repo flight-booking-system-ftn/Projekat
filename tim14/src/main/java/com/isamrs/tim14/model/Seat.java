@@ -12,24 +12,27 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "seat")
 public class Seat {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
-	@Enumerated(EnumType.STRING)
-    @Column(name = "type", length = 20)
-	private SeatType type;
-	
+
 	@Column(name = "seat_row")
 	private Integer seatRow;
-	
+
 	@Column(name = "number")
 	private Integer number;
-	
+
 	@Column(name = "busy")
 	private Boolean busy;
+	
+	@Column(name = "enabled")
+	private Boolean enabled;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "type", length = 20)
+	private SeatType type;
 
 	public Seat() {
 		super();
@@ -43,20 +46,12 @@ public class Seat {
 		this.id = id;
 	}
 
-	public SeatType getType() {
-		return type;
-	}
-
-	public void setType(SeatType type) {
-		this.type = type;
-	}
-
-	public Integer getRow() {
+	public Integer getSeatRow() {
 		return seatRow;
 	}
 
-	public void setRow(Integer row) {
-		this.seatRow = row;
+	public void setSeatRow(Integer seatRow) {
+		this.seatRow = seatRow;
 	}
 
 	public Integer getNumber() {
@@ -73,6 +68,22 @@ public class Seat {
 
 	public void setBusy(Boolean busy) {
 		this.busy = busy;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public SeatType getType() {
+		return type;
+	}
+
+	public void setType(SeatType type) {
+		this.type = type;
 	}
 
 }

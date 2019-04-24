@@ -1,11 +1,17 @@
 package com.isamrs.tim14.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "luggage")
@@ -15,15 +21,20 @@ public class Luggage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
+
+	@Column(name = "weight")
+	private Integer weight;
+
+	@Column(name = "dimensions")
+	private String dimensions;
 	
-	@Column(name = "min_weight")
-	private Integer minWeight;
+	@Column(name = "price")
+	private Double price;
 	
-	@Column(name = "max_weight")
-	private Integer maxWeight;
-	
-	@Column(name = "description")
-	private String description;
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "airline_id")
+	@JsonIgnoreProperties("luggagePricelist")
+	private Airline airline;
 
 	public Luggage() {
 		super();
@@ -37,28 +48,36 @@ public class Luggage {
 		this.id = id;
 	}
 
-	public Integer getMinWeight() {
-		return minWeight;
+	public Integer getWeight() {
+		return weight;
 	}
 
-	public void setMinWeight(Integer minWeight) {
-		this.minWeight = minWeight;
+	public void setWeight(Integer weight) {
+		this.weight = weight;
 	}
 
-	public Integer getMaxWeight() {
-		return maxWeight;
+	public String getDimensions() {
+		return dimensions;
 	}
 
-	public void setMaxWeight(Integer maxWeight) {
-		this.maxWeight = maxWeight;
+	public void setDimensions(String dimensions) {
+		this.dimensions = dimensions;
 	}
 
-	public String getDescription() {
-		return description;
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	public Airline getAirline() {
+		return airline;
+	}
+
+	public void setAirline(Airline airline) {
+		this.airline = airline;
 	}
 
 }

@@ -1,12 +1,14 @@
 package com.isamrs.tim14.model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +18,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "flight")
@@ -27,64 +32,62 @@ public class Flight {
 	@Column(name = "id")
 	private Integer id;
 	
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "airline_id")
+	@JsonIgnoreProperties("flights")
+	private Airline airline;
+	
+	@JoinColumn(name = "start_airport_id")
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	private Airport from;
+	
+	@JoinColumn(name = "end_airport_id")
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	private Airport to;
+
 	@Column(name = "departure_date")
-	private Date departureDate;
+	private Timestamp departureDate;
+
+	@Column(name = "arrival_date")
+	private Timestamp arrivalDate;
 	
-	@Column(name = "return_date")
-	private Date returnDate;
-	
-	@Column(name = "flight_time")
-	private Integer flightTime;
-	
+	@Column(name = "return_departure_date")
+	private Timestamp returnDepartureDate;
+
+	@Column(name = "return_arrival_date")
+	private Timestamp returnArrivalDate;
+
 	@Column(name = "flight_length")
 	private Integer flightLength;
 	
-	@Column(name = "stop_number")
-	private Integer stopNumber;
+	@Column(name = "luggage_quantity")
+	private Integer luggageQuantity;
 	
-	@Column(name = "business_class_seats")
-	private Integer businessClassSeats;
+	@Column(name = "flight_duration")
+	private Double flightDuration;
 	
-	@Column(name = "economy_class_seats")
-	private Integer economyClassSeats;
+	@Column(name = "ticket_price")
+	private Double ticketPrice;
 	
-	@Column(name = "first_class_seats")
-	private Integer firstClassSeats;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "flight_type", length = 20)
+	private FlightType flightType;
 	
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "Flight_destination", 
-             joinColumns = { @JoinColumn(name = "flight_id") }, 
-             inverseJoinColumns = { @JoinColumn(name = "destination_id") })
-	private Set<Destination> stopDestinations;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "flight_id")
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinTable(name = "flight_stopover", joinColumns = { @JoinColumn(name = "flight_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "stopover_id") })
+	private Set<Airport> stops;
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Grade> grades;
-	
-	@ElementCollection(targetClass = FlightTicket.class)
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "flight")
+	@JsonIgnoreProperties("flight")
 	private Set<FlightTicket> tickets;
-	
-	@OneToMany(cascade = CascadeType.ALL)
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "flight_id")
-	private Set<Luggage> luggages;
-	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "flight_id")
-	private Set<Seat> seats;
-	
-	@Column(name = "business_class_price")
-	private Double businessClassPrice;
-	
-	@Column(name = "economy_class_price")
-	private Double economyClassPrice;
-	
-	@Column(name = "first_class_price")
-	private Double firstClassPrice;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flight_id")
-	private Airline airline;
+	private List<Seat> seats;
 
 	public Flight() {
 		super();
@@ -98,28 +101,60 @@ public class Flight {
 		this.id = id;
 	}
 
-	public Date getDepartureDate() {
+	public Airline getAirline() {
+		return airline;
+	}
+
+	public void setAirline(Airline airline) {
+		this.airline = airline;
+	}
+
+	public Airport getFrom() {
+		return from;
+	}
+
+	public void setFrom(Airport from) {
+		this.from = from;
+	}
+
+	public Airport getTo() {
+		return to;
+	}
+
+	public void setTo(Airport to) {
+		this.to = to;
+	}
+
+	public Timestamp getDepartureDate() {
 		return departureDate;
 	}
 
-	public void setDepartureDate(Date departureDate) {
+	public void setDepartureDate(Timestamp departureDate) {
 		this.departureDate = departureDate;
 	}
 
-	public Date getReturnDate() {
-		return returnDate;
+	public Timestamp getArrivalDate() {
+		return arrivalDate;
 	}
 
-	public void setReturnDate(Date returnDate) {
-		this.returnDate = returnDate;
+	public void setArrivalDate(Timestamp arrivalDate) {
+		this.arrivalDate = arrivalDate;
 	}
 
-	public Integer getFlightTime() {
-		return flightTime;
+	public Timestamp getReturnDepartureDate() {
+		return returnDepartureDate;
 	}
 
-	public void setFlightTime(Integer flightTime) {
-		this.flightTime = flightTime;
+	public void setReturnDepartureDate(Timestamp returnDepartureDate) {
+		this.returnDepartureDate = returnDepartureDate;
+	}
+
+	public Timestamp getReturnArrivalDate() {
+		return returnArrivalDate;
+	}
+
+	public void setReturnArrivalDate(Timestamp returnArrivalDate) {
+		this.returnArrivalDate = returnArrivalDate;
 	}
 
 	public Integer getFlightLength() {
@@ -130,44 +165,44 @@ public class Flight {
 		this.flightLength = flightLength;
 	}
 
-	public Integer getStopNumber() {
-		return stopNumber;
+	public Integer getLuggageQuantity() {
+		return luggageQuantity;
 	}
 
-	public void setStopNumber(Integer stopNumber) {
-		this.stopNumber = stopNumber;
+	public void setLuggageQuantity(Integer luggageQuantity) {
+		this.luggageQuantity = luggageQuantity;
 	}
 
-	public Integer getBusinessClassSeats() {
-		return businessClassSeats;
+	public Double getFlightDuration() {
+		return flightDuration;
 	}
 
-	public void setBusinessClassSeats(Integer businessClassSeats) {
-		this.businessClassSeats = businessClassSeats;
+	public void setFlightDuration(Double flightDuration) {
+		this.flightDuration = flightDuration;
 	}
 
-	public Integer getEconomyClassSeats() {
-		return economyClassSeats;
+	public Double getTicketPrice() {
+		return ticketPrice;
 	}
 
-	public void setEconomyClassSeats(Integer economyClassSeats) {
-		this.economyClassSeats = economyClassSeats;
+	public void setTicketPrice(Double ticketPrice) {
+		this.ticketPrice = ticketPrice;
 	}
 
-	public Integer getFirstClassSeats() {
-		return firstClassSeats;
+	public FlightType getFlightType() {
+		return flightType;
 	}
 
-	public void setFirstClassSeats(Integer firstClassSeats) {
-		this.firstClassSeats = firstClassSeats;
+	public void setFlightType(FlightType flightType) {
+		this.flightType = flightType;
 	}
 
-	public Set<Destination> getStopDestinations() {
-		return stopDestinations;
+	public Set<Airport> getStops() {
+		return stops;
 	}
 
-	public void setStopDestinations(Set<Destination> stopDestinations) {
-		this.stopDestinations = stopDestinations;
+	public void setStops(Set<Airport> stops) {
+		this.stops = stops;
 	}
 
 	public Set<Grade> getGrades() {
@@ -186,52 +221,12 @@ public class Flight {
 		this.tickets = tickets;
 	}
 
-	public Set<Luggage> getLuggages() {
-		return luggages;
-	}
-
-	public void setLuggages(Set<Luggage> luggages) {
-		this.luggages = luggages;
-	}
-
-	public Set<Seat> getSeats() {
+	public List<Seat> getSeats() {
 		return seats;
 	}
 
-	public void setSeats(Set<Seat> seats) {
+	public void setSeats(List<Seat> seats) {
 		this.seats = seats;
-	}
-
-	public Double getBusinessClassPrice() {
-		return businessClassPrice;
-	}
-
-	public void setBusinessClassPrice(Double businessClassPrice) {
-		this.businessClassPrice = businessClassPrice;
-	}
-
-	public Double getEconomyClassPrice() {
-		return economyClassPrice;
-	}
-
-	public void setEconomyClassPrice(Double economyClassPrice) {
-		this.economyClassPrice = economyClassPrice;
-	}
-
-	public Double getFirstClassPrice() {
-		return firstClassPrice;
-	}
-
-	public void setFirstClassPrice(Double firstClassPrice) {
-		this.firstClassPrice = firstClassPrice;
-	}
-
-	public Airline getAirline() {
-		return airline;
-	}
-
-	public void setAirline(Airline airline) {
-		this.airline = airline;
 	}
 
 }
