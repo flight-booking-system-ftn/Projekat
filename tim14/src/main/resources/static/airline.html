@@ -3,8 +3,10 @@
 
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="airline.js"> </script>
+	<title>Airline-register</title>
 </head>
 
 <body>
@@ -13,39 +15,35 @@
 		<table>
 			<tr>
 				<td>Name</td>
-				<td><input type="text" name="txt_name" class="field"></td>
-			</tr>
-			<tr>
-				<td>Address</td>
-				<td><input type="text" name="txt_address" class="field"></td>
+				<td colspan="3"><input type="text"  id="airlineNameField"  required></td>
 			</tr>
 			<tr>
 				<td>Description</td>
-				<td><input type="text" name="txt_description" class="field"></td>
+				<td colspan="3"><input type="text" id="airlineDescriptionField"  required></td>
 			</tr>
 			<tr>
-				<td>Destinations</td>
-				<td><input type="text" name="txt_destinations" class="field"></td>
+				<td rowspan="3">Services</td>
+				<td><input type="checkbox" id="service1option"></td>
+				<td>Airline service 1 </td>
+				<td><input type="number" id="service1price" ></td>
 			</tr>
 			<tr>
-				<td>Flights</td>
-				<td><input type="text" name="txt_flights" class="field"></td>
+				<td><input type="checkbox" id="service2option"></td>
+				<td>Airline service 2 </td>
+				<td><input type="number" id="service2price"></td>
 			</tr>
 			<tr>
-				<td>Quick reservations</td>
-				<td><input type="text" name="txt_quick" class="field"></td>
+				<td><input type="checkbox" id="service3option"></td>
+				<td>Airline service 3 </td>
+				<td><input type="number" id="service3price"></td>
 			</tr>
 			<tr>
-				<td>Flights configuration</td>
-				<td><input type="text" name="txt_flights_configuration" class="field"></td>
-			</tr>
-			<tr>
-				<td>Price list</td>
-				<td><input type="text" name="txt_pricelist" class="field"></td>
+				<td>Destination</td>
+				<td colspan="3"><select id="airlineDestination"></select></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><input type="submit" value="Add"></td>
+				<td colspan="3"><input type="submit" value="Add"></td>
 			</tr>
 		</table>
 	</form>

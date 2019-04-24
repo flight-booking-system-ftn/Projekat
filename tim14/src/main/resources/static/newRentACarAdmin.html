@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Adding new rent-a-car administrator</title>
+	<title>Adding new rent-a-car administrator</title>
+	<link rel="stylesheet" type="text/css" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="newRentACarAdmin.js"> </script>
 </head>
@@ -14,27 +15,33 @@
 		<table>
 			<tr>
 				<td>Username: </td>
-				<td><input type="text" id="usernameRentACarAdmin"></td>
+				<td><input type="text" id="usernameRentACarAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Password: </td>
-				<td><input type="password" id="passwordRentACarAdmin"></td>
+				<td><input type="password" id="passwordRentACarAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Repeat password: </td>
-				<td><input type="password" id="rep_passwordRentACarAdmin"></td>
+				<td><input type="password" id="rep_passwordRentACarAdmin" required></td>
 			</tr>
 			<tr>
 				<td>First name:</td>
-				<td><input type="text" id="firstNameRentACarAdmin"></td>
+				<td><input type="text" id="firstNameRentACarAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Last name:</td>
-				<td><input type="text" id="lastNameRentACarAdmin"></td>
+				<td><input type="text" id="lastNameRentACarAdmin" required></td>
 			</tr>
 			<tr>
 				<td>Email address: </td>
-				<td><input type="text" id="emailRentACarAdmin"></td>
+				<td><input type="text" id="emailRentACarAdmin" required></td>
+			</tr>
+			<tr>
+				<td>Rent-a-car: </td>
+				<td>
+					<select id="rentRentAdmin"></select>
+				</td>
 			</tr>
 			<tr>
 				<td></td>

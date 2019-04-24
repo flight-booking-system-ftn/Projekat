@@ -1,0 +1,150 @@
+.VelikiPregled{
+  background-color: rgba(0,0,0,0.8);
+  padding: 30px;
+  border-radius:10px;
+  margin-top: 20px;
+  margin-bottom: 100px;
+}
+
+a{
+    color: #ccc;
+}
+
+.VelikiPregled h1{
+  color: #e8e1de;
+}
+
+.VelikiPregled button{
+  margin-left:10px;
+  width:180px;
+  height:38px;
+  text-align:center;
+  background-color: rgba(0,0,0,0.6);
+  color: #e8e1de;
+  border: 1px solid #2b77b4;
+}
+
+.VelikiPregled input{
+  margin-left:10px;
+  width:180px;
+  height:34px;
+  text-align:center;
+  background-color: #e8e1de;
+  border: 1px solid rgba(0,0,0,0.6);
+}
+
+.VelikiPregled button:hover{
+  margin-left:10px;
+  width:180px;
+  height:38px;
+  text-align:center;
+  background-color: #2b77b4;
+  color: #e8e1de;
+  border: 1px solid rgba(0,0,0,0.6);
+}
+
+body {
+  background-image: url("./images/Airport.jpg");
+  background-color: #cccccc;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body h2 {
+	color: #ccc;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  border-radius:5px;
+}
+
+th, td {
+  padding: 0.5px;
+  text-align: center;
+  border: 1px solid #ccc;
+  color: #ccc;
+}
+
+tr{
+  height:40px;
+}
+
+tbody tr:nth-child(odd) {
+  background: rgba(0,0,0,0.3);
+  color: #e8e1de;
+}
+
+tbody tr:nth-child(even) {
+  background: #2b77b4;
+  color: #e8e1de;
+}
+
+
+.menuDiv{
+    float: left;
+  }
+.menuDiv button{
+  margin-left:10px;
+  width:180px;
+  height:38px;
+  text-align:center;
+  background-color: rgba(0,0,0,0.6);
+  color: #e8e1de;
+  border: 1px solid #2b77b4;
+}
+
+.menuDiv button:hover{
+  margin-left:10px;
+  width:180px;
+  height:38px;
+  text-align:center;
+  background-color: #2b77b4;
+  color: #e8e1de;
+  border: 1px solid rgba(0,0,0,0.6);
+}
+
+
+.dialog {
+  display: none; 
+  position: fixed;
+  z-index: 1; 
+  padding-top: 74px;
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+.dialogContent {
+  color: #e8e1de;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  background-color: #1e2838;
+}
+
+.dialogContent button{
+  margin-left:10px;
+  width:150px;
+  height:30px;
+  text-align:center;
+  background-color: rgba(0,0,0,0.6);
+  color: #e8e1de;
+  border: 1px solid #2b77b4;
+}
+
+.dialogContent button:hover{
+  margin-left:10px;
+  width:150px;
+  height:30px;
+  text-align:center;
+  background-color: #2b77b4;
+  color: #e8e1de;
+  border: 1px solid rgba(0,0,0,0.6);
+}
