@@ -41,6 +41,9 @@ $(document).ready(function(){
     $(document).on('click','#hotelSearchBtn', function(){
         renderHotelTableSearch();
     });
+    $(document).on('click','#rentSearchBtn', function(){
+        renderRentACarTableSearch();
+    });
     
 
 });
@@ -95,4 +98,20 @@ var renderRentACarTable = function(){
             $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
         }
     });
+}
+
+var renderRentACarTableSearch = function(){
+    var text = $('#rentSearchInput').val();
+    if(text == ""){
+        renderRentACarTable();
+        return;
+    }
+    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
+    $.get('/api/rentsSearch/'+text, function(data){
+        console.log("Rent-a-cars: ", data);
+        for(var i=0;i<data.length;i++){
+            var red = data[i];
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
+        }
+    }); 
 }
