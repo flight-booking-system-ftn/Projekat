@@ -1,7 +1,13 @@
-var addAirlineAdmin = "/airlineAdmins";
-
-
 $(document).ready(function(){
+	
+	$.get('/api/airlines', function(data){
+        console.log(data);
+        var select = document.getElementById("airlineAirlineAdmin");
+        for(var i=0;i<data.length;i++){
+            var red = data[i];
+            select.options[select.options.length] = new Option(''+red.name,''+red.id);
+        }
+    });
 
     $(document).submit('#airlineAdminForm',function(e){
             	
@@ -17,28 +23,47 @@ $(document).ready(function(){
 
            
         var check = checkFields(username, password, firstName, lastName, email,repeatPassword);
-        data = {
-            username,
-            password,
-            firstName,
-            lastName,
-            email,
-            airline
-        }
-        console.log(data);
+        
         if(check){
-            $.ajax({
-                url: addAirlineAdmin,
-                type: "POST",
-                data: JSON.stringify(data),
-                contentType: "application/json; charset=utf-8;",
-                dataType: "text",
-                success: function(data){
-                    $(location).attr('href',"/");
-                },
-                error: function(e,t){
-                    $(location).attr('href',"/");
+            $.get('/api/airlines/'+$('#airlineAirlineAdmin').val(),function(airlineData){
+                data = {
+                    username,
+                    password,
+                    firstName,
+                    lastName,
+                    email,
+                    airline: airlineData
                 }
+                console.log(data);
+                $.ajax({
+                    url: '/api/airlineadmins',
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8;",
+                    dataType: "text",
+                    success: function(data){
+                        $(location).attr('href',"/");
+                    },
+            		error: function (jqXHR, exception) {
+            			var msg = '';
+            	        if (jqXHR.status == 0) {
+            	            msg = 'Not connect.\n Verify Network.';
+            	        } else if (jqXHR.status == 404) {
+            	            msg = 'Requested page not found. [404]';
+            	        } else if (jqXHR.status == 500) {
+            	            msg = 'Internal Server Error [500].';
+            	        } else if (exception === 'parsererror') {
+            	            msg = 'Requested JSON parse failed.';
+            	        } else if (exception === 'timeout') {
+            	            msg = 'Time out error.';
+            	        } else if (exception === 'abort') {
+            	            msg = 'Ajax request aborted.';
+            	        } else {
+            	            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            	        }
+            	        alert(msg);
+            		}
+                });
             });
         };
     });
@@ -47,10 +72,7 @@ $(document).ready(function(){
 
 
 var checkFields = function(username, password, firstName, lastName, email,repeatPassword){
-    if(username=="" || password=="" || firstName=="" || lastName=="" || email=="" || repeatPassword==""){
-    	alert("Fields cannot be empty!");
-        return false;
-    }
+    
     if(password != repeatPassword){
     	alert("Difference between passwords!");
         return false;

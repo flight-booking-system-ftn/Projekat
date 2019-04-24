@@ -3,9 +3,10 @@
 
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="hotel.js"></script>
-	<title>Prijava</title>
+	<title>Hotel-register</title>
 </head>
 
 <body>
@@ -14,27 +15,35 @@
 		<table>
 			<tr>
 				<td>Name</td>
-				<td><input type="text" name="txt_name" class="field"></td>
-			</tr>
-			<tr>
-				<td>Address</td>
-				<td><input type="text" name="txt_address" class="field"></td>
+				<td colspan="3"><input type="text"  id="hotelNameField"  required></td>
 			</tr>
 			<tr>
 				<td>Description</td>
-				<td><input type="text" name="txt_description" class="field"></td>
+				<td colspan="3"><input type="text" id="hotelDescriptionField"  required></td>
 			</tr>
 			<tr>
-				<td>Services</td>
-				<td><input type="text" name="txt_service" class="field"></td>
+				<td rowspan="3">Services</td>
+				<td><input type="checkbox" id="service1option"></td>
+				<td>Hotel service 1 </td>
+				<td><input type="number" id="service1price" ></td>
 			</tr>
 			<tr>
-				<td>Rooms</td>
-				<td><input type="text" name="txt_rooms" class="field"></td>
+				<td><input type="checkbox" id="service2option"></td>
+				<td>Hotel service 2 </td>
+				<td><input type="number" id="service2price"></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" id="service3option"></td>
+				<td>Hotel service 3 </td>
+				<td><input type="number" id="service3price"></td>
+			</tr>
+			<tr>
+				<td>Destination</td>
+				<td colspan="3"><select id="hotelDestination"></select></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><input type="submit" name="btn_vehicle" value="Add"></td>
+				<td colspan="3"><input type="submit" value="Add"></td>
 			</tr>
 		</table>
 	</form>
