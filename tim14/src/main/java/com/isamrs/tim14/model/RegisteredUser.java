@@ -46,9 +46,6 @@ public class RegisteredUser extends User {
 	@Column(name = "phone_number")
 	private String phoneNumber;
 
-	@Column(name = "enabled")
-	private Boolean enabled;
-
 	public RegisteredUser() {
 		super();
 	}
@@ -117,12 +114,5 @@ public class RegisteredUser extends User {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public Boolean getEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
 
 }

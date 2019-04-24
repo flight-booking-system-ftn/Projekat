@@ -1,17 +1,41 @@
 package com.isamrs.tim14.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
+
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.MappedSuperclass;
+
+
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 
 import org.joda.time.DateTime;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @MappedSuperclass
-public class User {
+public class User implements Serializable, UserDetails {
 
 	
 	private static final long serialVersionUID = 1655113308824460247L;
@@ -41,6 +65,11 @@ public class User {
 	
 	@Column(name = "last_password_reset_date")
 	private Timestamp lastPasswordResetDate;
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	private List<Authority> authorities;
+
 	public User() {
 		super();
 	}
@@ -91,6 +120,14 @@ public class User {
 		this.email = email;
 	}
 	
+	public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
     public Timestamp getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
@@ -98,6 +135,29 @@ public class User {
     public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @JsonIgnore
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 	
     public void setEnabled(boolean enabled) {
         this.enabled = true;

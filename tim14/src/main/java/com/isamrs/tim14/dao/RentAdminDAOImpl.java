@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.service.CustomUserDetailsService;
 
 
 @Repository
@@ -17,8 +18,9 @@ public class RentAdminDAOImpl implements RentAdminDAO{
 
 	private EntityManager entityManager;
 	
-	
-	
+	@Autowired
+	private CustomUserDetailsService customService;
+
 	@Autowired
 	public RentAdminDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
@@ -42,7 +44,7 @@ public class RentAdminDAOImpl implements RentAdminDAO{
 		List<RentACarAdmin> result = query.getResultList();
 		
 		if(result.size() == 0) {
-			rentAdmin.setPassword(rentAdmin.getPassword());
+			rentAdmin.setPassword(customService.encodePassword(rentAdmin.getPassword()));
 			entityManager.persist(rentAdmin);
 			return rentAdmin;
 		}else {

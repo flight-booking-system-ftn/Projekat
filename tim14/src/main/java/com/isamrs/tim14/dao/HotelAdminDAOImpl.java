@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.HotelAdmin;
+import com.isamrs.tim14.service.CustomUserDetailsService;
 
 @Repository
 public class HotelAdminDAOImpl implements HotelAdminDAO {
 
 	private EntityManager entityManager;
+	
+	@Autowired
+	private CustomUserDetailsService customService;
 	
 	@Autowired
 	public HotelAdminDAOImpl(EntityManager entityManager) {
@@ -39,7 +43,8 @@ public class HotelAdminDAOImpl implements HotelAdminDAO {
 		List<HotelAdmin> result = query.getResultList();
 		
 		if(result.size() == 0) {
-			hotelAdmin.setPassword(hotelAdmin.getPassword());
+			
+			hotelAdmin.setPassword(customService.encodePassword(hotelAdmin.getPassword()));
 			entityManager.persist(hotelAdmin);
 			return hotelAdmin;
 		}else {

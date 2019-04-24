@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.AirlineAdmin;
+import com.isamrs.tim14.service.CustomUserDetailsService;
 
 @Repository
 public class AirlineAdminDAOImpl implements AirlineAdminDAO{
 	
 	private EntityManager entityManager;
 	
+	@Autowired
+	private CustomUserDetailsService customService;
 	
 	
 	@Autowired
@@ -42,7 +45,7 @@ public class AirlineAdminDAOImpl implements AirlineAdminDAO{
 		System.out.println("Admin: " + airlineAdmin);
 		
 		if(result.size() == 0) {
-			airlineAdmin.setPassword(airlineAdmin.getPassword());
+			airlineAdmin.setPassword(customService.encodePassword(airlineAdmin.getPassword()));
 			entityManager.persist(airlineAdmin);
 			return airlineAdmin;
 		}else {
