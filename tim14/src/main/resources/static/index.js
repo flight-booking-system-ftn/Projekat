@@ -42,6 +42,35 @@ $(document).ready(function(){
         renderHotelTableSearch();
     });
     
+    
+    $(document).on('click','#quitDialogHotelView',function(){
+        $('#dialogHotelView').css("display","none");
+    });
+
+    $(document).on('click','table button',function(e){
+        if(e.target.id.startsWith("hotelDetailViewBtn")){
+            var message = e.target.id.substr(18);
+            console.log("PORUKA JE ", message);
+            $.get('/api/hotels/'+ message, function(data){
+                console.log("MY DATA: ", data);
+                $('#pNameOfChosenHotel').text(data.name);
+                $('#pDescriptionOfChosenHotel').text(data.description);
+                $('#pDestinationOfChosenHotel').text(data.destination.name +
+                    ", " + data.destination.country);
+                $.get('/api/roomsSearch/'+data.id, function(RoomData){
+                    console.log("Rooms: ", RoomData);
+                    var rooms = RoomData;
+                    $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Price</th></tr>`);
+                    for(var i=0;i<rooms.length;i++){
+                        var red = rooms[i];
+                        $('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>${red.price}</td></tr>`);
+                    }
+                    $('#dialogHotelView').css("display","block");
+                });
+            });
+        }
+    });
+    
 
 });
 
