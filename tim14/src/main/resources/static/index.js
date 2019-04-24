@@ -34,7 +34,10 @@ $(document).ready(function(){
         $(location).attr('href',"/newRentACarAdmin.html");
     });
 
-
+    
+    $(document).on('click','#hotelSearchBtn', function(){
+        renderHotelTableSearch();
+    });
     
 
 });
@@ -54,6 +57,23 @@ var renderAirlineTable = function(){
 var renderHotelTable = function(){
     $('#hotelTable').html(`<tr><th>Name</th><th>Description</th><th></th></tr>`);
     $.get("/api/hotels", function(data){
+        console.log("Hotels: ", data);
+        for(var i=0;i<data.length;i++){
+            var red = data[i];
+            var btnID = "hotelDetailViewBtn" + red.id;
+            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td><td><button id=${btnID}>More details</button></td></tr>`);
+        }
+    });
+}
+
+var renderHotelTableSearch = function(){
+    var text = $('#hotelSearchInput').val();
+    if(text == ""){
+        renderHotelTable();
+        return;
+    }
+    $('#hotelTable').html(`<tr><th>Name</th><th>Description</th><th></th></tr>`);
+    $.get('/api/hotelsSearch/'+text, function(data){
         console.log("Hotels: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
