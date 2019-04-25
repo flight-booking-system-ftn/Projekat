@@ -1,7 +1,7 @@
-application.properties
+**/resources/application.properties
 **/HELP.md
 **/.DS_Store
 **/.classpath
 **/.project
 **/.settings
-/target/
+**/target/

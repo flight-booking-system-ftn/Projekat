@@ -14,17 +14,17 @@ import com.isamrs.tim14.model.Destination;
 @Repository
 public class DestinationDAOImpl implements DestinationDAO {
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	public DestinationDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
+
 	@Override
 	@Transactional
 	public Destination save(Destination destination) {
 		entityManager.persist(destination);
-		
+
 		return destination;
 	}
 
@@ -34,10 +34,10 @@ public class DestinationDAOImpl implements DestinationDAO {
 		Query query = entityManager.createQuery("SELECT d FROM Destination d WHERE d.id = :dId");
 		query.setParameter("dId", id);
 		List<Destination> result = query.getResultList();
-		
-		if(result.size() == 0) {
+
+		if (result.size() == 0) {
 			return null;
-		}else {
+		} else {
 			return result.get(0);
 		}
 	}
