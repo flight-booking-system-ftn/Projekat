@@ -12,15 +12,15 @@ import org.springframework.stereotype.Repository;
 import com.isamrs.tim14.model.Room;
 
 @Repository
-public class RoomDAOImpl implements RoomDAO{
-	
+public class RoomDAOImpl implements RoomDAO {
+
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	public RoomDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
+
 	@Override
 	@Transactional
 	public Room save(Room room) {

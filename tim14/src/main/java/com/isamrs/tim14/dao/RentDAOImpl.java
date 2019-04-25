@@ -12,20 +12,19 @@ import org.springframework.stereotype.Repository;
 import com.isamrs.tim14.model.RentACar;
 
 @Repository
-public class RentDAOImpl implements RentDAO{
+public class RentDAOImpl implements RentDAO {
 
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	public RentDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
-	
+
 	@Override
 	@Transactional
 	public List<RentACar> getRents() {
-		
+
 		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent");
 		List<RentACar> result = query.getResultList();
 		return result;
@@ -37,11 +36,11 @@ public class RentDAOImpl implements RentDAO{
 		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE lower(rent.name) LIKE :rentName");
 		query.setParameter("rentName", rent.getName());
 		List<RentACar> result = query.getResultList();
-		
-		if(result.size() == 0) {
+
+		if (result.size() == 0) {
 			entityManager.persist(rent);
 			return rent;
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -50,28 +49,27 @@ public class RentDAOImpl implements RentDAO{
 	@Transactional
 	public RentACar getRent(int id) {
 		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE rent.id = :rentId");
-		query.setParameter("rentId",id);
+		query.setParameter("rentId", id);
 		List<RentACar> result = query.getResultList();
-		
-		if(result.size() == 0) {
+
+		if (result.size() == 0) {
 			return null;
 		}
-		
+
 		return result.get(0);
 	}
 
 	@Override
 	@Transactional
 	public void deleteRent(int id) {
-		
+
 	}
 
-
-	@Override	
+	@Override
 	@Transactional
 	public List<RentACar> getRentSearch(String search) {
 		Query query = entityManager.createQuery("SELECT r FROM RentACar r WHERE r.name LIKE :rentName");
-		query.setParameter("rentName", "%"+search+"%");
+		query.setParameter("rentName", "%" + search + "%");
 		List<RentACar> result = query.getResultList();
 		return result;
 	}

@@ -26,8 +26,6 @@ $(document).ready(function(){
     $(document).on('click','#addRoomBtn',function(){
         $(location).attr('href',"/room.html");
     });
-    
-    
 
     $(document).on('click','#addAirlineAdminBtn',function(){
         $(location).attr('href',"/newAirlineAdmin.html");
@@ -38,7 +36,9 @@ $(document).ready(function(){
     $(document).on('click','#addRentACarAdminBtn',function(){
         $(location).attr('href',"/newRentACarAdmin.html");
     });
-
+    $(document).on('click','#airlineSearchBtn', function(){
+        renderAirlineTableSearch();
+    });
     
     $(document).on('click','#hotelSearchBtn', function(){
         renderHotelTableSearch();
@@ -91,6 +91,21 @@ var renderAirlineTable = function(){
     });
 }
 
+var renderAirlineTableSearch = function(){
+    var text = $('#airlineSearchInput').val();
+    if(text == ""){
+        renderAirlineTable();
+        return;
+    }
+    $('#airlineTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
+    $.get('/api/airlinesSearch/'+text, function(data){
+        console.log("Airlines: ", data);
+        for(var i=0;i<data.length;i++){
+            var red = data[i];
+            $('#airlineTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
+        }
+    }); 
+}
 
 var renderHotelTable = function(){
     $('#hotelTable').html(`<tr><th>Name</th><th>Description</th><th></th></tr>`);

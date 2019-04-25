@@ -15,12 +15,12 @@ import com.isamrs.tim14.model.Hotel;
 public class HotelDAOImpl implements HotelDAO {
 
 	private EntityManager entityManager;
-	
+
 	@Autowired
 	public HotelDAOImpl(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
+
 	@Override
 	@Transactional
 	public List<Hotel> getHotels() {
@@ -35,11 +35,11 @@ public class HotelDAOImpl implements HotelDAO {
 		Query query = entityManager.createQuery("SELECT h FROM Hotel h WHERE lower(h.name) LIKE :hotelName");
 		query.setParameter("hotelName", hotel.getName());
 		List<Hotel> result = query.getResultList();
-		
-		if(result.size() == 0) {
+
+		if (result.size() == 0) {
 			entityManager.persist(hotel);
 			return hotel;
-		}else {
+		} else {
 			return null;
 		}
 	}
@@ -48,28 +48,27 @@ public class HotelDAOImpl implements HotelDAO {
 	@Transactional
 	public Hotel getHotel(int id) {
 		Query query = entityManager.createQuery("SELECT hot FROM Hotel hot WHERE hot.id = :hotelId");
-		query.setParameter("hotelId",id);
+		query.setParameter("hotelId", id);
 		List<Hotel> result = query.getResultList();
-		
-		if(result.size() == 0) {
+
+		if (result.size() == 0) {
 			return null;
 		}
-		
+
 		return result.get(0);
 	}
 
 	@Override
 	@Transactional
 	public void deleteHotel(int id) {
-		
+
 	}
 
-	
 	@Override
 	@Transactional
 	public List<Hotel> getHotelsSearch(String search) {
 		Query query = entityManager.createQuery("SELECT hot FROM Hotel hot WHERE hot.name LIKE :hotelName");
-		query.setParameter("hotelName", "%"+search+"%");
+		query.setParameter("hotelName", "%" + search + "%");
 		List<Hotel> result = query.getResultList();
 		return result;
 	}

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RoomDAO;
-import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.Room;
 
 @RestController
