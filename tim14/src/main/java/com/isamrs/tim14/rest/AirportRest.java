@@ -28,8 +28,6 @@ public class AirportRest {
 		return airportDAO.save(airport);
 	}
 	
-	
-	
 	@GetMapping("/airportsOfAirline")
 	public Set<Airport> getAirportsOfAirline() {
 		return airportDAO.airportsOfAirline();

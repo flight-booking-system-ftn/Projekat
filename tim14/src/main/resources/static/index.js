@@ -19,6 +19,9 @@ $(document).ready(function(){
     $(document).on('click','#addFlightBtn',function(){
         $(location).attr('href',"/newFlight.html");
     });
+    $(document).on('click','#addAirportBtn',function(){
+        $(location).attr('href',"/newAirport.html");
+    });
     $(document).on('click','#loginUserBtn',function(){
         $(location).attr('href',"/login.html");
     });
