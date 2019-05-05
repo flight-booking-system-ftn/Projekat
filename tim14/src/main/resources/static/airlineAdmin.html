@@ -3,8 +3,11 @@
 
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="styles.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="modal.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="snackbar.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="snackbar.js"></script>
 	<script type="text/javascript" src="aidlineAdmin.js"></script>
 </head>
 
@@ -17,6 +20,13 @@
 		<button id="addDestinationBtn">Add destination</button>
 	</div>
 
+	<table id="flightsTable" border="1">
+		<thead>
+			<tr><th>Trip type</th> <th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Return departure date</th> <th>Return arrival date</th> <th>Bags</th> <th>Ticket price</th> <th>Actions</th></tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
 </body>
 
 </html>
