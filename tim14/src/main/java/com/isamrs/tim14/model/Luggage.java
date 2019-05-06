@@ -27,10 +27,10 @@ public class Luggage {
 
 	@Column(name = "dimensions")
 	private String dimensions;
-	
+
 	@Column(name = "price")
 	private Double price;
-	
+
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "airline_id")
 	@JsonIgnoreProperties("luggagePricelist")
