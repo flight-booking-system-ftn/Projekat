@@ -29,6 +29,10 @@ $(document).ready(function(){
     $(document).on('click','#addRoomBtn',function(){
         $(location).attr('href',"/room.html");
     });
+    
+    $(document).on('click','#defineLuggagePricelistBtn',function(){
+        $(location).attr('href',"/luggagePricelist.html");
+    });
 
     $(document).on('click','#addAirlineAdminBtn',function(){
         $(location).attr('href',"/newAirlineAdmin.html");
