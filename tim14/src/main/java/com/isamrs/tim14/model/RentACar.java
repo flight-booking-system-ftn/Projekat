@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "rent_a_car")
 public class RentACar {
@@ -28,28 +30,28 @@ public class RentACar {
 	private String name;
 	
 	@JoinColumn(name = "destination_id")
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	private Destination destination;
 	
 	@Column(name = "description")
 	private String description;
 	
-	@ElementCollection(targetClass = RentACarService.class)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "rentACar")
+	@JsonIgnoreProperties("rentACar")
 	private Set<RentACarService> services;
 	
-	@ElementCollection(targetClass = Vehicle.class)
-	private Set<Vehicle> vehicles;
-	
-	@ElementCollection(targetClass = BranchOffice.class)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "rent_a_car_id")
 	private Set<BranchOffice> offices;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
 	private Set<Grade> grades;
 	
-	@ElementCollection(targetClass = RentACarAdmin.class)
+	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "rentACar")
+	@JsonIgnoreProperties("rentACar")
 	private Set<RentACarAdmin> admins;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "rent_a_car_id")
 	private Set<VehicleReservation> reservations;
 
@@ -97,13 +99,6 @@ public class RentACar {
 		this.services = services;
 	}
 
-	public Set<Vehicle> getVehicles() {
-		return vehicles;
-	}
-
-	public void setVehicles(Set<Vehicle> vehicles) {
-		this.vehicles = vehicles;
-	}
 
 	public Set<BranchOffice> getOffices() {
 		return offices;

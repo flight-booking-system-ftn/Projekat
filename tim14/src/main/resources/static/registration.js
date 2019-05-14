@@ -1,8 +1,9 @@
 $(document).ready(function() {
 	$(document).on('submit', "#registrationForm", function(e) {
+	e.preventDefault();
+	
     var check = true;
     $(".field").each(function() {
-        console.log($(this));
         if($(this).val() == ""){
             check = false;
             return false;
@@ -26,7 +27,7 @@ $(document).ready(function() {
         var email = $(".field").eq(7).val();
         $.ajax({
 			type : 'POST',
-			url : "/registeredUsers",
+			url : "/auth/registration",
 			contentType : 'application/json',
 			dataType : "text",
 			data : JSON.stringify({
@@ -49,8 +50,8 @@ $(document).ready(function() {
 			success : function(data) {
 				$(location).attr('href',"/");
 			},
-        	error : function(){
-        		console.log("a")
+        	error : function(err){
+        		console.log("Error", err);
         	}
 		});
     }})})

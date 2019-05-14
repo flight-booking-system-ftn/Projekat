@@ -1,7 +1,5 @@
 package com.isamrs.tim14.service;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.isamrs.tim14.model.AirlineAdmin;
-import com.isamrs.tim14.model.HotelAdmin;
-import com.isamrs.tim14.model.RegisteredUser;
-import com.isamrs.tim14.model.RentACarAdmin;
-import com.isamrs.tim14.model.SystemAdmin;
 import com.isamrs.tim14.model.User;
-import com.isamrs.tim14.repository.IAirlineAdminRepository;
-import com.isamrs.tim14.repository.IHotelAdminRepository;
-import com.isamrs.tim14.repository.IRegistrationRepository;
-import com.isamrs.tim14.repository.IRentACarAdminRepository;
-import com.isamrs.tim14.repository.ISystemAdminRepository;
+import com.isamrs.tim14.repository.IUserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -33,19 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	protected final Log LOGGER = LogFactory.getLog(getClass());
 
 	@Autowired
-	private IHotelAdminRepository hotelAdminRepository;
-	
-	@Autowired
-	private IRentACarAdminRepository rentACarAdminRepository;
-	
-	@Autowired
-	private IAirlineAdminRepository airlineAdminRepository;
-	
-	@Autowired
-	private IRegistrationRepository registeredUserRepository;
-	
-	@Autowired
-	private ISystemAdminRepository systemAdminRepository;
+	private IUserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -56,53 +33,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 	// Funkcija koja na osnovu username-a iz baze vraca objekat User-a
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
-		List<RegisteredUser> users = registeredUserRepository.findAll();
-		if (users != null) {
-			for(User u : users) {
-				if(u.getUsername().equals(username)) {
-					return u;
-					}
-				}
-			}
-		
-		List<HotelAdmin> hotelAdmins = hotelAdminRepository.findAll();
-		if (hotelAdmins != null) {
-			for(User u : hotelAdmins) {
-				if(u.getUsername().equals(username)) {
-					return u;
-					}
-				}
-			}
-		List<AirlineAdmin> airlineAdmins = airlineAdminRepository.findAll();
-		if (airlineAdmins != null) {
-			for(User u : airlineAdmins) {
-				if(u.getUsername().equals(username)) {
-					return u;
-					}
-				}
-			}
-		
-		List<RentACarAdmin> rentAdmin = rentACarAdminRepository.findAll();
-		if (rentAdmin != null) {
-			for(User u : rentAdmin) {
-				if(u.getUsername().equals(username)) {
-					return u;
-					}
-				}
-			}
-		
-		List<SystemAdmin> sysAdmin = systemAdminRepository.findAll();
-		if (sysAdmin != null) {
-			for(User u : sysAdmin) {
-				if(u.getUsername().equals(username)) {
-					return u;
-					}
-				}
-			}
-		
-		
-		throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
+		UserDetails u =  userRepository.findByUsername(username);
+		if(u!= null)
+			return u;
+		else
+			throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
 	}
 	
 	
@@ -110,6 +45,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 		return this.passwordEncoder.encode(password);
 	}
 	
+	public boolean saveUser(User ru) {
+		try {
+			this.userRepository.save(ru);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
 	
 	// Funkcija pomocu koje korisnik menja svoju lozinku
 	public void changePassword(String oldPassword, String newPassword) {
@@ -137,4 +80,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 		//userRepository.save(user);
 
 	}
+	
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+	
+	public User findByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
 }

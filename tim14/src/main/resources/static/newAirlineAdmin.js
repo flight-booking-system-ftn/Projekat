@@ -42,7 +42,8 @@ $(document).ready(function(){
                     contentType: "application/json; charset=utf-8;",
                     dataType: "text",
                     success: function(data){
-                        $(location).attr('href',"/");
+                        //$(location).attr('href',"/");
+                    	
                     },
             		error: function (jqXHR, exception) {
             			var msg = '';

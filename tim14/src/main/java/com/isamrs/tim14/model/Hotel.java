@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "hotel")
 public class Hotel {
@@ -27,7 +29,6 @@ public class Hotel {
 	@Column(name = "name")
 	private String name;
 	
-	
     @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
     @JoinColumn(name = "destination_id")
     private Destination destination;
@@ -36,9 +37,11 @@ public class Hotel {
 	private String description;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
+	@JsonIgnoreProperties("hotel")
 	private Set<HotelService> services;
 	
-	@ElementCollection(targetClass = Room.class)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
+	@JsonIgnoreProperties("hotel")
 	private Set<Room> rooms;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
@@ -48,7 +51,8 @@ public class Hotel {
 	@JoinColumn(name = "hotel_id")
 	private Set<RoomReservation> reservations;
 	
-	@ElementCollection(targetClass = HotelAdmin.class)
+	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "hotel")
+	@JsonIgnoreProperties("hotel")
 	private Set<HotelAdmin> admins;
 
 	public Hotel() {

@@ -10,9 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "room")
@@ -35,17 +39,19 @@ public class Room {
 	@Column(name = "price")
 	private Double price;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "room_id")
 	private Set<Grade> grades;
 	
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
+	@JsonIgnoreProperties("rooms")
 	private Hotel hotel;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "room_id")
-	private Set<ReservationInterval> priceIntervals;
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "rooms_reservations", joinColumns = { @JoinColumn(name = "room_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "reservation_id") })
+	private Set<RoomReservation> reservations;
 
 	public Room() {
 		super();
@@ -107,12 +113,13 @@ public class Room {
 		this.hotel = hotel;
 	}
 
-	public Set<ReservationInterval> getPriceIntervals() {
-		return priceIntervals;
+	public Set<RoomReservation> getReservations() {
+		return reservations;
 	}
 
-	public void setPriceIntervals(Set<ReservationInterval> priceIntervals) {
-		this.priceIntervals = priceIntervals;
+	public void setReservations(Set<RoomReservation> reservations) {
+		this.reservations = reservations;
 	}
-
+	
+	
 }

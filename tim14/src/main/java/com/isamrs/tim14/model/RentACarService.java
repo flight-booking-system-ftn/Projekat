@@ -6,12 +6,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "rent_a_car_service")
 public class RentACarService extends Service {
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rent_a_car_id")
+	@JsonIgnoreProperties("services")
 	private RentACar rentACar;
 
 	public RentACarService() {
