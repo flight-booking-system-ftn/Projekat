@@ -15,5 +15,5 @@ public interface HotelDAO {
 	
 	public void deleteHotel(int id);
 	
-	public List<Hotel> getHotelsSearch(String search);
+	public List<Hotel> getHotelsSearch(String hotelName, String hotelDestination, String checkIn, String checkOut);
 }
