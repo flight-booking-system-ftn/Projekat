@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Hotel;
+import com.isamrs.tim14.model.HotelService;
 
 @Repository
 public class HotelDAOImpl implements HotelDAO {
@@ -35,8 +36,10 @@ public class HotelDAOImpl implements HotelDAO {
 		Query query = entityManager.createQuery("SELECT h FROM Hotel h WHERE lower(h.name) LIKE :hotelName");
 		query.setParameter("hotelName", hotel.getName());
 		List<Hotel> result = query.getResultList();
-
 		if (result.size() == 0) {
+			for(HotelService hs : hotel.getServices()) {
+				hs.setHotel(hotel);
+			}
 			entityManager.persist(hotel);
 			return hotel;
 		} else {

@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -52,11 +54,12 @@ public class Vehicle {
 	private Double price;
 	
 	@JoinColumn(name = "vehicle_id")
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Grade> grades;
 	
-	@JoinColumn(name = "vehicle_id")
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "vehicles_reservations", joinColumns = { @JoinColumn(name = "vehicle_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "reservation_id") })
 	private Set<VehicleReservation> reservations;
 
 	public Vehicle() {
@@ -150,9 +153,6 @@ public class Vehicle {
 	public void setReservations(Set<VehicleReservation> reservations) {
 		this.reservations = reservations;
 	}
-	
-	
-	
 	
 
 }

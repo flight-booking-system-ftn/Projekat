@@ -26,6 +26,11 @@ $(document).ready(function(){
         $(location).attr('href',"/login.html");
     });
     
+    $(document).on('click','#registrationBtn',function(){
+    	console.log("SDASD");
+        $(location).attr('href',"/registration.html");
+    });
+    
     $(document).on('click','#addRoomBtn',function(){
         $(location).attr('href',"/room.html");
     });

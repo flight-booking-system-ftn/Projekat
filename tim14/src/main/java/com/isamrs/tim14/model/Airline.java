@@ -31,8 +31,8 @@ public class Airline {
 	private String name;
 
 	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "address_id")
-	private Destination address;
+	@JoinColumn(name = "destination_id")
+	private Destination destination;
 
 	@Column(name = "description")
 	private String description;
@@ -84,12 +84,12 @@ public class Airline {
 		this.name = name;
 	}
 
-	public Destination getAddress() {
-		return address;
+	public Destination getDestination() {
+		return destination;
 	}
 
-	public void setAddress(Destination address) {
-		this.address = address;
+	public void setDestination(Destination destination) {
+		this.destination = destination;
 	}
 
 	public String getDescription() {

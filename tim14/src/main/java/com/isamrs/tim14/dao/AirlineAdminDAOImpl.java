@@ -1,5 +1,6 @@
 package com.isamrs.tim14.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.AirlineAdmin;
+import com.isamrs.tim14.model.Authority;
+import com.isamrs.tim14.model.User;
+import com.isamrs.tim14.model.UserType;
 import com.isamrs.tim14.service.CustomUserDetailsService;
 
 @Repository
@@ -29,7 +33,7 @@ public class AirlineAdminDAOImpl implements AirlineAdminDAO{
 	@Override
 	@Transactional
 	public List<AirlineAdmin> getAirlineAdmins() {
-		Query query = entityManager.createQuery("SELECT a FROM AirlineAdmin a");
+		Query query = entityManager.createQuery("SELECT a FROM User a");
 		List<AirlineAdmin> result = query.getResultList();
 		return result;
 	}
@@ -37,14 +41,17 @@ public class AirlineAdminDAOImpl implements AirlineAdminDAO{
 	@Override
 	@Transactional
 	public AirlineAdmin save(AirlineAdmin airlineAdmin) {
-		Query query = entityManager.createQuery("SELECT a FROM AirlineAdmin a WHERE lower(a.username) LIKE :aUsername OR lower(a.email) LIKE :aEmail");
+		Query query = entityManager.createQuery("SELECT a FROM User a WHERE lower(a.username) LIKE :aUsername OR lower(a.email) LIKE :aEmail");
 		query.setParameter("aUsername", airlineAdmin.getUsername());
 		query.setParameter("aEmail", airlineAdmin.getEmail());
-		List<AirlineAdmin> result = query.getResultList();
-		System.out.println("Result: " + result);
-		System.out.println("Admin: " + airlineAdmin);
+		List<User> result = query.getResultList();
 		
 		if(result.size() == 0) {
+			List<Authority> authorities = new ArrayList<Authority>();
+			Authority a = new Authority();
+			a.setUserType(UserType.ROLE_AIRLINEADMIN);
+			authorities.add(a);
+			airlineAdmin.setAuthorities(authorities);
 			airlineAdmin.setPassword(customService.encodePassword(airlineAdmin.getPassword()));
 			entityManager.persist(airlineAdmin);
 			return airlineAdmin;
@@ -56,7 +63,7 @@ public class AirlineAdminDAOImpl implements AirlineAdminDAO{
 	@Override
 	@Transactional
 	public AirlineAdmin getAirlineAdmin(int id) {
-		Query query = entityManager.createQuery("SELECT a FROM AirlineAdmin a WHERE a.id = :aId");
+		Query query = entityManager.createQuery("SELECT a FROM User a WHERE a.id = :aId");
 		query.setParameter("aId",id);
 		List<AirlineAdmin> result = query.getResultList();
 		

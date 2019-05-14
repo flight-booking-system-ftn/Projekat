@@ -1,14 +1,18 @@
 package com.isamrs.tim14.model;
 
+import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -22,16 +26,18 @@ public class VehicleReservation {
 	@Column(name = "id")
 	private Integer id;
 	
-	@JoinColumn(name = "interval_id")
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	private ReservationInterval interval;
+	@Column(name = "start")
+	private Date start;
 	
-	@JoinColumn(name = "vehicle_reservation_id")
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	private Vehicle vehicle;
+	@Column(name = "end")
+	private Date end;
 	
-	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "vehicle_reservation_id")
+	@ManyToMany(mappedBy = "reservations")
+	private Set<Vehicle> vehicle;
+	
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "vehicles_services", joinColumns = { @JoinColumn(name = "reservation_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "service_id") })
 	private Set<RentACarService> services;
 
 	public VehicleReservation() {
@@ -46,19 +52,28 @@ public class VehicleReservation {
 		this.id = id;
 	}
 
-	public ReservationInterval getInterval() {
-		return interval;
+	public Date getStart() {
+		return start;
 	}
 
-	public void setInterval(ReservationInterval interval) {
-		this.interval = interval;
+	public void setStart(Date start) {
+		this.start = start;
 	}
 
-	public Vehicle getVehicle() {
+	public Date getEnd() {
+		return end;
+	}
+
+	public void setEnd(Date end) {
+		this.end = end;
+	}
+
+
+	public Set<Vehicle> getVehicle() {
 		return vehicle;
 	}
 
-	public void setVehicle(Vehicle vehicle) {
+	public void setVehicle(Set<Vehicle> vehicle) {
 		this.vehicle = vehicle;
 	}
 
