@@ -103,11 +103,11 @@ var renderRoomTable = function(hotelId, arrivalDate, numDays, TwoBedRooms, Three
     $.get('/api/roomsSearch'+text, function(RoomData){
             console.log("Rooms: ", RoomData);
             var rooms = RoomData;
-            $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Bed number</th></tr>`);
+            $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th></tr>`);
             for(var i=0;i<rooms.length;i++){
                 var red = rooms[i];
                 checkBoxID = "roomCheckbox"+ red.id;
-                $('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td></tr>`);
+                $('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price*numDays}</td></tr>`);
             }
         });
 }
