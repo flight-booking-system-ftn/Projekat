@@ -89,13 +89,27 @@ $(document).ready(function(){
                 $('#pDestinationOfChosenHotel').text(data.destination.name +
                     ", " + data.destination.country);
                 $('#roomSearchArrivalDate').val(formatDate(new Date()));
-                $('#dialogHotelView').css("display","block");
+                renderHotelServiceTable(message);
             });
         }
     });
     
 
 });
+
+var renderHotelServiceTable = function(hotelId){
+    $.get('/api/hotelServicesSearch/'+hotelId, function(servicesData){
+        console.log("Hotel Services: ", servicesData);
+        var services = servicesData;
+        $('#selectedHotelServicesTable').html(`<tr><th>Name</th><th>Price</th><th>Select</th></tr>`);
+        for(var i=0;i<services.length;i++){
+            var red = services[i];
+            checkBoxID = "hotelServiceCheckbox"+ red.id;
+            $('#selectedHotelServicesTable tr:last').after(`<tr><td>${red.name}</td><td>${red.price}</td><td><input type="checkbox" id=${checkBoxID}></td></tr>`);
+        }
+        $('#dialogHotelView').css("display","block");
+    });
+}
 
 var renderRoomTable = function(hotelId, arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms){
     var text = `/${hotelId}/${arrivalDate}/${numDays}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
