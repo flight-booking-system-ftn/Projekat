@@ -41,12 +41,17 @@ public class RoomRest {
 	}
 	
 	@RequestMapping(
-			value = "/roomsSearch/{hotelId}",
+			value = "/roomsSearch/{hotelId}/{arriveDate}/{dayNum}/{twoBed}/{threeBed}/{fourBed}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Room>> getRoomSearch(@PathVariable String hotelId){
+	public ResponseEntity<Collection<Room>> getRoomSearch(@PathVariable String hotelId, @PathVariable String arriveDate, @PathVariable String dayNum, @PathVariable String twoBed, 
+			@PathVariable String threeBed, @PathVariable String fourBed){
 		int id = Integer.parseInt(hotelId);
-		Collection<Room> rooms = roomDAO.getRoomsSearch(id);
+		int numberOfDays = Integer.parseInt(dayNum);
+		boolean twoBeds = (twoBed.equals("true")) ? true: false;
+		boolean threeBeds = (threeBed.equals("true")) ? true: false;
+		boolean fourBeds = (fourBed.equals("true")) ? true: false;
+		Collection<Room> rooms = roomDAO.getRoomsSearch(id, arriveDate, numberOfDays, twoBeds, threeBeds, fourBeds);
 		
 		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
 	}
