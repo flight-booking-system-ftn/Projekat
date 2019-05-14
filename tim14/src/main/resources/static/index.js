@@ -60,6 +60,18 @@ $(document).ready(function(){
         renderRentACarTableSearch();
     });
     
+    $(document).on('click','#roomSearchBtn', function(){
+        var hotelId = $('#hotelIdField').val();
+        var arrivalDate = $('#roomSearchArrivalDate').val();
+        var numDays = $('#roomSearchDayNumber').val();
+        var TwoBedRooms = $('#roomSearch2Bed').prop('checked');
+        var ThreeBedRooms = $('#roomSearch3Bed').prop('checked');
+        var FourBedRooms = $('#roomSearch4Bed').prop('checked');
+        console.log('Hotel id: ', hotelId ,'....', arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms);
+
+        renderRoomTable(hotelId, arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms);
+    });
+    
     
     $(document).on('click','#quitDialogHotelView',function(){
         $('#dialogHotelView').css("display","none");
@@ -71,26 +83,34 @@ $(document).ready(function(){
             console.log("PORUKA JE ", message);
             $.get('/api/hotels/'+ message, function(data){
                 console.log("MY DATA: ", data);
+                $('#hotelIdField').val(message);
                 $('#pNameOfChosenHotel').text(data.name);
                 $('#pDescriptionOfChosenHotel').text(data.description);
                 $('#pDestinationOfChosenHotel').text(data.destination.name +
                     ", " + data.destination.country);
-                $.get('/api/roomsSearch/'+data.id, function(RoomData){
-                    console.log("Rooms: ", RoomData);
-                    var rooms = RoomData;
-                    $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Price</th></tr>`);
-                    for(var i=0;i<rooms.length;i++){
-                        var red = rooms[i];
-                        $('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>${red.price}</td></tr>`);
-                    }
-                    $('#dialogHotelView').css("display","block");
-                });
+                $('#roomSearchArrivalDate').val(formatDate(new Date()));
+                $('#dialogHotelView').css("display","block");
             });
         }
     });
     
 
 });
+
+var renderRoomTable = function(hotelId, arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms){
+    var text = `/${hotelId}/${arrivalDate}/${numDays}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
+    console.log(text);
+    $.get('/api/roomsSearch'+text, function(RoomData){
+            console.log("Rooms: ", RoomData);
+            var rooms = RoomData;
+            $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Bed number</th></tr>`);
+            for(var i=0;i<rooms.length;i++){
+                var red = rooms[i];
+                checkBoxID = "roomCheckbox"+ red.id;
+                $('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td></tr>`);
+            }
+        });
+}
 
 var renderAirlineTable = function(){
     $('#airlineTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
@@ -187,4 +207,16 @@ var renderRentACarTableSearch = function(){
             $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
         }
     }); 
+}
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
 }
