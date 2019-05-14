@@ -59,10 +59,14 @@
 	</div>
 	
 	<div class="VelikiPregled">
-        <h1>Hotels: </h1> <input type="text" id="hotelSearchInput"> <button id="hotelSearchBtn" value="Search hotels">Search</button>
+        <h1>Hotels: </h1> <input type="text" id="hotelNameSearchInput" placeholder="Hotel name">
+        <input type="text" id="hotelDestinationSearchInput" placeholder="Hotel destination">
+        <input type="text" placeholder="Check in" id="hotelSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+        <input type="text" placeholder="Check out" id="hotelSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
+         <button id="hotelSearchBtn" value="Search hotels">Search</button>
 		<br><br>
 		<table id="hotelTable">
-            <tr><th>Name</th><th>Description</th><th></th></tr>
+            <tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>
         </table>
 	</div>
 	

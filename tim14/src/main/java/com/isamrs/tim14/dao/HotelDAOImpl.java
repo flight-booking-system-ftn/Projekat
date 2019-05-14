@@ -69,9 +69,17 @@ public class HotelDAOImpl implements HotelDAO {
 
 	@Override
 	@Transactional
-	public List<Hotel> getHotelsSearch(String search) {
-		Query query = entityManager.createQuery("SELECT hot FROM Hotel hot WHERE hot.name LIKE :hotelName");
-		query.setParameter("hotelName", "%" + search + "%");
+	public List<Hotel> getHotelsSearch(String hotelName, String hotelDestination, String checkIn, String checkOut) {
+		
+		if(hotelName.equals("NO_INPUT")) {
+			hotelName = "";
+		}
+		if(hotelDestination.equals("NO_INPUT")) {
+			hotelDestination = "";
+		}
+		Query query = entityManager.createQuery("SELECT hot FROM Hotel hot WHERE hot.name LIKE :hotelName AND hot.destination.name LIKE :hotelDestination");
+		query.setParameter("hotelName", "%" + hotelName + "%");
+		query.setParameter("hotelDestination", "%" + hotelDestination + "%");
 		List<Hotel> result = query.getResultList();
 		return result;
 	}

@@ -120,30 +120,44 @@ var renderAirlineTableSearch = function(){
 }
 
 var renderHotelTable = function(){
-    $('#hotelTable').html(`<tr><th>Name</th><th>Description</th><th></th></tr>`);
+	$('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
     $.get("/api/hotels", function(data){
         console.log("Hotels: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
             var btnID = "hotelDetailViewBtn" + red.id;
-            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td><td><button id=${btnID}>More details</button></td></tr>`);
+            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td> - </td><td><button id=${btnID}>More details</button></td></tr>`);
         }
     });
 }
 
 var renderHotelTableSearch = function(){
-    var text = $('#hotelSearchInput').val();
-    if(text == ""){
-        renderHotelTable();
-        return;
+    var hotelName = $('#hotelNameSearchInput').val();
+    var hotelDestination = $('#hotelDestinationSearchInput').val();
+    var checkIn = $('#hotelSearchCheckIn').val();
+    var checkOut = $('#hotelSearchCheckOut').val();
+    
+    console.log(checkIn, checkOut);
+    if(hotelName == ""){
+        hotelName = "NO_INPUT";
     }
-    $('#hotelTable').html(`<tr><th>Name</th><th>Description</th><th></th></tr>`);
+    if(hotelDestination == ""){
+        hotelDestination = "NO_INPUT";
+    }
+    if(checkIn == ""){
+        checkIn = "NO_INPUT";
+    }
+    if(checkOut == ""){
+        checkOut = "NO_INPUT";
+    }
+    text = hotelName+"/"+hotelDestination+"/"+checkIn+"/"+checkOut;
+    $('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
     $.get('/api/hotelsSearch/'+text, function(data){
         console.log("Hotels: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
             var btnID = "hotelDetailViewBtn" + red.id;
-            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td><td><button id=${btnID}>More details</button></td></tr>`);
+            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td><button id=${btnID}>More details</button></td></tr>`);
         }
     });
 }

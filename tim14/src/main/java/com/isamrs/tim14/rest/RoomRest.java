@@ -33,6 +33,7 @@ public class RoomRest {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Room> saveRoom(@RequestBody Room room) {
 		Room newRoom = roomDAO.save(room);
+
 		if(newRoom == null) {
 			return new ResponseEntity<Room>(HttpStatus.NOT_FOUND);
 		}

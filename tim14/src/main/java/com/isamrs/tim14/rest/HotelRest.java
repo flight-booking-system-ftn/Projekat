@@ -39,12 +39,12 @@ public class HotelRest {
 	
 
 	@RequestMapping(
-			value = "/hotelsSearch/{hotelName}",
+			value = "/hotelsSearch/{hotelName}/{hotelDestination}/{checkIn}/{checkOut}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Hotel>> getHotelsSearch(@PathVariable String hotelName){
-		
-		Collection<Hotel> hotels = hotelDAO.getHotelsSearch(hotelName);
+	public ResponseEntity<Collection<Hotel>> getHotelsSearch(@PathVariable String hotelName, @PathVariable String hotelDestination, @PathVariable String checkIn, @PathVariable String checkOut){
+		System.out.println(hotelName + " " + hotelDestination + " " + checkIn + " " + checkOut);
+		Collection<Hotel> hotels = hotelDAO.getHotelsSearch(hotelName, hotelDestination, checkIn, checkOut);
 		
 		return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
 	}
