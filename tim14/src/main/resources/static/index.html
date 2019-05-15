@@ -159,6 +159,54 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="VelikiPregled">
+        <h1>Search</h1>
+        <br>
+        <form id="searchFlightsForm">
+        	<table>
+        		<tr>
+        			<td>
+	        			<select id="tripType">
+	        				<option selected="selected">One-way</option>
+	        				<option>Round trip</option>
+	        				<option>Multi-city</option>
+	        			</select>
+        			</td>
+        			<td>Number of passengers <input type="number" id="passengers" value="1" min="1" title="Number of passengers"></td>
+        			<td>
+        				<select id="seatClass">
+	        				<option selected="selected">Economy</option>
+	        				<option>Business</option>
+	        				<option>First Class</option>
+	        			</select>
+        			</td>
+        			<td>Bags <input type="number" id="bags" value="0" min="0"></td>
+        		</tr>
+        		<tr id="1">
+        			<td>From <select id="from" title="Where from?"></select></td> <td>To <select id="to" title="Where to?"></select></td> <td>Departure date <input type="date" id="departureDate" title="Departure date"></td>
+        		</tr>
+        		<tr><td><input type="submit" value="Search"></td></tr>
+        	</table>
+        </form>
+        
+        <br><br><br>
+        
+        <table id="searchResultTable">
+        	<caption style="color: white;">Flights</caption>
+        	<thead>
+        		<tr><th>Times</th> <th>Travel time</th> <th>Stops</th> <th>Airline</th> <th>Price</th> <th>Action</th></tr>
+        	</thead>
+        	<tbody></tbody>
+        </table>
+        
+        <div id='reservationSeatsModal' class='modal'>
+        	<div class='modal-content'><h4>Choose seats</h4>
+        		<div id="seatsDiv" style="text-align: center; margin-top: 50px;"></div>
+        		<div id="passengersFormDiv" style="float: right;"></div>
+        	</div>
+        </div>
+	</div>
 </body>
 
 </html>
