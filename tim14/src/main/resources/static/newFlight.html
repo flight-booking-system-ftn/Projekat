@@ -4,61 +4,62 @@
 <head>
     <meta charset="UTF-8">
     <title>New flight</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="snackbar.css">
     <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="snackbar.js"></script>
     <script type="text/javascript" src="newFlight.js"></script>
 </head>
 
 <body>
     <h2>New flight</h2>
     <form id="newFlightForm">
-        <table>
+        <table id="newFlightTable">
             <tr>
-                <td>Departure date</td>
-                <td><input type="date" id="departureDate"></td>
+                <td>From:</td>
+                <td><select id="from"></select></td>
             </tr>
             <tr>
-                <td>Return date</td>
-                <td><input type="date" id="returnDate"></td>
+                <td>To:</td>
+                <td><select id="to"></select></td>
             </tr>
             <tr>
-                <td>Flight time</td>
-                <td><input type="number" id="flightTime" step="1" min="0" pattern="[0-9]"></td>
+                <td>Stops:</td>
+                <td><div id="stopsDiv" style="overflow-y: scroll; height: 40px;"></div></td>
             </tr>
             <tr>
-                <td>Flight length</td>
-                <td><input type="number" id="flightLength" step="1" min="0" pattern="[0-9]"></td>
+                <td>Departure date:</td>
+                <td><input type="datetime-local" id="departureDate"></td>
             </tr>
             <tr>
-                <td>Stop number</td>
-                <td><input type="number" id="stopNumber" step="1" min="0" pattern="[0-9]"></td>
+                <td>Arrival date:</td>
+                <td><input type="datetime-local" id="arrivalDate"></td>
             </tr>
             <tr>
-                <td>Number of business class seats</td>
-                <td><input type="number" id="businessClassSeats" step="1" min="0" pattern="[0-9]"></td>
+            	<td>Length:</td>
+            	<td><input type="number" min="1" id="length"></td>
             </tr>
             <tr>
-                <td>Number of economy class seats</td>
-                <td><input type="number" id="economyClassSeats" step="1" min="0" pattern="[0-9]"></td>
+            	<td>Rows in first class:</td>
+            	<td><input type="number" min="0" id="rowsInFirstClass"></td>
             </tr>
             <tr>
-                <td>Number of first class seats</td>
-                <td><input type="number" id="firstClassSeats" step="1" min="0" pattern="[0-9]"></td>
+            	<td>Rows in business class:</td>
+            	<td><input type="number" min="0" id="rowsInBusinessClass"></td>
             </tr>
             <tr>
-                <td>Business ticket price</td>
-                <td><input type="number" id="businessTicketPrice" step="0.1" min="0" pattern="[0-9].[0-9]"></td>
+            	<td>Rows in economy class:</td>
+            	<td><input type="number" min="0" id="rowsInEconomyClass"></td>
             </tr>
             <tr>
-                <td>Economy ticket price</td>
-                <td><input type="number" id="economyTicketPrice" step="0.1" min="0" pattern="[0-9].[0-9]"></td>
+            	<td>Bags per person:</td>
+            	<td><input type="number" min="0" id="luggageQuantity"></td>
             </tr>
             <tr>
-                <td>First ticket price</td>
-                <td><input type="number" id="firstTicketPrice" step="0.1" min="0" pattern="[0-9].[0-9]"></td>
+            	<td>Ticket price:</td>
+            	<td><input type="number" min="1" id="ticketPrice"></td>
             </tr>
             <tr>
-                <td></td>
-                <td><input type="submit" value="Add"></td>
+            	<td></td><td><input type="submit" value="Add"></td>
             </tr>
         </table>
     </form>

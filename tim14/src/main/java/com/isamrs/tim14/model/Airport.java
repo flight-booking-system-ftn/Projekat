@@ -1,10 +1,14 @@
 package com.isamrs.tim14.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,8 +23,9 @@ public class Airport {
 	@Column(name = "name")
 	private String name;
 
-	@Column(name = "address")
-	private String address;
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "destination_id")
+	private Destination destination;
 
 	public Airport() {
 		super();
@@ -42,12 +47,12 @@ public class Airport {
 		this.name = name;
 	}
 
-	public String getAddress() {
-		return address;
+	public Destination getDestination() {
+		return destination;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setDestination(Destination destination) {
+		this.destination = destination;
 	}
 
 }

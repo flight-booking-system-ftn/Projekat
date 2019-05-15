@@ -3,8 +3,11 @@
 
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" media="screen" href="modal.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="snackbar.css">
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="snackbar.js"></script>
 	<script type="text/javascript" src="index.js"></script>
 </head>
 
@@ -135,7 +138,27 @@
         </table>
     </div>
 	
-
+	<div class="VelikiPregled">
+		<h2 style="color: white;">Flights</h2>
+		<table id="flightsTable" border="1">
+			<thead>
+				<tr><th>Trip type</th> <th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Return departure date</th> <th>Return arrival date</th> <th>Bags</th> <th>Ticket price</th> <th>Actions</th></tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<br>
+		
+		<div id='editSeatsModal' class='modal'>
+			<div class='modal-content'>
+				<h4>Edit seats</h4>
+				<span class='close'>&times;</span>
+				<div id="seatsTableDiv"></div> <br>
+				<input type='button' id='toggleSeat' value='Enable/Disable' disabled> &nbsp;&nbsp;&nbsp;
+				<input type='button' id='deleteSeat' value='Delete' disabled>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

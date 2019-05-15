@@ -10,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -36,11 +34,6 @@ public class Airline {
 
 	@Column(name = "description")
 	private String description;
-
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
-	@JoinTable(name = "airline_airport", joinColumns = { @JoinColumn(name = "airline_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "airport_id") })
-	private Set<Airport> airports;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
@@ -98,14 +91,6 @@ public class Airline {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Set<Airport> getAirports() {
-		return airports;
-	}
-
-	public void setAirports(Set<Airport> airports) {
-		this.airports = airports;
 	}
 
 	public Set<Flight> getFlights() {
