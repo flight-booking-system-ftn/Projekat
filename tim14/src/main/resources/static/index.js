@@ -158,38 +158,6 @@ $(document).ready(function(){
 			contentType: "text/html; charset=utf-8",
 			dataType: "json",
 			success: function(data) {
-				/*var table = $("<table id='seats' border='5px solid gray' width='100%' height='500px'></table>");
-				var tr = $("<tr></tr>");
-				
-				$.each(data, function(index, seat) {
-					var bgcolor;
-					if(seat.enabled == false)
-						bgcolor = "#a3a3a3";
-					else if(seat.busy == true)
-						bgcolor = "#ff0000";
-					else if(seat.type == "FIRST_CLASS")
-						bgcolor = "#fffc77";
-					else if(seat.type == "BUSINESS")
-						bgcolor = "#77c8ff";
-					else
-						bgcolor = "#b8ff82";
-					
-					var td = $("<td bgcolor='" + bgcolor + "'><input type='hidden' value='" + seat.id + "'></td>");
-					tr.append(td);
-					
-					if(index % 3 == 2) {
-						table.append(tr);
-						
-						tr = $("<tr></tr>");
-					}
-				});
-				
-				if(tr.children().length > 0) {
-					table.append(tr);
-				}
-				
-				seatsTableDiv.append(table);
-				$("div.modal").show();*/
 				
 				seatsTableDiv.css("height", ((data.length / 3) * 55) + "px");
 				$.each(data, function(index, seat) {
@@ -285,6 +253,205 @@ $(document).ready(function(){
 				showMessage("Reserved seat can't be deleted.", "red");
 			}
 		});
+	});
+	
+	getAirports();
+    
+    function getAirports() {
+    	$.ajax({
+    		type: "GET",
+    		url: "/airport/all",
+    		success: function(data) {
+    			var fromSelect = $("select#from");
+    			var toSelect = $("select#to");
+    			
+    			$.each(data, function(index, airport) {
+    	    		var fromOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
+    	    		var toOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
+    	    		
+    	    		fromSelect.append(fromOption);
+    	    		toSelect.append(toOption);
+    	    	});
+    		}
+    	});
+    }
+    
+    $("select#tripType").change(function() {
+    	var selected = $(this).find("option:selected").text();
+    	
+    	if(selected == "Round trip") {
+    		var returnDate = $("<td id='returnDateTD'>Return date <input type='date' id='returnDate' title='Return date'></td>");
+    		var tr = $("#searchFlightsForm table tr#1");
+    		
+    		tr.append(returnDate);
+    	} else if(selected == "One-way") {
+    		$("td#returnDateTD").remove();
+    	}
+    });
+    
+    $("form#searchFlightsForm").submit(function(e) {
+    	e.preventDefault();
+    	
+    	var tripType = $("select#tripType").find(":selected").text();
+    	var passengers = $("input#passengers").val();
+    	var seatClass = $("select#seatClass").find(":selected").text();
+    	var bags = $("input#bags").val();
+    	var from = $("select#from").find(":selected");
+    	var to = $("select#to").find(":selected");
+    	var departureDate = new Date($("input#departureDate").val());
+    	var returnDate = new Date($("input#returnDate").val());
+    	
+    	if(passengers == "" || bags == "" || departureDate == "" || (tripType == "Round trip" && returnDate == "")) {
+    		showMessage("Some fields are empty!", "red");
+			return;
+    	} else if(from.text() == to.text()) {
+    		showMessage("Destination can't be the same as starting point!", "red");
+    		return;
+    	} else if(departureDate - new Date() < 0) {
+    		showMessage("The departure date can't be before current date!", "red");
+			return;
+    	} else if(tripType == "Round trip" && returnDate - departureDate < 0) {
+    		showMessage("The return date can't be before departure date!", "red");
+    		return;
+    	}
+    	
+    	var search = {
+    		"tripType": tripType,
+    		"passengers": parseInt(passengers),
+    		"seatClass": seatClass,
+    		"bags": parseInt(bags),
+    		"from": {
+    			"id": parseInt(from.attr("id"))
+    		},
+    		"to": {
+    			"id": parseInt(to.attr("id"))
+    		},
+    		"departureDate": departureDate,
+    		"returnDate": (tripType == "Round trip" ? returnDate : null)
+    	}
+    	
+    	$.ajax({
+    		type: "POST",
+    		url: "/flight/search",
+    		contentType: "application/json",
+    		data: JSON.stringify(search),
+    		dataType: "json",
+    		success: function(data) {
+    			var table = $("table#searchResultTable tbody");
+    			
+    			table.empty();
+    			
+    			$.each(data, function(index, flight) {
+    				
+    				var departureDate = new Date(flight.departureDate);
+    				var arrivalDate = new Date(flight.arrivalDate);
+    				
+    				var times = $("<td>" + departureDate.getHours() + ":" + departureDate.getMinutes() + " - " + arrivalDate.getHours() + ":" + arrivalDate.getMinutes() + "</td>")
+    				var travelTime = $("<td>" + flight.flightDuration + "</td>");
+    				var stops = $("<td>" + flight.stops.length + "</td>");
+    				var airline = $("<td>" + flight.airline.name + "</td>");
+    				var price = $("<td>" + flight.ticketPrice + "</td>");
+    				var action = $("<td><input type='button' value='Select flight' class='select'></td>");
+    				
+    				var tr = $("<tr id='" + flight.id + "'></tr>");
+    				
+    				tr.append(times);
+    				tr.append(travelTime);
+    				tr.append(stops);
+    				tr.append(airline);
+    				tr.append(price);
+    				tr.append(action);
+    				
+    				table.append(tr);
+    			});
+    		},
+    		error: function(xhr) {
+    			table.empty();
+    		}
+    	});
+    });
+    
+    /*$(document).on("click", "input.select", function() {
+    	var seatsDiv = $("div#seatsDiv"); //var seatsDiv = $("<div id='seatsDiv' style='text-align: center; height: " + ((data.length / 3) * 55) + "px;'></div>");
+    	seatsDiv.empty();
+    	
+    	var flightID = $(this).parent().parent().attr("id");
+    	
+    	$.ajax({
+			type: "GET",
+			url: "/flight/" + flightID + "/seats",
+			contentType: "text/html; charset=utf-8",
+			dataType: "json",
+			success: function(data) {
+				seatsDiv.css("height", ((data.length / 3) * 55) + "px");
+				
+				$.each(data, function(index, seat) {
+					var bgcolor;
+					if(seat.enabled == false)
+						bgcolor = "#3a3a3a";
+					else if(seat.busy == true)
+						bgcolor = "#ff0000";
+					else if(seat.type == "FIRST_CLASS")
+						bgcolor = "#ffd700";
+					else if(seat.type == "BUSINESS")
+						bgcolor = "#0000ff";
+					else
+						bgcolor = "#00ff00";
+					
+					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForReservation'><input type='hidden' value='" + seat.id + "'></div>");
+					
+					if(index % 3 == 0)
+						seatDiv.css("clear", "left");
+					
+					seatsDiv.append(seatDiv);
+				});
+				
+				
+				
+				$("div#reservationSeatsModal").show();
+			}
+		});
+    });*/
+    
+    var selectedSeats = [];
+	$(document).on("click", "div.seatDivForReservation", function() {
+		if($(this).css("background-color") == "rgb(58, 58, 58)" || $(this).css("background-color") == "rgb(255, 0, 0)")
+			return;
+		
+		var seatId = $($(this).children("input")[0]).attr("value");
+		
+		var exists = false;
+		for(var i = 0; i < selectedSeats.length; i++) {
+			if(selectedSeats[i].id == seatId) {
+				selectedSeats.splice(i, 1);
+				$(this).css("border", "0");
+				
+				exists = true;
+				if(selectedSeats.length == 0)
+					$("input#next").prop("disabled", true);
+				
+				break;
+			}
+		}
+		
+		if(!exists) {
+			selectedSeats.push({
+				"id": seatId
+			});
+			$(this).css("border", "3px solid red");
+			
+			$("input#next").prop("disabled", false);
+		}
+	});
+	
+	$(document).on("click", "input#close", function() {
+		$("div#seatsDiv").empty();
+		selectedSeats = [];
+	});
+	
+	var previous
+	$(document).on("click", "input#next", function() {
+		
 	});
     
     //----------------------------------------
