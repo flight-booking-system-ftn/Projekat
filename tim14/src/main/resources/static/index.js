@@ -94,7 +94,200 @@ $(document).ready(function(){
         }
     });
     
-
+    //--------------- RADOJCIN ---------------
+    
+    var flights;
+	var options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
+	
+	getFlights();
+	
+	function getFlights() {
+		$.ajax({
+			type: "GET",
+			url: "/flight/flightsOfAirline",
+			async: false,
+			success: function(data) {
+				flights = data;
+				var table = $("table#flightsTable tbody");
+				
+				$.each(flights, function(index, flight) {
+					var tr = $("<tr id='" + flight.id + "'></tr>");
+					var id = $("<input type='hidden' value='" + flight.id + "'>");
+					var tripType = $("<td>" + (flight.flightType == "ONE_WAY" ? "One way" : "Round trip") + "</td>");
+					var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
+					var to = $("<td>" + flight.to.name + " - " + flight.to.destination.name + ", " + flight.to.destination.country + "</td>");
+					var stops = $("<td>" + flight.stops.length + "</td>");
+					var departureDate = $("<td>" + formatDate(new Date(flight.departureDate)) + "</td>");
+					var arrivalDate = $("<td>" + formatDate(new Date(flight.arrivalDate)) + "</td>");
+					var returnDepartureDate = $("<td>" + (flight.returnDepartureDate == null ? "" : formatDate(new Date(flight.returnDepartureDate))) + "</td>");
+					var returnArrivalDate = $("<td>" + (flight.returnArrivalDate == null ? "" : formatDate(new Date(flight.returnArrivalDate))) + "</td>");
+					var luggageQuantity = $("<td>" + flight.luggageQuantity + "</td>");
+					var ticketPrice = $("<td>" + flight.ticketPrice + "</td>");
+					var actions = $("<td><input type='button' class='edit' value='Edit seats'></td>");
+					
+					tr.append(id);
+					tr.append(tripType);
+					tr.append(from);
+					tr.append(to);
+					tr.append(stops);
+					tr.append(departureDate);
+					tr.append(arrivalDate);
+					tr.append(returnDepartureDate);
+					tr.append(returnArrivalDate);
+					tr.append(luggageQuantity);
+					tr.append(ticketPrice);
+					tr.append(actions);
+					
+					table.append(tr);
+				});
+			}
+		});
+	}
+	
+	function formatDate(date) {
+		return date.toLocaleDateString("en", options) + " " + (date.getHours() < 10 ? "0" + (date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+	}
+	
+	$("input.edit").on("click", function() {
+		var seatsTableDiv = $("div#seatsTableDiv");
+		var flightID = $(this).parent().parent().find("input[type='hidden']").attr("value");
+		
+		$.ajax({
+			type: "GET",
+			url: "/flight/" + flightID + "/seats",
+			contentType: "text/html; charset=utf-8",
+			dataType: "json",
+			success: function(data) {
+				/*var table = $("<table id='seats' border='5px solid gray' width='100%' height='500px'></table>");
+				var tr = $("<tr></tr>");
+				
+				$.each(data, function(index, seat) {
+					var bgcolor;
+					if(seat.enabled == false)
+						bgcolor = "#a3a3a3";
+					else if(seat.busy == true)
+						bgcolor = "#ff0000";
+					else if(seat.type == "FIRST_CLASS")
+						bgcolor = "#fffc77";
+					else if(seat.type == "BUSINESS")
+						bgcolor = "#77c8ff";
+					else
+						bgcolor = "#b8ff82";
+					
+					var td = $("<td bgcolor='" + bgcolor + "'><input type='hidden' value='" + seat.id + "'></td>");
+					tr.append(td);
+					
+					if(index % 3 == 2) {
+						table.append(tr);
+						
+						tr = $("<tr></tr>");
+					}
+				});
+				
+				if(tr.children().length > 0) {
+					table.append(tr);
+				}
+				
+				seatsTableDiv.append(table);
+				$("div.modal").show();*/
+				
+				seatsTableDiv.css("height", ((data.length / 3) * 55) + "px");
+				$.each(data, function(index, seat) {
+					var bgcolor;
+					if(seat.enabled == false)
+						bgcolor = "#3a3a3a";
+					else if(seat.busy == true)
+						bgcolor = "#ff0000";
+					else if(seat.type == "FIRST_CLASS")
+						bgcolor = "#ffd700";
+					else if(seat.type == "BUSINESS")
+						bgcolor = "#0000ff";
+					else
+						bgcolor = "#00ff00";
+					
+					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDiv'><input type='hidden' value='" + seat.id + "'></div>");
+					
+					if(index % 3 == 0)
+						seatDiv.css("clear", "left");
+					
+					seatsTableDiv.append(seatDiv);
+				});
+				
+				
+				
+				$("div#editSeatsModal").show();
+			}
+		});
+	});
+	
+	var previousSeat = undefined; //Ujedno i trenutno selektovano mesto
+	$(document).on("click", "span.close", function() {
+		$("div#seatsTableDiv").empty();
+		previousSeat = undefined;
+		$("input#toggleSeat").prop("disabled", true);
+		$("input#deleteSeat").prop("disabled", true);
+		$("div#editSeatsModal").hide();
+	});
+	
+	$(document).on("click", "div.seatDiv", function() {
+		if($(this).css("background-color") == "rgb(255, 0, 0)")
+			return;
+		
+		if(previousSeat != undefined) {
+			previousSeat.css("border", "0");
+		}
+		$(this).css("border", "2px solid red");
+		previousSeat = $(this);
+		
+		$("input#toggleSeat").prop("disabled", false);
+		$("input#deleteSeat").prop("disabled", false);
+	});
+	
+	$(document).on("click", "input#toggleSeat", function() {
+		var seatID = previousSeat.find("input[type='hidden']").attr("value");
+		
+		$.ajax({
+			type: "PUT",
+			url: "seats/toggle/" + seatID,
+			contentType: "text/html; charset=utf-8",
+			success: function(data) {
+				var bgcolor;
+				if(data.enabled == true) {
+					if(data.type == "FIRST_CLASS")
+						bgcolor = "#ffd700";
+					else if(data.type == "BUSINESS")
+						bgcolor = "#0000ff";
+					else
+						bgcolor = "#00ff00";
+				} else {
+					bgcolor = "#3a3a3a";
+				}
+				
+				previousSeat.css("background-color", bgcolor);
+			},
+			error: function() {
+				showMessage("Reserved seat can't be disabled.", "red");
+			}
+		});
+	});
+	
+	$(document).on("click", "input#deleteSeat", function() {
+		var seatID = previousSeat.find("input[type='hidden']").attr("value");
+		
+		$.ajax({
+			type: "DELETE",
+			url: "seats/delete/" + seatID,
+			contentType: "text/html; charset=utf-8",
+			success: function(data) {
+				previousSeat.remove();
+			},
+			error: function() {
+				showMessage("Reserved seat can't be deleted.", "red");
+			}
+		});
+	});
+    
+    //----------------------------------------
 });
 
 var renderHotelServiceTable = function(hotelId){

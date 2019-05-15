@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isamrs.tim14.dao.FlightDAO;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.Seat;
+import com.isamrs.tim14.others.FlightsSearch;
 
 @RestController
 @RequestMapping("/flight")
@@ -38,5 +39,10 @@ public class FlightRest {
 	@GetMapping("/{id}/seats")
 	public List<Seat> getSeats(@PathVariable Integer id) {
 		return flightDAO.getSeats(id);
+	}
+	
+	@PostMapping("/search")
+	public List<Flight> search(@RequestBody FlightsSearch values) {
+		return flightDAO.search(values);
 	}
 }

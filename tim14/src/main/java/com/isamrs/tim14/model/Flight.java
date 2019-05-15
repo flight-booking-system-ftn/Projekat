@@ -7,8 +7,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -50,12 +48,6 @@ public class Flight {
 
 	@Column(name = "arrival_date")
 	private Timestamp arrivalDate;
-	
-	@Column(name = "return_departure_date")
-	private Timestamp returnDepartureDate;
-
-	@Column(name = "return_arrival_date")
-	private Timestamp returnArrivalDate;
 
 	@Column(name = "flight_length")
 	private Integer flightLength;
@@ -68,10 +60,6 @@ public class Flight {
 	
 	@Column(name = "ticket_price")
 	private Double ticketPrice;
-	
-	@Enumerated(EnumType.STRING)
-	@Column(name = "flight_type", length = 20)
-	private FlightType flightType;
 	
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "flight_stopover", joinColumns = { @JoinColumn(name = "flight_id") }, inverseJoinColumns = {
@@ -141,22 +129,6 @@ public class Flight {
 		this.arrivalDate = arrivalDate;
 	}
 
-	public Timestamp getReturnDepartureDate() {
-		return returnDepartureDate;
-	}
-
-	public void setReturnDepartureDate(Timestamp returnDepartureDate) {
-		this.returnDepartureDate = returnDepartureDate;
-	}
-
-	public Timestamp getReturnArrivalDate() {
-		return returnArrivalDate;
-	}
-
-	public void setReturnArrivalDate(Timestamp returnArrivalDate) {
-		this.returnArrivalDate = returnArrivalDate;
-	}
-
 	public Integer getFlightLength() {
 		return flightLength;
 	}
@@ -187,14 +159,6 @@ public class Flight {
 
 	public void setTicketPrice(Double ticketPrice) {
 		this.ticketPrice = ticketPrice;
-	}
-
-	public FlightType getFlightType() {
-		return flightType;
-	}
-
-	public void setFlightType(FlightType flightType) {
-		this.flightType = flightType;
 	}
 
 	public Set<Airport> getStops() {

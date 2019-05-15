@@ -1,6 +1,6 @@
 package com.isamrs.tim14.dao;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Airport;
 
 @Repository
@@ -24,39 +23,25 @@ public class AirportDAOImpl implements AirportDAO {
 	@Override
 	@Transactional
 	public Airport save(Airport airport) {
-		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE a.id = :airline_id");
-		query.setParameter("airline_id", 1);
+		Query query = entityManager.createQuery("SELECT a FROM Airport a WHERE a.name = :airport_name AND a.destination = :airport_destination");
+		query.setParameter("airport_name", airport.getName());
+		query.setParameter("airport_destination", airport.getDestination());
 
-		Airline result = (Airline) query.getSingleResult();
-		
-		System.out.println(result.getName());
+		List<Airport> airports = query.getResultList();
 
-		boolean exists = false;
-		for(Airport a : result.getAirports()) {
-			if(a.getName().toLowerCase().equals(airport.getName().toLowerCase()) && a.getAddress().toLowerCase().equals(airport.getAddress().toLowerCase())) {
-				exists = true;
-				break;
-			}
+		if(airports.size() > 0) {
+			return null;
 		}
 		
-		if(!exists) {
-			result.getAirports().add(airport);
-			entityManager.persist(airport);
-			entityManager.persist(result);
-			
-			return airport;
-		} else
-			return null;
+		entityManager.persist(airport);
+		return airport;
 	}
 
 	@Override
 	@Transactional
-	public Set<Airport> airportsOfAirline() {
-		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE a.id = :airline_id");
-		query.setParameter("airline_id", 1);
+	public List<Airport> getAll() {
+		Query query = entityManager.createQuery("SELECT a FROM Airport a");
 		
-		Airline result = (Airline)query.getSingleResult();
-		
-		return result.getAirports();
+		return query.getResultList();
 	}
 }

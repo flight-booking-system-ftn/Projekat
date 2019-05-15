@@ -1,6 +1,6 @@
 package com.isamrs.tim14.rest;
 
-import java.util.Set;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +28,8 @@ public class AirportRest {
 		return airportDAO.save(airport);
 	}
 	
-	@GetMapping("/airportsOfAirline")
-	public Set<Airport> getAirportsOfAirline() {
-		return airportDAO.airportsOfAirline();
+	@GetMapping("/all")
+	public List<Airport> getAll() {
+		return airportDAO.getAll();
 	}
 }
