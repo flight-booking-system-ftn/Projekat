@@ -94,6 +94,27 @@ $(document).ready(function(){
         }
     });
     
+    $(document).on('click','table button',function(e){
+        if(e.target.id.startsWith("rentDetailViewBtn")){
+            var message = e.target.id.substr(17);
+            console.log("PORUKA JE ", message);
+            $.get('/api/rentacars/'+ message, function(data){
+                console.log("MY DATA: ", data);
+                console.log("DEST", data.destination);
+                $('#pNameOfChosenRent').text(data.name);
+                $('#pDescriptionOfChosenRent').text(data.description);
+                $('#pDestinationOfChosenRent').text(data.destination.name +
+                    ", " + data.destination.country);
+                $('#vehicleSearchArrivalDate').val(formatDate(new Date()));
+                $('#dialogRentView').css("display","block");
+            });
+        }
+    });
+    
+    $(document).on('click','#quitDialogRentView',function(){
+        $('#dialogRentView').css("display","none");
+    });
+    
     //--------------- RADOJCIN ---------------
     
     var flights;
@@ -563,8 +584,8 @@ var renderRentACarTable = function(){
         console.log("Rent-a-cars: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
-            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td><button id=${btnID}>More details</button></td></tr>`);
-        }
+            var btnID = "rentDetailViewBtn" + red.id;
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td><button id=${btnID}>More details</button></td></tr>`);        }
     });
 }
 
