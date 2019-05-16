@@ -64,14 +64,14 @@ public class RentACarRest {
 	
 	
 	@RequestMapping(
-			value = "/rentsSearch/{rentName}",
+			value = "/rentsSearch/{rentName}/{rentDestination}/{checkIn}/{checkOut}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<RentACar>> getRentSearch(@PathVariable String rentName){
+	public ResponseEntity<Collection<RentACar>> getRentSearch(@PathVariable String rentName,
+			@PathVariable String rentDestination, @PathVariable String checkIn, @PathVariable String checkOut){
 		
-		Collection<RentACar> rents = rentDAO.getRentSearch(rentName);
+		Collection<RentACar> rents = rentDAO.getRentSearch(rentName, rentDestination, checkIn, checkOut);
 		
 		return new ResponseEntity<Collection<RentACar>>(rents, HttpStatus.OK);
 	}
-	
 }

@@ -563,23 +563,36 @@ var renderRentACarTable = function(){
         console.log("Rent-a-cars: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
-            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td><button id=${btnID}>More details</button></td></tr>`);
         }
     });
 }
 
 var renderRentACarTableSearch = function(){
-    var text = $('#rentSearchInput').val();
-    if(text == ""){
-        renderRentACarTable();
-        return;
+	var rentName = $('#rentNameSearchInput').val();
+    var rentDestination = $('#rentDestinationSearchInput').val();
+    var checkIn = $('#rentSearchCheckIn').val();
+    var checkOut = $('#rentSearchCheckOut').val();
+    console.log(checkIn, checkOut);
+    if(rentName == ""){
+        rentName = "NO_INPUT";
     }
-    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
+    if(rentDestination == ""){
+        rentDestination = "NO_INPUT";
+    }
+    if(checkIn == ""){
+        checkIn = "NO_INPUT";
+    }
+    if(checkOut == ""){
+        checkOut = "NO_INPUT";
+    }
+    text = rentName+"/"+rentDestination+"/"+checkIn+"/"+checkOut;
+    $('#rentACarTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
     $.get('/api/rentsSearch/'+text, function(data){
         console.log("Rent-a-cars: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
-            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td></tr>`);      
         }
     }); 
 }

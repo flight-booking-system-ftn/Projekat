@@ -67,11 +67,17 @@ public class RentDAOImpl implements RentDAO {
 
 	@Override
 	@Transactional
-	public List<RentACar> getRentSearch(String search) {
-		Query query = entityManager.createQuery("SELECT r FROM RentACar r WHERE r.name LIKE :rentName");
-		query.setParameter("rentName", "%" + search + "%");
+	public List<RentACar> getRentSearch(String rentName, String rentDestination, String checkIn, String checkOut) {
+		if(rentName.equals("NO_INPUT")) {
+			rentName = "";
+		}
+		if(rentDestination.equals("NO_INPUT")) {
+			rentDestination = "";
+		}
+		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE rent.name LIKE :rentName AND rent.destination.name LIKE :rentDestination");
+		query.setParameter("rentName", "%" + rentName + "%");
+		query.setParameter("rentDestination", "%" + rentDestination + "%");
 		List<RentACar> result = query.getResultList();
 		return result;
 	}
-
 }
