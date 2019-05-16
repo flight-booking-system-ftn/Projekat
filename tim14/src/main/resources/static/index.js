@@ -72,6 +72,16 @@ $(document).ready(function(){
         renderRoomTable(hotelId, arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms);
     });
     
+    $(document).on('click','#vehicleSearchBtn', function(){
+        var rentId = $('#rentIdField').val();
+        var arrivalDate = $('#vehicleSearchArrivalDate').val();
+        var numDays = $('#vehicleSearchDayNumber').val();
+        var cars = $('#vehicleCars').prop('checked');
+        var motocycles = $('#vehicleMotocycles').prop('checked');
+        console.log('Rent: ', rentId ,'....', arrivalDate, numDays, cars, motocycles);
+
+        renderVehicleTable(1, arrivalDate, numDays, cars, motocycles);
+    });
     
     $(document).on('click','#quitDialogHotelView',function(){
         $('#dialogHotelView').css("display","none");
@@ -616,6 +626,22 @@ var renderRentACarTableSearch = function(){
             $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td></tr>`);      
         }
     }); 
+}
+
+var renderVehicleTable = function(rentId, arrivalDate, numDays, cars, motocycles){
+    var text = `/${rentId}/${arrivalDate}/${numDays}/${cars}/${motocycles}`;
+    console.log(text);
+    $.get('/api/vehiclesSearch'+text, function(VehicleData){
+            console.log("Vehicles: ", VehicleData);
+            var vehicles = VehicleData;
+            //$('#selectedRentVehiclesTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
+            for(var i=0;i<vehicles.length;i++){
+                var red = vehicles[i];
+                checkBoxID = "vehicleCheckbox"+ red.id;
+                $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.name}</td><td>${red.type}</td><td>-</td><td>${red.price*numDays}</td><td>
+                <input type="checkbox" id=${checkBoxID}></td></tr>`);
+            }
+        });
 }
 
 function formatDate(date) {
