@@ -47,8 +47,6 @@ public class VehicleRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Vehicle>> getVehicleSearch(@PathVariable String vehicleId, @PathVariable String arriveDate, @PathVariable String dayNum, @PathVariable String cars, 
 			@PathVariable String motocycles){
-		User u = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println(u.getUsername());
 		int id = Integer.parseInt(vehicleId);
 		int numberOfDays = Integer.parseInt(dayNum);
 		boolean car = (cars.equals("true")) ? true: false;
