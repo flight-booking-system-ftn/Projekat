@@ -14,5 +14,6 @@ public interface RentDAO {
 	
 	public void deleteRent(int id);
 
-	public List<RentACar> getRentSearch(String search);
+	public List<RentACar> getRentSearch(String rentName, String rentDestination, String checkIn, String checkOut);
+
 }

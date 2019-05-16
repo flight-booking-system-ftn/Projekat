@@ -131,8 +131,11 @@
 	</div>
 	
 	<div class="VelikiPregled">
-        <h1>Rent-a-car: </h1> <input type="text" id="rentSearchInput"> <button id="rentSearchBtn" value="Search rent-a-cars">Search</button>
-        <br><br>
+        <h1>Rent-a-car: </h1> <input type="text" id="rentNameSearchInput" placeholder="Rent-a-car name">
+        <input type="text" id="rentDestinationSearchInput" placeholder="Rent-a-car destination">
+        <input type="text" placeholder="Start date" id="rentSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+        <input type="text" placeholder="End date" id="rentSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
+         <button id="rentSearchBtn" value="Search rent">Search</button><br><br>
         <table id="rentACarTable">
             <tr><th>Name</th><th>Description</th></tr>
         </table>
