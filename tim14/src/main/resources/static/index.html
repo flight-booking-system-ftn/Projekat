@@ -110,6 +110,68 @@
         </div>
     </div>
 
+	<div id="dialogRentView" class="dialog">
+        <div class="dialogContent">
+            <h1>Hotel review</h1>
+            <p id="rentIdField" style="visibility: hidden"></p>
+            <table>
+				<tr><td colspan="2"><h3 id="pNameOfChosenRent">Hotel</h3></td></tr>
+				<tr><td>Description: </td><td><p id="pDescriptionOfChosenRent">Description</p></td></tr>
+				<tr><td>Destination: </td><td><p id="pDestinationOfChosenRent">Destination</p></td></tr>
+			</table>
+			<br>
+			<br>
+			<h1>Search vehicles</h1>
+			<table>
+				<tr>
+					<td>
+						Start date: 
+					</td>
+					<td>
+						<input type="text" placeholder="Arrival date" id="vehicleSearchArrivalDate" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Number of days to stay: 
+					</td>
+					<td>
+						<input type="number" id="vehicleSearchDayNumber" value="1">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Cars: 
+					</td>
+					<td>
+						<input type="checkbox" id="vehicleCars">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Motocycles: 
+					</td>
+					<td>
+						<input type="checkbox" id="vehicleMotocycles">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<button id="vehicleSearchBtn" value="Search vehicles">Search</button>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<h1>Vehicles</h1>
+            <table id="selectedRentVehiclesTable">
+				<tr><th>Name</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>
+			</table>
+			<br>
+			<button id="makeRentReservationBtn">Make Reservation</button>
+            <button id="quitDialogRentView">Close</button>
+        </div>
+    </div>
+
 	<div class="VelikiPregled">
         <h1>Airlines: </h1> <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
         <br><br>
