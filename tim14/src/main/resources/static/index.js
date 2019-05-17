@@ -638,7 +638,8 @@ var renderVehicleTable = function(rentId, arrivalDate, numDays, cars, motocycles
             for(var i=0;i<vehicles.length;i++){
                 var red = vehicles[i];
                 checkBoxID = "vehicleCheckbox"+ red.id;
-                $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.name}</td><td>${red.type}</td><td>-</td><td>${red.price*numDays}</td><td><td></tr>`);
+                $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.name}</td><td>${red.type}</td><td>-</td><td>${red.price*numDays}</td><td>
+                <input type="checkbox" id=${checkBoxID}></td></tr>`);
             }
         });
 }
