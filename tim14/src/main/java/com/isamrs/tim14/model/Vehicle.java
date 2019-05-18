@@ -30,9 +30,6 @@ public class Vehicle {
 	@Column(name = "id")
 	private Integer id;
 	
-	@Column(name = "name")
-	private String name;
-	
 	@Column(name = "brand")
 	private String brand;
 	
@@ -86,14 +83,6 @@ public class Vehicle {
 
 	public void setRentACar(RentACar rentACar) {
 		this.rentACar = rentACar;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getBrand() {
