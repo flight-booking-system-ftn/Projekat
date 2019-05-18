@@ -30,7 +30,7 @@ public class VehicleDAOImpl implements VehicleDAO {
 
 	@Override
 	@Transactional
-	public List<Vehicle> getVehiclesSearch(Integer vehicleID, String arriveDate, Integer dayNum, Boolean cars, Boolean motocycles) {
+	public List<Vehicle> getVehiclesSearch(Integer rentID, String arriveDate, Integer dayNum, Boolean cars, Boolean motocycles) {
 		String queryPlus = " AND 1=2 ";
 		boolean check = false;
 		if(cars || motocycles) {
@@ -48,8 +48,8 @@ public class VehicleDAOImpl implements VehicleDAO {
 			queryPlus += ")";
 		}
 		System.out.println(">>> " + queryPlus);
-		Query query = entityManager.createQuery("SELECT v FROM Vehicle v WHERE v.id = :vehicleId" + queryPlus);
-		query.setParameter("vehicleId", vehicleID);
+		Query query = entityManager.createQuery("SELECT v FROM Vehicle v WHERE v.rentACar.id = :rentId" + queryPlus);
+		query.setParameter("rentId", rentID);
 		List<Vehicle> result = query.getResultList();
 		return result;
 	}

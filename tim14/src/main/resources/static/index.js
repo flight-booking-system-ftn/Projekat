@@ -35,6 +35,10 @@ $(document).ready(function(){
         $(location).attr('href',"/room.html");
     });
     
+    $(document).on('click','#addVehicleBtn',function(){
+        $(location).attr('href',"/vehicle.html");
+    });
+    
     $(document).on('click','#defineLuggagePricelistBtn',function(){
         $(location).attr('href',"/luggagePricelist.html");
     });
@@ -80,10 +84,11 @@ $(document).ready(function(){
         var motocycles = $('#vehicleMotocycles').prop('checked');
         console.log('Rent: ', rentId ,'....', arrivalDate, numDays, cars, motocycles);
 
-        renderVehicleTable(1, arrivalDate, numDays, cars, motocycles);
+        renderVehicleTable(rentId, arrivalDate, numDays, cars, motocycles);
     });
     
     $(document).on('click','#quitDialogHotelView',function(){
+        $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
         $('#dialogHotelView').css("display","none");
     });
 
@@ -111,6 +116,7 @@ $(document).ready(function(){
             $.get('/api/rentacars/'+ message, function(data){
                 console.log("MY DATA: ", data);
                 console.log("DEST", data.destination);
+                $('#rentIdField').val(message);
                 $('#pNameOfChosenRent').text(data.name);
                 $('#pDescriptionOfChosenRent').text(data.description);
                 $('#pDestinationOfChosenRent').text(data.destination.name +
@@ -122,6 +128,7 @@ $(document).ready(function(){
     });
     
     $(document).on('click','#quitDialogRentView',function(){
+    	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
         $('#dialogRentView').css("display","none");
     });
     
@@ -589,13 +596,13 @@ var renderHotelTableSearch = function(){
 }
 
 var renderRentACarTable = function(){
-    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
+    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th><th>Grade</th><th></th></tr>`);
     $.get("/api/rentacars", function(data){
         console.log("Rent-a-cars: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
             var btnID = "rentDetailViewBtn" + red.id;
-            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td><button id=${btnID}>More details</button></td></tr>`);        }
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td><button id=${btnID}>More details</button></td></tr>`);        }
     });
 }
 
@@ -623,7 +630,8 @@ var renderRentACarTableSearch = function(){
         console.log("Rent-a-cars: ", data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
-            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td></tr>`);      
+            var btnID = "rentDetailViewBtn" + red.id;
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td><button id=${btnID}>More details</button></td></tr>`);      
         }
     }); 
 }
@@ -634,11 +642,11 @@ var renderVehicleTable = function(rentId, arrivalDate, numDays, cars, motocycles
     $.get('/api/vehiclesSearch'+text, function(VehicleData){
             console.log("Vehicles: ", VehicleData);
             var vehicles = VehicleData;
-            //$('#selectedRentVehiclesTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
+        	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
             for(var i=0;i<vehicles.length;i++){
                 var red = vehicles[i];
                 checkBoxID = "vehicleCheckbox"+ red.id;
-                $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.name}</td><td>${red.type}</td><td>-</td><td>${red.price*numDays}</td><td>
+                $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price*numDays}</td><td>
                 <input type="checkbox" id=${checkBoxID}></td></tr>`);
             }
         });

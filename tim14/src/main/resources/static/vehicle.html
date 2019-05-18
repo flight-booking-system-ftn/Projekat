@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="vehicle.js"></script>
 </head>
@@ -12,12 +12,31 @@
 	<form id="add_vehicle">
 		<table>
 			<tr>
-				<td>Registration</td>
-				<td><input type="text" name="txt_registration" class="field"></td>
+				<td>Brand</td>
+				<td><input type="text" id="txt_vehicle_brand" class="field" required></td>
+			</tr>
+			<tr>
+				<td>Model</td>
+				<td><input type="text" id="txt_vehicle_model" class="field" required></td>
+			</tr>
+			<tr>
+				<td>Production year</td>
+				<td><input type="number" id="txt_vehicle_year" class="field" required></td>
+			</tr>
+			<tr>
+				<td>Seats</td>
+				<td><input type="number" id="txt_vehicle_seats" class="field" required></td>
+			</tr>
+			<tr>
+				<td>Price</td>
+				<td><input type="number" id="txt_vehicle_price" class="field" required></td>
 			</tr>
 			<tr>
 				<td>Type</td>
-				<td><input type="text" name="txt_vehicle" class="field"></td>
+				<td><select id="select_vehicle_type">
+				  <option value="CAR">Car</option>
+				  <option value="MOTOCYCLE">Motocycle</option>
+				  </select></td>
 			</tr>
 			<tr>
 				<td></td>

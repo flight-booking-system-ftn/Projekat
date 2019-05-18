@@ -6,6 +6,6 @@ import com.isamrs.tim14.model.Vehicle;
 
 public interface VehicleDAO {
 	public Vehicle save(Vehicle vehcle);
-	public List<Vehicle> getVehiclesSearch(Integer vehicleID, String arriveDate, Integer dayNum, Boolean cars, Boolean motocycles);
+	public List<Vehicle> getVehiclesSearch(Integer rentID, String arriveDate, Integer dayNum, Boolean cars, Boolean motocycles);
 
 }
