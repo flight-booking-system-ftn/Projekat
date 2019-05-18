@@ -1,5 +1,6 @@
 package com.isamrs.tim14.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -41,20 +43,22 @@ public class Room {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "room_id")
+	@JsonBackReference(value="room-grades")
 	private Set<Grade> grades;
 	
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
-	@JsonIgnoreProperties("rooms")
 	private Hotel hotel;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "rooms_reservations", joinColumns = { @JoinColumn(name = "room_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "reservation_id") })
 	private Set<RoomReservation> reservations;
 
 	public Room() {
 		super();
+		this.grades = new HashSet<Grade>();
+		this.reservations = new HashSet<RoomReservation>();
 	}
 
 	public Integer getId() {
@@ -120,6 +124,5 @@ public class Room {
 	public void setReservations(Set<RoomReservation> reservations) {
 		this.reservations = reservations;
 	}
-	
 	
 }

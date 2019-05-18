@@ -17,7 +17,7 @@ public class UserTokenState {
 	public UserTokenState(String accessToken, long expiresIn, UserType userType, String redirect) {
 		this.accessToken = accessToken;
 		this.expiresIn = expiresIn;
-		this.userType = userType;
+		this.setUserType(userType);
 		this.redirectionURL = redirect;
 	}
 

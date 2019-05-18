@@ -1,5 +1,6 @@
 package com.isamrs.tim14.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,7 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class RegisteredUser extends User {
@@ -30,23 +32,25 @@ public class RegisteredUser extends User {
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
+	@JsonBackReference(value="user-roomReservation")
 	private Set<RoomReservation> roomReservations;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
+	@JsonBackReference(value="user-vehicleReservation")
 	private Set<VehicleReservation> vehicleReservations;
 
 	@Column(name = "bonus_points")
 	private Integer bonusPoints;
 
-	@Column(name = "city")
-	private String city;
-
-	@Column(name = "phone_number")
-	private String phoneNumber;
-
 	public RegisteredUser() {
 		super();
+		this.friendList1 = new HashSet<RegisteredUser>();
+		this.friendList2 = new HashSet<RegisteredUser>();
+		this.flightReservations = new HashSet<FlightReservation>();
+		this.roomReservations = new HashSet<RoomReservation>();
+		this.vehicleReservations = new HashSet<VehicleReservation>();
+		this.bonusPoints = 0;
 	}
 
 	public Set<RegisteredUser> getFriendList1() {
@@ -96,22 +100,5 @@ public class RegisteredUser extends User {
 	public void setBonusPoints(Integer bonusPoints) {
 		this.bonusPoints = bonusPoints;
 	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
 
 }

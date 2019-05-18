@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -19,19 +20,18 @@ import javax.persistence.Table;
 @Table(name = "branch_office")
 public class BranchOffice {
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
 	
-	@JoinColumn(name = "destination_id")
 	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "destination_id")
 	private Destination destination;
 	
-	@JoinColumn(name = "branchOffice_id")
-    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
-	private Set<Vehicle> vehicles;
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rent_a_car_id")
+	private RentACar rentACar;
 
 	public BranchOffice() {
 		super();
@@ -52,16 +52,5 @@ public class BranchOffice {
 	public void setDestination(Destination destination) {
 		this.destination = destination;
 	}
-
-	public Set<Vehicle> getVehicles() {
-		return vehicles;
-	}
-
-	public void setVehicles(Set<Vehicle> vehicles) {
-		this.vehicles = vehicles;
-	}
-	
-	
-	
 
 }

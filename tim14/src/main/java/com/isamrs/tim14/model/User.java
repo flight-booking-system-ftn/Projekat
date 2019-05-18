@@ -2,6 +2,7 @@ package com.isamrs.tim14.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.joda.time.DateTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -30,8 +32,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User implements Serializable, UserDetails {
 
-	private static final long serialVersionUID = 1655113308824460247L;
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -54,17 +54,26 @@ public class User implements Serializable, UserDetails {
 
     @Column(name = "enabled")
     private boolean enabled = true;
+    
+    @Column(name = "city")
+	private String city;
+
+	@Column(name = "phone_number")
+	private String phoneNumber;
 	
 	@Column(name = "last_password_reset_date")
 	private Timestamp lastPasswordResetDate;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-	@JsonIgnore
+	@JoinTable(name = "user_authority", 
+		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+		inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	@JsonBackReference(value="user-authority")
 	private List<Authority> authorities;
 
 	public User() {
 		super();
+		authorities = new ArrayList<Authority>();
 	}
 
 	public Integer getId() {
@@ -117,7 +126,27 @@ public class User implements Serializable, UserDetails {
         this.authorities = authorities;
     }
 
-    @Override
+    public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;
     }
@@ -149,10 +178,15 @@ public class User implements Serializable, UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return enabled;
 	}
 	
     public void setEnabled(boolean enabled) {
-        this.enabled = true;
+        this.enabled = enabled;
     }
+    
+	private static final long serialVersionUID = 1655113308824460247L;
+
+    
+    
 }

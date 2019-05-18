@@ -3,12 +3,15 @@ package com.isamrs.tim14.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "grade")
@@ -19,8 +22,9 @@ public class Grade {
 	@Column(name = "id")
 	private Integer id;
 	
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },  fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH })
+	@JsonIgnoreProperties(value={ "friendList1", "friendList2", "flightReservations", "roomReservations", "vehicleReservations" }, allowGetters= true)
 	private RegisteredUser user;
 	
 	@Column(name = "grade")

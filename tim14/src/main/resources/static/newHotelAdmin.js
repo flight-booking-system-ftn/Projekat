@@ -33,7 +33,7 @@ $(document).ready(function(){
                 }
                 console.log(data);
                 $.ajax({
-                    url: '/api/hoteladmins',
+                    url: '/auth/registerHotelAdmin',
                     type: "POST",
                     data: JSON.stringify(data),
                     contentType: "application/json; charset=utf-8;",

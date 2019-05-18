@@ -1,10 +1,10 @@
 package com.isamrs.tim14.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -37,26 +38,34 @@ public class Hotel {
 	private String description;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
-	@JsonIgnoreProperties("hotel")
+	@JsonBackReference(value="hotel-services")
 	private Set<HotelService> services;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
-	@JsonIgnoreProperties("hotel")
+	@JsonBackReference(value="hotel-rooms")
 	private Set<Room> rooms;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+	@JoinColumn(name = "hotel_id")
+	@JsonBackReference(value="hotel-grades")
 	private Set<Grade> grades;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "hotel_id")
+	@JsonBackReference(value="hotel-reservations")
 	private Set<RoomReservation> reservations;
 	
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "hotel")
-	@JsonIgnoreProperties("hotel")
+	@JsonBackReference(value="hotel-admins")
 	private Set<HotelAdmin> admins;
 
 	public Hotel() {
-		super();
+		this.destination = new Destination();
+		this.services = new HashSet<HotelService>();
+		this.rooms = new HashSet<Room>();
+		this.grades = new HashSet<Grade>();
+		this.reservations = new HashSet<RoomReservation>();
+		this.admins = new HashSet<HotelAdmin>();
 	}
 
 	public Integer getId() {

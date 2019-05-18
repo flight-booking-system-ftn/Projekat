@@ -1,5 +1,6 @@
 package com.isamrs.tim14.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "vehicle")
 public class Vehicle {
@@ -26,10 +29,6 @@ public class Vehicle {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rent_a_car_id")
-	private RentACar rentACar;
 	
 	@Column(name = "name")
 	private String name;
@@ -53,17 +52,24 @@ public class Vehicle {
 	@Column(name = "price")
 	private Double price;
 	
-	@JoinColumn(name = "vehicle_id")
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "vehicle_id")
+	@JsonBackReference(value="vehicle-grades")
 	private Set<Grade> grades;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+    @JoinColumn(name = "rent_a_car_id")
+	private RentACar rentACar;
+	
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "vehicles_reservations", joinColumns = { @JoinColumn(name = "vehicle_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "reservation_id") })
 	private Set<VehicleReservation> reservations;
 
 	public Vehicle() {
 		super();
+		this.grades = new HashSet<Grade>();
+		this.reservations = new HashSet<VehicleReservation>();
 	}
 
 	public Integer getId() {

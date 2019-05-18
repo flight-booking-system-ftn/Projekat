@@ -1,6 +1,7 @@
 package com.isamrs.tim14.model;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "vehicle_reservation")
 public class VehicleReservation {
@@ -32,16 +35,19 @@ public class VehicleReservation {
 	@Column(name = "end")
 	private Date end;
 	
-	@ManyToMany(mappedBy = "reservations")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "reservations")
+	@JsonBackReference(value="vehicle-reservations")
 	private Set<Vehicle> vehicle;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "vehicles_services", joinColumns = { @JoinColumn(name = "reservation_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "service_id") })
+	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "vehicle_reservation_id")
+	@JsonBackReference(value="vehicle-services")
 	private Set<RentACarService> services;
 
 	public VehicleReservation() {
 		super();
+		this.vehicle = new HashSet<Vehicle>();
+		this.services = new HashSet<RentACarService>();
 	}
 
 	public Integer getId() {
