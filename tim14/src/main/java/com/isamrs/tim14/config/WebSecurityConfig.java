@@ -78,6 +78,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
 
 		http.csrf().disable();
+		
+		http.logout().logoutSuccessUrl("/").invalidateHttpSession(true);
 	}
 
 	// Generalna bezbednost aplikacije

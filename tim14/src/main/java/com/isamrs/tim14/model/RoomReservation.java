@@ -1,6 +1,7 @@
 package com.isamrs.tim14.model;
 
 import java.sql.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,10 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "room_reservation")
@@ -31,16 +33,19 @@ public class RoomReservation {
 	@Column(name = "end")
 	private Date end;
 	
-	@ManyToMany(mappedBy = "reservations")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "reservations")
+	@JsonBackReference(value="room-reservations")
 	private Set<Room> rooms;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "rooms_services", joinColumns = { @JoinColumn(name = "reservation_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "service_id") })
+	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_reservation_id")
+	@JsonBackReference(value="room-services")
 	private Set<HotelService> services;
 
 	public RoomReservation() {
 		super();
+		this.rooms = new HashSet<Room>();
+		this.services = new HashSet<HotelService>();
 	}
 	
 	public Date getStart() {

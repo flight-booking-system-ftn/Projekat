@@ -9,7 +9,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.model.HotelService;
 import com.isamrs.tim14.model.RentACar;
+import com.isamrs.tim14.model.RentACarService;
 
 @Repository
 public class RentDAOImpl implements RentDAO {
@@ -36,8 +38,10 @@ public class RentDAOImpl implements RentDAO {
 		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE lower(rent.name) LIKE :rentName");
 		query.setParameter("rentName", rent.getName());
 		List<RentACar> result = query.getResultList();
-
 		if (result.size() == 0) {
+			for(RentACarService rs : rent.getServices()) {
+				rs.setRentACar(rent);
+			}
 			entityManager.persist(rent);
 			return rent;
 		} else {

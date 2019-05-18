@@ -66,11 +66,11 @@ public class AuthenticationController {
 	public ResponseEntity<?> register(@RequestBody RegisteredUser user) {
 		User u = userDetailsService.findByUsername(user.getUsername());
 		if(u != null) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
 		}
 		u = userDetailsService.findByEmail(user.getEmail());
 		if(u != null) {
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
 		}
 		RegisteredUser ru = new RegisteredUser();
 		ru.setEmail(user.getEmail());
@@ -104,6 +104,104 @@ public class AuthenticationController {
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/registerHotelAdmin", method = RequestMethod.POST)
+	public ResponseEntity<?> registerHotelAdmin(@RequestBody HotelAdmin hotelAdmin) {
+		User admin = userDetailsService.findByUsername(hotelAdmin.getUsername());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		admin = userDetailsService.findByEmail(hotelAdmin.getEmail());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		System.out.println("HotelAdmin (" + hotelAdmin.getUsername() + ") " +", hotel name: " + 
+				hotelAdmin.getHotel().getName());
+		hotelAdmin.setPassword(this.userDetailsService.encodePassword(hotelAdmin.getPassword()));
+		List<Authority> authorities = new ArrayList<Authority>();
+		Authority a = new Authority();
+		a.setUserType(UserType.ROLE_HOTELADMIN);
+		authorities.add(a);
+		hotelAdmin.setAuthorities(authorities);
+		hotelAdmin.setEnabled(true);
+		hotelAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
+		hotelAdmin.getHotel().getAdmins().add(hotelAdmin);
+		
+		this.userDetailsService.saveUser(hotelAdmin);
+		
+		/*try {
+			mailService.sendNotificaitionAsync(hotelAdmin);
+		} catch (MailException | InterruptedException e) {
+			e.printStackTrace();
+		}*/
+		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/registerRentACarAdmin", method = RequestMethod.POST)
+	public ResponseEntity<?> registerRentAdmin(@RequestBody RentACarAdmin rentAdmin) {
+		User admin = userDetailsService.findByUsername(rentAdmin.getUsername());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		admin = userDetailsService.findByEmail(rentAdmin.getEmail());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		System.out.println("RentAdmin (" + rentAdmin.getUsername() + ") " +", hotel name: " + 
+				rentAdmin.getRentACar().getName());
+		rentAdmin.setPassword(this.userDetailsService.encodePassword(rentAdmin.getPassword()));
+		List<Authority> authorities = new ArrayList<Authority>();
+		Authority a = new Authority();
+		a.setUserType(UserType.ROLE_RENTACARADMIN);
+		authorities.add(a);
+		rentAdmin.setAuthorities(authorities);
+		rentAdmin.setEnabled(true);
+		rentAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
+		rentAdmin.getRentACar().getAdmins().add(rentAdmin);
+		
+		this.userDetailsService.saveUser(rentAdmin);
+		
+		/*try {
+			mailService.sendNotificaitionAsync(rentAdmin);
+		} catch (MailException | InterruptedException e) {
+			e.printStackTrace();
+		}*/
+		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value = "/registerAirlineAdmin", method = RequestMethod.POST)
+	public ResponseEntity<?> registerAirlineAdmin(@RequestBody AirlineAdmin airlineAdmin) {
+		User admin = userDetailsService.findByUsername(airlineAdmin.getUsername());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		admin = userDetailsService.findByEmail(airlineAdmin.getEmail());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		System.out.println("AirlineAdmin (" + airlineAdmin.getUsername() + ") " +", hotel name: " + 
+				airlineAdmin.getAirline().getName());
+		airlineAdmin.setPassword(this.userDetailsService.encodePassword(airlineAdmin.getPassword()));
+		List<Authority> authorities = new ArrayList<Authority>();
+		Authority a = new Authority();
+		a.setUserType(UserType.ROLE_AIRLINEADMIN);
+		authorities.add(a);
+		airlineAdmin.setAuthorities(authorities);
+		airlineAdmin.setEnabled(true);
+		airlineAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
+		airlineAdmin.getAirline().getAdmins().add(airlineAdmin);
+		
+		this.userDetailsService.saveUser(airlineAdmin);
+		
+		/*try {
+			mailService.sendNotificaitionAsync(airlineAdmin);
+		} catch (MailException | InterruptedException e) {
+			e.printStackTrace();
+		}*/
+		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+	}
+	
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) throws AuthenticationException, IOException {
@@ -115,7 +213,7 @@ public class AuthenticationController {
 						authenticationRequest.getPassword()));
 		}
 		catch(BadCredentialsException e) {
-			return new ResponseEntity<String>("",HttpStatus.OK);
+			return new ResponseEntity<String>("",HttpStatus.NOT_ACCEPTABLE);
 		}
 		// Ubaci username + password u kontext
 		SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -36,7 +36,7 @@ $(document).ready(function(){
                 }
                 console.log(data);
                 $.ajax({
-                    url: '/api/rentacaradmins',
+                    url: '/auth/registerRentACarAdmin',
                     type: "POST",
                     data: JSON.stringify(data),
                     contentType: "application/json; charset=utf-8;",

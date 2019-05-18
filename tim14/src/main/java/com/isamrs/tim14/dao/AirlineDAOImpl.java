@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Airline;
+import com.isamrs.tim14.model.AirlineService;
+import com.isamrs.tim14.model.HotelService;
 
 @Repository
 public class AirlineDAOImpl implements AirlineDAO {
@@ -49,8 +51,10 @@ public class AirlineDAOImpl implements AirlineDAO {
 		Query query = entityManager.createQuery("SELECT air FROM Airline air WHERE lower(air.name) LIKE :airlineName");
 		query.setParameter("airlineName", airline.getName());
 		List<Airline> result = query.getResultList();
-
 		if (result.size() == 0) {
+			for(AirlineService as : airline.getServices()) {
+				as.setAirline(airline);
+			}
 			entityManager.persist(airline);
 			return airline;
 		} else {

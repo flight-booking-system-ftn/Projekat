@@ -9,6 +9,7 @@ import com.isamrs.tim14.model.User;
 public interface IUserRepository extends JpaRepository<User, Long> {
 	List<User> findAll();
 	User findByUsername(String username);
+	User findOneByUsername(String username);
 	User findByEmail(String email);
 	User save(User user);
 }

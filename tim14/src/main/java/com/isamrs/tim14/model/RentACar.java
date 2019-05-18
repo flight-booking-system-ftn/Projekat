@@ -1,5 +1,6 @@
 package com.isamrs.tim14.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -29,34 +31,47 @@ public class RentACar {
 	@Column(name = "name")
 	private String name;
 	
-	@JoinColumn(name = "destination_id")
     @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "destination_id")
 	private Destination destination;
 	
 	@Column(name = "description")
 	private String description;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "rentACar")
-	@JsonIgnoreProperties("rentACar")
+	@JsonBackReference(value="rent-services")
 	private Set<RentACarService> services;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "rent_a_car_id")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "rentACar")
+    @JsonBackReference(value="rent-vehicles")
+	private Set<Vehicle> vehicles;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "rentACar")
+	@JsonBackReference(value="rent-offices")
 	private Set<BranchOffice> offices;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
+	@JoinColumn(name = "rent_a_car_id")
+	@JsonBackReference(value="rent-grades")
 	private Set<Grade> grades;
 	
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "rentACar")
-	@JsonIgnoreProperties("rentACar")
+	@JsonBackReference(value="rent-admins")
 	private Set<RentACarAdmin> admins;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "rent_a_car_id")
+	@JsonBackReference(value="rent-reservations")
 	private Set<VehicleReservation> reservations;
 
 	public RentACar() {
 		super();
+		this.services = new HashSet<RentACarService>();
+		this.vehicles = new HashSet<Vehicle>();
+		this.offices = new HashSet<BranchOffice>();
+		this.grades = new HashSet<Grade>();
+		this.admins = new HashSet<RentACarAdmin>();
+		this.reservations = new HashSet<VehicleReservation>();
 	}
 
 	public Integer getId() {

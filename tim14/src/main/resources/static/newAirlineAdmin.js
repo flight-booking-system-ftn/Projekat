@@ -36,13 +36,13 @@ $(document).ready(function(){
                 }
                 console.log(data);
                 $.ajax({
-                    url: '/api/airlineadmins',
+                    url: '/auth/registerAirlineAdmin',
                     type: "POST",
                     data: JSON.stringify(data),
                     contentType: "application/json; charset=utf-8;",
                     dataType: "text",
                     success: function(data){
-                        //$(location).attr('href',"/");
+                        $(location).attr('href',"/");
                     	
                     },
             		error: function (jqXHR, exception) {
