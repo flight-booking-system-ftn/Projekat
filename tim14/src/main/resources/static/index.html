@@ -267,9 +267,32 @@
         </table>
         
         <div id='reservationSeatsModal' class='modal'>
-        	<div class='modal-content'><h4>Choose seats</h4>
-        		<div id="seatsDiv" style="text-align: center; margin-top: 50px;"></div>
-        		<div id="passengersFormDiv" style="float: right;"></div>
+        	<div class='modal-content'>
+        		<!-- <div id="seatsDiv" style="text-align: center; margin-top: 50px;"></div>
+        		<div id="passengersFormDiv" style="float: right;"></div> -->
+        		
+        		<span class="close">&times;</span>
+        		
+        		<div class="tab">
+				  <button id="chooseSeatsTab" class="tablinks" onclick="openCity(event, 'chooseSeatsContent')">Choose seats</button>
+				  <button id="inviteFriendsTab" class="tablinks" onclick="openCity(event, 'inviteFriendsContent')" disabled>Invite friends</button>
+				  <button id="otherPassengersTab" class="tablinks" onclick="openCity(event, 'otherPassengersContent')" disabled>Other passengers</button>
+				</div>
+				
+				<div id="chooseSeatsContent" class="tabcontent">
+				  <h3>Choose seats</h3>
+				  <div id="seatsDiv" style="text-align: center; margin-top: 25px;"></div>
+				</div>
+				
+				<div id="inviteFriendsContent" class="tabcontent">
+				  <h3>Invite friends</h3>
+				  <p>Paris is the capital of France.</p> 
+				</div>
+				
+				<div id="otherPassengersContent" class="tabcontent">
+				  <h3>Other passengers</h3>
+				  <p>Tokyo is the capital of Japan.</p>
+				</div>
         	</div>
         </div>
 	</div>
