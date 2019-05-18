@@ -31,7 +31,7 @@ $(document).ready(function() {
 			$.ajax({
 				type : 'POST',
 				url : "/api/airlines",
-				contentType : 'application/json',
+				headers: createAuthorizationTokenHeader(),
 				data : JSON.stringify(data),
 				success: function(){
 					$(location).attr('href',"/");

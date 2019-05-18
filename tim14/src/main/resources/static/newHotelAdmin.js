@@ -36,7 +36,7 @@ $(document).ready(function(){
                     url: '/auth/registerHotelAdmin',
                     type: "POST",
                     data: JSON.stringify(data),
-                    contentType: "application/json; charset=utf-8;",
+                    headers: createAuthorizationTokenHeader(),
                     dataType: "text",
                     success: function(data){
                         $(location).attr('href',"/");

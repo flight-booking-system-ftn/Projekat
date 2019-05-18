@@ -29,7 +29,7 @@ $(document).ready(function() {
 			$.ajax({
 				type : 'POST',
 				url : "/api/hotels",
-				contentType : 'application/json',
+				headers: createAuthorizationTokenHeader(),
 				data : JSON.stringify(data),
 				success: function(){
 					$(location).attr('href',"/");

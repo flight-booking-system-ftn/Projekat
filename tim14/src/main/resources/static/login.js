@@ -1,8 +1,5 @@
 var loginUrl = "auth/login";
 
-
-var TOKEN_KEY = 'jwtToken';
-
 $(document).ready(function() {
 	$(document).on('submit', '#loginForm', function(e) {
 		e.preventDefault();
@@ -17,25 +14,19 @@ $(document).ready(function() {
 				type : 'POST',
 				url : loginUrl,
 				contentType : 'application/json',
-				data : formToJSON(username, password),
+				data : JSON.stringify({
+					username,
+					password
+				}),
+				dataType: 'json',
 				success : function(response) {
-					if (response == "") {
-						alert("Login failed!");
-						return;
-					} else {
-						console.log("E");
-						setJwtToken(TOKEN_KEY, response.accessToken);			
-					
-					window.location.replace(response.redirectionURL);
-				}
+					setJwtToken(response.accessToken);			
+					$(location).attr('href', response.redirectionURL);
+				},
+				error: function (xhr, status) {
+					showMessage('Login failed!', 'red');
 				}
 			});
 		}
 	})
 })
-function formToJSON(username, password) {
-	return JSON.stringify({
-		"username" : username,
-		"password" : password
-	});
-}

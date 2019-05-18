@@ -168,7 +168,6 @@ public class AuthenticationController {
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 	
-	
 	@RequestMapping(value = "/registerAirlineAdmin", method = RequestMethod.POST)
 	public ResponseEntity<?> registerAirlineAdmin(@RequestBody AirlineAdmin airlineAdmin) {
 		User admin = userDetailsService.findByUsername(airlineAdmin.getUsername());
@@ -234,8 +233,8 @@ public class AuthenticationController {
 		
 		if (user instanceof RegisteredUser) {
 			ut = UserType.ROLE_REGISTEREDUSER;
-			redirectionURL = "index.html";}
-			
+			redirectionURL = "/";
+			}
 		else if (user instanceof AirlineAdmin) {
 			ut = UserType.ROLE_AIRLINEADMIN;
 			redirectionURL = "airlineAdmin.html";

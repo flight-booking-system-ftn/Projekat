@@ -7,5 +7,5 @@ import com.isamrs.tim14.model.RentACar;
 
 @RepositoryRestResource(path = "rentacars")
 public interface IRentACarRepository extends JpaRepository<RentACar, Integer>{
-
+	RentACar getRentACarById(Integer id);
 }
