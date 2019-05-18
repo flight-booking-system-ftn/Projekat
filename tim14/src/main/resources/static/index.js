@@ -27,7 +27,6 @@ $(document).ready(function(){
     });
     
     $(document).on('click','#registrationBtn',function(){
-    	console.log("SDASD");
         $(location).attr('href',"/registration.html");
     });
     
@@ -52,6 +51,12 @@ $(document).ready(function(){
     $(document).on('click','#addRentACarAdminBtn',function(){
         $(location).attr('href',"/newRentACarAdmin.html");
     });
+    
+    $(document).on('click','#logoutBtn',function(){
+    	removeJwtToken();
+        $(location).attr('href',"/logout");
+    });
+    
     $(document).on('click','#airlineSearchBtn', function(){
         renderAirlineTableSearch();
     });

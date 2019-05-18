@@ -14,4 +14,9 @@ $(document).ready(function() {
 	$(document).on('click', '#addDestinationBtn', function() {
 		$(location).attr('href', "/destination.html");
 	});
+	
+	$(document).on('click','#logoutBtn',function(){
+    	removeJwtToken();
+        $(location).attr('href',"/logout");
+    });
 })
