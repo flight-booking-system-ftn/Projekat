@@ -216,7 +216,7 @@ $(document).ready(function(){
 					else
 						bgcolor = "#00ff00";
 					
-					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDiv'><input type='hidden' value='" + seat.id + "'></div>");
+					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForReservation'><input type='hidden' value='" + seat.id + "'></div>");
 					
 					if(index % 3 == 0)
 						seatDiv.css("clear", "left");
@@ -389,7 +389,7 @@ $(document).ready(function(){
     				var departureDate = new Date(flight.departureDate);
     				var arrivalDate = new Date(flight.arrivalDate);
     				
-    				var times = $("<td>" + departureDate.getHours() + ":" + departureDate.getMinutes() + " - " + arrivalDate.getHours() + ":" + arrivalDate.getMinutes() + "</td>")
+    				var times = $("<td>" + (departureDate.getHours() < 9 ? "0" : "") + departureDate.getHours() + ":"+ (departureDate.getMinutes() < 9 ? "0" : "") + departureDate.getMinutes() + " - "+ (arrivalDate.getHours() < 9 ? "0" : "") + arrivalDate.getHours() + ":"+ (arrivalDate.getMinutes() < 9 ? "0" : "") + arrivalDate.getMinutes() + "</td>");
     				var travelTime = $("<td>" + flight.flightDuration + "</td>");
     				var stops = $("<td>" + flight.stops.length + "</td>");
     				var airline = $("<td>" + flight.airline.name + "</td>");
@@ -414,7 +414,7 @@ $(document).ready(function(){
     	});
     });
     
-    /*$(document).on("click", "input.select", function() {
+    $(document).on("click", "input.select", function() {
     	var seatsDiv = $("div#seatsDiv"); //var seatsDiv = $("<div id='seatsDiv' style='text-align: center; height: " + ((data.length / 3) * 55) + "px;'></div>");
     	seatsDiv.empty();
     	
@@ -449,12 +449,10 @@ $(document).ready(function(){
 					seatsDiv.append(seatDiv);
 				});
 				
-				
-				
 				$("div#reservationSeatsModal").show();
 			}
 		});
-    });*/
+    });
     
     var selectedSeats = [];
 	$(document).on("click", "div.seatDivForReservation", function() {
@@ -470,8 +468,11 @@ $(document).ready(function(){
 				$(this).css("border", "0");
 				
 				exists = true;
-				if(selectedSeats.length == 0)
-					$("input#next").prop("disabled", true);
+				if(selectedSeats.length < 2) {
+					$("button#inviteFriendsTab").attr("disabled", "disabled");
+					$("button#otherPassengersTab").attr("disabled", "disabled");
+					console.log(selectedSeats.length);
+				}
 				
 				break;
 			}
@@ -483,18 +484,18 @@ $(document).ready(function(){
 			});
 			$(this).css("border", "3px solid red");
 			
-			$("input#next").prop("disabled", false);
+			if(selectedSeats.length > 1) {
+				$("button#inviteFriendsTab").removeAttr("disabled");
+				$("button#otherPassengersTab").removeAttr("disabled");
+				console.log(selectedSeats.length);
+			}
 		}
 	});
 	
-	$(document).on("click", "input#close", function() {
+	$(document).on("click", "span.close", function() {
 		$("div#seatsDiv").empty();
 		selectedSeats = [];
-	});
-	
-	var previous
-	$(document).on("click", "input#next", function() {
-		
+		$("div#reservationSeatsModal").hide();
 	});
     
     //----------------------------------------
@@ -667,4 +668,18 @@ function formatDate(date) {
     if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
+}
+
+function openTab(evt, tabName) {
+	var i, tabcontent, tablinks;
+	tabcontent = document.getElementsByClassName("tabcontent");
+	for (i = 0; i < tabcontent.length; i++) {
+		tabcontent[i].style.display = "none";
+	}
+	tablinks = document.getElementsByClassName("tablinks");
+	for (i = 0; i < tablinks.length; i++) {
+		tablinks[i].className = tablinks[i].className.replace(" active", "");
+	}
+	document.getElementById(tabName).style.display = "block";
+	evt.currentTarget.className += " active";
 }
