@@ -1,3 +1,8 @@
+all_rooms = [];
+selected_rooms = [];
+all_hotel_services = [];
+selected_hotel_services = [];
+
 $(document).ready(function(){
     
     renderAirlineTable();
@@ -71,14 +76,16 @@ $(document).ready(function(){
     
     $(document).on('click','#roomSearchBtn', function(){
         var hotelId = $('#hotelIdField').val();
-        var arrivalDate = $('#roomSearchArrivalDate').val();
-        var numDays = $('#roomSearchDayNumber').val();
+        var start = stringToDate($('#roomSearchArrivalDate').val());
+		var end = start + $('#roomSearchDayNumber').val()*24*60*60*1000;
+		console.log(">>> " + start);
+		console.log(">>> " + end);
         var TwoBedRooms = $('#roomSearch2Bed').prop('checked');
         var ThreeBedRooms = $('#roomSearch3Bed').prop('checked');
         var FourBedRooms = $('#roomSearch4Bed').prop('checked');
-        console.log('Hotel id: ', hotelId ,'....', arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms);
+        console.log('Hotel id: ', hotelId ,'....', start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms);
 
-        renderRoomTable(hotelId, arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms);
+        renderRoomTable(hotelId, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms,$('#roomSearchDayNumber').val() );
     });
     
     $(document).on('click','#vehicleSearchBtn', function(){
@@ -88,7 +95,6 @@ $(document).ready(function(){
         var cars = $('#vehicleCars').prop('checked');
         var motocycles = $('#vehicleMotocycles').prop('checked');
         console.log('Rent: ', rentId ,'....', arrivalDate, numDays, cars, motocycles);
-
         renderVehicleTable(rentId, arrivalDate, numDays, cars, motocycles);
     });
     
@@ -135,7 +141,58 @@ $(document).ready(function(){
     $(document).on('click','#quitDialogRentView',function(){
     	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
         $('#dialogRentView').css("display","none");
-    });
+	});
+	
+	$(document).on('click','#makeHotelReservationBtn',function(){
+		selected_rooms = [];
+		selected_hotel_services = [];
+        for(var i=0;i<all_rooms.length;i++){
+			var red = all_rooms[i];
+			if($('#roomCheckbox'+ red.id).prop('checked')){
+				delete red.hotel.hibernateLazyInitializer;
+				delete red.hotel.destination.hibernateLazyInitializer;
+				selected_rooms.push(red);
+			}
+		}
+		for(var i=0;i<all_hotel_services.length;i++){
+			var red = all_hotel_services[i];
+			if($('#hotelServiceCheckbox'+ red.id).prop('checked')){
+				delete red.hotel.hibernateLazyInitializer;
+				delete red.hotel.destination.hibernateLazyInitializer;
+				selected_hotel_services.push(red);
+			}
+		}
+		var start = stringToDate($('#roomSearchArrivalDate').val());
+		var end = start + $('#roomSearchDayNumber').val()*24*60*60*1000;	
+		console.log("Selected rooms: ", selected_rooms);
+		console.log("Selected hotel services: ", selected_hotel_services);
+		if(selected_rooms.length == 0){
+			showMessage("Select at least 1 room!", "orange");
+			return;
+		}
+		var reservation = {
+			"start": new Date(start),
+			"end": new Date(end),
+			"rooms": selected_rooms,
+			"services": selected_hotel_services,
+			"hotel": selected_rooms[0].hotel
+		};
+		console.log("Hotel reservation: ", reservation);
+		$.ajax({
+			type : 'POST',
+			url : "/api/roomReservations",
+			headers: createAuthorizationTokenHeader(),
+			data : JSON.stringify(reservation),
+			success: function(){
+				$(location).attr('href',"/");
+			},
+			error: function (jqXHR, exception) {
+				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+			}
+		})
+	});
+	
+	
     
     //--------------- RADOJCIN ---------------
     
@@ -160,10 +217,10 @@ $(document).ready(function(){
 					var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
 					var to = $("<td>" + flight.to.name + " - " + flight.to.destination.name + ", " + flight.to.destination.country + "</td>");
 					var stops = $("<td>" + flight.stops.length + "</td>");
-					var departureDate = $("<td>" + formatDate(new Date(flight.departureDate)) + "</td>");
-					var arrivalDate = $("<td>" + formatDate(new Date(flight.arrivalDate)) + "</td>");
-					var returnDepartureDate = $("<td>" + (flight.returnDepartureDate == null ? "" : formatDate(new Date(flight.returnDepartureDate))) + "</td>");
-					var returnArrivalDate = $("<td>" + (flight.returnArrivalDate == null ? "" : formatDate(new Date(flight.returnArrivalDate))) + "</td>");
+					var departureDate = $("<td>" + formatDateDet(new Date(flight.departureDate)) + "</td>");
+					var arrivalDate = $("<td>" + formatDateDet(new Date(flight.arrivalDate)) + "</td>");
+					var returnDepartureDate = $("<td>" + (flight.returnDepartureDate == null ? "" : formatDateDet(new Date(flight.returnDepartureDate))) + "</td>");
+					var returnArrivalDate = $("<td>" + (flight.returnArrivalDate == null ? "" : formatDateDet(new Date(flight.returnArrivalDate))) + "</td>");
 					var luggageQuantity = $("<td>" + flight.luggageQuantity + "</td>");
 					var ticketPrice = $("<td>" + flight.ticketPrice + "</td>");
 					var actions = $("<td><input type='button' class='edit' value='Edit seats'></td>");
@@ -187,7 +244,7 @@ $(document).ready(function(){
 		});
 	}
 	
-	function formatDate(date) {
+	function formatDateDet(date) {
 		return date.toLocaleDateString("en", options) + " " + (date.getHours() < 10 ? "0" + (date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
 	}
 	
@@ -504,7 +561,8 @@ $(document).ready(function(){
 var renderHotelServiceTable = function(hotelId){
     $.get('/api/hotelServicesSearch/'+hotelId, function(servicesData){
         console.log("Hotel Services: ", servicesData);
-        var services = servicesData;
+		var services = servicesData;
+		all_hotel_services = services;
         $('#selectedHotelServicesTable').html(`<tr><th>Name</th><th>Price</th><th>Select</th></tr>`);
         for(var i=0;i<services.length;i++){
             var red = services[i];
@@ -515,12 +573,13 @@ var renderHotelServiceTable = function(hotelId){
     });
 }
 
-var renderRoomTable = function(hotelId, arrivalDate, numDays, TwoBedRooms, ThreeBedRooms, FourBedRooms){
-    var text = `/${hotelId}/${arrivalDate}/${numDays}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
+var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms, ThreeBedRooms, FourBedRooms, numDays){
+    var text = `/${hotelId}/${arrivalDate}/${departureDate}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
     console.log(text);
     $.get('/api/roomsSearch'+text, function(RoomData){
             console.log("Rooms: ", RoomData);
-            var rooms = RoomData;
+			var rooms = RoomData;
+			all_rooms = rooms;
             $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
             for(var i=0;i<rooms.length;i++){
                 var red = rooms[i];
@@ -574,22 +633,35 @@ var renderHotelTableSearch = function(){
     var hotelName = $('#hotelNameSearchInput').val();
     var hotelDestination = $('#hotelDestinationSearchInput').val();
     var checkIn = $('#hotelSearchCheckIn').val();
-    var checkOut = $('#hotelSearchCheckOut').val();
-    
-    console.log(checkIn, checkOut);
+    var checkOut = $('#hotelSearchCheckOut').val();	
+
     if(hotelName == ""){
         hotelName = "NO_INPUT";
     }
     if(hotelDestination == ""){
         hotelDestination = "NO_INPUT";
     }
-    if(checkIn == ""){
-        checkIn = "NO_INPUT";
-    }
-    if(checkOut == ""){
-        checkOut = "NO_INPUT";
-    }
-    text = hotelName+"/"+hotelDestination+"/"+checkIn+"/"+checkOut;
+    if(checkIn == "" && checkOut == ""){
+		checkIn = "NO_INPUT";
+		checkOut = "NO_INPUT";
+	}else if(checkIn != "" && checkOut == ""){
+		showMessage("Fill check-out field!", "orange");
+		return;
+	}else if(checkIn == "" && checkOut != ""){
+		showMessage("Fill check-in field!", "orange");
+		return;
+	}else {
+		var checkInTS = stringToDate(checkIn);
+		var checkOutTS = stringToDate(checkOut);
+		if(checkInTS >= checkOutTS){
+			showMessage("Check-in must be before Check-out", "orange");
+			return;
+		}
+	}
+    var checkInTS = stringToDate(checkIn);
+	var checkOutTS = stringToDate(checkOut);
+	text = hotelName+"/"+hotelDestination+"/"+checkInTS+"/"+checkOutTS;
+	console.log('/api/hotelsSearch/'+text);
     $('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
     $.get('/api/hotelsSearch/'+text, function(data){
         console.log("Hotels: ", data);
@@ -659,16 +731,24 @@ var renderVehicleTable = function(rentId, arrivalDate, numDays, cars, motocycles
 }
 
 function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+    month = '' + (date.getMonth() + 1);
+    day = '' + date.getDate();
+    year = date.getFullYear();
 
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
+	return [year, month, day].join('-');
 
-    return [year, month, day].join('-');
 }
+
+
+function stringToDate(displayFormat){
+	myDate=displayFormat.split("-");
+	var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
+	console.log(newDate);
+	return new Date(newDate).getTime();
+}
+
 
 function openTab(evt, tabName) {
 	var i, tabcontent, tablinks;

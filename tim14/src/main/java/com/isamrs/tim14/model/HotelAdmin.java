@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 public class HotelAdmin extends User {
 
-	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "hotel_id")
 	private Hotel hotel;
 

@@ -69,7 +69,7 @@ public class HotelDAOImpl implements HotelDAO {
 
 	@Override
 	@Transactional
-	public List<Hotel> getHotelsSearch(String hotelName, String hotelDestination, String checkIn, String checkOut) {
+	public List<Hotel> getHotelsSearch(String hotelName, String hotelDestination, long checkIn, long checkOut) {
 		
 		if(hotelName.equals("NO_INPUT")) {
 			hotelName = "";
