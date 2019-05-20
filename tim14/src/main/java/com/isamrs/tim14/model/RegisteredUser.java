@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -19,19 +20,21 @@ public class RegisteredUser extends User {
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "friend_table", joinColumns = { @JoinColumn(name = "friend1") }, inverseJoinColumns = {
 			@JoinColumn(name = "friend2") })
+	@JsonBackReference(value="user-user1")
 	private Set<RegisteredUser> friendList1;
 
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "friend_table", joinColumns = { @JoinColumn(name = "friend2") }, inverseJoinColumns = {
 			@JoinColumn(name = "friend1") })
+	@JsonBackReference(value="user-user2")
 	private Set<RegisteredUser> friendList2;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
+	@JsonBackReference(value="user-flightReservation")
 	private Set<FlightReservation> flightReservations;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="registeredUser")
 	@JsonBackReference(value="user-roomReservation")
 	private Set<RoomReservation> roomReservations;
 

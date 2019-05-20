@@ -43,7 +43,7 @@ public class HotelRest {
 			value = "/hotelsSearch/{hotelName}/{hotelDestination}/{checkIn}/{checkOut}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Hotel>> getHotelsSearch(@PathVariable String hotelName, @PathVariable String hotelDestination, @PathVariable String checkIn, @PathVariable String checkOut){
+	public ResponseEntity<Collection<Hotel>> getHotelsSearch(@PathVariable String hotelName, @PathVariable String hotelDestination, @PathVariable long checkIn, @PathVariable long checkOut){
 		System.out.println(hotelName + " " + hotelDestination + " " + checkIn + " " + checkOut);
 		Collection<Hotel> hotels = hotelDAO.getHotelsSearch(hotelName, hotelDestination, checkIn, checkOut);
 		

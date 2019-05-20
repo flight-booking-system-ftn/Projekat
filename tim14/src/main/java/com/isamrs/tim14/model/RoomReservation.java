@@ -12,7 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -33,14 +35,22 @@ public class RoomReservation {
 	@Column(name = "end")
 	private Date end;
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "reservations")
+	@ManyToMany(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "reservations")
 	@JsonBackReference(value="room-reservations")
 	private Set<Room> rooms;
 	
-	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "room_reservation_id")
-	@JsonBackReference(value="room-services")
+	@ManyToMany(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)  
+    @JoinTable(name="roomReservations_services", joinColumns=@JoinColumn(name="reservation_id"), inverseJoinColumns=@JoinColumn(name="service_id"))
+	@JsonBackReference(value="reservation-services")
 	private Set<HotelService> services;
+	
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+	private RegisteredUser registeredUser;
+	
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id")
+	private Hotel hotel;
 
 	public RoomReservation() {
 		super();
@@ -64,6 +74,22 @@ public class RoomReservation {
 		this.end = end;
 	}
 	
+	public RegisteredUser getRegisteredUser() {
+		return registeredUser;
+	}
+
+	public void setRegisteredUser(RegisteredUser registeredUser) {
+		this.registeredUser = registeredUser;
+	}
+
+	public Hotel getHotel() {
+		return hotel;
+	}
+
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
+	}
+
 	public Integer getId() {
 		return id;
 	}
