@@ -8,9 +8,11 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Authority;
+import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.User;
@@ -72,6 +74,14 @@ public class HotelAdminDAOImpl implements HotelAdminDAO {
 			return null;
 		}
 		return result.get(0);
+	}
+
+
+	@Override
+	@Transactional
+	public Hotel getCurrentHotel() {
+		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return admin.getHotel();
 	}
 
 	

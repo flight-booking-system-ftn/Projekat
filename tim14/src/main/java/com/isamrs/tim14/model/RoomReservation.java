@@ -35,6 +35,9 @@ public class RoomReservation {
 	@Column(name = "end")
 	private Date end;
 	
+	@Column(name = "price")
+	private double price;
+	
 	@ManyToMany(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "reservations")
 	@JsonBackReference(value="room-reservations")
 	private Set<Room> rooms;
@@ -54,6 +57,7 @@ public class RoomReservation {
 
 	public RoomReservation() {
 		super();
+		this.price = 0;
 		this.rooms = new HashSet<Room>();
 		this.services = new HashSet<HotelService>();
 	}
@@ -98,6 +102,15 @@ public class RoomReservation {
 		this.id = id;
 	}
 
+	
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
 
 	public Set<Room> getRooms() {
 		return rooms;
