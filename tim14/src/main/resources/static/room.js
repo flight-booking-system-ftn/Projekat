@@ -20,7 +20,7 @@ $(document).ready(function() {
             headers: createAuthorizationTokenHeader(),
             data : JSON.stringify(data),
             success: function(){
-                $(location).attr('href',"/");
+                $(location).attr('href',"/hotelAdmin.html");
             },
             error: function (jqXHR, exception) {
                 if(jqXHR.status == 401){

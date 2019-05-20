@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.HotelAdminDAO;
+import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelAdmin;
 
 @RestController
@@ -47,6 +48,18 @@ public class HotelAdminRest {
 			return new ResponseEntity<HotelAdmin>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<HotelAdmin>(hotelAdmin, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/hotelAdmin/hotel",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hotel> getAdminsHotel(){
+		
+		Hotel currentHotel = hotelAdminDAO.getCurrentHotel();
+		
+		return new ResponseEntity<Hotel>(currentHotel, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_SYSTEMADMIN')")

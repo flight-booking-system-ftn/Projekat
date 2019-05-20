@@ -163,19 +163,21 @@ $(document).ready(function(){
 			}
 		}
 		var start = stringToDate($('#roomSearchArrivalDate').val());
-		var end = start + $('#roomSearchDayNumber').val()*24*60*60*1000;	
+		var end = start + ($('#roomSearchDayNumber').val() - 1)*24*60*60*1000;	
 		console.log("Selected rooms: ", selected_rooms);
 		console.log("Selected hotel services: ", selected_hotel_services);
 		if(selected_rooms.length == 0){
 			showMessage("Select at least 1 room!", "orange");
 			return;
 		}
+		var price = calculatePrice(selected_rooms, selected_hotel_services, $('#roomSearchDayNumber').val());
 		var reservation = {
 			"start": new Date(start),
 			"end": new Date(end),
 			"rooms": selected_rooms,
 			"services": selected_hotel_services,
-			"hotel": selected_rooms[0].hotel
+			"hotel": selected_rooms[0].hotel,
+			"price": price
 		};
 		console.log("Hotel reservation: ", reservation);
 		$.ajax({
@@ -660,6 +662,12 @@ var renderHotelTableSearch = function(){
 	}
     var checkInTS = stringToDate(checkIn);
 	var checkOutTS = stringToDate(checkOut);
+	if(checkIn == "NO_INPUT"){
+		checkInTS = 0;
+	}
+	if(checkOut == "NO_INPUT"){
+		checkOutTS = 0;
+	}
 	text = hotelName+"/"+hotelDestination+"/"+checkInTS+"/"+checkOutTS;
 	console.log('/api/hotelsSearch/'+text);
     $('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
@@ -762,4 +770,16 @@ function openTab(evt, tabName) {
 	}
 	document.getElementById(tabName).style.display = "block";
 	evt.currentTarget.className += " active";
+}
+
+function calculatePrice(rooms, services, days){
+	price = 0;
+	for(var i=0;i<rooms.length;i++){
+		price += (days * rooms[i].price);
+	}
+	for(var i=0;i<services.length;i++){
+		price += services[i].price;
+	}
+
+	return price;
 }

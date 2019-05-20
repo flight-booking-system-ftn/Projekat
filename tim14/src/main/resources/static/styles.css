@@ -107,6 +107,30 @@ tbody tr:nth-child(even) {
 	border: 1px solid rgba(0, 0, 0, 0.6);
 }
 
+.menuDivRight {
+	float: right;
+}
+
+.menuDivRight button {
+	margin-left: 10px;
+	width: 180px;
+	height: 38px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #e8e1de;
+	border: 1px solid #2b77b4;
+}
+
+.menuDivRight button:hover {
+	margin-left: 10px;
+	width: 180px;
+	height: 38px;
+	text-align: center;
+	background-color: #2b77b4;
+	color: #e8e1de;
+	border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
 .dialog {
 	display: none;
 	position: fixed;
@@ -131,7 +155,7 @@ tbody tr:nth-child(even) {
 
 .dialogContent button {
 	margin-left: 10px;
-	width: 150px;
+	width: 170px;
 	height: 30px;
 	text-align: center;
 	background-color: rgba(0, 0, 0, 0.6);
@@ -141,7 +165,7 @@ tbody tr:nth-child(even) {
 
 .dialogContent button:hover {
 	margin-left: 10px;
-	width: 150px;
+	width: 170px;
 	height: 30px;
 	text-align: center;
 	background-color: #2b77b4;
