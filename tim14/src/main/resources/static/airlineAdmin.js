@@ -302,6 +302,10 @@ $(document).ready(function() {
 		$(location).attr('href', "/newFlight.html");
 	});
 	
+	$("button#addOfficeBtn").click(function() {
+		$(location).attr('href', "/newAirlineOffice.html");
+	});
+	
 	$("button#logoutBtn").click(function(){
     	removeJwtToken();
         $(location).attr('href',"/logout");
