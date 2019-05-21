@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RentDAO;
+import com.isamrs.tim14.model.BranchOffice;
 import com.isamrs.tim14.model.RentACar;
 
 @RestController
@@ -74,5 +74,17 @@ public class RentACarRest {
 		Collection<RentACar> rents = rentDAO.getRentSearch(rentName, rentDestination, checkIn, checkOut);
 		
 		return new ResponseEntity<Collection<RentACar>>(rents, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/rentBranches/{rentID}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<BranchOffice>> getRentOffices(@PathVariable Integer rentID) {
+		RentACar rent =  rentDAO.getRent(rentID);
+		if(rent == null) {
+			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Collection<BranchOffice>>(rent.getOffices(), HttpStatus.OK);
 	}
 }

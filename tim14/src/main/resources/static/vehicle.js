@@ -1,4 +1,15 @@
 $(document).ready(function() {
+	$.get({url: '/api/branchOffices', 
+			headers: createAuthorizationTokenHeader()}, function(data){
+        
+		var select = document.getElementById("branch_office");
+		console.log(data);
+        for(var i=0;i<data.length;i++){
+            var red = data[i];
+            select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
+        }
+    });
+	
 	$(document).on('submit', "#add_vehicle", function(e) {
 		e.preventDefault(); 
         var brand = $("#txt_vehicle_brand").val();
@@ -7,8 +18,9 @@ $(document).ready(function() {
         var seatsNumber = $("#txt_vehicle_seats").val();
         var type = $("#select_vehicle_type").val();
         var price = $("#txt_vehicle_price").val();
-         $.get('/api/rentacars/1', function(rentData){
-             console.log("Rent DATA: ", rentData);
+        var link = '/api/branchOffice/'+$("#branch_office option:selected" ).val();
+		$.get(link, function(branches){
+             console.log("Branch DATA: ", branches);
              data = {
                  "brand": brand,
                  "model" : model,
@@ -17,7 +29,8 @@ $(document).ready(function() {
                  "seatsNumber": seatsNumber,
                  "price": price,
                  "type": type,
-                 "rentACar" : rentData
+                 "rentACar" : null,
+                 "branchOffice" : branches 
              };
              console.log(data);
              $.ajax({
