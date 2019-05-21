@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>New office</title>
+		<link rel="stylesheet" type="text/css" media="screen" href="snackbar.css">
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="snackbar.js"></script>
+		<script type="text/javascript" src="newAirlineOffice.js"></script>
+		<script src="authentication.js"></script>
+	</head>
+	<body>
+		<form id="newOfficeForm">
+			<table>
+				<tr><td>Name</td> <td><input type="text" id="name" required="required"></td></tr>
+				<tr><td>Address</td> <td><input type="text" id="address" required="required"></td></tr>
+				<tr><td>Phone</td> <td><input type="text" id="phone" pattern="[0-9]{3}/[0-9]{2,}" required="required"></td></tr>
+				<tr><td>Email</td> <td><input type="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required="required"></td></tr>
+				<tr><td></td> <td><input type="submit" value="Add"></td></tr>
+			</table>
+		</form>
+	</body>
+</html>

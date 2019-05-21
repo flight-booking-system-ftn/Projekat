@@ -53,6 +53,10 @@ public class Airline {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
 	private Set<Luggage> luggagePricelist;
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "airline_id")
+	private Set<AirlineOffice> offices;
 
 	public Airline() {
 		super();
@@ -128,6 +132,14 @@ public class Airline {
 
 	public void setLuggagePricelist(Set<Luggage> luggagePricelist) {
 		this.luggagePricelist = luggagePricelist;
+	}
+
+	public Set<AirlineOffice> getOffices() {
+		return offices;
+	}
+
+	public void setOffices(Set<AirlineOffice> offices) {
+		this.offices = offices;
 	}
 
 }
