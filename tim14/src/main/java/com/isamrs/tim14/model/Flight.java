@@ -58,8 +58,14 @@ public class Flight {
 	@Column(name = "flight_duration")
 	private Double flightDuration;
 	
-	@Column(name = "ticket_price")
-	private Double ticketPrice;
+	@Column(name = "ticket_price_first_class")
+	private Double ticketPriceFirstClass;
+	
+	@Column(name = "ticket_price_business_class")
+	private Double ticketPriceBusinessClass;
+	
+	@Column(name = "ticket_price_economy_class")
+	private Double ticketPriceEconomyClass;
 	
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "flight_stopover", joinColumns = { @JoinColumn(name = "flight_id") }, inverseJoinColumns = {
@@ -68,10 +74,6 @@ public class Flight {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<Grade> grades;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "flight")
-	@JsonIgnoreProperties("flight")
-	private Set<FlightTicket> tickets;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "flight_id")
@@ -153,12 +155,28 @@ public class Flight {
 		this.flightDuration = flightDuration;
 	}
 
-	public Double getTicketPrice() {
-		return ticketPrice;
+	public Double getTicketPriceFirstClass() {
+		return ticketPriceFirstClass;
 	}
 
-	public void setTicketPrice(Double ticketPrice) {
-		this.ticketPrice = ticketPrice;
+	public void setTicketPriceFirstClass(Double ticketPriceFirstClass) {
+		this.ticketPriceFirstClass = ticketPriceFirstClass;
+	}
+
+	public Double getTicketPriceBusinessClass() {
+		return ticketPriceBusinessClass;
+	}
+
+	public void setTicketPriceBusinessClass(Double ticketPriceBusinessClass) {
+		this.ticketPriceBusinessClass = ticketPriceBusinessClass;
+	}
+
+	public Double getTicketPriceEconomyClass() {
+		return ticketPriceEconomyClass;
+	}
+
+	public void setTicketPriceEconomyClass(Double ticketPriceEconomyClass) {
+		this.ticketPriceEconomyClass = ticketPriceEconomyClass;
 	}
 
 	public Set<Airport> getStops() {
@@ -175,14 +193,6 @@ public class Flight {
 
 	public void setGrades(Set<Grade> grades) {
 		this.grades = grades;
-	}
-
-	public Set<FlightTicket> getTickets() {
-		return tickets;
-	}
-
-	public void setTickets(Set<FlightTicket> tickets) {
-		this.tickets = tickets;
 	}
 
 	public List<Seat> getSeats() {

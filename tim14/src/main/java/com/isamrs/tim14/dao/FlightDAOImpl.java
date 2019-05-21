@@ -9,12 +9,15 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.Seat;
 import com.isamrs.tim14.model.SeatType;
+import com.isamrs.tim14.others.FlightPathAndDate;
 import com.isamrs.tim14.others.FlightsSearch;
 
 @Repository
@@ -65,50 +68,109 @@ public class FlightDAOImpl implements FlightDAO {
 
 	@Override
 	@Transactional
-	public List<Flight> search(FlightsSearch values) {
-		Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
-		query.setParameter("from_airport", values.getFrom());
-		query.setParameter("to_airport", values.getTo());
-		query.setParameter("bags", values.getBags());
-		
-		List<Flight> flights = query.getResultList();
-		List<Flight> result = new ArrayList<Flight>();
+	public ResponseEntity<List<List<Flight>>> search(FlightsSearch values) {
+		List<List<Flight>> result = new ArrayList<List<Flight>>();
 		
 		int freeSeats;
+		List<Flight> flights;
 		
-		for(Flight flight : flights) {
-			if(flight.getDepartureDate().getYear() == values.getDepartureDate().getYear() && flight.getDepartureDate().getMonth() == values.getDepartureDate().getMonth()
-					&& flight.getDepartureDate().getDate() == values.getDepartureDate().getDate()) {
-				freeSeats = 0;
-				for(Seat seat : flight.getSeats()) {
-					if(seat.getEnabled() == true && seat.getBusy() == false) {
-						if(values.getSeatClass().equals("Economy") && seat.getType() == SeatType.ECONOMY) {
-							freeSeats++;
-							if(freeSeats >= values.getPassengers()) {
-								result.add(flight);
-								freeSeats = 0;
-								break;
-							}
-						} else if(values.getSeatClass().equals("Business") && seat.getType() == SeatType.BUSINESS) {
-							freeSeats++;
-							if(freeSeats >= values.getPassengers()) {
-								result.add(flight);
-								freeSeats = 0;
-								break;
-							}
-						} else if(values.getSeatClass().equals("First Class") && seat.getType() == SeatType.FIRST_CLASS) {
-							freeSeats++;
-							if(freeSeats >= values.getPassengers()) {
-								result.add(flight);
-								freeSeats = 0;
-								break;
+		for(FlightPathAndDate data : values.getData()) {
+			Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+			query.setParameter("from_airport", data.getFrom());
+			query.setParameter("to_airport", data.getTo());
+			query.setParameter("bags", values.getBags());
+			
+			flights = query.getResultList();
+			List<Flight> flightResult = new ArrayList<Flight>();
+			
+			for(Flight flight : flights) {
+				if(flight.getDepartureDate().getYear() == data.getDepartureDate().getYear() && flight.getDepartureDate().getMonth() == data.getDepartureDate().getMonth()
+						&& flight.getDepartureDate().getDate() == data.getDepartureDate().getDate()) {
+					freeSeats = 0;
+					for(Seat seat : flight.getSeats()) {
+						if(seat.getEnabled() == true && seat.getBusy() == false) {
+							if(values.getSeatClass().equals("Economy") && seat.getType() == SeatType.ECONOMY) {
+								freeSeats++;
+								if(freeSeats >= values.getPassengers()) {
+									flightResult.add(flight);
+									freeSeats = 0;
+									break;
+								}
+							} else if(values.getSeatClass().equals("Business") && seat.getType() == SeatType.BUSINESS) {
+								freeSeats++;
+								if(freeSeats >= values.getPassengers()) {
+									flightResult.add(flight);
+									freeSeats = 0;
+									break;
+								}
+							} else if(values.getSeatClass().equals("First Class") && seat.getType() == SeatType.FIRST_CLASS) {
+								freeSeats++;
+								if(freeSeats >= values.getPassengers()) {
+									flightResult.add(flight);
+									freeSeats = 0;
+									break;
+								}
 							}
 						}
 					}
 				}
 			}
+			
+			if(flightResult.size() == 0)
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			
+			result.add(flightResult);
 		}
 		
-		return result;
+		if(values.getTripType().equals("Round trip")) {
+			System.out.println("ROUND TRIP, TRAZIM POVRATNI LET ZA DATUM " + values.getData().get(0).getReturnDate());
+			Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+			query.setParameter("from_airport", values.getData().get(0).getTo());
+			query.setParameter("to_airport", values.getData().get(0).getFrom());
+			query.setParameter("bags", values.getBags());
+			
+			flights = query.getResultList();
+			List<Flight> returningFlightResult = new ArrayList<Flight>();
+			
+			for(Flight flight : flights) {
+				if(flight.getDepartureDate().getYear() == values.getData().get(0).getReturnDate().getYear() && flight.getDepartureDate().getMonth() == values.getData().get(0).getReturnDate().getMonth()
+						&& flight.getDepartureDate().getDate() == values.getData().get(0).getReturnDate().getDate()) {
+					freeSeats = 0;
+					for(Seat seat : flight.getSeats()) {
+						if(seat.getEnabled() == true && seat.getBusy() == false) {
+							if(values.getSeatClass().equals("Economy") && seat.getType() == SeatType.ECONOMY) {
+								freeSeats++;
+								if(freeSeats >= values.getPassengers()) {
+									returningFlightResult.add(flight);
+									freeSeats = 0;
+									break;
+								}
+							} else if(values.getSeatClass().equals("Business") && seat.getType() == SeatType.BUSINESS) {
+								freeSeats++;
+								if(freeSeats >= values.getPassengers()) {
+									returningFlightResult.add(flight);
+									freeSeats = 0;
+									break;
+								}
+							} else if(values.getSeatClass().equals("First Class") && seat.getType() == SeatType.FIRST_CLASS) {
+								freeSeats++;
+								if(freeSeats >= values.getPassengers()) {
+									returningFlightResult.add(flight);
+									freeSeats = 0;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			if(returningFlightResult.size() == 0)
+				return new ResponseEntity(HttpStatus.NOT_FOUND);
+			
+			result.add(returningFlightResult);
+		}
+		
+		return new ResponseEntity(result, HttpStatus.OK);
 	}
 }

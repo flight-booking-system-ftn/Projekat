@@ -225,7 +225,7 @@ $(document).ready(function(){
     
     //--------------- RADOJCIN ---------------
     
-    var flights;
+	var flights;
 	var options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
 	
 	getFlights();
@@ -242,29 +242,27 @@ $(document).ready(function(){
 				$.each(flights, function(index, flight) {
 					var tr = $("<tr id='" + flight.id + "'></tr>");
 					var id = $("<input type='hidden' value='" + flight.id + "'>");
-					var tripType = $("<td>" + (flight.flightType == "ONE_WAY" ? "One way" : "Round trip") + "</td>");
 					var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
 					var to = $("<td>" + flight.to.name + " - " + flight.to.destination.name + ", " + flight.to.destination.country + "</td>");
 					var stops = $("<td>" + flight.stops.length + "</td>");
 					var departureDate = $("<td>" + formatDateDet(new Date(flight.departureDate)) + "</td>");
 					var arrivalDate = $("<td>" + formatDateDet(new Date(flight.arrivalDate)) + "</td>");
-					var returnDepartureDate = $("<td>" + (flight.returnDepartureDate == null ? "" : formatDateDet(new Date(flight.returnDepartureDate))) + "</td>");
-					var returnArrivalDate = $("<td>" + (flight.returnArrivalDate == null ? "" : formatDateDet(new Date(flight.returnArrivalDate))) + "</td>");
 					var luggageQuantity = $("<td>" + flight.luggageQuantity + "</td>");
-					var ticketPrice = $("<td>" + flight.ticketPrice + "</td>");
+					var ticketPriceFirstClass = $("<td>" + flight.ticketPriceFirstClass + "</td>");
+					var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
+					var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
 					var actions = $("<td><input type='button' class='edit' value='Edit seats'></td>");
 					
 					tr.append(id);
-					tr.append(tripType);
 					tr.append(from);
 					tr.append(to);
 					tr.append(stops);
 					tr.append(departureDate);
 					tr.append(arrivalDate);
-					tr.append(returnDepartureDate);
-					tr.append(returnArrivalDate);
 					tr.append(luggageQuantity);
-					tr.append(ticketPrice);
+					tr.append(ticketPriceFirstClass);
+					tr.append(ticketPriceBusinessClass);
+					tr.append(ticketPriceEconomyClass);
 					tr.append(actions);
 					
 					table.append(tr);
@@ -288,7 +286,7 @@ $(document).ready(function(){
 			dataType: "json",
 			success: function(data) {
 				
-				seatsTableDiv.css("height", ((data.length / 3) * 55) + "px");
+				seatsTableDiv.css("height", ((data.length / 3) * 55 + (data.length % 3 > 0 ? 20 : 0)) + "px");
 				$.each(data, function(index, seat) {
 					var bgcolor;
 					if(seat.enabled == false)
@@ -302,15 +300,13 @@ $(document).ready(function(){
 					else
 						bgcolor = "#00ff00";
 					
-					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForReservation'><input type='hidden' value='" + seat.id + "'></div>");
+					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForEdit'><input type='hidden' value='" + seat.id + "'></div>");
 					
 					if(index % 3 == 0)
 						seatDiv.css("clear", "left");
 					
 					seatsTableDiv.append(seatDiv);
 				});
-				
-				
 				
 				$("div#editSeatsModal").show();
 			}
@@ -321,12 +317,20 @@ $(document).ready(function(){
 	$(document).on("click", "span.close", function() {
 		$("div#seatsTableDiv").empty();
 		previousSeat = undefined;
-		$("input#toggleSeat").prop("disabled", true);
-		$("input#deleteSeat").prop("disabled", true);
+		$("input#toggleSeat").attr("disabled", "disabled");
+		$("input#deleteSeat").attr("disabled", "disabled");
 		$("div#editSeatsModal").hide();
+		
+		//---------------- REZERVACIJA ----------------
+		
+		$("div#seatsDiv").empty();
+		$("div#extraServicesDiv").empty();
+		selectedSeats = [];
+		$("input#makeFlightReservation").attr("disabled", "disabled");
+		$("div#reservationSeatsModal").hide();
 	});
 	
-	$(document).on("click", "div.seatDiv", function() {
+	$(document).on("click", "div.seatDivForEdit", function() {
 		if($(this).css("background-color") == "rgb(255, 0, 0)")
 			return;
 		
@@ -336,8 +340,8 @@ $(document).ready(function(){
 		$(this).css("border", "2px solid red");
 		previousSeat = $(this);
 		
-		$("input#toggleSeat").prop("disabled", false);
-		$("input#deleteSeat").prop("disabled", false);
+		$("input#toggleSeat").removeAttr("disabled");
+		$("input#deleteSeat").removeAttr("disabled");
 	});
 	
 	$(document).on("click", "input#toggleSeat", function() {
@@ -383,16 +387,16 @@ $(document).ready(function(){
 			}
 		});
 	});
-	
-	getAirports();
     
-    function getAirports() {
+getAirports(1);
+    
+    function getAirports(index) {
     	$.ajax({
     		type: "GET",
     		url: "/airport/all",
     		success: function(data) {
-    			var fromSelect = $("select#from");
-    			var toSelect = $("select#to");
+    			var fromSelect = $("select#from" + index);
+    			var toSelect = $("select#to" + index);
     			
     			$.each(data, function(index, airport) {
     	    		var fromOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
@@ -405,17 +409,58 @@ $(document).ready(function(){
     	});
     }
     
+    var flightIndex = 2;
+    var flightRows = [];
     $("select#tripType").change(function() {
     	var selected = $(this).find("option:selected").text();
     	
     	if(selected == "Round trip") {
-    		var returnDate = $("<td id='returnDateTD'>Return date <input type='date' id='returnDate' title='Return date'></td>");
+    		$("td#addFlightTD").remove();
+    		
+    		flightRows.forEach(function(index) {
+    			$("#searchFlightsForm table tr#" + index).remove();
+    		});
+    		flightRows = [];
+    		flightIndex = 2;
+    		
+    		var returnDate = $("<td id='returnDateTD'>Return date <input type='date' id='returnDate1' title='Return date'></td>");
     		var tr = $("#searchFlightsForm table tr#1");
     		
     		tr.append(returnDate);
     	} else if(selected == "One-way") {
     		$("td#returnDateTD").remove();
+    		$("td#addFlightTD").remove();
+    		
+    		flightRows.forEach(function(index) {
+    			$("#searchFlightsForm table tr#" + index).remove();
+    		});
+    		flightRows = [];
+    		flightIndex = 2;
+    	} else {
+    		$("td#returnDateTD").remove();
+    		
+    		var button = $("<td id='addFlightTD'><input type='button' id='addFlight' value='Add Flight'></td>");
+    		
+    		$("#searchFlightsForm table tr:last").prepend(button);
     	}
+    });
+    
+    $(document).on("click", "input#addFlight", function() {
+    	var tr = $("<tr id='" + flightIndex + "'> <td>From <select id='from" + flightIndex + "' class='from' title='Where from?'></select></td> <td>To <select id='to" + flightIndex + "' class='to' title='Where to?'></select></td> <td>Departure date <input type='date' id='departureDate" + flightIndex + "' title='Departure date'></td></tr>");
+    	
+    	$("#searchFlightsForm table tr:last").before(tr);
+    	
+    	getAirports(flightIndex);
+    	flightRows.push(flightIndex);
+    	flightIndex += 1;
+    });
+    
+    $(document).on("change", "select.from", function() {
+    	$(this).parent().parent().prev().find("select.to").val($(this).find(":selected").text());
+    });
+    
+    $(document).on("change", "select.to", function() {
+    	$(this).parent().parent().next().find("select.from").val($(this).find(":selected").text());
     });
     
     $("form#searchFlightsForm").submit(function(e) {
@@ -425,39 +470,78 @@ $(document).ready(function(){
     	var passengers = $("input#passengers").val();
     	var seatClass = $("select#seatClass").find(":selected").text();
     	var bags = $("input#bags").val();
-    	var from = $("select#from").find(":selected");
-    	var to = $("select#to").find(":selected");
-    	var departureDate = new Date($("input#departureDate").val());
-    	var returnDate = new Date($("input#returnDate").val());
     	
-    	if(passengers == "" || bags == "" || departureDate == "" || (tripType == "Round trip" && returnDate == "")) {
+    	if(passengers == "" || bags == "") {
     		showMessage("Some fields are empty!", "red");
 			return;
-    	} else if(from.text() == to.text()) {
+    	}
+    	
+    	data = [];
+    	
+    	var from1 = $("select#from1").find(":selected");
+		var to1 = $("select#to1").find(":selected");
+		var departureDate1 = $("input#departureDate1").val();
+		var returnDate1 = $("input#returnDate1").val();
+		
+		if(from1.text() == to1.text()) {
     		showMessage("Destination can't be the same as starting point!", "red");
     		return;
-    	} else if(departureDate - new Date() < 0) {
+    	} else if(departureDate1 - new Date() < 0) {
     		showMessage("The departure date can't be before current date!", "red");
 			return;
-    	} else if(tripType == "Round trip" && returnDate - departureDate < 0) {
+    	} else if(tripType == "Round trip" && returnDate1 - departureDate1 < 0) {
     		showMessage("The return date can't be before departure date!", "red");
     		return;
     	}
+		
+		data.push({
+			"from": {
+				"id": parseInt(from1.attr("id"))
+			},
+			"to": {
+				"id": parseInt(to1.attr("id"))
+			},
+			"departureDate": new Date(departureDate1),
+			"returnDate": (tripType == "Round trip" ? new Date(returnDate1) : null)
+		});
+    	
+    	flightRows.forEach(function(index) {
+    		var from = $("select#from" + index).find(":selected");
+    		var to = $("select#to" + index).find(":selected");
+    		var departureDate = $("input#departureDate" + index).val();
+    		
+    		if(from.text() == to.text()) {
+        		showMessage("Destination can't be the same as starting point!", "red");
+        		return;
+        	} else if(departureDate - new Date() < 0) {
+        		showMessage("The departure date can't be before current date!", "red");
+    			return;
+        	} else if(tripType == "Round trip" && returnDate - departureDate < 0) {
+        		showMessage("The return date can't be before departure date!", "red");
+        		return;
+        	}
+    		
+    		data.push({
+    			"from": {
+    				"id": parseInt(from.attr("id"))
+    			},
+    			"to": {
+    				"id": parseInt(to.attr("id"))
+    			},
+    			"departureDate": new Date(departureDate),
+    			"returnDate": null
+    		});
+    	});
     	
     	var search = {
     		"tripType": tripType,
     		"passengers": parseInt(passengers),
     		"seatClass": seatClass,
     		"bags": parseInt(bags),
-    		"from": {
-    			"id": parseInt(from.attr("id"))
-    		},
-    		"to": {
-    			"id": parseInt(to.attr("id"))
-    		},
-    		"departureDate": departureDate,
-    		"returnDate": (tripType == "Round trip" ? returnDate : null)
+    		"data": data
     	}
+    	
+    	console.log(search);
     	
     	$.ajax({
     		type: "POST",
@@ -466,123 +550,59 @@ $(document).ready(function(){
     		data: JSON.stringify(search),
     		dataType: "json",
     		success: function(data) {
-    			var table = $("table#searchResultTable tbody");
+    			$("table.searchResultTable").remove();
     			
-    			table.empty();
-    			
-    			$.each(data, function(index, flight) {
-    				
-    				var departureDate = new Date(flight.departureDate);
-    				var arrivalDate = new Date(flight.arrivalDate);
-    				
-    				var times = $("<td>" + (departureDate.getHours() < 9 ? "0" : "") + departureDate.getHours() + ":"+ (departureDate.getMinutes() < 9 ? "0" : "") + departureDate.getMinutes() + " - "+ (arrivalDate.getHours() < 9 ? "0" : "") + arrivalDate.getHours() + ":"+ (arrivalDate.getMinutes() < 9 ? "0" : "") + arrivalDate.getMinutes() + "</td>");
-    				var travelTime = $("<td>" + flight.flightDuration + "</td>");
-    				var stops = $("<td>" + flight.stops.length + "</td>");
-    				var airline = $("<td>" + flight.airline.name + "</td>");
-    				var price = $("<td>" + flight.ticketPrice + "</td>");
-    				var action = $("<td><input type='button' value='Select flight' class='select'></td>");
-    				
-    				var tr = $("<tr id='" + flight.id + "'></tr>");
-    				
-    				tr.append(times);
-    				tr.append(travelTime);
-    				tr.append(stops);
-    				tr.append(airline);
-    				tr.append(price);
-    				tr.append(action);
-    				
-    				table.append(tr);
+    			$.each(data, function(index, result) {
+    				if(result.length > 0) {
+    					var table = $("<table class='searchResultTable'></table>");
+            			var caption = $("<caption style='color: white;'></caption>")
+            			var thead = $("<thead><tr><th>Times</th> <th>Travel time</th> <th>Stops</th> <th>Airline</th> <th>First class price</th> <th>Business class price</th> <th>Economy class price</th> <th>Action</th></tr></thead>");
+            			var tbody = $("<tbody></tbody>");
+    					
+            			if(result.length == 0) {
+            				$("table.searchResultTable").remove();
+            				
+            				return;
+            			}
+    					$.each(result, function(index, flight) {
+    						caption.text(flight.from.name + " - " + flight.to.name);
+    						
+    						var times = $("<td>" + (new Date(flight.departureDate).getHours() < 9 ? "0" : "") + new Date(flight.departureDate).getHours() + ":"+ (new Date(flight.departureDate).getMinutes() < 9 ? "0" : "") + new Date(flight.departureDate).getMinutes() + " - "+ (new Date(flight.arrivalDate).getHours() < 9 ? "0" : "") + new Date(flight.arrivalDate).getHours() + ":"+ (new Date(flight.arrivalDate).getMinutes() < 9 ? "0" : "") + new Date(flight.arrivalDate).getMinutes() + "</td>");
+    	    				var travelTime = $("<td>" + flight.flightDuration + "</td>");
+    	    				var stops = $("<td>" + flight.stops.length + "</td>");
+    	    				var airline = $("<td>" + flight.airline.name + "</td>");
+    	    				var ticketPriceFirstClass = $("<td>" + flight.ticketPriceFirstClass + "</td>");
+    						var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
+    						var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
+    	    				var action = $("<td><input type='button' value='Select flight' class='select'></td>");
+    	    				
+    	    				var tr = $("<tr id='" + flight.id + "'></tr>");
+    	    				
+    	    				tr.append(times);
+    	    				tr.append(travelTime);
+    	    				tr.append(stops);
+    	    				tr.append(airline);
+    	    				tr.append(ticketPriceFirstClass);
+    						tr.append(ticketPriceBusinessClass);
+    						tr.append(ticketPriceEconomyClass);
+    	    				tr.append(action);
+    	    				
+    	    				tbody.append(tr);
+    					});
+    					
+    					table.append(caption);
+    					table.append(thead);
+    					table.append(tbody);
+    					
+    					$("div#searchFlightsDiv div#reservationSeatsModal").before(table);
+    				}
     			});
     		},
     		error: function(xhr) {
-    			table.empty();
+    			$("table.searchResultTable").remove();
     		}
     	});
     });
-    
-    $(document).on("click", "input.select", function() {
-    	var seatsDiv = $("div#seatsDiv"); //var seatsDiv = $("<div id='seatsDiv' style='text-align: center; height: " + ((data.length / 3) * 55) + "px;'></div>");
-    	seatsDiv.empty();
-    	
-    	var flightID = $(this).parent().parent().attr("id");
-    	
-    	$.ajax({
-			type: "GET",
-			url: "/flight/" + flightID + "/seats",
-			contentType: "text/html; charset=utf-8",
-			dataType: "json",
-			success: function(data) {
-				seatsDiv.css("height", ((data.length / 3) * 55) + "px");
-				
-				$.each(data, function(index, seat) {
-					var bgcolor;
-					if(seat.enabled == false)
-						bgcolor = "#3a3a3a";
-					else if(seat.busy == true)
-						bgcolor = "#ff0000";
-					else if(seat.type == "FIRST_CLASS")
-						bgcolor = "#ffd700";
-					else if(seat.type == "BUSINESS")
-						bgcolor = "#0000ff";
-					else
-						bgcolor = "#00ff00";
-					
-					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForReservation'><input type='hidden' value='" + seat.id + "'></div>");
-					
-					if(index % 3 == 0)
-						seatDiv.css("clear", "left");
-					
-					seatsDiv.append(seatDiv);
-				});
-				
-				$("div#reservationSeatsModal").show();
-			}
-		});
-    });
-    
-    var selectedSeats = [];
-	$(document).on("click", "div.seatDivForReservation", function() {
-		if($(this).css("background-color") == "rgb(58, 58, 58)" || $(this).css("background-color") == "rgb(255, 0, 0)")
-			return;
-		
-		var seatId = $($(this).children("input")[0]).attr("value");
-		
-		var exists = false;
-		for(var i = 0; i < selectedSeats.length; i++) {
-			if(selectedSeats[i].id == seatId) {
-				selectedSeats.splice(i, 1);
-				$(this).css("border", "0");
-				
-				exists = true;
-				if(selectedSeats.length < 2) {
-					$("button#inviteFriendsTab").attr("disabled", "disabled");
-					$("button#otherPassengersTab").attr("disabled", "disabled");
-					console.log(selectedSeats.length);
-				}
-				
-				break;
-			}
-		}
-		
-		if(!exists) {
-			selectedSeats.push({
-				"id": seatId
-			});
-			$(this).css("border", "3px solid red");
-			
-			if(selectedSeats.length > 1) {
-				$("button#inviteFriendsTab").removeAttr("disabled");
-				$("button#otherPassengersTab").removeAttr("disabled");
-				console.log(selectedSeats.length);
-			}
-		}
-	});
-	
-	$(document).on("click", "span.close", function() {
-		$("div#seatsDiv").empty();
-		selectedSeats = [];
-		$("div#reservationSeatsModal").hide();
-	});
     
     //----------------------------------------
 });

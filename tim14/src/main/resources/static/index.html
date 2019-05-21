@@ -212,7 +212,7 @@
 			<h2 style="color: white;">Flights</h2>
 			<table id="flightsTable" border="1">
 				<thead>
-					<tr><th>Trip type</th> <th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Return departure date</th> <th>Return arrival date</th> <th>Bags</th> <th>Ticket price</th> <th>Actions</th></tr>
+					<tr><th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Bags</th> <th>First class price</th> <th>Business class price</th> <th>Economy class price</th> <th>Actions</th></tr>
 				</thead>
 				<tbody>
 				</tbody>
@@ -230,7 +230,7 @@
 			</div>
 		</div>
 		
-		<div class="VelikiPregled">
+		<div id="searchFlightsDiv" class="VelikiPregled">
 	        <h1>Search</h1>
 	        <br>
 	        <form id="searchFlightsForm">
@@ -254,21 +254,11 @@
 	        			<td>Bags <input type="number" id="bags" value="0" min="0"></td>
 	        		</tr>
 	        		<tr id="1">
-	        			<td>From <select id="from" title="Where from?"></select></td> <td>To <select id="to" title="Where to?"></select></td> <td>Departure date <input type="date" id="departureDate" title="Departure date"></td>
+	        			<td>From <select id="from1" class="from" title="Where from?"></select></td> <td>To <select id="to1" class="to" title="Where to?"></select></td> <td>Departure date <input type="date" id="departureDate1" title="Departure date"></td>
 	        		</tr>
 	        		<tr><td><input type="submit" value="Search"></td></tr>
 	        	</table>
 	        </form>
-	        
-	        <br><br><br>
-	        
-	        <table id="searchResultTable">
-	        	<caption style="color: white;">Flights</caption>
-	        	<thead>
-	        		<tr><th>Times</th> <th>Travel time</th> <th>Stops</th> <th>Airline</th> <th>Price</th> <th>Action</th></tr>
-	        	</thead>
-	        	<tbody></tbody>
-	        </table>
 	
 			<div id='reservationSeatsModal' class='modal'>
 				<div class='modal-content'>
@@ -286,13 +276,13 @@
 	
 					<div id="inviteFriendsContent" class="tabcontent">
 						<h3>Invite friends</h3>
-						<p>Paris is the capital of France.</p>
 					</div>
 	
 					<div id="otherPassengersContent" class="tabcontent">
 						<h3>Other passengers</h3>
-						<p>Tokyo is the capital of Japan.</p>
 					</div>
+					
+					<input type="button" id="makeFlightReservation" value="Make reservation" disabled="disabled">
 				</div>
 			</div>
 		</div>

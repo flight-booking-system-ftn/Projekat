@@ -1,14 +1,11 @@
 package com.isamrs.tim14.others;
 
-import java.sql.Timestamp;
-
-import com.isamrs.tim14.model.Airport;
+import java.util.List;
 
 public class FlightsSearch {
 	public String tripType, seatClass;
 	public Integer passengers, bags;
-	public Airport from, to;
-	public Timestamp departureDate, returnDate;
+	public List<FlightPathAndDate> data;
 	
 	public FlightsSearch() {
 		super();
@@ -46,35 +43,11 @@ public class FlightsSearch {
 		this.bags = bags;
 	}
 
-	public Airport getFrom() {
-		return from;
+	public List<FlightPathAndDate> getData() {
+		return data;
 	}
 
-	public void setFrom(Airport from) {
-		this.from = from;
-	}
-
-	public Airport getTo() {
-		return to;
-	}
-
-	public void setTo(Airport to) {
-		this.to = to;
-	}
-
-	public Timestamp getDepartureDate() {
-		return departureDate;
-	}
-
-	public void setDepartureDate(Timestamp departureDate) {
-		this.departureDate = departureDate;
-	}
-
-	public Timestamp getReturnDate() {
-		return returnDate;
-	}
-
-	public void setReturnDate(Timestamp returnDate) {
-		this.returnDate = returnDate;
+	public void setData(List<FlightPathAndDate> data) {
+		this.data = data;
 	}
 }
