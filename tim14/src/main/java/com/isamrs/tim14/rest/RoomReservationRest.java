@@ -1,10 +1,13 @@
 package com.isamrs.tim14.rest;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +40,31 @@ private RoomReservationDAO roomReservationDAO;
 			return new ResponseEntity<RoomReservation>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<RoomReservation>(newRoomReservation, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(
+			value = "/reserveQuickRoomReservation/{reservationID}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RoomReservation> saveQuickRoomReservation(@PathVariable String reservationID) {
+		RoomReservation newRoomReservation = roomReservationDAO.saveQuick(reservationID);
+
+		if(newRoomReservation == null) {
+			return new ResponseEntity<RoomReservation>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<RoomReservation>(newRoomReservation, HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(
+			value = "/quickRoomReservations/{hotelID}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<RoomReservation>> getQuickRoomReservations(@PathVariable String hotelID){
+		
+		Collection<RoomReservation> result = roomReservationDAO.getQuickRoomReservations(hotelID);
+		
+		return new ResponseEntity<Collection<RoomReservation>>(result, HttpStatus.OK);
 	}
 	
 }

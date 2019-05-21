@@ -1,5 +1,6 @@
 package com.isamrs.tim14.dao;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.persistence.EntityManager;
@@ -10,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Hotel;
-import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
@@ -56,6 +56,28 @@ public class RoomReservationDAOImpl implements RoomReservationDAO {
 		}
 		
 		return roomReservation;
+	}
+	
+	@Override
+	@Transactional
+	public ArrayList<RoomReservation> getQuickRoomReservations(String hotelID) {
+		Hotel managedHotel = entityManager.find(Hotel.class, Integer.parseInt(hotelID));
+		ArrayList<RoomReservation> result = new ArrayList<RoomReservation>();
+		for(RoomReservation res : managedHotel.getReservations()) {
+			if(res.getRegisteredUser() == null) {
+				result.add(res);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public RoomReservation saveQuick(String roomReservationID) {
+		RoomReservation managedReservation = entityManager.find(RoomReservation.class, Integer.parseInt(roomReservationID));
+		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		managedReservation.setRegisteredUser(user);
+		return managedReservation;
 	}
 
 }

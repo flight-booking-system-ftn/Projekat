@@ -53,6 +53,7 @@ public class Room {
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "rooms_reservations", joinColumns = { @JoinColumn(name = "room_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "reservation_id") })
+	@JsonBackReference(value="room-reservations")
 	private Set<RoomReservation> reservations;
 
 	public Room() {

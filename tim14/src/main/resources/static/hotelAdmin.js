@@ -97,10 +97,15 @@ $(document).ready(function() {
 			headers: createAuthorizationTokenHeader(),
 			data : JSON.stringify(reservation),
 			success: function(){
+				showMessage('Quick room reservation successful!', "green");
 				$(location).attr('href',"/hotelAdmin.html");
 			},
 			error: function (jqXHR, exception) {
-				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
 			}
 		})
 	});
