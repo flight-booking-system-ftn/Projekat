@@ -46,4 +46,9 @@ public class FlightRest {
 	public ResponseEntity<List<List<Flight>>> search(@RequestBody FlightsSearch values) {
 		return flightDAO.search(values);
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Flight> getFlight(@PathVariable Integer id){
+		return flightDAO.getFlight(id);
+	}
 }

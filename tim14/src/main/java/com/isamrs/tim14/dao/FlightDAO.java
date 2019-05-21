@@ -17,4 +17,6 @@ public interface FlightDAO {
 	public List<Seat> getSeats(Integer id);
 
 	public ResponseEntity<List<List<Flight>>> search(FlightsSearch values);
+	
+	public ResponseEntity<Flight> getFlight(Integer id);
 }

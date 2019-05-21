@@ -388,7 +388,7 @@ $(document).ready(function(){
 		});
 	});
     
-getAirports(1);
+	getAirports(1);
     
     function getAirports(index) {
     	$.ajax({
@@ -603,6 +603,153 @@ getAirports(1);
     		}
     	});
     });
+    
+    var selectedFlight;
+    $(document).on("click", "input.select", function() {
+    	var seatsDiv = $("div#seatsDiv"); //var seatsDiv = $("<div id='seatsDiv' style='text-align: center; height: " + ((data.length / 3) * 55) + "px;'></div>");
+    	seatsDiv.empty();
+    	
+    	selectedFlight = $(this).parent().parent().attr("id");
+    	
+    	$.ajax({
+			type: "GET",
+			url: "/flight/" + selectedFlight + "/seats",
+			contentType: "text/html; charset=utf-8",
+			dataType: "json",
+			success: function(data) {
+				seatsDiv.css("height", ((data.length / 3) * 55 + (data.length % 3 > 0 ? 20 : 0)) + "px");
+				
+				$.each(data, function(index, seat) {
+					var bgcolor;
+					if(seat.enabled == false)
+						bgcolor = "#3a3a3a";
+					else if(seat.busy == true)
+						bgcolor = "#ff0000";
+					else if(seat.type == "FIRST_CLASS")
+						bgcolor = "#ffd700";
+					else if(seat.type == "BUSINESS")
+						bgcolor = "#0000ff";
+					else
+						bgcolor = "#00ff00";
+					
+					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForReservation' id='" + seat.id + "'><input type='hidden' value='" + seat.id + "'></div>");
+					
+					if(index % 3 == 0)
+						seatDiv.css("clear", "left");
+					
+					seatsDiv.append(seatDiv);
+				});
+				
+				$("div#reservationSeatsModal").show();
+			}
+		});
+    });
+    
+    var selectedSeats = [];
+	$(document).on("click", "div.seatDivForReservation", function() {
+		if($(this).css("background-color") == "rgb(58, 58, 58)" || $(this).css("background-color") == "rgb(255, 0, 0)")
+			return;
+		
+		var seatId = $($(this).children("input")[0]).attr("value");
+		
+		var exists = false;
+		for(var i = 0; i < selectedSeats.length; i++) {
+			if(selectedSeats[i] == seatId) {
+				selectedSeats.splice(i, 1);
+				$(this).css("border", "0");
+				
+				exists = true;
+				
+				if(selectedSeats.length == 0) {
+					$("input#makeFlightReservation").attr("disabled", "disabled");
+				}
+				else if(selectedSeats.length < 2) {
+					$("button#inviteFriendsTab").attr("disabled", "disabled");
+					$("button#otherPassengersTab").attr("disabled", "disabled");
+				}
+				
+				break;
+			}
+		}
+		
+		if(!exists) {
+			selectedSeats.push(parseInt(seatId));
+			$(this).css("border", "2px solid red");
+			
+			$("input#makeFlightReservation").removeAttr("disabled");
+			if(selectedSeats.length > 1) {
+				$("button#inviteFriendsTab").removeAttr("disabled");
+				$("button#otherPassengersTab").removeAttr("disabled");
+			}
+		}
+	});
+	
+	$("input#makeFlightReservation").click(function() {
+		$.ajax({
+			type: "GET",
+			url: "/flight/" + selectedFlight,
+			headers: createAuthorizationTokenHeader(),
+			success: function(flight) {
+				var tickets = [];
+				console.log(selectedSeats);
+				$.ajax({
+					type: "POST",
+					url: "/seats/getSelectedSeats",
+					headers: createAuthorizationTokenHeader(),
+					data: JSON.stringify(selectedSeats),
+					success: function(seats) {
+						seats.forEach(function(entry) {
+							var ticket = {
+								"seat": entry,
+								"passportNumber": "0123456789"
+							};
+							
+							tickets.push(ticket);
+						});
+						
+						var reservation = {
+								"flight": flight,
+								"tickets": tickets,
+								"dateOfPurchase": new Date()
+							};
+						
+						console.log(reservation);
+						
+						$.ajax({
+							type: "POST",
+							url: "/api/flightReservation/save",
+							headers: createAuthorizationTokenHeader(),
+				    		data: JSON.stringify(reservation),
+				    		success: function(data) {
+				    			showMessage(data, "green");
+				    			
+				    			selectedSeats.forEach(function(entry) {
+				    				$("div.seatDivForReservation#" + entry).css("background-color", "red");
+				    				$("div.seatDivForReservation#" + entry).css("border", "0");
+				    			});
+				    			
+				    			selectedSeats = [];
+				    			$("input#makeFlightReservation").attr("disabled", "disabled");
+				    		},
+				    		error: function (jqXHR, exception) {
+				    			if (jqXHR.status == 401) {
+				    				showMessage("Not authenticated!", "red");
+				    			} else{
+				    				showMessage(jqXHR, "red");
+				    			}
+							}
+						});
+					}
+				});
+			}
+		});
+	});
+	
+	/*$(document).on("click", "span.close", function() {
+		$("div#seatsDiv").empty();
+		selectedSeats = [];
+		$("div#reservationSeatsModal").hide();
+	});*/
     
     //----------------------------------------
 });
