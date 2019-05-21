@@ -324,7 +324,6 @@ $(document).ready(function(){
 		//---------------- REZERVACIJA ----------------
 		
 		$("div#seatsDiv").empty();
-		$("div#extraServicesDiv").empty();
 		selectedSeats = [];
 		$("input#makeFlightReservation").attr("disabled", "disabled");
 		$("div#reservationSeatsModal").hide();
@@ -690,7 +689,7 @@ $(document).ready(function(){
 			url: "/flight/" + selectedFlight,
 			headers: createAuthorizationTokenHeader(),
 			success: function(flight) {
-				var tickets = [];
+				var reservations = [];
 				console.log(selectedSeats);
 				$.ajax({
 					type: "POST",
@@ -698,38 +697,45 @@ $(document).ready(function(){
 					headers: createAuthorizationTokenHeader(),
 					data: JSON.stringify(selectedSeats),
 					success: function(seats) {
-						seats.forEach(function(entry) {
-							var ticket = {
-								"seat": entry,
-								"passportNumber": "0123456789"
+						seats.forEach(function(seat) {
+							var price = 0;
+							if(seat.type == "FIRST_CLASS")
+								price = flight.ticketPriceFirstClass;
+							else if(seat.type == "BUSINESS")
+								price = flight.ticketPriceBusinessClass;
+							else
+								price = flight.ticketPriceEconomyClass;
+							
+							var reservation = {
+								"flight": flight,
+								"seat": seat,
+								"dateOfPurchase": new Date(),
+								"price": price,
+								"discount": 0
 							};
 							
-							tickets.push(ticket);
+							reservations.push(reservation);
 						});
 						
-						var reservation = {
-								"flight": flight,
-								"tickets": tickets,
-								"dateOfPurchase": new Date()
-							};
-						
-						console.log(reservation);
+						console.log(reservations);
 						
 						$.ajax({
 							type: "POST",
 							url: "/api/flightReservation/save",
 							headers: createAuthorizationTokenHeader(),
-				    		data: JSON.stringify(reservation),
+				    		data: JSON.stringify(reservations),
 				    		success: function(data) {
 				    			showMessage(data, "green");
 				    			
-				    			selectedSeats.forEach(function(entry) {
-				    				$("div.seatDivForReservation#" + entry).css("background-color", "red");
-				    				$("div.seatDivForReservation#" + entry).css("border", "0");
+				    			selectedSeats.forEach(function(seatID) {
+				    				$("div.seatDivForReservation#" + seatID).css("background-color", "red");
+				    				$("div.seatDivForReservation#" + seatID).css("border", "0");
 				    			});
 				    			
-				    			selectedSeats = [];
 				    			$("input#makeFlightReservation").attr("disabled", "disabled");
+				    			$("div#seatsDiv").empty();
+				    			selectedSeats = [];
+				    			$("div#reservationSeatsModal").hide();
 				    		},
 				    		error: function (jqXHR, exception) {
 				    			if (jqXHR.status == 401) {

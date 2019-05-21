@@ -8,28 +8,52 @@
 	<link rel="stylesheet" type="text/css" media="screen" href="styles.css">
 	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="snackbar.js"></script>
-	<script src="authentication.js"></script>
-	<script type="text/javascript" src="aidlineAdmin.js"></script>
+	<script type="text/javascript" src="authentication.js"></script>
+	<script type="text/javascript" src="airlineAdmin.js"></script>
 	
 </head>
 
 <body>
 
 	<div class="menuDiv">
-		<button id="addAirlineBtn">Add airline</button>
-		<button id="editAirlineBtn">Edit airline</button>
 		<button id="addFlightBtn">Add flight</button>
-		<button id="addDestinationBtn">Add destination</button>
 		<button id="logoutBtn">Logout</button>
 	</div>
 
-	<table id="flightsTable" border="1">
-		<thead>
-			<tr><th>Trip type</th> <th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Return departure date</th> <th>Return arrival date</th> <th>Bags</th> <th>Ticket price</th> <th>Actions</th></tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
+	<div class="VelikiPregled">
+		<h1>Flights</h1>
+		<table id="flightsTable" border="1">
+			<thead>
+				<tr><th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Bags</th> <th>First class price</th> <th>Business class price</th> <th>Economy class price</th> <th>Actions</th></tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<br>
+		
+		<div id='editSeatsModal' class='modal'>
+			<div class='modal-content'>
+				<h4>Edit seats</h4>
+				<span class='close'>&times;</span>
+				<div id="seatsTableDiv"></div> <br>
+				<input type='button' id='toggleSeat' value='Enable/Disable' disabled> &nbsp;&nbsp;&nbsp;
+				<input type='button' id='deleteSeat' value='Delete' disabled>
+			</div>
+		</div>
+		
+		<div id='reservationSeatsModal' class='modal'>
+			<div class='modal-content'>
+				<span class="close">&times;</span>
+				<h3>Choose seats</h3>
+				<div id="seatsDiv" style="text-align: center; margin-top: 25px;"></div>
+				
+				<br>
+				Enter discount (%): <input type="number" id="discount" value="0" min="0" max="100">
+				<br> 
+				<input type="button" id="makeQuickReservation" value="Make quick reservation" disabled="disabled">
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

@@ -54,9 +54,11 @@ $(document).ready(function() {
     	var rowsInBusinessClass = parseInt($("input#rowsInBusinessClass").val());
     	var rowsInEconomyClass = parseInt($("input#rowsInEconomyClass").val());
     	var luggageQuantity = parseInt($("input#luggageQuantity").val());
-    	var ticketPrice = parseInt($("input#ticketPrice").val());
+    	var ticketPriceFirstClass = parseInt($("input#ticketPriceFirstClass").val());
+    	var ticketPriceBusinessClass = parseInt($("input#ticketPriceBusinessClass").val());
+    	var ticketPriceEconomyClass = parseInt($("input#ticketPriceEconomyClass").val());
     	
-    	if(!departureDate || !arrivalDate || !length || !luggageQuantity || !ticketPrice) {
+    	if(!departureDate || !arrivalDate || !length || !luggageQuantity || !ticketPriceFirstClass || !ticketPriceBusinessClass || !ticketPriceEconomyClass) {
     		showMessage("Some fields are empty!", "red");
     		return;
     	} else if(departureDate - new Date() <= 0) {
@@ -132,7 +134,9 @@ $(document).ready(function() {
     		"flightLength": length,
     		"luggageQuantity": luggageQuantity,
     		"flightDuration": (arrivalDate - departureDate)/1000/60/60,
-    		"ticketPrice": ticketPrice,
+    		"ticketPriceFirstClass": ticketPriceFirstClass,
+    		"ticketPriceBusinessClass": ticketPriceBusinessClass,
+    		"ticketPriceEconomyClass": ticketPriceEconomyClass,
     		"seats": seats
     	}
     	
