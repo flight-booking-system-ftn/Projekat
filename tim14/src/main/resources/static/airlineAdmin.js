@@ -16,29 +16,27 @@ $(document).ready(function() {
 				$.each(flights, function(index, flight) {
 					var tr = $("<tr id='" + flight.id + "'></tr>");
 					var id = $("<input type='hidden' value='" + flight.id + "'>");
-					var tripType = $("<td>" + (flight.flightType == "ONE_WAY" ? "One way" : "Round trip") + "</td>");
-					var from = $("<td>" + flight.from.name + " - " + flight.from.address + "</td>");
-					var to = $("<td>" + flight.to.name + " - " + flight.to.address + "</td>");
+					var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
+					var to = $("<td>" + flight.to.name + " - " + flight.to.destination.name + ", " + flight.to.destination.country + "</td>");
 					var stops = $("<td>" + flight.stops.length + "</td>");
 					var departureDate = $("<td>" + formatDate(new Date(flight.departureDate)) + "</td>");
 					var arrivalDate = $("<td>" + formatDate(new Date(flight.arrivalDate)) + "</td>");
-					var returnDepartureDate = $("<td>" + (flight.returnDepartureDate == null ? "" : formatDate(new Date(flight.returnDepartureDate))) + "</td>");
-					var returnArrivalDate = $("<td>" + (flight.returnArrivalDate == null ? "" : formatDate(new Date(flight.returnArrivalDate))) + "</td>");
 					var luggageQuantity = $("<td>" + flight.luggageQuantity + "</td>");
-					var ticketPrice = $("<td>" + flight.ticketPrice + "</td>");
-					var actions = $("<td><input type='button' class='edit' value='Edit seats'></td>");
+					var ticketPriceFirstClass = $("<td>" + flight.ticketPriceFirstClass + "</td>");
+					var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
+					var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
+					var actions = $("<td><input type='button' class='edit' value='Edit seats'> &nbsp; &nbsp; &nbsp; &nbsp; <input type='button' class='makeQuickReservation' value='Make quick reservation'></td>");
 					
 					tr.append(id);
-					tr.append(tripType);
 					tr.append(from);
 					tr.append(to);
 					tr.append(stops);
 					tr.append(departureDate);
 					tr.append(arrivalDate);
-					tr.append(returnDepartureDate);
-					tr.append(returnArrivalDate);
 					tr.append(luggageQuantity);
-					tr.append(ticketPrice);
+					tr.append(ticketPriceFirstClass);
+					tr.append(ticketPriceBusinessClass);
+					tr.append(ticketPriceEconomyClass);
 					tr.append(actions);
 					
 					table.append(tr);
@@ -51,84 +49,57 @@ $(document).ready(function() {
 		return date.toLocaleDateString("en", options) + " " + (date.getHours() < 10 ? "0" + (date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
 	}
 	
-	var seats;
 	$("input.edit").on("click", function() {
+		var seatsTableDiv = $("div#seatsTableDiv");
 		var flightID = $(this).parent().parent().find("input[type='hidden']").attr("value");
 		
 		$.ajax({
 			type: "GET",
 			url: "/flight/" + flightID + "/seats",
-			async: false,
 			contentType: "text/html; charset=utf-8",
 			dataType: "json",
 			success: function(data) {
-				seats = data;
-				var table = $("<table id='seats' border='5px solid gray' width='100%' height='500px'></table>");
-				var tr = $("<tr></tr>");
 				
+				seatsTableDiv.css("height", ((data.length / 3) * 55 + (data.length % 3 > 0 ? 20 : 0)) + "px");
 				$.each(data, function(index, seat) {
 					var bgcolor;
 					if(seat.enabled == false)
-						bgcolor = "#a3a3a3";
+						bgcolor = "#3a3a3a";
 					else if(seat.busy == true)
 						bgcolor = "#ff0000";
 					else if(seat.type == "FIRST_CLASS")
-						bgcolor = "#fffc77";
+						bgcolor = "#ffd700";
 					else if(seat.type == "BUSINESS")
-						bgcolor = "#77c8ff";
+						bgcolor = "#0000ff";
 					else
-						bgcolor = "#b8ff82";
+						bgcolor = "#00ff00";
 					
-					var td = $("<td bgcolor='" + bgcolor + "'><input type='hidden' value='" + seat.id + "'></td>");
-					tr.append(td);
+					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForEdit'><input type='hidden' value='" + seat.id + "'></div>");
 					
-					if(index % 3 == 2) {
-						table.append(tr);
-						
-						tr = $("<tr></tr>");
-					}
+					if(index % 3 == 0)
+						seatDiv.css("clear", "left");
+					
+					seatsTableDiv.append(seatDiv);
 				});
 				
-				if(tr.children().length > 0) {
-					table.append(tr);
-				}
-				
-				var dialog = $("<div id='myDialog' class='modal'></div>");
-				var dialogContent = $("<div class='modal-content'><h4>Edit seats</h4><span class='close'>&times;</span></div>");
-				
-				dialogContent.append(table);
-				dialogContent.append($("<br>"));
-				
-				var toggleBtn = $("<input type='button' id='toggleSeat' value='Enable/Disable'>");
-				toggleBtn.prop("disabled", true);
-				
-				var deleteBtn = $("<input type='button' id='deleteSeat' value='Delete'>");
-				deleteBtn.prop("disabled", true);
-				
-				dialogContent.append(toggleBtn);
-				dialogContent.append("   ");
-				dialogContent.append(deleteBtn);
-				
-				dialog.append(dialogContent);
-				$("body").append(dialog);
+				$("div#editSeatsModal").show();
 			}
 		});
 	});
 	
-	$(document).on("click", "span.close", function() {
-		$("div.modal").remove();
-	});
-	
 	var previousSeat = undefined; //Ujedno i trenutno selektovano mesto
-	$(document).on("click", "table#seats td", function() {
-		$(this).css("border", "1px solid red");
+	$(document).on("click", "div.seatDivForEdit", function() {
+		if($(this).css("background-color") == "rgb(255, 0, 0)")
+			return;
+		
 		if(previousSeat != undefined) {
-			previousSeat.css("border", "1px solid transparent");
+			previousSeat.css("border", "0");
 		}
+		$(this).css("border", "2px solid red");
 		previousSeat = $(this);
 		
-		$("input#toggleSeat").prop("disabled", false);
-		$("input#deleteSeat").prop("disabled", false);
+		$("input#toggleSeat").removeAttr("disabled");
+		$("input#deleteSeat").removeAttr("disabled");
 	});
 	
 	$(document).on("click", "input#toggleSeat", function() {
@@ -142,16 +113,16 @@ $(document).ready(function() {
 				var bgcolor;
 				if(data.enabled == true) {
 					if(data.type == "FIRST_CLASS")
-						bgcolor = "#fffc77";
+						bgcolor = "#ffd700";
 					else if(data.type == "BUSINESS")
-						bgcolor = "#77c8ff";
+						bgcolor = "#0000ff";
 					else
-						bgcolor = "#b8ff82";
+						bgcolor = "#00ff00";
 				} else {
-					bgcolor = "#a3a3a3";
+					bgcolor = "#3a3a3a";
 				}
 				
-				previousSeat.attr("bgcolor", bgcolor);
+				previousSeat.css("background-color", bgcolor);
 			},
 			error: function() {
 				showMessage("Reserved seat can't be disabled.", "red");
@@ -175,23 +146,163 @@ $(document).ready(function() {
 		});
 	});
 	
-	$(document).on('click', '#addAirlineBtn', function() {
-		$(location).attr('href', "/airline.html");
+	var selectedFlight;
+	$("input.makeQuickReservation").on("click", function() {
+		var seatsDiv = $("div#seatsDiv");
+    	seatsDiv.empty();
+    	
+    	selectedFlight = $(this).parent().parent().attr("id");
+    	
+    	$.ajax({
+			type: "GET",
+			url: "/flight/" + selectedFlight + "/seats",
+			contentType: "text/html; charset=utf-8",
+			dataType: "json",
+			success: function(data) {
+				seatsDiv.css("height", ((data.length / 3) * 55 + (data.length % 3 > 0 ? 20 : 0)) + "px");
+				
+				$.each(data, function(index, seat) {
+					var bgcolor;
+					if(seat.enabled == false)
+						bgcolor = "#3a3a3a";
+					else if(seat.busy == true)
+						bgcolor = "#ff0000";
+					else if(seat.type == "FIRST_CLASS")
+						bgcolor = "#ffd700";
+					else if(seat.type == "BUSINESS")
+						bgcolor = "#0000ff";
+					else
+						bgcolor = "#00ff00";
+					
+					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForReservation' id='" + seat.id + "'><input type='hidden' value='" + seat.id + "'></div>");
+					
+					if(index % 3 == 0)
+						seatDiv.css("clear", "left");
+					
+					seatsDiv.append(seatDiv);
+				});
+				
+				$("div#reservationSeatsModal").show();
+			}
+		});
 	});
 	
-	$(document).on('click', '#editAirlineBtn', function() {
-		$(location).attr('href', "/editAirline.html");
+	var selectedSeats = [];
+	$(document).on("click", "div.seatDivForReservation", function() {
+		if($(this).css("background-color") == "rgb(58, 58, 58)" || $(this).css("background-color") == "rgb(255, 0, 0)")
+			return;
+		
+		var seatId = $($(this).children("input")[0]).attr("value");
+		
+		var exists = false;
+		for(var i = 0; i < selectedSeats.length; i++) {
+			if(selectedSeats[i] == seatId) {
+				selectedSeats.splice(i, 1);
+				$(this).css("border", "0");
+				
+				exists = true;
+				
+				if(selectedSeats.length == 0) {
+					$("input#makeQuickReservation").attr("disabled", "disabled");
+				}
+				
+				break;
+			}
+		}
+		
+		if(!exists) {
+			selectedSeats.push(parseInt(seatId));
+			$(this).css("border", "2px solid red");
+			
+			$("input#makeQuickReservation").removeAttr("disabled");
+		}
 	});
 	
-	$(document).on('click', '#addFlightBtn', function() {
+	$("input#makeQuickReservation").click(function() {
+		$.ajax({
+			type: "GET",
+			url: "/flight/" + selectedFlight,
+			headers: createAuthorizationTokenHeader(),
+			success: function(flight) {
+				var reservations = [];
+				console.log(selectedSeats);
+				$.ajax({
+					type: "POST",
+					url: "/seats/getSelectedSeats",
+					headers: createAuthorizationTokenHeader(),
+					data: JSON.stringify(selectedSeats),
+					success: function(seats) {
+						seats.forEach(function(seat) {
+							var price = 0;
+							if(seat.type == "FIRST_CLASS")
+								price = flight.ticketPriceFirstClass;
+							else if(seat.type == "BUSINESS")
+								price = flight.ticketPriceBusinessClass;
+							else
+								price = flight.ticketPriceEconomyClass;
+							
+							var reservation = {
+								"flight": flight,
+								"seat": seat,
+								"price": price,
+								"discount": parseInt($("input#discount").val())
+							};
+							
+							reservations.push(reservation);
+						});
+						
+						console.log(reservations);
+						
+						$.ajax({
+							type: "POST",
+							url: "/api/flightReservation/makeQuick",
+							headers: createAuthorizationTokenHeader(),
+				    		data: JSON.stringify(reservations),
+				    		success: function(data) {
+				    			showMessage(data, "green");
+				    			
+				    			selectedSeats.forEach(function(seatID) {
+				    				$("div.seatDivForReservation#" + seatID).css("background-color", "red");
+				    				$("div.seatDivForReservation#" + seatID).css("border", "0");
+				    			});
+				    			
+				    			selectedSeats = [];
+				    			$("input#makeQuickReservation").attr("disabled", "disabled");
+				    		},
+				    		error: function (jqXHR, exception) {
+				    			if (jqXHR.status == 401) {
+				    				showMessage("Not authenticated!", "red");
+				    			} else{
+				    				showMessage(jqXHR, "red");
+				    			}
+							}
+						});
+					}
+				});
+			}
+		});
+	});
+	
+	$(document).on("click", "span.close", function() {
+		$("div#seatsTableDiv").empty();
+		$("div#seatsDiv").empty();
+		
+		previousSeat = undefined;
+		selectedSeats = [];
+		
+		$("input#toggleSeat").attr("disabled", "disabled");
+		$("input#deleteSeat").attr("disabled", "disabled");
+		$("input#makeQuickReservation").attr("disabled", "disabled");
+		
+		$("div#editSeatsModal").hide();
+		$("div#reservationSeatsModal").hide();
+	});
+	
+	$("button#addFlightBtn").click(function() {
 		$(location).attr('href', "/newFlight.html");
 	});
 	
-	$(document).on('click', '#addDestinationBtn', function() {
-		$(location).attr('href', "/destination.html");
-	});
-	
-	$(document).on('click','#logoutBtn',function(){
+	$("button#logoutBtn").click(function(){
     	removeJwtToken();
         $(location).attr('href',"/logout");
     });

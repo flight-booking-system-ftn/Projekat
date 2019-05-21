@@ -39,9 +39,6 @@ public class Airline {
 	@JsonIgnoreProperties("airline")
 	private Set<Flight> flights;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<FlightTicket> quickReservationTickets;
-
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
 	private Set<AirlineService> services;
@@ -99,14 +96,6 @@ public class Airline {
 
 	public void setFlights(Set<Flight> flights) {
 		this.flights = flights;
-	}
-
-	public Set<FlightTicket> getQuickReservationTickets() {
-		return quickReservationTickets;
-	}
-
-	public void setQuickReservationTickets(Set<FlightTicket> quickReservationTickets) {
-		this.quickReservationTickets = quickReservationTickets;
 	}
 
 	public Set<AirlineService> getServices() {
