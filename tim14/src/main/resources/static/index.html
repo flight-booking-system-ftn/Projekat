@@ -117,12 +117,12 @@
 	
 		<div id="dialogRentView" class="dialog">
 	        <div class="dialogContent">
-	            <h1>Hotel review</h1>
+	            <h1>Rent-a-car review</h1>
 	            <p id="rentIdField" style="visibility: hidden"></p>
 	            <table>
 					<tr><td colspan="2"><h3 id="pNameOfChosenRent">Hotel</h3></td></tr>
 					<tr><td>Description: </td><td><p id="pDescriptionOfChosenRent">Description</p></td></tr>
-					<tr><td>Destination: </td><td><p id="pDestinationOfChosenRent">Destination</p></td></tr>
+					<tr><td>Branch offices: </td><td><p id="pBranchesOfChosenRent">Branch offices</p></td></tr>
 				</table>
 				<br>
 				<br>
@@ -159,6 +159,22 @@
 						<td>
 							<input type="checkbox" id="vehicleMotocycles">
 						</td>
+						<tr>
+						<td>
+							Start destination: 
+						</td>
+						<td>
+							<select id="startDestination"></select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							End destination: 
+						</td>
+						<td>
+							<select id="endDestination"></select>
+						</td>
+					</tr>
 					</tr>
 					<tr>
 						<td colspan="2">
@@ -202,9 +218,9 @@
 	        <input type="text" id="rentDestinationSearchInput" placeholder="Rent-a-car destination">
 	        <input type="text" placeholder="Start date" id="rentSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
 	        <input type="text" placeholder="End date" id="rentSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
-	         <button id="rentSearchBtn" value="Search rent">Search</button><br><br>
+	        <button id="rentSearchBtn" value="Search rent">Search</button><br><br>
 	        <table id="rentACarTable">
-	            <tr><th>Name</th><th>Description</th><th>Grade</th><th></th></tr>
+	            <tr><th>Name</th><th>Description</th><th>Grade</th><th>Branch offices</th><th></th></tr>
 	        </table>
 	    </div>
 		

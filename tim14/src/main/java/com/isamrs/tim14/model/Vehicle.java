@@ -58,6 +58,10 @@ public class Vehicle {
     @JoinColumn(name = "rent_a_car_id")
 	private RentACar rentACar;
 	
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JoinColumn(name = "branch_office_id")
+	private BranchOffice branchOffice;
+	
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "vehicles_reservations", joinColumns = { @JoinColumn(name = "vehicle_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "reservation_id") })
@@ -103,6 +107,14 @@ public class Vehicle {
 
 	public Integer getProductionYear() {
 		return productionYear;
+	}
+
+	public BranchOffice getBranchOffice() {
+		return branchOffice;
+	}
+
+	public void setBranchOffice(BranchOffice branchOffice) {
+		this.branchOffice = branchOffice;
 	}
 
 	public void setProductionYear(Integer productionYear) {

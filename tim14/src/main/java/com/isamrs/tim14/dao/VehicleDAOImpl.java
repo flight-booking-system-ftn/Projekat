@@ -26,13 +26,15 @@ public class VehicleDAOImpl implements VehicleDAO {
 	@Override
 	@Transactional
 	public Vehicle save(Vehicle vehicle) {
+		RentACarAdmin admin = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		vehicle.setRentACar(admin.getRentACar());
 		entityManager.persist(vehicle);
 		return vehicle;
 	}
 
 	@Override
 	@Transactional
-	public List<Vehicle> getVehiclesSearch(Integer rentID, String arriveDate, Integer dayNum, Boolean cars, Boolean motocycles) {
+	public List<Vehicle> getVehiclesSearch(Integer rentID, Long arriveDate, Long dayNum, Boolean cars, Boolean motocycles, String startDest) {
 		String queryPlus = " AND 1=2 ";
 		boolean check = false;
 		if(cars || motocycles) {

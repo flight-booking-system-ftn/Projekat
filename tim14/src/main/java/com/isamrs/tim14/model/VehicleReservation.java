@@ -12,10 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -43,6 +42,10 @@ public class VehicleReservation {
 	@JoinColumn(name = "vehicle_reservation_id")
 	@JsonBackReference(value="vehicle-services")
 	private Set<RentACarService> services;
+	
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.EAGER)
+    @JoinColumn(name = "rent_a_car_id")
+	private RentACar rentACar;
 
 	public VehicleReservation() {
 		super();

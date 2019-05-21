@@ -46,16 +46,15 @@ public class VehicleRest {
 	
 	
 	@RequestMapping(
-			value = "/vehiclesSearch/{vehicleId}/{arriveDate}/{dayNum}/{cars}/{motocycles}",
+			value = "/vehiclesSearch/{vehicleId}/{arriveDate}/{dayNum}/{cars}/{motocycles}/{startDest}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Vehicle>> getVehicleSearch(@PathVariable String vehicleId, @PathVariable String arriveDate, @PathVariable String dayNum, @PathVariable String cars, 
-			@PathVariable String motocycles){
+	public ResponseEntity<Collection<Vehicle>> getVehicleSearch(@PathVariable String vehicleId, @PathVariable Long arriveDate, @PathVariable Long dayNum, @PathVariable String cars, 
+			@PathVariable String motocycles,  @PathVariable String startDest){
 		int id = Integer.parseInt(vehicleId);
-		int numberOfDays = Integer.parseInt(dayNum);
 		boolean car = (cars.equals("true")) ? true: false;
 		boolean moto = (motocycles.equals("true")) ? true: false;
-		Collection<Vehicle> vehicles = vehicleDAO.getVehiclesSearch(id, arriveDate, numberOfDays, car, moto);
+		Collection<Vehicle> vehicles = vehicleDAO.getVehiclesSearch(id, arriveDate, dayNum, car, moto, startDest);
 		
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}

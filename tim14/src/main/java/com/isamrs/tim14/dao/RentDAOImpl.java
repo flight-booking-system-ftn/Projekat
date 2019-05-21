@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -9,7 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.isamrs.tim14.model.HotelService;
+import com.isamrs.tim14.model.BranchOffice;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarService;
 
@@ -83,5 +84,18 @@ public class RentDAOImpl implements RentDAO {
 		query.setParameter("rentDestination", "%" + rentDestination + "%");
 		List<RentACar> result = query.getResultList();
 		return result;
+	}
+	
+	@Override
+	public Set<BranchOffice> getRentOffices(int id) {
+		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE rent.id = :rentId");
+		query.setParameter("rentId", id);
+		List<RentACar> result = query.getResultList();
+
+		if (result.size() == 0) {
+			return null;
+		}
+
+		return result.get(0).getOffices();
 	}
 }

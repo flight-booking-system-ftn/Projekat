@@ -31,7 +31,7 @@ public class RentACar {
 	@Column(name = "name")
 	private String name;
 	
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "destination_id")
 	private Destination destination;
 	
@@ -46,8 +46,7 @@ public class RentACar {
     @JsonBackReference(value="rent-vehicles")
 	private Set<Vehicle> vehicles;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "rentACar")
-	@JsonBackReference(value="rent-offices")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "rentACar")
 	private Set<BranchOffice> offices;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
@@ -59,8 +58,7 @@ public class RentACar {
 	@JsonBackReference(value="rent-admins")
 	private Set<RentACarAdmin> admins;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "rent_a_car_id")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "rentACar")
 	@JsonBackReference(value="rent-reservations")
 	private Set<VehicleReservation> reservations;
 
