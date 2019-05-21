@@ -115,8 +115,30 @@ $(document).ready(function(){
                 $('#pDestinationOfChosenHotel').text(data.destination.name +
                     ", " + data.destination.country);
                 $('#roomSearchArrivalDate').val(formatDate(new Date()));
-                renderHotelServiceTable(message);
+                $.get('/api/quickRoomReservations/' + message, function(data){
+                	console.log("quick reservations: ", data);
+                    renderHotelServiceTable(message);
+                    renderQuickRoomReservations(data);
+                });
             });
+        }else if(e.target.id.startsWith('quickRoomReservationNumber')){
+        	var message = e.target.id.substr(26);
+        	$.ajax({
+    			type : 'GET',
+    			url : "/api/reserveQuickRoomReservation/"+message,
+    			headers: createAuthorizationTokenHeader(),
+    			success: function(){
+    				showMessage('Successfully reserved quick room reservation');
+    				$('#dialogHotelView').css('display', 'none');
+    			},
+    			error: function (jqXHR, exception) {
+    				if (jqXHR.status == 401) {
+    					showMessage('Login first!', "orange");
+					}else{
+						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					}
+    			}
+    		})
         }
     });
     
@@ -187,9 +209,14 @@ $(document).ready(function(){
 			data : JSON.stringify(reservation),
 			success: function(){
 				$(location).attr('href',"/");
+				showMessage('Room reservation successful!', "green");
 			},
 			error: function (jqXHR, exception) {
-				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				if (jqXHR.status == 401) {
+					showMessage('Login first!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
 			}
 		})
 	});
@@ -738,6 +765,31 @@ var renderVehicleTable = function(rentId, arrivalDate, numDays, cars, motocycles
         });
 }
 
+var renderQuickRoomReservations = function(reservations){
+	$('#quickRoomReservationsTable').html(`<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Price</th><th></th></tr>`);
+    for(var i=0;i<reservations.length;i++){
+        var red = reservations[i];
+        var bed2 = 0;
+        var bed3 = 0;
+        var bed4 = 0;
+        for(var k=0;k<red.rooms.length;k++){
+        	var miniRed = red.rooms[k];
+        	if(miniRed.bedNumber == 2){
+        		bed2 ++;
+        	}else if(miniRed.bedNumber == 3){
+        		bed3 ++;
+        	}else if(miniRed.bedNumber == 4){
+        		bed4 ++;
+        	}
+        }
+        console.log(bed2, bed3, bed4);
+        buttonID = "quickRoomReservationNumber"+ red.id;
+        console.log("-->", red);
+        $('#quickRoomReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${bed2}</td><td>${bed3}</td><td>${bed4}</td><td>${red.price}</td>
+        <td><button id=${buttonID}>Reserve</button></td></tr>`);
+    }
+};
+
 function formatDate(date) {
     month = '' + (date.getMonth() + 1);
     day = '' + date.getDate();
@@ -755,6 +807,11 @@ function stringToDate(displayFormat){
 	var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
 	console.log(newDate);
 	return new Date(newDate).getTime();
+}
+
+function displayDateFormat(date){
+	myDate=date.split("-");
+	return [myDate[2], myDate[1], myDate[0]].join('/');
 }
 
 
