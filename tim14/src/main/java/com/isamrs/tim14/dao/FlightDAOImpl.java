@@ -173,4 +173,15 @@ public class FlightDAOImpl implements FlightDAO {
 		
 		return new ResponseEntity(result, HttpStatus.OK);
 	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<Flight> getFlight(Integer id) {
+		Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.id = :flight_id");
+		query.setParameter("flight_id", id);
+		
+		List<Flight> result = query.getResultList();
+		
+		return new ResponseEntity(result.get(0), HttpStatus.OK);
+	}
 }
