@@ -183,8 +183,29 @@ $(document).ready(function(){
                     select2.options[select2.options.length] = new Option(''+red.destination.name,''+red.id);
                 }
             });
-                $('#dialogRentView').css("display","block");
+                $.get('/api/quickVehicleReservations/' + message, function(data){
+                	console.log("quick reservations: ", data);
+                    renderQuickVehicleReservations(data);
+                });
             });
+        }else if(e.target.id.startsWith('quickVehicleReservationNumber')){
+        	var message = e.target.id.substr(29);
+        	$.ajax({
+    			type : 'GET',
+    			url : "/api/reserveQuickVehicleReservation/"+message,
+    			headers: createAuthorizationTokenHeader(),
+    			success: function(){
+    				showMessage('Successfully reserved quick vehicle reservation');
+    				$('#dialogRentView').css('display', 'none');
+    			},
+    			error: function (jqXHR, exception) {
+    				if (jqXHR.status == 401) {
+    					showMessage('Login first!', "orange");
+					}else{
+						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					}
+    			}
+    		})
         }
     });
     
@@ -1023,6 +1044,31 @@ var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, moto
             }
         });
 }
+
+var renderQuickVehicleReservations = function(reservations){
+	$('#quickVehicleReservationsTable').html(`<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Price</th><th>Start Destination</th><th>End Destination</th><th></th></tr>`);
+    for(var i=0;i<reservations.length;i++){
+        var red = reservations[i];
+        var cars = 0;
+        var motocycles = 0;
+    	var price = 0;
+        for(var k=0;k<red.vehicles.length;k++){
+        	var miniRed = red.vehicles[k];
+        	if(miniRed.type == "CAR"){
+        		cars ++;
+        	}else if(miniRed.type == "MOTOCYCLE"){
+        		motocycles ++;
+        	}
+        	var price = price + red.vehicles[k].price;
+        }
+        console.log(cars, motocycles);
+        buttonID = "quickVehicleReservationNumber"+ red.id;
+        console.log("-->", red);
+        $('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${price}</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
+        <td><button id=${buttonID}>Reserve</button></td></tr>`);
+        }
+    $('#dialogRentView').css("display","block");
+};
 
 var renderQuickRoomReservations = function(reservations){
 	$('#quickRoomReservationsTable').html(`<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Price</th><th></th></tr>`);
