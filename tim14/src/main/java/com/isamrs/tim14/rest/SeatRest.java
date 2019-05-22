@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +28,13 @@ public class SeatRest {
 		this.seatDAO = seatDAO;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	@PutMapping("/toggle/{id}")
 	public ResponseEntity<Seat> toggleSeat(@PathVariable Integer id) {
 		return seatDAO.toggle(id);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteSeat(@PathVariable Integer id) {
 		return seatDAO.delete(id);

@@ -11,8 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "luggage")
 public class Luggage {
@@ -33,7 +31,6 @@ public class Luggage {
 
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "airline_id")
-	@JsonIgnoreProperties("luggagePricelist")
 	private Airline airline;
 
 	public Luggage() {

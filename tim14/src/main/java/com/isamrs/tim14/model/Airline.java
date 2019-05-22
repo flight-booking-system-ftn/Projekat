@@ -1,5 +1,6 @@
 package com.isamrs.tim14.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -44,6 +45,7 @@ public class Airline {
 	private Set<AirlineService> services;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "airline_id")
 	private Set<Grade> grades;
 
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "airline")
@@ -53,13 +55,15 @@ public class Airline {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
 	private Set<Luggage> luggagePricelist;
-	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "airline_id")
-	private Set<AirlineOffice> offices;
 
 	public Airline() {
 		super();
+		
+		this.flights = new HashSet<Flight>();
+		this.services = new HashSet<AirlineService>();
+		this.grades = new HashSet<Grade>();
+		this.admins = new HashSet<AirlineAdmin>();
+		this.luggagePricelist = new HashSet<Luggage>();
 	}
 
 	public Integer getId() {
@@ -132,14 +136,6 @@ public class Airline {
 
 	public void setLuggagePricelist(Set<Luggage> luggagePricelist) {
 		this.luggagePricelist = luggagePricelist;
-	}
-
-	public Set<AirlineOffice> getOffices() {
-		return offices;
-	}
-
-	public void setOffices(Set<AirlineOffice> offices) {
-		this.offices = offices;
 	}
 
 }

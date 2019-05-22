@@ -18,6 +18,9 @@ $(document).ready(function(){
         firstName = $("#firstNameAirlineAdmin").val();
         lastName = $("#lastNameAirlineAdmin").val();
         email = $("#emailAirlineAdmin").val();
+        city = $("#cityAirlineAdmin").val();
+        phoneNumber = $("#phoneAirlineAdmin").val();
+        
         airline = null;
         repeatPassword = $("#rep_passwordAirlineAdmin").val();
 
@@ -32,6 +35,8 @@ $(document).ready(function(){
                     firstName,
                     lastName,
                     email,
+                    city,
+                    phoneNumber,
                     airline: airlineData
                 }
                 console.log(data);

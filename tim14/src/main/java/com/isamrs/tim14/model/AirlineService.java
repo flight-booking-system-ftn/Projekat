@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "airline_service")
 public class AirlineService extends Service {
@@ -14,7 +16,8 @@ public class AirlineService extends Service {
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },
 			fetch = FetchType.LAZY)
     @JoinColumn(name = "airline_id")
-	Airline airline;
+	@JsonIgnoreProperties("services")
+	public Airline airline;
 
 	public AirlineService() {
 		super();

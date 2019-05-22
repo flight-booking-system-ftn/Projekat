@@ -73,6 +73,7 @@ public class Flight {
 	private Set<Airport> stops;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "flight_id")
 	private Set<Grade> grades;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

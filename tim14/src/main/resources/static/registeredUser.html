@@ -37,6 +37,88 @@
 		</div>
 		<br><br><br><br>
 		
+		<div id="dialogAirlineView" class="dialog">
+	        <div class="dialogContent">
+	            <h1>Airline review</h1>
+	            <p id="airlineIdField" style="visibility: hidden"></p>
+	            <table>
+					<tr><td colspan="2"><h3 id="pNameOfChosenAirline"></h3></td></tr>
+					<tr><td>Description: </td><td><p id="pDescriptionOfChosenAirline"></p></td></tr>
+					<tr><td>Destination: </td><td><p id="pDestinationOfChosenAirline"></p></td></tr>
+					<tr><td>Grade: </td><td><p id="pGradeOfChosenAirline"></p></td></tr>
+				</table>
+				<br>
+				<br>
+				<h1>Search flights</h1>
+				<form id="searchFlightsForm">
+		        	<table>
+		        		<tr>
+		        			<td>
+			        			<select id="tripType">
+			        				<option selected="selected">One-way</option>
+			        				<option>Round trip</option>
+			        				<option>Multi-city</option>
+			        			</select>
+		        			</td>
+		        			<td>Number of passengers <input type="number" id="passengers" value="1" min="1" title="Number of passengers"></td>
+		        			<td>
+		        				<select id="seatClass">
+			        				<option selected="selected">Economy</option>
+			        				<option>Business</option>
+			        				<option>First Class</option>
+			        			</select>
+		        			</td>
+		        			<td>Bags <input type="number" id="bags" value="0" min="0"></td>
+		        		</tr>
+		        		<tr id="1">
+		        			<td>From <select id="from1" class="from" title="Where from?"></select></td> <td>To <select id="to1" class="to" title="Where to?"></select></td> <td>Departure date <input type="date" id="departureDate1" title="Departure date"></td>
+		        		</tr>
+		        		<tr><td><input type="submit" value="Search"></td></tr>
+		        	</table>
+		        </form>
+				<br>
+				<h1>Flights</h1>
+				
+				<div id='reservationSeatsModal' class='modal'>
+					<div class='modal-content'>
+						<span class="close">&times;</span>
+						<div class="tab">
+							<button id="chooseSeatsTab" class="tablinks" onclick="openTab(event, 'chooseSeatsContent')"> Choose seats</button>
+							<button id="inviteFriendsTab" class="tablinks" onclick="openTab(event, 'inviteFriendsContent')" disabled>Invite friends</button>
+							<button id="otherPassengersTab" class="tablinks" onclick="openTab(event, 'otherPassengersContent')" disabled>Other passengers</button>
+						</div>
+						
+						<div id="chooseSeatsContent" class="tabcontent">
+							<h3>Choose seats</h3>
+							<div id="seatsDiv" style="text-align: center; margin-top: 25px;"></div>
+						</div>
+		
+						<div id="inviteFriendsContent" class="tabcontent">
+							<h3>Invite friends</h3>
+						</div>
+		
+						<div id="otherPassengersContent" class="tabcontent">
+							<h3>Other passengers</h3>
+						</div>
+						
+						<input type="button" id="makeFlightReservation" value="Make reservation" disabled="disabled">
+					</div>
+				</div>
+				
+				<br>
+				<h1>Quick Reservations</h1>
+				<table id="quickFlightReservationsTable">
+					<thead>
+						<tr><th>From</th><th>To</th><th>Departure date</th><th>Arrival date</th><th>Seat</th><th>Price</th><th>Discount (%)</th><th>Action</th></tr>
+					</thead>
+					
+					<tbody>
+					</tbody>
+				</table>
+	            <button id="quitDialogAirlineView">Close</button>
+	        </div>
+	    </div>
+		
 		<div id="dialogHotelView" class="dialog">
 	        <div class="dialogContent">
 	            <h1>Hotel review</h1>
@@ -175,7 +257,6 @@
 							<select id="endDestination"></select>
 						</td>
 					</tr>
-					</tr>
 					<tr>
 						<td colspan="2">
 							<button id="vehicleSearchBtn" value="Search vehicles">Search</button>
@@ -201,7 +282,12 @@
 	        <h1>Airlines: </h1> <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
 	        <br><br>
 	        <table id="airlineTable">
-	            <tr><th>Name</th><th>Description</th></tr>
+	            <thead>
+	            	<tr><th>Name</th><th>Action</th></tr>
+	            </thead>
+	            
+	            <tbody>
+	            </tbody>
 	        </table>
 		</div>
 		
@@ -227,85 +313,6 @@
 	            <tr><th>Name</th><th>Description</th><th>Grade</th><th>Branch offices</th><th></th></tr>
 	        </table>
 	    </div>
-		
-		<div class="VelikiPregled">
-			<h2 style="color: white;">Flights</h2>
-			<table id="flightsTable" border="1">
-				<thead>
-					<tr><th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Bags</th> <th>First class price</th> <th>Business class price</th> <th>Economy class price</th> <th>Actions</th></tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-			<br>
-			
-			<div id='editSeatsModal' class='modal'>
-				<div class='modal-content'>
-					<h4>Edit seats</h4>
-					<span class='close'>&times;</span>
-					<div id="seatsTableDiv"></div> <br>
-					<input type='button' id='toggleSeat' value='Enable/Disable' disabled> &nbsp;&nbsp;&nbsp;
-					<input type='button' id='deleteSeat' value='Delete' disabled>
-				</div>
-			</div>
-		</div>
-		
-		<div id="searchFlightsDiv" class="VelikiPregled">
-	        <h1>Search</h1>
-	        <br>
-	        <form id="searchFlightsForm">
-	        	<table>
-	        		<tr>
-	        			<td>
-		        			<select id="tripType">
-		        				<option selected="selected">One-way</option>
-		        				<option>Round trip</option>
-		        				<option>Multi-city</option>
-		        			</select>
-	        			</td>
-	        			<td>Number of passengers <input type="number" id="passengers" value="1" min="1" title="Number of passengers"></td>
-	        			<td>
-	        				<select id="seatClass">
-		        				<option selected="selected">Economy</option>
-		        				<option>Business</option>
-		        				<option>First Class</option>
-		        			</select>
-	        			</td>
-	        			<td>Bags <input type="number" id="bags" value="0" min="0"></td>
-	        		</tr>
-	        		<tr id="1">
-	        			<td>From <select id="from1" class="from" title="Where from?"></select></td> <td>To <select id="to1" class="to" title="Where to?"></select></td> <td>Departure date <input type="date" id="departureDate1" title="Departure date"></td>
-	        		</tr>
-	        		<tr><td><input type="submit" value="Search"></td></tr>
-	        	</table>
-	        </form>
-	
-			<div id='reservationSeatsModal' class='modal'>
-				<div class='modal-content'>
-					<span class="close">&times;</span>
-					<div class="tab">
-						<button id="chooseSeatsTab" class="tablinks" onclick="openTab(event, 'chooseSeatsContent')"> Choose seats</button>
-						<button id="inviteFriendsTab" class="tablinks" onclick="openTab(event, 'inviteFriendsContent')" disabled>Invite friends</button>
-						<button id="otherPassengersTab" class="tablinks" onclick="openTab(event, 'otherPassengersContent')" disabled>Other passengers</button>
-					</div>
-					
-					<div id="chooseSeatsContent" class="tabcontent">
-						<h3>Choose seats</h3>
-						<div id="seatsDiv" style="text-align: center; margin-top: 25px;"></div>
-					</div>
-	
-					<div id="inviteFriendsContent" class="tabcontent">
-						<h3>Invite friends</h3>
-					</div>
-	
-					<div id="otherPassengersContent" class="tabcontent">
-						<h3>Other passengers</h3>
-					</div>
-					
-					<input type="button" id="makeFlightReservation" value="Make reservation" disabled="disabled">
-				</div>
-			</div>
-		</div>
 	</body>
 
 </html>
