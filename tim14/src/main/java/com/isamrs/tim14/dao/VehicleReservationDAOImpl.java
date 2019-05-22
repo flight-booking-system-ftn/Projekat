@@ -1,5 +1,7 @@
 package com.isamrs.tim14.dao;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
 import javax.persistence.EntityManager;
@@ -10,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.RegisteredUser;
+import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
@@ -56,5 +59,25 @@ public class VehicleReservationDAOImpl implements VehicleReservationDAO {
 		return vehicleReservation;
 	}
 
-	
+	@Override
+	@Transactional
+	public Collection<VehicleReservation> getQuickVehicleReservations(String rentID) {
+		RentACar rent = entityManager.find(RentACar.class, Integer.parseInt(rentID));
+		Collection<VehicleReservation> result = new ArrayList<VehicleReservation>();
+		for(VehicleReservation res : rent.getReservations()) {
+			if(res.getRegisteredUser() == null) {
+				result.add(res);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	@Transactional
+	public VehicleReservation saveQuickVehicleReservation(String reservationID) {
+		VehicleReservation res = entityManager.find(VehicleReservation.class, Integer.parseInt(reservationID));
+		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		res.setRegisteredUser(user);
+		return res;
+	}
 }

@@ -34,8 +34,7 @@ public class VehicleReservation {
 	@Column(name = "end")
 	private Date end;
 	
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "reservations")
-	@JsonBackReference(value="vehicle-reservations")
+	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "reservations")
 	private Set<Vehicle> vehicles;
 	
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)

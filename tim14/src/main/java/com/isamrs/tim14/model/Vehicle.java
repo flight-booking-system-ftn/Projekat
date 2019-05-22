@@ -65,6 +65,7 @@ public class Vehicle {
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "vehicles_reservations", joinColumns = { @JoinColumn(name = "vehicle_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "reservation_id") })
+	@JsonBackReference(value="vehicle-reservations")
 	private Set<VehicleReservation> reservations;
 
 	public Vehicle() {
