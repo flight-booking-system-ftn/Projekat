@@ -62,10 +62,14 @@ public class VehicleDAOImpl implements VehicleDAO {
 		check = true;
 		Date arrivalDate = new Date(start);
 		Date departureDate = new Date(start);
+		boolean mycheck = false;
+		if(startDest.equals("NO_INPUT")) {
+			mycheck = true;
+		}
 		for (Vehicle selectedVehicle : resultQuery) {
 			check = true;
 			System.out.println(selectedVehicle.getBranchOffice().getDestination().getName() + startDest);
-			if (selectedVehicle.getBranchOffice().getDestination().getName().equalsIgnoreCase(startDest)) {
+			if (mycheck || selectedVehicle.getBranchOffice().getDestination().getName().equalsIgnoreCase(startDest)) {
 				for (VehicleReservation reservation : selectedVehicle.getReservations()) {
 					if (!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
 						check = false;

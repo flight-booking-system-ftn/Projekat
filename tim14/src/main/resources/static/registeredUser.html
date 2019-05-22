@@ -8,22 +8,34 @@
 		<link rel="stylesheet" type="text/css" href="styles.css">
 		<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 		<script type="text/javascript" src="snackbar.js"></script>
-		<script type="text/javascript" src="unregisteredUser.js"></script>
+		<script type="text/javascript" src="index.js"></script>
 		<script src="authentication.js"></script>
 	</head>
 	
 	<body>
 	
 		<div class="menuDiv">
-			<button style="float: right; margin-right:20px;" id="loginUserBtn">Login</button>	
-			<button style="float: right;" id="registrationBtn">Registration</button>
-			<button id="showAirlinesBtn">Airlines</button>
-			<button id="showHotelsBtn">Hotels</button>
-			<button id="showRentsBtn">Rent-a-cars</button>
+			<button id="addAirlineBtn">Add airline</button>
+			<button id="addHotelBtn">Add hotel</button>
+			<button id="addRentACarBtn">Add rent-a-car</button>
+			<button id="editAirlineBtn">Edit airline</button>
+			<button id="addFlightBtn">Add flight</button>
+			<button id="addAirportBtn">Add airport</button>
+			<button id="loginUserBtn">Login</button>
+			<button id="addRoomBtn">Add room</button>
+			<button id="addVehicleBtn">Add vehicle</button>
+			<button id="defineLuggagePricelistBtn">Define luggage pricelist</button>
+			<button id="registrationBtn">Registration</button>
+			<button id="logoutBtn">Logout</button>
 		</div>
-        
-        <br><br><br><br><br><br><br>
-        <div id="serviceContainer"></div>
+			
+		<br><br><br><br><br><br>
+		<div class="menuDiv">
+			<button id="addAirlineAdminBtn">Add airline administrator</button>
+			<button id="addHotelAdminBtn">Add hotel administrator</button>
+			<button id="addRentACarAdminBtn">Add rent-a-car administrator</button>
+		</div>
+		<br><br><br><br>
 		
 		<div id="dialogHotelView" class="dialog">
 	        <div class="dialogContent">
@@ -87,14 +99,18 @@
 				<br>
 				<h1>Rooms</h1>
 	            <table id="selectedHotelRoomsTable">
-					<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th></tr>
+					<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>
 				</table>
 				<h1>Hotel Services</h1>
 				<table id="selectedHotelServicesTable">
-					<tr><th>Name</th><th>Price</th></tr>
+					<tr><th>Name</th><th>Price</th><th>Select</th></tr>
+				</table>
+				<h1>Quick Reservations</h1>
+				<table id="quickRoomReservationsTable">
+					<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Price</th><th></th></tr>
 				</table>
 				<br>
-				<button id="hotelMapLocationBtn">Show on map</button>
+				<button id="makeHotelReservationBtn">Make Reservation</button>
 	            <button id="quitDialogHotelView">Close</button>
 	        </div>
 	    </div>
@@ -104,27 +120,115 @@
 	            <h1>Rent-a-car review</h1>
 	            <p id="rentIdField" style="visibility: hidden"></p>
 	            <table>
-					<tr><td colspan="2"><h3 id="pNameOfChosenRent">Hotel</h3></td></tr>
+					<tr><td colspan="2"><h3 id="pNameOfChosenRent">Rent-a-car</h3></td></tr>
 					<tr><td>Description: </td><td><p id="pDescriptionOfChosenRent">Description</p></td></tr>
-					<tr><td>Destination: </td><td><p id="pDestinationOfChosenRent">Destination</p></td></tr>
+					<tr><td>Branch offices: </td><td><p id="pBranchesOfChosenRent">Branch offices</p></td></tr>
 				</table>
 				<br>
+				<br>
+				<h1>Search vehicles</h1>
+				<table>
+					<tr>
+						<td>
+							Start date: 
+						</td>
+						<td>
+							<input type="text" placeholder="Arrival date" id="vehicleSearchArrivalDate" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Number of days for rent: 
+						</td>
+						<td>
+							<input type="number" id="vehicleSearchDayNumber" value="1" min="1">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Cars: 
+						</td>
+						<td>
+							<input type="checkbox" id="vehicleCars">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Motocycles: 
+						</td>
+						<td>
+							<input type="checkbox" id="vehicleMotocycles">
+						</td>
+						<tr>
+						<td>
+							Start destination: 
+						</td>
+						<td>
+							<select id="startDestination"></select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							End destination: 
+						</td>
+						<td>
+							<select id="endDestination"></select>
+						</td>
+					</tr>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<button id="vehicleSearchBtn" value="Search vehicles">Search</button>
+						</td>
+					</tr>
+				</table>
 				<br>
 				<h1>Vehicles</h1>
 	            <table id="selectedRentVehiclesTable">
-					<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>
-                </table>
-                <h1>Branch offices</h1>
-	            <table id="RentBranchOfficeTable">
-					<tr><th>Column A</th><th>Column B</th></tr>
+					<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>
 				</table>
 				<br>
-				<button id="rentMapLocationBtn">Show on map</button>
+				<h1>Quick Reservations</h1>
+				<table id="quickVehicleReservationsTable">
+					<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Price</th><th>Start Destination</th><th>End Destination</th><th></th></tr>
+				</table>
+				<button id="makeRentReservationBtn">Make Reservation</button>
 	            <button id="quitDialogRentView">Close</button>
 	        </div>
 	    </div>
+	
+		<div class="VelikiPregled">
+	        <h1>Airlines: </h1> <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
+	        <br><br>
+	        <table id="airlineTable">
+	            <tr><th>Name</th><th>Description</th></tr>
+	        </table>
+		</div>
 		
-		<div class="VelikiPregled" style="visibility: hidden;>
+		<div class="VelikiPregled">
+	        <h1>Hotels: </h1> <input type="text" id="hotelNameSearchInput" placeholder="Hotel name">
+	        <input type="text" id="hotelDestinationSearchInput" placeholder="Hotel destination">
+	        <input type="text" placeholder="Check in" id="hotelSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+	        <input type="text" placeholder="Check out" id="hotelSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
+	         <button id="hotelSearchBtn" value="Search hotels">Search</button>
+			<br><br>
+			<table id="hotelTable">
+	            <tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>
+	        </table>
+		</div>
+		
+		<div class="VelikiPregled">
+	        <h1>Rent-a-car: </h1> <input type="text" id="rentNameSearchInput" placeholder="Rent-a-car name">
+	        <input type="text" id="rentDestinationSearchInput" placeholder="Rent-a-car destination">
+	        <input type="text" placeholder="Start date" id="rentSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+	        <input type="text" placeholder="End date" id="rentSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
+	        <button id="rentSearchBtn" value="Search rent">Search</button><br><br>
+	        <table id="rentACarTable">
+	            <tr><th>Name</th><th>Description</th><th>Grade</th><th>Branch offices</th><th></th></tr>
+	        </table>
+	    </div>
+		
+		<div class="VelikiPregled">
 			<h2 style="color: white;">Flights</h2>
 			<table id="flightsTable" border="1">
 				<thead>
@@ -146,7 +250,7 @@
 			</div>
 		</div>
 		
-		<div id="searchFlightsDiv" class="VelikiPregled" style="visibility: hidden;">
+		<div id="searchFlightsDiv" class="VelikiPregled">
 	        <h1>Search</h1>
 	        <br>
 	        <form id="searchFlightsForm">

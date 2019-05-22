@@ -98,7 +98,7 @@ $(document).ready(function(){
         var cars = $('#vehicleCars').prop('checked');
         var motocycles = $('#vehicleMotocycles').prop('checked');
         var e = document.getElementById("startDestination");
-	    var startDest = e.options[e.selectedIndex].text
+	    var startDest = e.options[e.selectedIndex].text;
 	    console.log('Rent: ', rentId ,'....', start, end, cars, motocycles, startDest);
         renderVehicleTable(rentId, start, end, cars, motocycles,$('#vehicleSearchDayNumber').val(), startDest);
     });
