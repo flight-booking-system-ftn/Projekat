@@ -8,9 +8,11 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Authority;
+import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.UserType;
@@ -72,6 +74,13 @@ public class RentAdminDAOImpl implements RentAdminDAO {
 		}
 
 		return result.get(0);
+	}
+	
+	@Override
+	@Transactional
+	public RentACar getCurrentRent() {
+		RentACarAdmin admin = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return admin.getRentACar();
 	}
 
 }
