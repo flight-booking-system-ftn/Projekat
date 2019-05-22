@@ -38,8 +38,7 @@ public class RegisteredUser extends User {
 	@JsonBackReference(value="user-roomReservation")
 	private Set<RoomReservation> roomReservations;
 
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="registeredUser")
 	@JsonBackReference(value="user-vehicleReservation")
 	private Set<VehicleReservation> vehicleReservations;
 

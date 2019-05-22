@@ -36,7 +36,7 @@ public class VehicleReservation {
 	
 	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "reservations")
 	@JsonBackReference(value="vehicle-reservations")
-	private Set<Vehicle> vehicle;
+	private Set<Vehicle> vehicles;
 	
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "vehicle_reservation_id")
@@ -46,10 +46,18 @@ public class VehicleReservation {
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.EAGER)
     @JoinColumn(name = "rent_a_car_id")
 	private RentACar rentACar;
+	
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @JoinColumn(name = "branch_office_id")
+	private BranchOffice endBranchOffice;
 
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+	private RegisteredUser registeredUser;
+	
 	public VehicleReservation() {
 		super();
-		this.vehicle = new HashSet<Vehicle>();
+		this.vehicles = new HashSet<Vehicle>();
 		this.services = new HashSet<RentACarService>();
 	}
 
@@ -78,12 +86,12 @@ public class VehicleReservation {
 	}
 
 
-	public Set<Vehicle> getVehicle() {
-		return vehicle;
+	public Set<Vehicle> getVehicles() {
+		return vehicles;
 	}
 
-	public void setVehicle(Set<Vehicle> vehicle) {
-		this.vehicle = vehicle;
+	public void setVehicles(Set<Vehicle> vehicle) {
+		this.vehicles = vehicle;
 	}
 
 	public Set<RentACarService> getServices() {
@@ -92,6 +100,30 @@ public class VehicleReservation {
 
 	public void setServices(Set<RentACarService> services) {
 		this.services = services;
+	}
+
+	public RentACar getRentACar() {
+		return rentACar;
+	}
+
+	public void setRentACar(RentACar rentACar) {
+		this.rentACar = rentACar;
+	}
+
+	public RegisteredUser getRegisteredUser() {
+		return registeredUser;
+	}
+
+	public void setRegisteredUser(RegisteredUser registeredUser) {
+		this.registeredUser = registeredUser;
+	}
+
+	public BranchOffice getEndBranchOffice() {
+		return endBranchOffice;
+	}
+
+	public void setEndBranchOffice(BranchOffice endBranchOffice) {
+		this.endBranchOffice = endBranchOffice;
 	}
 
 }

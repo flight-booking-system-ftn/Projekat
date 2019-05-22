@@ -1,5 +1,7 @@
 package com.isamrs.tim14.dao;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -11,8 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.RentACarAdmin;
-import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.Vehicle;
+import com.isamrs.tim14.model.VehicleReservation;
 
 @Repository
 public class VehicleDAOImpl implements VehicleDAO {
@@ -34,19 +36,20 @@ public class VehicleDAOImpl implements VehicleDAO {
 
 	@Override
 	@Transactional
-	public List<Vehicle> getVehiclesSearch(Integer rentID, Long arriveDate, Long dayNum, Boolean cars, Boolean motocycles, String startDest) {
+	public List<Vehicle> getVehiclesSearch(Integer rentID, Long start, Long end, Boolean cars, Boolean motocycles,
+			String startDest) {
 		String queryPlus = " AND 1=2 ";
 		boolean check = false;
-		if(cars || motocycles) {
+		if (cars || motocycles) {
 			queryPlus = " AND (";
-			if(cars) {
+			if (cars) {
 				queryPlus += " v.type = 'CAR' ";
 				check = true;
 			}
-			if(motocycles && !check) {
+			if (motocycles && !check) {
 				queryPlus += " v.type = 'MOTOCYCLE' ";
 				check = true;
-			}else if(motocycles) {
+			} else if (motocycles) {
 				queryPlus += " OR v.type = 'MOTOCYCLE' ";
 			}
 			queryPlus += ")";
@@ -54,7 +57,26 @@ public class VehicleDAOImpl implements VehicleDAO {
 		System.out.println(">>> " + queryPlus);
 		Query query = entityManager.createQuery("SELECT v FROM Vehicle v WHERE v.rentACar.id = :rentId" + queryPlus);
 		query.setParameter("rentId", rentID);
-		List<Vehicle> result = query.getResultList();
+		List<Vehicle> resultQuery = query.getResultList();
+		List<Vehicle> result = new ArrayList<Vehicle>();
+		check = true;
+		Date arrivalDate = new Date(start);
+		Date departureDate = new Date(start);
+		for (Vehicle selectedVehicle : resultQuery) {
+			check = true;
+			System.out.println(selectedVehicle.getBranchOffice().getDestination().getName() + startDest);
+			if (selectedVehicle.getBranchOffice().getDestination().getName().equalsIgnoreCase(startDest)) {
+				for (VehicleReservation reservation : selectedVehicle.getReservations()) {
+					if (!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
+						check = false;
+					}
+				}
+				if (check) {
+					result.add(selectedVehicle);
+				}
+			}
+		}
+		System.out.println(result.size());
 		return result;
 	}
 }
