@@ -37,8 +37,16 @@
 				<td><input type="text" id="lastNameAirlineAdmin" required></td>
 			</tr>
 			<tr>
+				<td>City: </td>
+				<td><input type="text" id="cityAirlineAdmin" required></td>
+			</tr>
+			<tr>
+				<td>Phone: </td>
+				<td><input type="text" id="phoneAirlineAdmin" pattern="[0-9]{3}/[0-9]{2,}" placeholder="example: 021/123456" required></td>
+			</tr>
+			<tr>
 				<td>Email address: </td>
-				<td><input type="text" id="emailAirlineAdmin" required></td>
+				<td><input type="text" id="emailAirlineAdmin" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required></td>
 			</tr>
 			<tr>
 				<td>Airline: </td>

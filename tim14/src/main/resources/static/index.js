@@ -686,7 +686,7 @@ $(document).ready(function(){
     					table.append(thead);
     					table.append(tbody);
     					
-    					$("div#searchFlightsDiv div#reservationSeatsModal").before(table);
+    					$("div#dialogAirlineView div#reservationSeatsModal").before(table);
     				}
     			});
     		},
@@ -849,6 +849,64 @@ $(document).ready(function(){
 		selectedSeats = [];
 		$("div#reservationSeatsModal").hide();
 	});*/
+	
+	$("button#quitDialogAirlineView").click(function() {
+    	$("table#quickFlightReservationsTable tbody").empty();
+    	$("table.searchResultTable").remove();
+    	$("div#dialogAirlineView").hide();
+    });
+	
+	$(document).on("click", "button.airlineDetails", function() {
+		var airlineID = $(this).parent().parent().attr("id");
+		
+		$.ajax({
+			type: "GET",
+			url: "/api/airlines/" + airlineID,
+			dataType: "json",
+			success: function(airline) {
+				$("h3#pNameOfChosenAirline").text(airline.name);
+				$("p#pDescriptionOfChosenAirline").text(airline.description);
+				$("p#pDestinationOfChosenAirline").text(airline.destination.name + ", " + airline.destination.country);
+				$("p#pGradeOfChosenAirline").text("-");
+				
+				$("div#dialogAirlineView").show();
+			}
+		});
+		
+		$.ajax({
+			type: "GET",
+			url: "/api/flightReservation/getQuickTickets/" + airlineID,
+			dataType: "json",
+			success: function(reservations) {
+				var table = $("table#quickFlightReservationsTable tbody");
+				
+				$.each(reservations, function(index, reservation) {
+					var tr = $("<tr id='" + reservation.id + "'><td>" + reservation.flight.from.name + "</td> <td>" + reservation.flight.to.name + "</td> <td>" + formatDateDet(new Date(reservation.flight.departureDate)) + "</td> <td>" + formatDateDet(new Date(reservation.flight.arrivalDate)) + "</td> <td>[" + reservation.seat.seatRow + ":" + reservation.seat.number + "]</td> <td>" + reservation.price + "</td> <td>" + reservation.discount + "</td> <td><input type='button' class='takeAReservation' value='Take it'></td></tr>");
+					
+					table.append(tr);
+				});
+			}
+		});
+	});
+	
+	$(document).on("click", "input.takeAReservation", function() {
+		var tr = $(this).parent().parent();
+		var reservationID = tr.attr("id");
+		
+		$.ajax({
+			type: "PUT",
+			url: "/api/flightReservation/buyQuickTicket/" + reservationID,
+			headers: createAuthorizationTokenHeader(),
+			success: function(response) {
+				showMessage(response, "green");
+
+				tr.remove();
+			},
+			error: function(response) {
+				alert(response);
+			}
+		});
+	});
     
     //----------------------------------------
 });
@@ -886,29 +944,35 @@ var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms,
 }
 
 var renderAirlineTable = function(){
-    $('#airlineTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
     $.get("/api/airlines", function(data){
-        console.log("ssAirlines: ", data);
-        for(var i=0;i<data.length;i++){
-            var red = data[i];
-            $('#airlineTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
-        }
+    	var table = $("table#airlineTable tbody");
+    	table.empty();
+    	
+        $.each(data, function(index, airline) {
+        	var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td></tr>");
+        	
+        	table.append(tr);
+        });
     });
 }
 
 var renderAirlineTableSearch = function(){
     var text = $('#airlineSearchInput').val();
+    
     if(text == ""){
         renderAirlineTable();
         return;
     }
-    $('#airlineTable').html(`<tr><th>Name</th><th>Description</th></tr>`);
+    
     $.get('/api/airlinesSearch/'+text, function(data){
-        console.log("Airlines: ", data);
-        for(var i=0;i<data.length;i++){
-            var red = data[i];
-            $('#airlineTable tr:last').after(`<tr><td>${red.name}</td><td>${red.description}</td></tr>`);
-        }
+    	var table = $("table#airlineTable tbody");
+    	table.empty();
+    	
+    	$.each(data, function(index, airline) {
+        	var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td></tr>");
+        	
+        	table.append(tr);
+        });
     }); 
 }
 

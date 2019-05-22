@@ -108,7 +108,7 @@ $(document).ready(function() {
 		$.ajax({
 			type: "PUT",
 			url: "seats/toggle/" + seatID,
-			contentType: "text/html; charset=utf-8",
+			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
 				var bgcolor;
 				if(data.enabled == true) {
@@ -136,7 +136,7 @@ $(document).ready(function() {
 		$.ajax({
 			type: "DELETE",
 			url: "seats/delete/" + seatID,
-			contentType: "text/html; charset=utf-8",
+			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
 				previousSeat.remove();
 			},
@@ -300,10 +300,6 @@ $(document).ready(function() {
 	
 	$("button#addFlightBtn").click(function() {
 		$(location).attr('href', "/newFlight.html");
-	});
-	
-	$("button#addOfficeBtn").click(function() {
-		$(location).attr('href', "/newAirlineOffice.html");
 	});
 	
 	$("button#logoutBtn").click(function(){

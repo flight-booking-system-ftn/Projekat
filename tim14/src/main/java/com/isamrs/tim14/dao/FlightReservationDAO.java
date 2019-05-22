@@ -10,4 +10,8 @@ public interface FlightReservationDAO {
 	public ResponseEntity<String> saveReservation(List<FlightReservation> reservations);
 
 	public ResponseEntity<String> makeQuickReservation(List<FlightReservation> reservations);
+
+	public ResponseEntity<List<FlightReservation>> getQuickTickets(Integer id);
+
+	public ResponseEntity<String> buyQuickTicket(Integer reservationID);
 }
