@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RentAdminDAO;
+import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 
 @RestController
@@ -61,6 +62,18 @@ public class RentAdminRest {
 			return new ResponseEntity<RentACarAdmin>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<RentACarAdmin>(newRentAdmin, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/rentAdmin/rent",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RentACar> getAdminsHotel(){
+		
+		RentACar currRent= rentAdminDAO.getCurrentRent();
+		
+		return new ResponseEntity<RentACar>(currRent, HttpStatus.OK);
 	}
 	
 }
