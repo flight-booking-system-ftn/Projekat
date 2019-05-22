@@ -83,8 +83,58 @@ tbody tr:nth-child(even) {
 	color: #e8e1de;
 }
 
+.imagePreview{
+	width: 200px;
+	height: 200px;
+	float: left;
+	background-size: cover;
+	background-image: url("./images/Airport.jpg");
+	margin-right:15px;
+}
+
+.mapButtonPreview button{
+	width: 200px;
+	height: 28px;
+	float: right;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #e8e1de;
+	border: 1px solid #2b77b4;
+}
+
+.mapButtonPreview button:hover {
+	width: 200px;
+	height: 28px;
+	float: right;
+	text-align: center;
+	background-color: #2b77b4;
+	color: #e8e1de;
+	border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.listItem{
+	width: 50%;
+	height: 220px;
+	margin: auto;
+  	border: rgba(0, 0, 0, 0.8);
+	padding: 15px;
+	margin-bottom: 5px;
+	color:white;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.bigImage {
+	width: 100%;
+	height: 400px;
+	background-image: url("./images/Airport.jpg");
+}
+
 .menuDiv {
 	float: left;
+	width: 100%;
+	background-color: #1e2838;
+	height: 60px;
+	padding: 10px;
 }
 
 .menuDiv button {
