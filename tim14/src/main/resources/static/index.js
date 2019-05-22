@@ -3,6 +3,9 @@ selected_rooms = [];
 all_hotel_services = [];
 selected_hotel_services = [];
 
+all_vehicles = [];
+selected_vehicles = [];
+
 $(document).ready(function(){
     
     renderAirlineTable();
@@ -246,6 +249,50 @@ $(document).ready(function(){
 		})
 	});
 	
+	$(document).on('click','#makeRentReservationBtn',function(){
+		selected_vehicles = [];
+		console.log("VOZILAAAA: ", all_vehicles);
+        for(var i=0;i<all_vehicles.length;i++){
+			var red = all_vehicles[i];
+			if($('#vehicleCheckbox'+ red.id).prop('checked')){
+				delete red.rentACar.hibernateLazyInitializer;
+				delete red.rentACar.destination.hibernateLazyInitializer;
+				selected_vehicles.push(red);
+			}
+		}
+		var start = stringToDate($('#vehicleSearchArrivalDate').val());
+		var end = start + ($('#vehicleSearchDayNumber').val()-1)*24*60*60*1000;	
+		console.log("Selected vehicles: ", selected_rooms);
+		var price = calculatePriceVehicle(selected_vehicles, $('#vehicleSearchDayNumber').val());
+		var link = '/api/branchOffice/'+$("#endDestination option:selected" ).val();
+		$.get(link, function(office){
+		var reservation = {
+			"start": new Date(start),
+			"end": new Date(end),
+			"vehicles": selected_vehicles,
+			"rentACar": selected_vehicles[0].rentACar,
+			"price": price,
+			"endBranchOffice" : office
+		};
+		console.log("Vehicle reservation: ", reservation);
+		if(reservation.vehicles.length == 0){
+			showMessage("Select at least 1 vehicle!", "orange");
+			return;
+		}
+		$.ajax({
+			type : 'POST',
+			url : "/api/vehicleReservations",
+			headers: createAuthorizationTokenHeader(),
+			data : JSON.stringify(reservation),
+			success: function(){
+				$(location).attr('href',"/");
+				showMessage('Vehicle reservation successful!', "green");
+			},
+			error: function (jqXHR, exception) {
+				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+			}
+		})});
+	});
 	
     
     //--------------- RADOJCIN ---------------
@@ -966,6 +1013,7 @@ var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, moto
     $.get('/api/vehiclesSearch'+text, function(VehicleData){
             console.log("Vehicles: ", VehicleData);
             var vehicles = VehicleData;
+            all_vehicles = vehicles;
         	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
             for(var i=0;i<vehicles.length;i++){
                 var red = vehicles[i];
@@ -1049,5 +1097,13 @@ function calculatePrice(rooms, services, days){
 		price += services[i].price;
 	}
 
+	return price;
+}
+
+function calculatePriceVehicle(vehicles, days){
+	price = 0;
+	for(var i=0;i<vehicles.length;i++){
+		price += (days * vehicles[i].price);
+	}
 	return price;
 }
