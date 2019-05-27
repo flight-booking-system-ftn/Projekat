@@ -114,7 +114,8 @@ public class AuthenticationController {
 		if(admin != null) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
 		}
-		System.out.println("HotelAdmin (" + hotelAdmin.getUsername() + ") " +", hotel name: " + 
+		System.out.println("HotelAdmin (" + hotelAdmin.getCity() + ") "+", hotel name: " + 
+				hotelAdmin.getPhoneNumber() +", hotel name: " + 
 				hotelAdmin.getHotel().getName());
 		hotelAdmin.setPassword(this.userDetailsService.encodePassword(hotelAdmin.getPassword()));
 		List<Authority> authorities = new ArrayList<Authority>();
@@ -255,6 +256,25 @@ public class AuthenticationController {
 		System.out.println(ud.getAuthorities());
 		// Vrati token kao odgovor na uspesno autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ut, redirectionURL));
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER') or hasRole('ROLE_AIRLINEADMIN') or hasRole('ROLE_HOTELADMIN') or hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(value = "/getInfo", method = RequestMethod.GET)
+	public ResponseEntity<?> getInfoOfLogged() {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (user instanceof RegisteredUser) {
+			user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		else if (user instanceof AirlineAdmin) {
+			user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		else if (user instanceof HotelAdmin) {
+			user = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		else{
+			user = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 
 

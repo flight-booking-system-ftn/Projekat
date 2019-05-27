@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.dto.UserDTO;
 import com.isamrs.tim14.model.Authority;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelAdmin;
@@ -26,6 +27,9 @@ public class HotelAdminDAOImpl implements HotelAdminDAO {
 	
 	@Autowired
 	private CustomUserDetailsService customService;
+	
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 	
 	@Autowired
 	public HotelAdminDAOImpl(EntityManager entityManager) {
@@ -82,6 +86,24 @@ public class HotelAdminDAOImpl implements HotelAdminDAO {
 	public Hotel getCurrentHotel() {
 		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return admin.getHotel();
+	}
+
+
+	@Override
+	@Transactional
+	public HotelAdmin updateAdmin(UserDTO user) {
+		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		HotelAdmin managedHotelAdmin = entityManager.find(HotelAdmin.class, admin.getId());
+		if(!user.getPassword().equals("")) {
+			managedHotelAdmin.setPassword(this.userDetailsService.encodePassword(user.getPassword()));
+		}
+		managedHotelAdmin.setFirstName(user.getFirstName());
+		managedHotelAdmin.setLastName(user.getLastName());
+		managedHotelAdmin.setEmail(user.getEmail());
+		managedHotelAdmin.setPhoneNumber(user.getPhone());
+		managedHotelAdmin.setCity(user.getCity());
+		
+		return managedHotelAdmin;
 	}
 
 	

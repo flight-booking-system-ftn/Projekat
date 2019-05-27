@@ -18,70 +18,75 @@ $(document).ready(function(){
         firstName = $("#firstNameRentACarAdmin").val();
         lastName = $("#lastNameRentACarAdmin").val();
         email = $("#emailRentACarAdmin").val();
+        phone = $('#phoneRentACarAdmin').val();
+        city = $('#cityRentACarAdmin').val();
         rentACar = null;
         repeatPassword = $("#rep_passwordRentACarAdmin").val();
 
            
-        var check = checkFields(username, password, firstName, lastName, email,repeatPassword);
+        var check = checkFields(password, email, repeatPassword);
         
         if(check){
-            $.get('/api/rentacars/'+$('#rentRentAdmin').val(), function(rentData){
-                data = {
-                    username,
-                    password,
-                    firstName,
-                    lastName,
-                    email,
-                    rentACar: rentData
-                }
-                console.log(data);
-                $.ajax({
-                    url: '/auth/registerRentACarAdmin',
-                    type: "POST",
-                    data: JSON.stringify(data),
-                    headers: createAuthorizationTokenHeader(),
-                    dataType: "text",
-                    success: function(data){
-                        $(location).attr('href',"/");
-                    },
-                    error: function (jqXHR, exception) {
-                        var msg = '';
-                        if (jqXHR.status == 0) {
-                            msg = 'Not connect.\n Verify Network.';
-                        } else if (jqXHR.status == 404) {
-                            msg = 'Requested page not found. [404]';
-                        } else if (jqXHR.status == 500) {
-                            msg = 'Internal Server Error [500].';
-                        } else if (exception === 'parsererror') {
-                            msg = 'Requested JSON parse failed.';
-                        } else if (exception === 'timeout') {
-                            msg = 'Time out error.';
-                        } else if (exception === 'abort') {
-                            msg = 'Ajax request aborted.';
-                        } else {
-                            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        	if($('#rentRentAdmin').val() == ""){
+        		showMessage("No rent-a-car in system!", "orange");
+        		return;
+        	}
+        	$.ajax({
+    			type : 'GET',
+    			url : '/api/rentacars/'+$('#rentRentAdmin').val(),
+    			headers: createAuthorizationTokenHeader(),
+    			success: function(rentData){
+    				data = {
+	                    username,
+	                    password,
+	                    firstName,
+	                    lastName,
+	                    email,
+	                    city,
+	                    "phoneNumber": phone,
+	                    "rentACar": rentData
+	                }
+	                console.log(data);
+    				$.ajax({
+                        url: '/auth/registerRentACarAdmin',
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        headers: createAuthorizationTokenHeader(),
+                        dataType: "text",
+                        success: function(data){
+                        	showMessage("Rent-a-car admin added successfully!", "green");
+                            $(location).attr('href',"/registeredUser.html");
+                        },
+                        error: function (jqXHR, exception) {
+                        	if (jqXHR.status == 401) {
+            					showMessage('Login as system admin!', "orange");
+        					}else{
+        						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+        					}
                         }
-                        alert(msg);
-                    }
-                });
-            });
+                    });
+    			},
+    			error: function (jqXHR, exception) {
+    				if (jqXHR.status == 401) {
+    					showMessage('Login first!', "orange");
+					}else{
+						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					}
+    			}
+    		})
         };
     });
 });
 
 
 
-var checkFields = function(username, password, firstName, lastName, email,repeatPassword){
-    if(username=="" || password=="" || firstName=="" || lastName=="" || email=="" || repeatPassword==""){
-    	alert("Fields cannot be empty!");
-        return false;
-    }
+var checkFields = function(password, email, repeatPassword){
     if(password != repeatPassword){
-    	alert("Difference between passwords!");
+    	showMessage("Difference between passwords!", "orange");
         return false;
     }
     if(validateEmail(email) === false){
-    	alert("email wrong format!");
+    	showMessage("email wrong format!", "orange");
         return false;
     }
     return true;

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.HotelAdminDAO;
+import com.isamrs.tim14.dto.UserDTO;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelAdmin;
 
@@ -76,6 +77,20 @@ public class HotelAdminRest {
 			return new ResponseEntity<HotelAdmin>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<HotelAdmin>(newHotelAdmin, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/updateHotelAdmin",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<HotelAdmin> updateHotelAdmin(@RequestBody UserDTO hotelAdmin) {
+		HotelAdmin updatedHotelAdmin = hotelAdminDAO.updateAdmin(hotelAdmin);
+		if(updatedHotelAdmin == null) {
+			return new ResponseEntity<HotelAdmin>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<HotelAdmin>(updatedHotelAdmin, HttpStatus.CREATED);
 	}
 	
 }
