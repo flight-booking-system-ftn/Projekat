@@ -15,6 +15,7 @@
 	<div class="menuDiv">
 		<button id="addRoomBtn">Add room</button>
 		<button id="makeQuickReservation">Make quick reservation</button>
+		<button id="showHotelInfoBtn">Show hotel rooms</button>
 		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
 		<button style="float: right; margin-right:20px;" id="editProfileBtn">Edit profile</button>
 	</div>
@@ -23,7 +24,7 @@
 		
 	<div id="dialogHotelView" class="dialog">
 		<div class="dialogContent">
-			<h1>Hotel review</h1>
+			<h1>Hotel info</h1>
 			<p id="hotelIdField" style="visibility: hidden"></p>
 			<table>
 				<tr><td colspan="2"><h3 id="pNameOfChosenHotel">Hotel</h3></td></tr>
@@ -135,6 +136,24 @@
 			<br>
 			<button id="editHotelAdminProfile">Edit profile</button>
 			<button id="quitDialogEditHotelAdmin">Close</button>
+		</div>
+	</div>
+	
+	<div id="dialogHotelViewRR" class="dialog">
+		<div class="dialogContent">
+			<h1>Hotel info</h1>
+			<table>
+				<tr><td colspan="2"><h3 id="pNameOfChosenHotelRR">Hotel</h3></td></tr>
+				<tr><td>Description: </td><td><p id="pDescriptionOfChosenHotelRR">Description</p></td></tr>
+				<tr><td>Destination: </td><td><p id="pDestinationOfChosenHotelRR">Destination</p></td></tr>
+			</table>
+			<br>
+			<h1>Rooms</h1>
+			<table id="hotelRoomsTableRR">
+				<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price per day</th><th></th></tr>
+			</table>
+			<br>
+			<button id="quitDialogHotelViewRR">Close</button>
 		</div>
 	</div>
 	

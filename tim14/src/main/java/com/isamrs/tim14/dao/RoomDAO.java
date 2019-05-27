@@ -7,4 +7,6 @@ import com.isamrs.tim14.model.Room;
 public interface RoomDAO {
 	public Room save(Room room);
 	public List<Room> getRoomsSearch(Integer hotelID, Long arriveDateTS, Long departureDateTS, Boolean twoBeds, Boolean threeBeds, Boolean fourBeds);
+	public List<Room> getUnreservedRooms();
+	public void removeRoom(Integer id);
 }
