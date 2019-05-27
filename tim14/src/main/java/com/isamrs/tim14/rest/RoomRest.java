@@ -57,4 +57,23 @@ public class RoomRest {
 		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/unreservedRooms",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Room>> getUnreservedRooms(){
+		Collection<Room> rooms = roomDAO.getUnreservedRooms();
+		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/removeRoom/{id}",
+			method = RequestMethod.DELETE)
+	public ResponseEntity<?> removeRoom(@PathVariable Integer id){
+		roomDAO.removeRoom(id);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
 }

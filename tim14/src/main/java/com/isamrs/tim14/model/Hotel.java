@@ -41,7 +41,7 @@ public class Hotel {
 	@JsonBackReference(value="hotel-services")
 	private Set<HotelService> services;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "hotel")
 	@JsonBackReference(value="hotel-rooms")
 	private Set<Room> rooms;
 	
@@ -50,7 +50,7 @@ public class Hotel {
 	@JsonBackReference(value="hotel-grades")
 	private Set<Grade> grades;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "hotel")
 	@JsonBackReference(value="hotel-reservations")
 	private Set<RoomReservation> reservations;
 	

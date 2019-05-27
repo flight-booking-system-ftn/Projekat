@@ -182,6 +182,57 @@ $(document).ready(function() {
 	$(document).on('click', '#quitDialogEditHotelAdmin', function(){
 		$('#dialogEditHotelAdminProfile').css('display', 'none');
 	});
+	
+	$(document).on('click', '#showHotelInfoBtn', function() {
+		$.ajax({
+            type : 'GET',
+            url : '/api/hotelAdmin/hotel',
+            headers: createAuthorizationTokenHeader(),
+            success: function(data){
+				console.log("Admin's hotel: ", data);
+                $('#pNameOfChosenHotelRR').text(data.name);
+                $('#pDescriptionOfChosenHotelRR').text(data.description);
+                $('#pDestinationOfChosenHotelRR').text(data.destination.name +
+                    ", " + data.destination.country);
+                renderTableAllRoomsOfHotel();
+                $('#dialogHotelViewRR').css('display', 'block');
+            },
+            error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
+            }
+        });
+	});
+	
+	$(document).on('click', '#quitDialogHotelViewRR', function(){
+		$('#dialogHotelViewRR').css('display', 'none');
+	});
+	
+	$(document).on('click','table button',function(e){
+        if(e.target.id.startsWith("removeRoomID")){
+            var id = e.target.id.substr(12);
+            console.log("Selektovana je soba sa id-em: ", id);
+            $.ajax({
+        		type: 'DELETE',
+        		url: '/api/removeRoom/'+id,
+        		headers: createAuthorizationTokenHeader(),
+        		success: function(){
+        			showMessage('Room successfully removed!', 'green');
+        			$(location).attr('href',"/hotelAdmin.html");
+        		},
+        		error: function (jqXHR, exception) {
+        			if (jqXHR.status == 401) {
+        				showMessage('Login first!', "orange");
+        			}else{
+        				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+        			}
+        		}
+        	});
+        }
+	});
 })
 
 
@@ -213,6 +264,30 @@ var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms,
 			checkBoxID = "roomCheckbox"+ red.id;
 			$('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price*numDays}</td><td>
 			<input type="checkbox" id=${checkBoxID}></td></tr>`);
+		}
+	});
+}
+
+var renderTableAllRoomsOfHotel = function(){
+	$.ajax({
+		type: 'GET',
+		url: '/api/unreservedRooms',
+		headers: createAuthorizationTokenHeader(),
+		success: function(rooms){
+			$('#hotelRoomsTableRR').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price per day</th><th></th></tr>`);
+			for(var i=0;i<rooms.length;i++){
+				var red = rooms[i];
+				removeRoomID = "removeRoomID"+ red.id;
+				$('#hotelRoomsTableRR tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price}</td><td>
+				<button id=${removeRoomID}>Remove room</button></td></tr>`);
+			}
+		},
+		error: function (jqXHR, exception) {
+			if (jqXHR.status == 401) {
+				showMessage('Login first!', "orange");
+			}else{
+				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+			}
 		}
 	});
 }

@@ -81,4 +81,40 @@ public class RoomDAOImpl implements RoomDAO {
 		return result;
 	}
 
+	@Override
+	@Transactional
+	public List<Room> getUnreservedRooms() {
+		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<Room> unreservedRooms = new ArrayList<Room>();
+		List<Room> reservedRooms = new ArrayList<Room>();
+		for(RoomReservation res : admin.getHotel().getReservations()) {
+			if(res.getEnd().getTime() + 24*60*60*1000 > new Date().getTime()) {
+				for(Room room : res.getRooms()) {
+					reservedRooms.add(room);
+				}
+			}
+		}
+		boolean check = true;
+		for(Room room : admin.getHotel().getRooms()) {
+			check = true;
+			for(Room resRoom : reservedRooms) {
+				if(resRoom.getId() == room.getId()) {
+					check = false;
+					break;
+				}
+			}
+			if(check) {
+				unreservedRooms.add(room);
+			}
+		}
+		return unreservedRooms;
+	}
+
+	@Override
+	@Transactional
+	public void removeRoom(Integer id) {
+		Room managedRoom = entityManager.find(Room.class, id);
+		entityManager.remove(managedRoom);
+	}
+
 }
