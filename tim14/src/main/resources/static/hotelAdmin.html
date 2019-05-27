@@ -15,9 +15,8 @@
 	<div class="menuDiv">
 		<button id="addRoomBtn">Add room</button>
 		<button id="makeQuickReservation">Make quick reservation</button>
-	</div>
-	<div class="menuDivRight">
-		<button id="logoutBtn">Logout</button>
+		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
+		<button style="float: right; margin-right:20px;" id="editProfileBtn">Edit profile</button>
 	</div>
 	
 	<br><br>
@@ -99,6 +98,46 @@
 			<button id="quitDialogHotelView">Close</button>
 		</div>
 	</div>
+	
+	<div id="dialogEditHotelAdminProfile" class="dialog">
+		<div class="dialogContent">
+			<h1>Edit profile</h1>
+			<table>
+				<tr>
+					<td>Password: </td>
+					<td><input type="password" id="passwordHotelAdmin"></td>
+				</tr>
+				<tr>
+					<td>Repeat password: </td>
+					<td><input type="password" id="rep_passwordHotelAdmin"></td>
+				</tr>
+				<tr>
+					<td>First name:</td>
+					<td><input type="text" id="firstNameHotelAdmin" required></td>
+				</tr>
+				<tr>
+					<td>Last name:</td>
+					<td><input type="text" id="lastNameHotelAdmin" required></td>
+				</tr>
+				<tr>
+					<td>Email address: </td>
+					<td><input type="text" id="emailHotelAdmin" required></td>
+				</tr>
+				<tr>
+					<td>City</td>
+					<td><input type="text" id="cityHotelAdmin" required></td>
+		        </tr>
+		        <tr>
+					<td>Phone</td>
+					<td><input type="text"  id="phoneHotelAdmin"  pattern="[0-9]{3}/[0-9]{2,}" placeholder="example: 021/123456" required></td>
+		        </tr>
+			</table>
+			<br>
+			<button id="editHotelAdminProfile">Edit profile</button>
+			<button id="quitDialogEditHotelAdmin">Close</button>
+		</div>
+	</div>
+	
 </body>
 
 </html>

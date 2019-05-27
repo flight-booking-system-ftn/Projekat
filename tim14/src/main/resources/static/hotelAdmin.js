@@ -109,6 +109,79 @@ $(document).ready(function() {
 			}
 		})
 	});
+	
+	$(document).on('click', '#editProfileBtn', function(){
+		$.ajax({
+			type : 'GET',
+			url : '/auth/getInfo',
+			headers: createAuthorizationTokenHeader(),
+			success: function(adminData){
+				console.log("Admin data: ", adminData);
+				$('#firstNameHotelAdmin').val(adminData.firstName);
+				$('#lastNameHotelAdmin').val(adminData.lastName);
+				$('#emailHotelAdmin').val(adminData.email);
+				$('#cityHotelAdmin').val(adminData.city);
+				$('#phoneHotelAdmin').val(adminData.phoneNumber);
+				
+				$('#dialogEditHotelAdminProfile').css('display', 'block');
+			},
+			error: function (jqXHR, exception) {
+				if (jqXHR.status == 401) {
+					showMessage('Login first!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
+			}
+		})
+	});
+	
+	$(document).on('click', '#editHotelAdminProfile', function(){
+		var password = $('#passwordHotelAdmin').val();
+		console.log(password, $('#rep_passwordHotelAdmin').val());
+		if(password !== ""){
+			var repeat = $('#rep_passwordHotelAdmin').val();
+			if(repeat !== password){
+				showMessage('Password and repeat password are not equal!', 'orange');
+				return;
+			}
+		}
+		var data = {
+			password: $('#passwordHotelAdmin').val(),
+			firstName: $('#firstNameHotelAdmin').val(),
+			lastName: $('#lastNameHotelAdmin').val(),
+			email: $('#emailHotelAdmin').val(),
+			city: $('#cityHotelAdmin').val(),
+			phone: $('#phoneHotelAdmin').val()
+		}
+		
+		$.ajax({
+			type : 'POST',
+			url : "/api/updateHotelAdmin",
+			headers: createAuthorizationTokenHeader(),
+			data : JSON.stringify(data),
+			success: function(){
+				showMessage('Hotel admin successfully updated!', "green");
+				$('#dialogEditHotelAdminProfile').css('display', 'none');
+				if($('#passwordHotelAdmin').val() == ""){
+					$(location).attr('href',"/hotelAdmin.html");
+				}else{
+					$(location).attr('href',"/logout");
+				}
+				
+			},
+			error: function (jqXHR, exception) {
+				if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
+			}
+		})
+	});
+	
+	$(document).on('click', '#quitDialogEditHotelAdmin', function(){
+		$('#dialogEditHotelAdminProfile').css('display', 'none');
+	});
 })
 
 

@@ -11,9 +11,9 @@ $(document).ready(function(){
         $(location).attr('href',"/registration.html");
     });
     
-    $(document).on('click','#logoutBtn',function(){
+    $(document).on('click','#loginUserBtn',function(){
     	removeJwtToken();
-        $(location).attr('href',"/logout");
+        $(location).attr('href',"/login.html");
     });
 
     $(document).on('click','#showAirlinesBtn',function(){
