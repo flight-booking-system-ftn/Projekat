@@ -1,11 +1,15 @@
 package com.isamrs.tim14.rest;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.AirlineDAO;
 import com.isamrs.tim14.model.Airline;
+import com.isamrs.tim14.model.Airport;
+import com.isamrs.tim14.model.Flight;
 
 @RestController
 @RequestMapping("/api")
@@ -53,7 +59,8 @@ public class AirlineRest {
 	}
 
 	@RequestMapping(value = "/airlines", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Airline editAirline(@RequestBody Airline airline) {
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	public ResponseEntity<String> editAirline(@RequestBody Airline airline) {
 		return airlineDAO.update(airline);
 	}
 
@@ -62,6 +69,23 @@ public class AirlineRest {
 		Collection<Airline> airlines = airlineDAO.search(airlineName);
 
 		return new ResponseEntity<Collection<Airline>>(airlines, HttpStatus.OK);
+	}
+	
+	@GetMapping("/airline/{id}/airports")
+	public ResponseEntity<List<Airport>> getAirports(@PathVariable Integer id) {
+		return airlineDAO.getAirports(id);
+	}
+	
+	@GetMapping("/airline/airports")
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	public ResponseEntity<List<Airport>> getAirportsOfAirline() {
+		return airlineDAO.getAirportsOfAirline();
+	}
+	
+	@GetMapping("/airline/flights")
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	public ResponseEntity<Set<Flight>> getFlightsOfAirline() {
+		return airlineDAO.getFlightsOfAirline();
 	}
 
 }

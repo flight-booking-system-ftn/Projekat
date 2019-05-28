@@ -28,19 +28,18 @@ $(document).ready(function() {
         	$.ajax({
         		type: "POST",
         		url: "/airport/new",
-        		contentType: "application/json",
+        		headers: createAuthorizationTokenHeader(),
         		data: JSON.stringify({
                     "name": airportName,
                     "destination": {
                     	"id": destination
                     }
         		}),
-        		dataType: "json",
-        		success: function() {
-        			showMessage("Airport successfully added.", "green");
+        		success: function(response) {
+        			showMessage(response, "green");
         		},
-        		error: function() {
-        			showMessage("Airport already exists.", "red");
+        		error: function(response) {
+        			showMessage(response.responseText, "orange");
         		}
         	});
         }

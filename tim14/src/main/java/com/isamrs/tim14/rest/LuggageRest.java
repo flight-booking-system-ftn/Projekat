@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,12 +26,13 @@ public class LuggageRest {
 	}
 	
 	@PostMapping("/add")
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	public ResponseEntity<String> add(@RequestBody Luggage luggage) {
 		return luggageDAO.add(luggage);
 	}
 	
 	@GetMapping("/getPricelist")
-	public Set<Luggage> getPricelist() {
+	public ResponseEntity<Set<Luggage>> getPricelist() {
 		return luggageDAO.getPricelist();
 	}
 	

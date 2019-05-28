@@ -27,7 +27,7 @@ public class FlightReservationRest {
 		this.flightReservationDAO = flightReservationDAO;
 	}
 	
-	//@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@PostMapping("/flightReservation/save")
 	public ResponseEntity<String> saveReservation(@RequestBody List<FlightReservation> reservations) {
 		return flightReservationDAO.saveReservation(reservations);

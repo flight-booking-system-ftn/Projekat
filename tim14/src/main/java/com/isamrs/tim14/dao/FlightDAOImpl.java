@@ -2,7 +2,6 @@ package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -11,9 +10,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
-import com.isamrs.tim14.model.Airline;
+import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.Seat;
 import com.isamrs.tim14.model.SeatType;
@@ -31,39 +31,25 @@ public class FlightDAOImpl implements FlightDAO {
 
 	@Override
 	@Transactional
-	public void save(Flight flight) {
-		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE a.id = :airline_id");
-		query.setParameter("airline_id", 1);
+	public ResponseEntity<String> save(Flight flight) {
+		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
-		Airline airline = (Airline)query.getSingleResult();
-		flight.setAirline(airline);
+		flight.setAirline(user.getAirline());
 		
 		entityManager.persist(flight);
+		
+		return new ResponseEntity("Flight successully added.", HttpStatus.CREATED);
 	}
 
 	@Override
 	@Transactional
-	public Set<Flight> flightsOfAirline() {
-		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE a.id = :airline_id");
-		query.setParameter("airline_id", 1);
-		
-		List<Airline> result = query.getResultList();
-		
-		if(result.size() == 0)
-			return null;
-					
-		return result.get(0).getFlights();
-	}
-
-	@Override
-	@Transactional
-	public List<Seat> getSeats(Integer id) {
+	public ResponseEntity<List<Seat>> getSeats(Integer id) {
 		Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.id = :flight_id");
 		query.setParameter("flight_id", id);
 		
 		Flight flight = (Flight)query.getSingleResult();
 		
-		return flight.getSeats();
+		return new ResponseEntity(flight.getSeats(), HttpStatus.OK);
 	}
 
 	@Override
@@ -123,7 +109,6 @@ public class FlightDAOImpl implements FlightDAO {
 		}
 		
 		if(values.getTripType().equals("Round trip")) {
-			System.out.println("ROUND TRIP, TRAZIM POVRATNI LET ZA DATUM " + values.getData().get(0).getReturnDate());
 			Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
 			query.setParameter("from_airport", values.getData().get(0).getTo());
 			query.setParameter("to_airport", values.getData().get(0).getFrom());
