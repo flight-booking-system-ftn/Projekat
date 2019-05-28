@@ -45,6 +45,10 @@ public class RegisteredUser extends User {
 	@Column(name = "bonus_points")
 	private Integer bonusPoints;
 
+	
+	@Column(name = "verified")
+	private boolean verified;
+	
 	public RegisteredUser() {
 		super();
 		this.friendList1 = new HashSet<RegisteredUser>();
@@ -53,6 +57,7 @@ public class RegisteredUser extends User {
 		this.roomReservations = new HashSet<RoomReservation>();
 		this.vehicleReservations = new HashSet<VehicleReservation>();
 		this.bonusPoints = 0;
+		this.verified = false;
 	}
 
 	public Set<RegisteredUser> getFriendList1() {
@@ -102,5 +107,14 @@ public class RegisteredUser extends User {
 	public void setBonusPoints(Integer bonusPoints) {
 		this.bonusPoints = bonusPoints;
 	}
+	
+	public boolean isVerified() {
+		return verified;
+	}
 
+	public void setVerified(boolean verified) {
+		this.verified = verified;
+	}
+
+    
 }

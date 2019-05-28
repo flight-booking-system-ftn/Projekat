@@ -48,10 +48,10 @@ $(document).ready(function() {
 	            
 	        }),
 			success : function(data) {
-				$(location).attr('href',"/");
+				showMessage('Email is sent. You must confirm your registration.', "orange");
 			},
         	error : function(err){
-        		console.log("Error", err);
+        		showMessage("Registration failed!", "red");
         	}
 		});
     }})})
