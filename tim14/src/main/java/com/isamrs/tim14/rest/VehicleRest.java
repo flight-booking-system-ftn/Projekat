@@ -59,4 +59,22 @@ public class VehicleRest {
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/unreservedVehicles",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Vehicle>> getUnreservedRooms(){
+		Collection<Vehicle> vehicles = vehicleDAO.getUnreservedVehicles();
+		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/removeVehicle/{id}",
+			method = RequestMethod.DELETE)
+	public ResponseEntity<?> removeRoom(@PathVariable Integer id){
+		vehicleDAO.removeVehicle(id);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 }

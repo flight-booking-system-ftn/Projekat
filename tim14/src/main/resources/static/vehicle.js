@@ -39,7 +39,7 @@ $(document).ready(function() {
                  headers: createAuthorizationTokenHeader(),
                  data : JSON.stringify(data),
                  success: function(){
-                     $(location).attr('href',"/");
+                     $(location).attr('href',"/rentACarAdmin.html");
                  },
                  error: function (jqXHR, exception) {
                      var msg = '';

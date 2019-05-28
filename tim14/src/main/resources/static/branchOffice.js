@@ -20,7 +20,7 @@ $(document).ready(function() {
 				headers: createAuthorizationTokenHeader(),
 				data : JSON.stringify(destinationData),
 				success: function(){
-					$(location).attr('href',"/");
+					$(location).attr('href',"/rentACarAdmin.html");
 				},
 				error: function (jqXHR, exception) {
 					var msg = '';
