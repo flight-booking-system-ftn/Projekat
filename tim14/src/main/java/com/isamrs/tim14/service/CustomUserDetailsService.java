@@ -89,4 +89,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		return userRepository.findByEmail(email);
 	}
 
+	public User findUserByToken(String token) {
+		return userRepository.findByToken(token);
+	}
+	
 }

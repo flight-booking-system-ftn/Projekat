@@ -62,7 +62,7 @@ public class User implements Serializable, UserDetails {
 	private String phoneNumber;
 	
 	@Column(name = "last_password_reset_date")
-	private Timestamp lastPasswordResetDate;
+	private Timestamp lastPasswordResetDate;	
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_authority", 
@@ -187,6 +187,5 @@ public class User implements Serializable, UserDetails {
     
 	private static final long serialVersionUID = 1655113308824460247L;
 
-    
     
 }

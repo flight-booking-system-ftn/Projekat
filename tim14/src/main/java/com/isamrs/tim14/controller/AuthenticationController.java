@@ -24,10 +24,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.Authority;
@@ -93,14 +95,13 @@ public class AuthenticationController {
 		ru.setRoomReservations(new HashSet<RoomReservation>());
 		ru.setFlightReservations(new HashSet<FlightReservation>());
 		ru.setVehicleReservations(new HashSet<VehicleReservation>());
-		
-		this.userDetailsService.saveUser(ru);
-		
-		/*try {
+		ru.setVerified(false);
+		userDetailsService.saveUser(ru);
+		try {
 			mailService.sendNotificaitionAsync(ru);
 		} catch (MailException | InterruptedException e) {
 			e.printStackTrace();
-		}*/
+		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 	
@@ -233,6 +234,9 @@ public class AuthenticationController {
 		String redirectionURL = "#";
 		
 		if (user instanceof RegisteredUser) {
+			if(!((RegisteredUser) user).isVerified()) {
+				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
+			}
 			ut = UserType.ROLE_REGISTEREDUSER;
 			redirectionURL = "/";
 			}
@@ -288,6 +292,18 @@ public class AuthenticationController {
 		return ResponseEntity.accepted().body(result);
 	}
 
+	@RequestMapping(value = "/confirm/{token}", method = RequestMethod.GET)
+	public RedirectView confirmRegistration(@PathVariable String token) {
+		User user = userDetailsService.findUserByToken(token);
+		if (user != null) {
+			RegisteredUser u = ((RegisteredUser) user);
+			u.setVerified(true);
+			userDetailsService.saveUser(u);
+			return new RedirectView("/login.html");
+		}
+		return null;
+	}
+	
 	static class PasswordChanger {
 		public String oldPassword;
 		public String newPassword;
