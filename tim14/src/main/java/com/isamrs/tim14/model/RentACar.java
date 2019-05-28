@@ -42,7 +42,7 @@ public class RentACar {
 	@JsonBackReference(value="rent-services")
 	private Set<RentACarService> services;
 	
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "rentACar")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "rentACar")
     @JsonBackReference(value="rent-vehicles")
 	private Set<Vehicle> vehicles;
 	
@@ -90,6 +90,14 @@ public class RentACar {
 
 	public Destination getDestination() {
 		return destination;
+	}
+
+	public Set<Vehicle> getVehicles() {
+		return vehicles;
+	}
+
+	public void setVehicles(Set<Vehicle> vehicles) {
+		this.vehicles = vehicles;
 	}
 
 	public void setDestination(Destination destination) {

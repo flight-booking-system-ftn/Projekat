@@ -15,12 +15,63 @@ $(document).ready(function() {
         $(location).attr('href',"/logout");
 	});
 	
-	 $(document).on('click','#quitDialogRentView',function(){
-	    	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
+	$(document).on('click','#quitDialogRentView',function(){
+	    	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
 	        $('#dialogRentView').css("display","none");
 		});
 
-		$(document).on('click', '#makeQuickReservation', function() {
+	$(document).on('click', '#showRentInfoBtn', function() {
+		$.ajax({
+            type : 'GET',
+            url : '/api/rentAdmin/rent',
+            headers: createAuthorizationTokenHeader(),
+            success: function(data){
+				console.log("Admin's rent: ", data);
+                $('#pNameOfChosenRentRemove').text(data.name);
+                $('#pDescriptionOfChosenRentRemove').text(data.description);
+                $('#pDestinationOfChosenRentRemove').text(data.destination.name +
+                    ", " + data.destination.country);
+                renderTableAllRentVehicles();
+                $('#dialogRentViewRemove').css('display', 'block');
+            },
+            error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as rent administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
+            }
+        });
+	});
+
+	$(document).on('click', '#quitDialogRentViewRemove', function(){
+		$('#dialogRentViewRemove').css('display', 'none');
+	});
+
+	$(document).on('click','table button',function(e){
+        if(e.target.id.startsWith("removeVehicleID")){
+            var id = e.target.id.substr(15);
+            console.log("vehicle id: ", id);
+            $.ajax({
+        		type: 'DELETE',
+        		url: '/api/removeVehicle/'+id,
+        		headers: createAuthorizationTokenHeader(),
+        		success: function(){
+        			showMessage('Vehicle successfully removed!', 'green');
+        			$(location).attr('href',"/rentACarAdmin.html");
+        		},
+        		error: function (jqXHR, exception) {
+        			if (jqXHR.status == 401) {
+        				showMessage('Login first!', "orange");
+        			}else{
+        				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+        			}
+        		}
+        	});
+        }
+	});
+	 
+	$(document).on('click', '#makeQuickReservation', function() {
 			console.log("heeeej");
 			$('#dialogRentView').css('display', 'block');
 			$.ajax({
@@ -62,7 +113,7 @@ $(document).ready(function() {
 	            },
 	            error: function (jqXHR) {
 	                if(jqXHR.status == 401){
-	                    showMessage("You don't have permission for getting current hotel!", "red");
+	                    showMessage("You don't have permission for getting current rent-a-car!", "red");
 	                }
 	            }
 	        });
@@ -118,7 +169,7 @@ $(document).ready(function() {
 				headers: createAuthorizationTokenHeader(),
 				data : JSON.stringify(reservation),
 				success: function(){
-					$(location).attr('href',"/");
+					$(location).attr('href',"/rentACarAdmin.html");
 					showMessage('Vehicle reservation successful!', "green");
 				},
 				error: function (jqXHR, exception) {
@@ -146,6 +197,34 @@ $(document).ready(function() {
 	            }
 	        });
 	}
+
+	var renderTableAllRentVehicles = function(){
+		$.ajax({
+			type: 'GET',
+			url: '/api/unreservedVehicles',
+			headers: createAuthorizationTokenHeader(),
+			success: function(vehicles){
+				console.log(vehicles)
+				$('#vehicleTableRemove').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th><th></th></tr>`);
+				for(var i=0;i<vehicles.length;i++){
+					var red = vehicles[i];
+					removeVehicleID = "removeVehicleID"+ red.id;
+					$('#vehicleTableRemove tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.destination.name}</td><td>-</td><td>${red.price}</td><td>
+					<button id=${removeVehicleID}>Remove vehicle</button></td></tr>`);
+				}
+			},
+			error: function (jqXHR, exception) {
+				if (jqXHR.status == 401) {
+					showMessage('Login first!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
+			}
+		});
+	}
+
+	
+	
 
 	function formatDate(date) {
 	    month = '' + (date.getMonth() + 1);
@@ -190,10 +269,10 @@ $(document).ready(function() {
 		return new Date(newDate).getTime();
 	}
 
-	function calculatePrice(rooms,days){
+	function calculatePrice(vehicles,days){
 		price = 0;
-		for(var i=0;i<rooms.length;i++){
-			price += (days * rooms[i].price);
+		for(var i=0;i<vehicles.length;i++){
+			price += (days * vehicles[i].price);
 		}
 		return price;
 	}

@@ -16,6 +16,7 @@
 		<button id="addVehicleBtn">Add vehicle</button>
 		<button id="addBranchOfficeBtn">Add branch office</button>
 		<button id="makeQuickReservation">Make quick reservation</button>
+		<button id="showRentInfoBtn">Show rent-a-car vehicles</button>
 	</div>
 	<div class="menuDivRight">
 		<button id="logoutBtn">Logout</button>
@@ -23,7 +24,7 @@
 		
 	<div id="dialogRentView" class="dialog">
 	        <div class="dialogContent">
-	            <h1>Rent-a-car review</h1>
+	            <h1>Rent-a-car info</h1>
 	            <p id="rentIdField" style="visibility: hidden"></p>
 	            <table>
 					<tr><td colspan="2"><h3 id="pNameOfChosenRent">Rent-a-car</h3></td></tr>
@@ -102,5 +103,23 @@
 	            <button id="quitDialogRentView">Close</button>
 	        </div>
 	    </div>
+	    
+	<div id="dialogRentViewRemove" class="dialog">
+		<div class="dialogContent">
+			<h1>Hotel info</h1>
+			<table>
+				<tr><td colspan="2"><h3 id="pNameOfChosenRentRemove">Hotel</h3></td></tr>
+				<tr><td>Description: </td><td><p id="pDescriptionOfChosenRentRemove">Description</p></td></tr>
+				<tr><td>Destination: </td><td><p id="pDestinationOfChosenRentRemove">Destination</p></td></tr>
+			</table>
+			<br>
+			<h1>Vehicles</h1>
+			<table id="vehicleTableRemove">
+				<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th><th></th></tr>
+			</table>
+			<br>
+			<button id="quitDialogRentViewRemove">Close</button>
+		</div>
+	</div>
 </body>
 </html>

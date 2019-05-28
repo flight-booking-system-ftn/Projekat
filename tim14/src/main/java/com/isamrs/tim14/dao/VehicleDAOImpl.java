@@ -83,4 +83,41 @@ public class VehicleDAOImpl implements VehicleDAO {
 		System.out.println(result.size());
 		return result;
 	}
+	
+	@Override
+	@Transactional
+	public List<Vehicle> getUnreservedVehicles() {
+		RentACarAdmin admin = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		List<Vehicle> unreservedVehicles = new ArrayList<Vehicle>();
+		List<Vehicle> reservedVehicles = new ArrayList<Vehicle>();
+		for(VehicleReservation res : admin.getRentACar().getReservations()) {
+			if(res.getEnd().getTime() + 24*60*60*1000 > new Date().getTime()) {
+				for(Vehicle vehicle : res.getVehicles()) {
+					reservedVehicles.add(vehicle);
+				}
+			}
+		}
+		boolean check = true;
+		for(Vehicle vehicle : admin.getRentACar().getVehicles()) {
+			check = true;
+			for(Vehicle resVehicle : reservedVehicles) {
+				if(resVehicle.getId() == vehicle.getId()) {
+					check = false;
+					break;
+				}
+			}
+			if(check) {
+				unreservedVehicles.add(vehicle);
+			}
+		}
+		return unreservedVehicles;
+	}
+
+	@Override
+	@Transactional
+	public void removeVehicle(Integer id) {
+		Vehicle managedVehicle = entityManager.find(Vehicle.class, id);
+		entityManager.remove(managedVehicle);
+	}
+
 }
