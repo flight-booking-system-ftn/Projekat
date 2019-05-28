@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	var flights;
 	var options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
 	
 	getFlights();
@@ -7,13 +6,12 @@ $(document).ready(function() {
 	function getFlights() {
 		$.ajax({
 			type: "GET",
-			url: "/flight/flightsOfAirline",
-			async: false,
+			url: "/api/airline/flights",
+			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
-				flights = data;
 				var table = $("table#flightsTable tbody");
 				
-				$.each(flights, function(index, flight) {
+				$.each(data, function(index, flight) {
 					var tr = $("<tr id='" + flight.id + "'></tr>");
 					var id = $("<input type='hidden' value='" + flight.id + "'>");
 					var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
@@ -49,7 +47,7 @@ $(document).ready(function() {
 		return date.toLocaleDateString("en", options) + " " + (date.getHours() < 10 ? "0" + (date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
 	}
 	
-	$("input.edit").on("click", function() {
+	$(document).on("click", "input.edit", function() {
 		var seatsTableDiv = $("div#seatsTableDiv");
 		var flightID = $(this).parent().parent().find("input[type='hidden']").attr("value");
 		
@@ -147,7 +145,7 @@ $(document).ready(function() {
 	});
 	
 	var selectedFlight;
-	$("input.makeQuickReservation").on("click", function() {
+	$(document).on("click", "input.makeQuickReservation", function() {
 		var seatsDiv = $("div#seatsDiv");
     	seatsDiv.empty();
     	
@@ -157,6 +155,7 @@ $(document).ready(function() {
 			type: "GET",
 			url: "/flight/" + selectedFlight + "/seats",
 			contentType: "text/html; charset=utf-8",
+			headers: createAuthorizationTokenHeader(),
 			dataType: "json",
 			success: function(data) {
 				seatsDiv.css("height", ((data.length / 3) * 55 + (data.length % 3 > 0 ? 20 : 0)) + "px");
@@ -301,6 +300,18 @@ $(document).ready(function() {
 	$("button#addFlightBtn").click(function() {
 		$(location).attr('href', "/newFlight.html");
 	});
+	
+	$("button#addAirportBtn").click(function() {
+		$(location).attr('href',"/newAirport.html");
+	});
+	
+	$("button#editAirlineBtn").click(function() {
+		$(location).attr('href',"/editAirline.html");
+	});
+	
+	$("button#defineLuggagePricelistBtn").click(function(){
+        $(location).attr('href',"/luggagePricelist.html");
+    });
 	
 	$("button#logoutBtn").click(function(){
     	removeJwtToken();

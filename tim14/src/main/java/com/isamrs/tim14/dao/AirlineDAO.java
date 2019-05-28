@@ -1,8 +1,13 @@
 package com.isamrs.tim14.dao;
 
 import java.util.List;
+import java.util.Set;
+
+import org.springframework.http.ResponseEntity;
 
 import com.isamrs.tim14.model.Airline;
+import com.isamrs.tim14.model.Airport;
+import com.isamrs.tim14.model.Flight;
 
 public interface AirlineDAO {
 
@@ -14,8 +19,14 @@ public interface AirlineDAO {
 
 	public void deleteAirline(int id);
 
-	public Airline update(Airline airline);
+	public ResponseEntity<String> update(Airline airline);
 
 	public List<Airline> search(String airlineName);
+
+	public ResponseEntity<List<Airport>> getAirports(Integer id);
+	
+	public ResponseEntity<Set<Flight>> getFlightsOfAirline();
+
+	public ResponseEntity<List<Airport>> getAirportsOfAirline();
 
 }

@@ -1,36 +1,31 @@
 $(document).ready(function() {
-	var airports;
-	
 	getAirports();
-	setAirports();
 	
-	//Zbog manje komunikacija sa bazom
     function getAirports() {
     	$.ajax({
     		type: "GET",
-    		async: false,
-    		url: "/airport/all",
+    		url: "/api/airline/airports",
+    		headers: createAuthorizationTokenHeader(),
     		success: function(data) {
-    			airports = data;
+    			var from = $("select#from");
+    			var to = $("select#to");
+    			var stops = $("div#stopsDiv");
+    			var i = 0;
+    	    	
+    	    	$.each(data, function(index, airport) {
+    	    		var fromOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
+    	    		var toOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
+    	    		var stopBox = $("<input type='checkbox' id='" + airport.id + "'><label for='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</label>")
+    	    		
+    	    		from.append(fromOption);
+    	    		to.append(toOption);
+    	    		stops.append(stopBox);
+    	    		stops.append("<br>");
+    	    	});
+    		},
+    		error: function(response) {
+    			showMessage(response.responseText, "orange");
     		}
-    	});
-    }
-    
-    function setAirports() {
-    	var from = $("select#from");
-		var to = $("select#to");
-		var stops = $("div#stopsDiv");
-		var i = 0;
-    	
-    	$.each(airports, function(index, airport) {
-    		var fromOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
-    		var toOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
-    		var stopBox = $("<input type='checkbox' id='" + airport.id + "'><label for='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</label>")
-    		
-    		from.append(fromOption);
-    		to.append(toOption);
-    		stops.append(stopBox);
-    		stops.append("<br>");
     	});
     }
     
@@ -145,9 +140,11 @@ $(document).ready(function() {
     	$.ajax({
     		type: "POST",
     		url: "/flight/new",
-    		contentType: "application/json",
+    		headers: createAuthorizationTokenHeader(),
     		data: JSON.stringify(flight),
-    		success: showMessage("Flight successfully added.", "green")
+    		success: function(message) {
+    			showMessage(message, "green");
+    		}
     	});
     });
 });

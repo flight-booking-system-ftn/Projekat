@@ -65,9 +65,7 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 		
 		List<FlightReservation> result = query.getResultList();
 		
-		System.out.println("BRZE REZERVACIJE SU");
 		for(FlightReservation reservation : result) {
-			System.out.println(reservation.getId());
 		}
 		
 		return new ResponseEntity(result, HttpStatus.OK);

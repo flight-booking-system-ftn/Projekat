@@ -1,17 +1,23 @@
 package com.isamrs.tim14.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Airline;
+import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.AirlineService;
-import com.isamrs.tim14.model.HotelService;
+import com.isamrs.tim14.model.Airport;
+import com.isamrs.tim14.model.Flight;
 
 @Repository
 public class AirlineDAOImpl implements AirlineDAO {
@@ -70,19 +76,24 @@ public class AirlineDAOImpl implements AirlineDAO {
 
 	@Override
 	@Transactional
-	public Airline update(Airline airline) {
-		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE a.id = :airline_id");
-		query.setParameter("airline_id", 1);
+	public ResponseEntity<String> update(Airline airline) {
+		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE lower(a.name) LIKE :airline_name AND a.destination.id = :destination_id");
+		query.setParameter("airline_name", airline.getName());
+		query.setParameter("destination_id", airline.getDestination().getId());
+		
+		List<Airline> result = query.getResultList();
+		
+		if(result.size() > 0)
+			return new ResponseEntity("Airline with same name at the same destination already exists.", HttpStatus.FORBIDDEN);
+		
+		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Airline managedAirline = entityManager.find(Airline.class, user.getAirline().getId());
 
-		Airline result = (Airline) query.getSingleResult();
+		managedAirline.setName(airline.getName());
+		managedAirline.setDestination(airline.getDestination());
+		managedAirline.setDescription(airline.getDescription());
 
-		result.setName(airline.getName());
-		// result.setDestination(airline.getDestination());
-		result.setDescription(airline.getDescription());
-
-		entityManager.merge(result);
-
-		return airline;
+		return new ResponseEntity("Airline informations successfully updated.", HttpStatus.OK);
 	}
 
 	@Override
@@ -92,6 +103,35 @@ public class AirlineDAOImpl implements AirlineDAO {
 		query.setParameter("airline_name", "%" + airlineName + "%");
 		
 		return query.getResultList();
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<List<Airport>> getAirports(Integer id) {
+		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE a.id = :airline_id");
+		query.setParameter("airline_id", id);
+		
+		List<Airline> result = query.getResultList();
+		return new ResponseEntity(result.get(0).getAirports(), HttpStatus.OK);
+	}
+	
+	@Override
+	@Transactional
+	public ResponseEntity<Set<Flight>> getFlightsOfAirline() {
+		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+					
+		return new ResponseEntity(user.getAirline().getFlights(), HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<List<Airport>> getAirportsOfAirline() {
+		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if(user.getAirline().getAirports().size() == 0)
+			return new ResponseEntity("No airports were found.", HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity(user.getAirline().getAirports(), HttpStatus.OK);
 	}
 
 }

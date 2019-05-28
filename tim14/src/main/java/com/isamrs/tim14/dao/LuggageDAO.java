@@ -9,5 +9,5 @@ import com.isamrs.tim14.model.Luggage;
 public interface LuggageDAO {
 	public ResponseEntity<String> add(Luggage luggage);
 
-	public Set<Luggage> getPricelist();
+	public ResponseEntity<Set<Luggage>> getPricelist();
 }

@@ -21,15 +21,6 @@ $(document).ready(function(){
     $(document).on('click','#addRentACarBtn',function(){
         $(location).attr('href',"/rentacar.html");
     });
-    $(document).on('click','#editAirlineBtn',function(){
-        $(location).attr('href',"/editAirline.html");
-    });
-    $(document).on('click','#addFlightBtn',function(){
-        $(location).attr('href',"/newFlight.html");
-    });
-    $(document).on('click','#addAirportBtn',function(){
-        $(location).attr('href',"/newAirport.html");
-    });
     $(document).on('click','#loginUserBtn',function(){
         $(location).attr('href',"/login.html");
     });
@@ -44,10 +35,6 @@ $(document).ready(function(){
     
     $(document).on('click','#addVehicleBtn',function(){
         $(location).attr('href',"/vehicle.html");
-    });
-    
-    $(document).on('click','#defineLuggagePricelistBtn',function(){
-        $(location).attr('href',"/luggagePricelist.html");
     });
 
     $(document).on('click','#addAirlineAdminBtn',function(){
@@ -318,93 +305,11 @@ $(document).ready(function(){
     
     //--------------- RADOJCIN ---------------
     
-	var flights;
 	var options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
-	
-	getFlights();
-	
-	function getFlights() {
-		$.ajax({
-			type: "GET",
-			url: "/flight/flightsOfAirline",
-			async: false,
-			success: function(data) {
-				flights = data;
-				var table = $("table#flightsTable tbody");
-				
-				$.each(flights, function(index, flight) {
-					var tr = $("<tr id='" + flight.id + "'></tr>");
-					var id = $("<input type='hidden' value='" + flight.id + "'>");
-					var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
-					var to = $("<td>" + flight.to.name + " - " + flight.to.destination.name + ", " + flight.to.destination.country + "</td>");
-					var stops = $("<td>" + flight.stops.length + "</td>");
-					var departureDate = $("<td>" + formatDateDet(new Date(flight.departureDate)) + "</td>");
-					var arrivalDate = $("<td>" + formatDateDet(new Date(flight.arrivalDate)) + "</td>");
-					var luggageQuantity = $("<td>" + flight.luggageQuantity + "</td>");
-					var ticketPriceFirstClass = $("<td>" + flight.ticketPriceFirstClass + "</td>");
-					var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
-					var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
-					var actions = $("<td><input type='button' class='edit' value='Edit seats'></td>");
-					
-					tr.append(id);
-					tr.append(from);
-					tr.append(to);
-					tr.append(stops);
-					tr.append(departureDate);
-					tr.append(arrivalDate);
-					tr.append(luggageQuantity);
-					tr.append(ticketPriceFirstClass);
-					tr.append(ticketPriceBusinessClass);
-					tr.append(ticketPriceEconomyClass);
-					tr.append(actions);
-					
-					table.append(tr);
-				});
-			}
-		});
-	}
 	
 	function formatDateDet(date) {
 		return date.toLocaleDateString("en", options) + " " + (date.getHours() < 10 ? "0" + (date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
 	}
-	
-	$("input.edit").on("click", function() {
-		var seatsTableDiv = $("div#seatsTableDiv");
-		var flightID = $(this).parent().parent().find("input[type='hidden']").attr("value");
-		
-		$.ajax({
-			type: "GET",
-			url: "/flight/" + flightID + "/seats",
-			contentType: "text/html; charset=utf-8",
-			dataType: "json",
-			success: function(data) {
-				
-				seatsTableDiv.css("height", ((data.length / 3) * 55 + (data.length % 3 > 0 ? 20 : 0)) + "px");
-				$.each(data, function(index, seat) {
-					var bgcolor;
-					if(seat.enabled == false)
-						bgcolor = "#3a3a3a";
-					else if(seat.busy == true)
-						bgcolor = "#ff0000";
-					else if(seat.type == "FIRST_CLASS")
-						bgcolor = "#ffd700";
-					else if(seat.type == "BUSINESS")
-						bgcolor = "#0000ff";
-					else
-						bgcolor = "#00ff00";
-					
-					var seatDiv = $("<div style='background-color: " + bgcolor + ";' class='seatDivForEdit'><input type='hidden' value='" + seat.id + "'></div>");
-					
-					if(index % 3 == 0)
-						seatDiv.css("clear", "left");
-					
-					seatsTableDiv.append(seatDiv);
-				});
-				
-				$("div#editSeatsModal").show();
-			}
-		});
-	});
 	
 	var previousSeat = undefined; //Ujedno i trenutno selektovano mesto
 	$(document).on("click", "span.close", function() {
@@ -421,74 +326,16 @@ $(document).ready(function(){
 		$("input#makeFlightReservation").attr("disabled", "disabled");
 		$("div#reservationSeatsModal").hide();
 	});
-	
-	$(document).on("click", "div.seatDivForEdit", function() {
-		if($(this).css("background-color") == "rgb(255, 0, 0)")
-			return;
-		
-		if(previousSeat != undefined) {
-			previousSeat.css("border", "0");
-		}
-		$(this).css("border", "2px solid red");
-		previousSeat = $(this);
-		
-		$("input#toggleSeat").removeAttr("disabled");
-		$("input#deleteSeat").removeAttr("disabled");
-	});
-	
-	$(document).on("click", "input#toggleSeat", function() {
-		var seatID = previousSeat.find("input[type='hidden']").attr("value");
-		
-		$.ajax({
-			type: "PUT",
-			url: "seats/toggle/" + seatID,
-			contentType: "text/html; charset=utf-8",
-			success: function(data) {
-				var bgcolor;
-				if(data.enabled == true) {
-					if(data.type == "FIRST_CLASS")
-						bgcolor = "#ffd700";
-					else if(data.type == "BUSINESS")
-						bgcolor = "#0000ff";
-					else
-						bgcolor = "#00ff00";
-				} else {
-					bgcolor = "#3a3a3a";
-				}
-				
-				previousSeat.css("background-color", bgcolor);
-			},
-			error: function() {
-				showMessage("Reserved seat can't be disabled.", "red");
-			}
-		});
-	});
-	
-	$(document).on("click", "input#deleteSeat", function() {
-		var seatID = previousSeat.find("input[type='hidden']").attr("value");
-		
-		$.ajax({
-			type: "DELETE",
-			url: "seats/delete/" + seatID,
-			contentType: "text/html; charset=utf-8",
-			success: function(data) {
-				previousSeat.remove();
-			},
-			error: function() {
-				showMessage("Reserved seat can't be deleted.", "red");
-			}
-		});
-	});
-    
-	getAirports(1);
     
     function getAirports(index) {
     	$.ajax({
     		type: "GET",
-    		url: "/airport/all",
+    		url: "/api/airline/" + selectedAirline + "/airports",
     		success: function(data) {
     			var fromSelect = $("select#from" + index);
     			var toSelect = $("select#to" + index);
+    			fromSelect.empty();
+    			toSelect.empty();
     			
     			$.each(data, function(index, airport) {
     	    		var fromOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
@@ -537,6 +384,7 @@ $(document).ready(function(){
     	}
     });
     
+    var selectedAirline;
     $(document).on("click", "input#addFlight", function() {
     	var tr = $("<tr id='" + flightIndex + "'> <td>From <select id='from" + flightIndex + "' class='from' title='Where from?'></select></td> <td>To <select id='to" + flightIndex + "' class='to' title='Where to?'></select></td> <td>Departure date <input type='date' id='departureDate" + flightIndex + "' title='Departure date'></td></tr>");
     	
@@ -854,14 +702,15 @@ $(document).ready(function(){
     	$("table#quickFlightReservationsTable tbody").empty();
     	$("table.searchResultTable").remove();
     	$("div#dialogAirlineView").hide();
+    	selectedAirline = undefined;
     });
 	
 	$(document).on("click", "button.airlineDetails", function() {
-		var airlineID = $(this).parent().parent().attr("id");
+		selectedAirline = $(this).parent().parent().attr("id");
 		
 		$.ajax({
 			type: "GET",
-			url: "/api/airlines/" + airlineID,
+			url: "/api/airlines/" + selectedAirline,
 			dataType: "json",
 			success: function(airline) {
 				$("h3#pNameOfChosenAirline").text(airline.name);
@@ -873,9 +722,11 @@ $(document).ready(function(){
 			}
 		});
 		
+		getAirports(1);
+		
 		$.ajax({
 			type: "GET",
-			url: "/api/flightReservation/getQuickTickets/" + airlineID,
+			url: "/api/flightReservation/getQuickTickets/" + selectedAirline,
 			dataType: "json",
 			success: function(reservations) {
 				var table = $("table#quickFlightReservationsTable tbody");

@@ -1,10 +1,10 @@
 package com.isamrs.tim14.rest;
 
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,17 +28,13 @@ public class FlightRest {
 	}
 	
 	@PostMapping("/new")
-	public void save(@RequestBody Flight flight) {
-		flightDAO.save(flight);
-	}
-	
-	@GetMapping("/flightsOfAirline")
-	public Set<Flight> getFlightsOfAirline() {
-		return flightDAO.flightsOfAirline();
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	public ResponseEntity<String> save(@RequestBody Flight flight) {
+		return flightDAO.save(flight);
 	}
 	
 	@GetMapping("/{id}/seats")
-	public List<Seat> getSeats(@PathVariable Integer id) {
+	public ResponseEntity<List<Seat>> getSeats(@PathVariable Integer id) {
 		return flightDAO.getSeats(id);
 	}
 	

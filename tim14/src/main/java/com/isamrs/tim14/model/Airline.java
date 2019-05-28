@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -39,10 +41,17 @@ public class Airline {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
+	//@JsonBackReference(value="airline-flights")
 	private Set<Flight> flights;
+	
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinTable(name = "airline_airport", joinColumns = { @JoinColumn(name = "airline_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "airport_id") })
+	private Set<Airport> airports;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
-	@JsonBackReference(value="airline-services")
+	//@JsonBackReference(value="airline-services")
+	@JsonIgnoreProperties("airline")
 	private Set<AirlineService> services;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -50,11 +59,13 @@ public class Airline {
 	private Set<Grade> grades;
 
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "airline")
+	//@JsonBackReference(value="airline-admins")
 	@JsonIgnoreProperties("airline")
 	private Set<AirlineAdmin> admins;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
+	//@JsonBackReference(value="airline-luggages")
 	private Set<Luggage> luggagePricelist;
 
 	public Airline() {
@@ -105,6 +116,14 @@ public class Airline {
 
 	public void setFlights(Set<Flight> flights) {
 		this.flights = flights;
+	}
+
+	public Set<Airport> getAirports() {
+		return airports;
+	}
+
+	public void setAirports(Set<Airport> airports) {
+		this.airports = airports;
 	}
 
 	public Set<AirlineService> getServices() {
