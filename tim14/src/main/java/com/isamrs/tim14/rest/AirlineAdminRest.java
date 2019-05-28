@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,5 +63,11 @@ public class AirlineAdminRest {
 			return new ResponseEntity<AirlineAdmin>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<AirlineAdmin>(newAirlineAdmin, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	@PutMapping("/airlineadmins/updateProfile")
+	public ResponseEntity<String> updateProfile(@RequestBody AirlineAdmin admin) {
+		return airlineAdminDAO.updateProfile(admin);
 	}
 }
