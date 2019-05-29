@@ -8,6 +8,9 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.AirlineAdmin;
@@ -72,6 +75,25 @@ public class AirlineAdminDAOImpl implements AirlineAdminDAO{
 		}
 		
 		return result.get(0);
+	}
+	
+	@Override
+	@Transactional
+	public ResponseEntity<String> updateProfile(AirlineAdmin admin) {
+		AirlineAdmin loggedIn = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		AirlineAdmin managedLoggedIn = entityManager.find(AirlineAdmin.class, loggedIn.getId());
+		
+		if(admin.getPassword() != "") {
+			managedLoggedIn.setPassword(customService.encodePassword(admin.getPassword()));
+		}
+		
+		managedLoggedIn.setFirstName(admin.getFirstName());
+		managedLoggedIn.setLastName(admin.getLastName());
+		managedLoggedIn.setEmail(admin.getEmail());
+		managedLoggedIn.setCity(admin.getCity());
+		managedLoggedIn.setPhoneNumber(admin.getPhoneNumber());
+		
+		return new ResponseEntity("Profile informations successfully changed.", HttpStatus.OK);
 	}
 
 }
