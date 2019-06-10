@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.dto.UserDTO;
 import com.isamrs.tim14.model.Authority;
+import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.User;
@@ -83,4 +85,20 @@ public class RentAdminDAOImpl implements RentAdminDAO {
 		return admin.getRentACar();
 	}
 
+	@Override
+	@Transactional
+	public RentACarAdmin updateAdmin(UserDTO user) {
+		RentACarAdmin admin = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RentACarAdmin managedRentACarAdmin = entityManager.find(RentACarAdmin.class, admin.getId());
+		if(!user.getPassword().equals("")) {
+			managedRentACarAdmin.setPassword(this.customService.encodePassword(user.getPassword()));
+		}
+		managedRentACarAdmin.setFirstName(user.getFirstName());
+		managedRentACarAdmin.setLastName(user.getLastName());
+		managedRentACarAdmin.setEmail(user.getEmail());
+		managedRentACarAdmin.setPhoneNumber(user.getPhone());
+		managedRentACarAdmin.setCity(user.getCity());
+		
+		return managedRentACarAdmin;
+	}
 }
