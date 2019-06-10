@@ -28,7 +28,7 @@ $(document).ready(function() {
         $.ajax({
 			type : 'POST',
 			url : "/auth/registration",
-			contentType : 'application/json',
+			headers: createAuthorizationTokenHeader(),
 			dataType : "text",
 			data : JSON.stringify({
 	            "username" : username,

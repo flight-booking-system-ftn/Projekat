@@ -18,14 +18,17 @@ $(document).ready(function(){
 
     $(document).on('click','#showAirlinesBtn',function(){
         displayAirlines();
+        $('#vehicleSearchDiv').css("display","none");
     });
 
     $(document).on('click','#showHotelsBtn',function(){
         displayHotels();
+        $('#vehicleSearchDiv').css("display","none");
     });
 
     $(document).on('click','#showRentsBtn',function(){
         displayRents();
+        $('#vehicleSearchDiv').css("display","block");
     });
 
 
@@ -77,6 +80,28 @@ $(document).ready(function(){
     	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         $('#dialogRentView').css("display","none");
 	});
+    
+    
+    //vehicle search
+    
+    $(document).on('click','#vehicleSearchBtnFullSearch', function(){
+        var name = $('#vehicleSearchNameFullSearch').val();
+        if(name == ""){
+        	name = "NO_INPUT";
+        }
+        var cars = $('#vehicleCarsFullSearch').prop('checked');
+        var motocycles = $('#vehicleMotocyclesFullSearch').prop('checked');
+        
+        var minPrice = $('#vehicleMinimumPriceFullSearch').val();
+        if(minPrice == ""){
+        	minPrice = -1;
+        }
+        var maxPrice = $('#vehicleMaximumPriceFullSearch').val();
+        if(maxPrice == ""){
+        	maxPrice = 10000001;
+        }
+	    renderVehicleTableMainView(name, cars, motocycles, minPrice, maxPrice);
+    });
 
 });
 
@@ -161,6 +186,21 @@ var renderVehicleTable = function(text){
         $('#dialogRentView').css("display","block");
     });
 }
+
+var renderVehicleTableMainView = function(name, cars, motocycles, minPrice, maxPrice){
+    var text = `/${name}/${cars}/${motocycles}/${minPrice}/${maxPrice}`;
+    console.log(text);
+    $.get('/api/allVehiclesSearch'+text, function(VehicleData){
+        console.log("Vehicles: ", VehicleData);
+        var vehicles = VehicleData;
+    	$('#selectedRentVehiclesTableFullSearch').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
+        for(var i=0;i<vehicles.length;i++){
+            var red = vehicles[i];
+            $('#selectedRentVehiclesTableFullSearch tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
+        }
+    });
+}
+
 
 function stringToDate(displayFormat){
 	myDate=displayFormat.split("-");

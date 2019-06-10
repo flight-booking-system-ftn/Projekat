@@ -59,6 +59,19 @@ public class VehicleRest {
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/allVehiclesSearch/{name}/{cars}/{motocycles}/{minPrice}/{maxPrice}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Vehicle>> getAllVehicleSearch(@PathVariable String name, @PathVariable String cars, @PathVariable String motocycles,  @PathVariable Double minPrice
+			, @PathVariable Double maxPrice){
+		boolean car = (cars.equals("true")) ? true: false;
+		boolean moto = (motocycles.equals("true")) ? true: false;
+		Collection<Vehicle> vehicles = vehicleDAO.getAllVehiclesSearch(name, car, moto, minPrice, maxPrice);
+		
+		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
+	}
+	
 	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
 	@RequestMapping(
 			value = "/unreservedVehicles",
