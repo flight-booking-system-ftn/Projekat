@@ -117,4 +117,64 @@ public class RoomDAOImpl implements RoomDAO {
 		entityManager.remove(managedRoom);
 	}
 
+	
+	@Override
+	@Transactional
+	public List<Room> getAllRoomsSearch(String hotelName, String destination, Long start, Long end, boolean twoBeds, boolean threeBeds,
+			boolean fourBeds, Double minPrice, Double maxPrice) {
+		String queryPlus = " 1=2 ";
+		boolean check = false;
+		if(twoBeds || threeBeds || fourBeds) {
+			queryPlus = " (";
+			if(twoBeds) {
+				queryPlus += " r.bedNumber = 2 ";
+				check = true;
+			}
+			if(threeBeds && !check) {
+				queryPlus += " r.bedNumber = 3 ";
+				check = true;
+			}else if(threeBeds) {
+				queryPlus += " OR r.bedNumber = 3 ";
+			}
+			
+			if(fourBeds && !check) {
+				queryPlus += " r.bedNumber = 4 ";
+			}else if(fourBeds){
+				queryPlus += " OR r.bedNumber = 4 ";
+			}
+			queryPlus += ")";
+		}
+		Query query = entityManager.createQuery("SELECT r FROM Room r WHERE " + queryPlus + " and r.price between :minPrice and :maxPrice");
+		query.setParameter("minPrice", minPrice);
+		query.setParameter("maxPrice", maxPrice);
+		List<Room> resultQuery = query.getResultList();
+		
+		List<Room> result = new ArrayList<Room>();
+		destination = (destination.equals("NO_INPUT")) ? "" : destination;
+		hotelName = (hotelName.equals("NO_INPUT")) ? "" : hotelName;
+		check = true;
+		
+		Date arrivalDate = new Date(start);
+		Date departureDate =  new Date(end);
+		
+		for(Room selectedRoom : resultQuery) {
+			check = true;
+			if(!selectedRoom.getHotel().getDestination().getName().toLowerCase().contains(destination.toLowerCase())) {
+				continue;
+			}
+			if(!selectedRoom.getHotel().getName().toLowerCase().contains(hotelName.toLowerCase())) {
+				continue;
+			}
+			for(RoomReservation reservation : selectedRoom.getReservations()) {
+				if(!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
+					check = false;
+				}
+			}
+			if(check) {
+				result.add(selectedRoom);
+			}
+		}
+		return result;
+	}
+
 }
