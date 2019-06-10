@@ -120,4 +120,44 @@ public class VehicleDAOImpl implements VehicleDAO {
 		entityManager.remove(managedVehicle);
 	}
 
+	@Override
+	@Transactional
+	public List<Vehicle> getAllVehiclesSearch(String name, Boolean cars, Boolean motocycles, Double minPrice, Double maxPrice) {
+		String queryPlus = " 1=2 ";
+		boolean check = false;
+		if (cars || motocycles) {
+			queryPlus = " (";
+			if (cars) {
+				queryPlus += " v.type = 'CAR' ";
+				check = true;
+			}
+			if (motocycles && !check) {
+				queryPlus += " v.type = 'MOTOCYCLE' ";
+				check = true;
+			} else if (motocycles) {
+				queryPlus += " OR v.type = 'MOTOCYCLE' ";
+			}
+			queryPlus += ")";
+		}
+		
+		Query query = entityManager.createQuery("SELECT v FROM Vehicle v WHERE " + queryPlus);
+		List<Vehicle> resultQuery = query.getResultList();
+		System.out.println("SIZE" + resultQuery.size() + " ... " + queryPlus);
+		List<Vehicle> result = new ArrayList<Vehicle>();
+		
+		if(name.equals("NO_INPUT")) {
+			name = "";
+		}
+		
+		for (Vehicle selectedVehicle : resultQuery) {
+			if(selectedVehicle.getBrand().toLowerCase().contains(name.toLowerCase()) || selectedVehicle.getModel().toLowerCase().contains(name.toLowerCase())) {
+				if(selectedVehicle.getPrice() >= minPrice && selectedVehicle.getPrice() <= maxPrice) {
+					result.add(selectedVehicle);
+				}
+			}
+		}
+		System.out.println(result.size());
+		return result;
+	}
+
 }

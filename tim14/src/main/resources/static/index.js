@@ -161,15 +161,17 @@ $(document).ready(function(){
                 $.get({url: link, 
         			headers: createAuthorizationTokenHeader()}, function(data){
                 
-        		var select = document.getElementById("startDestination");
-        		var select2 = document.getElementById("endDestination");
-        		console.log(data);
-                for(var i=0;i<data.length;i++){
-                    var red = data[i];
-                    select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
-                    select2.options[select2.options.length] = new Option(''+red.destination.name,''+red.id);
-                }
-            });
+					$('#startDestination').html('');
+		    		$('#endDestination').html('');
+		    		var select = document.getElementById("startDestination");
+		    		var select2 = document.getElementById("endDestination");
+		    		console.log(data);
+		            for(var i=0;i<data.length;i++){
+		                var red = data[i];
+		                select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
+		                select2.options[select2.options.length] = new Option(''+red.destination.name,''+red.id);
+		            }
+		        });
                 $.get('/api/quickVehicleReservations/' + message, function(data){
                 	console.log("quick reservations: ", data);
                     renderQuickVehicleReservations(data);

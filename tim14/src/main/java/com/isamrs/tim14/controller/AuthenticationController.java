@@ -97,11 +97,11 @@ public class AuthenticationController {
 		ru.setVehicleReservations(new HashSet<VehicleReservation>());
 		ru.setVerified(false);
 		userDetailsService.saveUser(ru);
-		try {
-			mailService.sendNotificaitionAsync(ru);
-		} catch (MailException | InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			mailService.sendNotificaitionAsync(ru);
+//		} catch (MailException | InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 	
@@ -234,9 +234,9 @@ public class AuthenticationController {
 		String redirectionURL = "#";
 		
 		if (user instanceof RegisteredUser) {
-			if(!((RegisteredUser) user).isVerified()) {
-				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
-			}
+//			if(!((RegisteredUser) user).isVerified()) {
+//				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
+//			}
 			ut = UserType.ROLE_REGISTEREDUSER;
 			redirectionURL = "/";
 			}
