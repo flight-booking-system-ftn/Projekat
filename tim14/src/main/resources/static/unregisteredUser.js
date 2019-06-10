@@ -33,6 +33,7 @@ $(document).ready(function(){
 
     $(document).on('click','#showRentsBtn',function(){
         displayRents();
+        $('#vehicleSearchArrivalDateFullSearch').val(formatDate(new Date()));
         $('#vehicleSearchDiv').css("display","block");
         $('#roomsSearchDiv').css("display","none");
     });
@@ -91,6 +92,31 @@ $(document).ready(function(){
     //vehicle search
     
     $(document).on('click','#vehicleSearchBtnFullSearch', function(){
+    	
+    	var destination = $('#vehicleSearchDestinationFullSearch').val();
+    	if(destination == ""){
+    		destination = "NO_INPUT";
+    	}
+    	
+    	var rentName = $('#vehicleSearchRentNameFullSearch').val();
+    	if(rentName == ""){
+    		rentName = "NO_INPUT";
+    	}
+    	
+        var start = stringToDate($('#vehicleSearchArrivalDateFullSearch').val());
+        if(start == ""){
+        	start = -1;
+        }
+        
+		var end = start + $('#vehicleSearchDayNumberFullSearch').val()*24*60*60*1000;
+		if(end == ""){
+			end = -1;
+		}
+		if(start!=-1 && end!=-1 && start > end){
+        	showMessage('Arrival date cannot be after departure date!', 'orange');
+        	return;
+		}
+    	
         var name = $('#vehicleSearchNameFullSearch').val();
         if(name == ""){
         	name = "NO_INPUT";
@@ -109,7 +135,7 @@ $(document).ready(function(){
         if(minPrice > maxPrice){
         	showMessage('Minimum price cannot be greater than maximum price!', 'orange');
         }
-	    renderVehicleTableMainView(name, cars, motocycles, minPrice, maxPrice);
+	    renderVehicleTableMainView(rentName, destination, start, end, name, cars, motocycles, minPrice, maxPrice);
     });
     
     
@@ -258,16 +284,16 @@ var renderVehicleTable = function(text){
     });
 }
 
-var renderVehicleTableMainView = function(name, cars, motocycles, minPrice, maxPrice){
-    var text = `/${name}/${cars}/${motocycles}/${minPrice}/${maxPrice}`;
+var renderVehicleTableMainView = function(rentName, destination, start, end, name, cars, motocycles, minPrice, maxPrice){
+    var text = `/${rentName}/${destination}/${start}/${end}/${name}/${cars}/${motocycles}/${minPrice}/${maxPrice}`;
     console.log(text);
     $.get('/api/allVehiclesSearch'+text, function(VehicleData){
         console.log("Vehicles: ", VehicleData);
         var vehicles = VehicleData;
-    	$('#selectedRentVehiclesTableFullSearch').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
+    	$('#selectedRentVehiclesTableFullSearch').html(`<tr><th>Rent-a-car</th><th>Destination</th><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
             var red = vehicles[i];
-            $('#selectedRentVehiclesTableFullSearch tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
+            $('#selectedRentVehiclesTableFullSearch tr:last').after(`<tr><td>${red.rentACar.name}</td><td>${red.rentACar.destination.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
         }
     });
 }
