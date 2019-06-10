@@ -60,14 +60,17 @@ public class VehicleRest {
 	}
 	
 	@RequestMapping(
-			value = "/allVehiclesSearch/{name}/{cars}/{motocycles}/{minPrice}/{maxPrice}",
+			value = "/allVehiclesSearch/{rentName}/{destination}/{start}/{end}/{name}/{cars}/{motocycles}/{minPrice}/{maxPrice}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Vehicle>> getAllVehicleSearch(@PathVariable String name, @PathVariable String cars, @PathVariable String motocycles,  @PathVariable Double minPrice
+	public ResponseEntity<Collection<Vehicle>> getAllVehicleSearch(@PathVariable String rentName, @PathVariable String destination, @PathVariable Long start,  @PathVariable Long end,
+			@PathVariable String name, @PathVariable String cars, @PathVariable String motocycles,  @PathVariable Double minPrice
 			, @PathVariable Double maxPrice){
 		boolean car = (cars.equals("true")) ? true: false;
 		boolean moto = (motocycles.equals("true")) ? true: false;
-		Collection<Vehicle> vehicles = vehicleDAO.getAllVehiclesSearch(name, car, moto, minPrice, maxPrice);
+		rentName = (rentName.equals("NO_INPUT")) ? "" : rentName;
+		destination = (destination.equals("NO_INPUT")) ? "" : destination;
+		Collection<Vehicle> vehicles = vehicleDAO.getAllVehiclesSearch(rentName, destination, start, end, name, car, moto, minPrice, maxPrice);
 		
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}

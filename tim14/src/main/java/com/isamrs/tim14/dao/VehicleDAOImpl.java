@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -68,7 +69,6 @@ public class VehicleDAOImpl implements VehicleDAO {
 		}
 		for (Vehicle selectedVehicle : resultQuery) {
 			check = true;
-			System.out.println(selectedVehicle.getBranchOffice().getDestination().getName() + startDest);
 			if (mycheck || selectedVehicle.getBranchOffice().getDestination().getName().equalsIgnoreCase(startDest)) {
 				for (VehicleReservation reservation : selectedVehicle.getReservations()) {
 					if (!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
@@ -122,7 +122,7 @@ public class VehicleDAOImpl implements VehicleDAO {
 
 	@Override
 	@Transactional
-	public List<Vehicle> getAllVehiclesSearch(String name, Boolean cars, Boolean motocycles, Double minPrice, Double maxPrice) {
+	public List<Vehicle> getAllVehiclesSearch(String rentName, String destination, Long start, Long end, String name, Boolean cars, Boolean motocycles, Double minPrice, Double maxPrice) {
 		String queryPlus = " 1=2 ";
 		boolean check = false;
 		if (cars || motocycles) {
@@ -148,15 +148,30 @@ public class VehicleDAOImpl implements VehicleDAO {
 		if(name.equals("NO_INPUT")) {
 			name = "";
 		}
-		
+		Date arrivalDate = new Date(start);
+		Date departureDate =  new Date(end);
 		for (Vehicle selectedVehicle : resultQuery) {
-			if(selectedVehicle.getBrand().toLowerCase().contains(name.toLowerCase()) || selectedVehicle.getModel().toLowerCase().contains(name.toLowerCase())) {
-				if(selectedVehicle.getPrice() >= minPrice && selectedVehicle.getPrice() <= maxPrice) {
-					result.add(selectedVehicle);
+			check = true;
+			if(!selectedVehicle.getRentACar().getDestination().getName().toLowerCase().contains(destination.toLowerCase())) {
+				continue;
+			}
+			if(!selectedVehicle.getRentACar().getName().toLowerCase().contains(rentName.toLowerCase())) {
+				continue;
+			}
+			for(VehicleReservation reservation : selectedVehicle.getReservations()) {
+				if(!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
+					check = false;
 				}
 			}
+			if(check) {
+				if(selectedVehicle.getBrand().toLowerCase().contains(name.toLowerCase()) || selectedVehicle.getModel().toLowerCase().contains(name.toLowerCase())) {
+					if(selectedVehicle.getPrice() >= minPrice && selectedVehicle.getPrice() <= maxPrice) {
+						result.add(selectedVehicle);
+					}
+				}
+			}
+			
 		}
-		System.out.println(result.size());
 		return result;
 	}
 
