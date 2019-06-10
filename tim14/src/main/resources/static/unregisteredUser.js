@@ -6,6 +6,8 @@ selected_hotel_services = [];
 $(document).ready(function(){
     
     displayAirlines();
+    $('#vehicleSearchDiv').css("display","none");
+    $('#roomsSearchDiv').css("display","none");
     
     $(document).on('click','#registrationBtn',function(){
         $(location).attr('href',"/registration.html");
@@ -19,16 +21,20 @@ $(document).ready(function(){
     $(document).on('click','#showAirlinesBtn',function(){
         displayAirlines();
         $('#vehicleSearchDiv').css("display","none");
+        $('#roomsSearchDiv').css("display","none");
     });
 
     $(document).on('click','#showHotelsBtn',function(){
         displayHotels();
         $('#vehicleSearchDiv').css("display","none");
+        $('#roomSearchArrivalDateFullSearch').val(formatDate(new Date()));
+        $('#roomsSearchDiv').css("display","block");
     });
 
     $(document).on('click','#showRentsBtn',function(){
         displayRents();
         $('#vehicleSearchDiv').css("display","block");
+        $('#roomsSearchDiv').css("display","none");
     });
 
 
@@ -100,7 +106,58 @@ $(document).ready(function(){
         if(maxPrice == ""){
         	maxPrice = 10000001;
         }
+        if(minPrice > maxPrice){
+        	showMessage('Minimum price cannot be greater than maximum price!', 'orange');
+        }
 	    renderVehicleTableMainView(name, cars, motocycles, minPrice, maxPrice);
+    });
+    
+    
+    //rooms search
+    
+    $(document).on('click','#roomSearchBtnFullSearch', function(){
+    	var destination = $('#roomSearchDestinationFullSearch').val();
+    	if(destination == ""){
+    		destination = "NO_INPUT";
+    	}
+    	
+    	var hotelName = $('#roomSearchHotelNameFullSearch').val();
+    	if(hotelName == ""){
+    		hotelName = "NO_INPUT";
+    	}
+    	
+        var start = stringToDate($('#roomSearchArrivalDateFullSearch').val());
+        if(start == ""){
+        	start = -1;
+        }
+        
+		var end = start + $('#roomSearchDayNumberFullSearch').val()*24*60*60*1000;
+		if(end == ""){
+			end = -1;
+		}
+		if(start!=-1 && end!=-1 && start > end){
+        	showMessage('Arrival date cannot be after departure date!', 'orange');
+        	return;
+		}
+		
+        var TwoBedRooms = $('#roomSearch2BedFullSearch').prop('checked');
+        var ThreeBedRooms = $('#roomSearch3BedFullSearch').prop('checked');
+        var FourBedRooms = $('#roomSearch4BedFullSearch').prop('checked');
+        
+        var minPrice = $('#roomMinimumPriceFullSearch').val();
+        if(minPrice == ""){
+        	minPrice = -1;
+        }
+        
+        var maxPrice = $('#roomMaximumPriceFullSearch').val();
+        if(maxPrice == ""){
+        	maxPrice = 1000001;
+        }
+        if(minPrice!=-1 && maxPrice!=1000001 && minPrice > maxPrice){
+        	showMessage('Minimum price cannot be greater than maximum price!', 'orange');
+        }
+        
+        renderRoomTableMainView(hotelName, destination, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, minPrice, maxPrice);
     });
 
 });
@@ -156,6 +213,20 @@ var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms,
 		for(var i=0;i<rooms.length;i++){
 			var red = rooms[i];
 			$('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price*numDays}</td></tr>`);
+		}
+	});
+}
+
+var renderRoomTableMainView = function(hotelName, destination, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, minPrice, maxPrice){
+    var text = `/${hotelName}/${destination}/${start}/${end}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}/${minPrice}/${maxPrice}`;
+    console.log('/api/allRoomsSearch' + text);
+    $.get('/api/allRoomsSearch'+text, function(RoomData){
+		console.log("Searched rooms: ", RoomData);
+		var rooms = RoomData;
+		$('#selectedHotelRoomsTableFullSearch').html(`<tr><td>Hotel</td><td>Destination</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>`);
+		for(var i=0;i<rooms.length;i++){
+			var red = rooms[i];
+			$('#selectedHotelRoomsTableFullSearch tr:last').after(`<tr><td>${red.hotel.name}</td><td>${red.hotel.destination.name}</td><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price}</td></tr>`);
 		}
 	});
 }

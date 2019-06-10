@@ -75,7 +75,7 @@ $(document).ready(function(){
         var FourBedRooms = $('#roomSearch4Bed').prop('checked');
         console.log('Hotel id: ', hotelId ,'....', start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms);
 
-        renderRoomTable(hotelId, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms,$('#roomSearchDayNumber').val() );
+        renderRoomTable(hotelId, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms,$('#roomSearchDayNumber').val());
     });
     
     $(document).on('click','#vehicleSearchBtn', function(){

@@ -57,6 +57,20 @@ public class RoomRest {
 		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/allRoomsSearch/{hotelName}/{destination}/{start}/{end}/{twoBed}/{threeBed}/{fourBed}/{minPrice}/{maxPrice}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Room>> getAllRoomSearch(@PathVariable String hotelName, @PathVariable String destination, @PathVariable Long start, @PathVariable Long end, @PathVariable String twoBed, 
+			@PathVariable String threeBed, @PathVariable String fourBed, @PathVariable Double minPrice, @PathVariable Double maxPrice){
+		boolean twoBeds = (twoBed.equals("true")) ? true: false;
+		boolean threeBeds = (threeBed.equals("true")) ? true: false;
+		boolean fourBeds = (fourBed.equals("true")) ? true: false;
+		Collection<Room> rooms = roomDAO.getAllRoomsSearch(hotelName, destination, start, end, twoBeds, threeBeds, fourBeds, minPrice, maxPrice);
+		
+		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
+	}
+	
 	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
 	@RequestMapping(
 			value = "/unreservedRooms",

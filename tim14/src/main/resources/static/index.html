@@ -263,7 +263,7 @@
 			<table>
 				<tr>
 					<td>
-						Name: 
+						Brand/model: 
 					</td>
 					<td>
 						<input type="text" id="vehicleSearchNameFullSearch"> 
@@ -284,7 +284,7 @@
 					<td>
 						<input type="checkbox" id="vehicleMotocyclesFullSearch">
 					</td>
-					<tr>
+				<tr>
 					<td>
 						Minimum price: 
 					</td>
@@ -311,6 +311,95 @@
             <table id="selectedRentVehiclesTableFullSearch">
 				<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>
             </table>
+        </div>
+        
+        
+        <div class="dialogContent" id="roomsSearchDiv" style="margin-top:50px;">
+			<h1>Search rooms</h1>
+			<table>
+				<tr>
+					<td>
+						Hotel: 
+					</td>
+					<td>
+						<input type="text" id="roomSearchHotelNameFullSearch"> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Destination: 
+					</td>
+					<td>
+						<input type="text" id="roomSearchDestinationFullSearch"> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Arrival date: 
+					</td>
+					<td>
+						<input type="text" placeholder="Arrival date" id="roomSearchArrivalDateFullSearch" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Number of days to stay: 
+					</td>
+					<td>
+						<input type="number" id="roomSearchDayNumberFullSearch" value="1" min="1">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						2-bed rooms: 
+					</td>
+					<td>
+						<input type="checkbox" id="roomSearch2BedFullSearch">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						3-bed rooms: 
+					</td>
+					<td>
+						<input type="checkbox" id="roomSearch3BedFullSearch">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						4-bed rooms: 
+					</td>
+					<td>
+						<input type="checkbox" id="roomSearch4BedFullSearch">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Minimum price: 
+					</td>
+					<td>
+						<input type="number" id="roomMinimumPriceFullSearch" min="1" max="1000000">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Maximum price: 
+					</td>
+					<td>
+						<input type="number" id="roomMaximumPriceFullSearch" min="1" max="1000000">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<button id="roomSearchBtnFullSearch" value="Search rooms">Search</button>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<h1>Rooms</h1>
+            <table id="selectedHotelRoomsTableFullSearch">
+				<tr><td>Hotel</td><td>Destination</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>
+			</table>
         </div>
 		
 	</body>
