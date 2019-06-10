@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RentAdminDAO;
+import com.isamrs.tim14.dto.UserDTO;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 
@@ -74,6 +75,20 @@ public class RentAdminRest {
 		RentACar currRent= rentAdminDAO.getCurrentRent();
 		
 		return new ResponseEntity<RentACar>(currRent, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/updateRentAdmin",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RentACarAdmin> updateRentACarAdmin(@RequestBody UserDTO rentAdmin) {
+		RentACarAdmin updatedRentACarAdmin = rentAdminDAO.updateAdmin(rentAdmin);
+		if(updatedRentACarAdmin == null) {
+			return new ResponseEntity<RentACarAdmin>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<RentACarAdmin>(updatedRentACarAdmin, HttpStatus.CREATED);
 	}
 	
 }

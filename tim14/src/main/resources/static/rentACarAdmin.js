@@ -177,6 +177,79 @@ $(document).ready(function() {
 				}
 			})
 		});});
+		
+		$(document).on('click', '#editProfileBtn', function(){
+			$.ajax({
+				type : 'GET',
+				url : '/auth/getInfo',
+				headers: createAuthorizationTokenHeader(),
+				success: function(adminData){
+					console.log("Admin data: ", adminData);
+					$('#firstNameRentAdmin').val(adminData.firstName);
+					$('#lastNameRentAdmin').val(adminData.lastName);
+					$('#emailRentAdmin').val(adminData.email);
+					$('#cityRentAdmin').val(adminData.city);
+					$('#phoneRentAdmin').val(adminData.phoneNumber);
+
+					$('#dialogEditRentAdminProfile').css('display', 'block');
+				},
+				error: function (jqXHR, exception) {
+					if (jqXHR.status == 401) {
+						showMessage('Login first!', "orange");
+					}else{
+						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					}
+				}
+			})
+		});
+
+		$(document).on('click', '#editRentAdminProfile', function(){
+			var password = $('#passwordRentAdmin').val();
+			console.log(password, $('#rep_passwordRentAdmin').val());
+			if(password !== ""){
+				var repeat = $('#rep_passwordRentAdmin').val();
+				if(repeat !== password){
+					showMessage('Password and repeat password are not equal!', 'orange');
+					return;
+				}
+			}
+			var data = {
+				password: $('#passwordRentAdmin').val(),
+				firstName: $('#firstNameRentAdmin').val(),
+				lastName: $('#lastNameRentAdmin').val(),
+				email: $('#emailRentAdmin').val(),
+				city: $('#cityRentAdmin').val(),
+				phone: $('#phoneRentAdmin').val()
+			}
+
+			$.ajax({
+				type : 'POST',
+				url : "/api/updateRentAdmin",
+				headers: createAuthorizationTokenHeader(),
+				data : JSON.stringify(data),
+				success: function(){
+					showMessage('Rent admin successfully updated!', "green");
+					$('#dialogEditRentAdminProfile').css('display', 'none');
+					if($('#passwordRentAdmin').val() == ""){
+						$(location).attr('href',"/rentACarAdmin.html");
+					}else{
+						$(location).attr('href',"/logout");
+					}
+
+				},
+				error: function (jqXHR, exception) {
+					if (jqXHR.status == 401) {
+						showMessage('Login as Rent administrator!', "orange");
+					}else{
+						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					}
+				}
+			})
+		});
+
+		$(document).on('click', '#quitDialogEditRentAdmin', function(){
+			$('#dialogEditRentAdminProfile').css('display', 'none');
+		});
 	})
 
 
