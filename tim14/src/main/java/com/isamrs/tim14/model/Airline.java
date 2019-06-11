@@ -17,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -44,7 +43,7 @@ public class Airline {
 	//@JsonBackReference(value="airline-flights")
 	private Set<Flight> flights;
 	
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinTable(name = "airline_airport", joinColumns = { @JoinColumn(name = "airline_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "airport_id") })
 	private Set<Airport> airports;

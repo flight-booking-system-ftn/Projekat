@@ -121,8 +121,10 @@ $(document).ready(function() {
 				}
 				
 				previousSeat.css("background-color", bgcolor);
+				
+				showMessage("Seat status successfully changed.", "green");
 			},
-			error: function() {
+			error: function(jqXHR, exception) {
 				showMessage("Reserved seat can't be disabled.", "red");
 			}
 		});
@@ -136,10 +138,11 @@ $(document).ready(function() {
 			url: "seats/delete/" + seatID,
 			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
+				showMessage(data);
 				previousSeat.remove();
 			},
-			error: function() {
-				showMessage("Reserved seat can't be deleted.", "red");
+			error: function(jqXHR, exception) {
+				showMessage(jqXHR, "red");
 			}
 		});
 	});

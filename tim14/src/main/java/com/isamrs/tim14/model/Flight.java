@@ -30,7 +30,7 @@ public class Flight {
 	@Column(name = "id")
 	private Integer id;
 	
-	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "airline_id")
 	@JsonIgnoreProperties("flights")
 	private Airline airline;
