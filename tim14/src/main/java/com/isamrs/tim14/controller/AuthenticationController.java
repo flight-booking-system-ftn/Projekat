@@ -38,6 +38,7 @@ import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.RoomReservation;
+import com.isamrs.tim14.model.SystemAdmin;
 import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.UserTokenState;
 import com.isamrs.tim14.model.UserType;
@@ -193,6 +194,36 @@ public class AuthenticationController {
 		airlineAdmin.getAirline().getAdmins().add(airlineAdmin);
 		
 		this.userDetailsService.saveUser(airlineAdmin);
+		
+		/*try {
+			mailService.sendNotificaitionAsync(airlineAdmin);
+		} catch (MailException | InterruptedException e) {
+			e.printStackTrace();
+		}*/
+		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/registerSystemAdmin", method = RequestMethod.POST)
+	public ResponseEntity<?> registerSystemAdmin(@RequestBody SystemAdmin systemAdmin) {
+		User admin = userDetailsService.findByUsername(systemAdmin.getUsername());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		admin = userDetailsService.findByEmail(systemAdmin.getEmail());
+		if(admin != null) {
+			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
+		}
+		System.out.println("SystemAdmin " + systemAdmin.getUsername());
+		systemAdmin.setPassword(this.userDetailsService.encodePassword(systemAdmin.getPassword()));
+		List<Authority> authorities = new ArrayList<Authority>();
+		Authority a = new Authority();
+		a.setUserType(UserType.ROLE_SYSTEMADMIN);
+		authorities.add(a);
+		systemAdmin.setAuthorities(authorities);
+		systemAdmin.setEnabled(true);
+		systemAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
+		
+		this.userDetailsService.saveUser(systemAdmin);
 		
 		/*try {
 			mailService.sendNotificaitionAsync(airlineAdmin);
