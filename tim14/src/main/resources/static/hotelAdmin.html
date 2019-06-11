@@ -15,6 +15,7 @@
 	<div class="menuDiv">
 		<button id="addRoomBtn">Add room</button>
 		<button id="makeQuickReservation">Make quick reservation</button>
+		<button id="addHotelServiceBtn">Add hotel service</button>
 		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
 		<button style="float: right; margin-right:20px;" id="editProfileBtn">Edit profile</button>
 	</div>
@@ -179,6 +180,25 @@
 			<br>
 			<button id="editHotelRoomBtn">Edit room</button>
 			<button id="quitDialogEditHotelRoom">Close</button>
+		</div>
+	</div>
+	
+	<div id="dialogNewHotelService" class="dialog">
+		<div class="dialogContent">
+			<h1>New hotel service</h1>
+			<table>
+				<tr>
+					<td>Name: </td>
+					<td><input type="text" id="newHotelServiceName" required></td>
+				</tr>
+				<tr>
+					<td>Price: </td>
+					<td><input type="number" id="newHotelServicePrice" min="1" value="1" required></td>
+		        </tr>
+			</table>
+			<br>
+			<button id="confirmAddingHotelServiceBtn">Add service</button>
+			<button id="quitDialogHotelService">Close</button>
 		</div>
 	</div>
 	

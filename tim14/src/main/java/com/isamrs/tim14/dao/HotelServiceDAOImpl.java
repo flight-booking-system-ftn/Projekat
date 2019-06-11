@@ -7,9 +7,13 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.model.Hotel;
+import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.HotelService;
+import com.isamrs.tim14.model.Room;
 
 @Repository
 public class HotelServiceDAOImpl implements HotelServiceDAO{
@@ -28,6 +32,28 @@ public class HotelServiceDAOImpl implements HotelServiceDAO{
 		query.setParameter("hotelId", hotelID);
 		List<HotelService> result = query.getResultList();
 		return result;
+	}
+
+	@Override
+	@Transactional
+	public HotelService save(HotelService service) {
+		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		service.setHotel(admin.getHotel());
+		boolean check = true;
+		for(HotelService hs : admin.getHotel().getServices()) {
+			if(hs.getName().equals(service.getName())) {
+				check = false;
+				break;
+			}
+		}
+		if(check) {
+			Hotel managedHotel = entityManager.find(Hotel.class, admin.getHotel().getId());
+			managedHotel.getServices().add(service);
+			entityManager.persist(service);
+			return service;
+		}
+		
+		return null;
 	}
 
 }
