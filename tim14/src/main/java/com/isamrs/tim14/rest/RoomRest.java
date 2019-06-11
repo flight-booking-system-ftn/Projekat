@@ -37,7 +37,7 @@ public class RoomRest {
 		Room newRoom = roomDAO.save(room);
 
 		if(newRoom == null) {
-			return new ResponseEntity<Room>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Room>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
 	}
@@ -88,6 +88,30 @@ public class RoomRest {
 	public ResponseEntity<?> removeRoom(@PathVariable Integer id){
 		roomDAO.removeRoom(id);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/room/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Room> getSelectedRoom(@PathVariable Integer id){
+		Room room = roomDAO.getRoom(id);
+		return new ResponseEntity<Room>(room, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/changeRoom",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Room> changeRoom(@RequestBody Room room) {
+		Room newRoom = roomDAO.changeRoom(room);
+		if(newRoom == null) {
+			return new ResponseEntity<Room>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
 	}
 	
 }
