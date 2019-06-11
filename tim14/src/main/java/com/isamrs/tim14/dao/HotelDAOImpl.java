@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelService;
+import com.isamrs.tim14.model.Room;
 
 @Repository
 public class HotelDAOImpl implements HotelDAO {
@@ -82,6 +83,24 @@ public class HotelDAOImpl implements HotelDAO {
 		query.setParameter("hotelDestination", "%" + hotelDestination + "%");
 		List<Hotel> result = query.getResultList();
 		return result;
+	}
+
+	@Override	
+	@Transactional
+	public Hotel changeHotel(Hotel hotel) {
+		Hotel managedHotel = entityManager.find(Hotel.class, hotel.getId());
+		
+		Query query = entityManager.createQuery("SELECT h FROM Hotel h WHERE h.name = :hotelName");
+		query.setParameter("hotelName", hotel.getName());
+		List<Room> resultQuery = query.getResultList();
+		if(resultQuery.size()!=0) {
+			return null;
+		}
+		managedHotel.setDescription(hotel.getDescription());
+		managedHotel.getDestination().setAddress(hotel.getDestination().getAddress());
+		managedHotel.setName(hotel.getName());
+		return managedHotel;
+		
 	}
 
 }

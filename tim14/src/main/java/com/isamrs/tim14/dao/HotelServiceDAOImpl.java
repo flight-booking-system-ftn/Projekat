@@ -56,4 +56,19 @@ public class HotelServiceDAOImpl implements HotelServiceDAO{
 		return null;
 	}
 
+	@Override
+	@Transactional
+	public HotelService getHotelServiceByID(int id) {
+		HotelService hs = entityManager.find(HotelService.class, id);
+		return hs;
+	}
+
+	@Override
+	@Transactional
+	public HotelService changeService(HotelService service) {
+		HotelService managedHotelService = entityManager.find(HotelService.class, service.getId());
+		managedHotelService.setPrice(service.getPrice());
+		return managedHotelService;
+	}
+
 }

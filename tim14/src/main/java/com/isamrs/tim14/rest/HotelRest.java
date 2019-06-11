@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.HotelDAO;
 import com.isamrs.tim14.model.Hotel;
+import com.isamrs.tim14.model.Room;
 
 @RestController
 @RequestMapping("/api")
@@ -73,5 +74,20 @@ public class HotelRest {
 			return new ResponseEntity<Hotel>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Hotel>(newHotel, HttpStatus.CREATED);
+	}
+	
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/changeHotel",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Hotel> changeHotel(@RequestBody Hotel hotel) {
+		Hotel managedHotel = hotelDAO.changeHotel(hotel);
+		if(managedHotel == null) {
+			return new ResponseEntity<Hotel>(HttpStatus.NOT_ACCEPTABLE);
+		}
+		return new ResponseEntity<Hotel>(managedHotel, HttpStatus.CREATED);
 	}
 }

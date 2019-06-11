@@ -109,7 +109,7 @@ public class RoomRest {
 	public ResponseEntity<Room> changeRoom(@RequestBody Room room) {
 		Room newRoom = roomDAO.changeRoom(room);
 		if(newRoom == null) {
-			return new ResponseEntity<Room>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Room>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
 	}
