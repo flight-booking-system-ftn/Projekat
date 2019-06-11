@@ -17,17 +17,17 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 public class RegisteredUser extends User {
 
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinTable(name = "friend_table", joinColumns = { @JoinColumn(name = "friend1") }, inverseJoinColumns = {
 			@JoinColumn(name = "friend2") })
-	@JsonBackReference(value="user-user1")
-	private Set<RegisteredUser> friendList1;
+	@JsonBackReference(value="friends")
+	private Set<RegisteredUser> friends;
 
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinTable(name = "friend_table", joinColumns = { @JoinColumn(name = "friend2") }, inverseJoinColumns = {
-			@JoinColumn(name = "friend1") })
-	@JsonBackReference(value="user-user2")
-	private Set<RegisteredUser> friendList2;
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@JoinTable(name = "friendship_request", joinColumns = { @JoinColumn(name = "request_from") }, inverseJoinColumns = {
+			@JoinColumn(name = "request_for") })
+	@JsonBackReference(value="friendship-request")
+	private Set<RegisteredUser> friendshipRequests;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
@@ -45,14 +45,13 @@ public class RegisteredUser extends User {
 	@Column(name = "bonus_points")
 	private Integer bonusPoints;
 
-	
 	@Column(name = "verified")
 	private boolean verified;
 	
 	public RegisteredUser() {
 		super();
-		this.friendList1 = new HashSet<RegisteredUser>();
-		this.friendList2 = new HashSet<RegisteredUser>();
+		this.friends = new HashSet<RegisteredUser>();
+		this.friendshipRequests = new HashSet<RegisteredUser>();
 		this.flightReservations = new HashSet<FlightReservation>();
 		this.roomReservations = new HashSet<RoomReservation>();
 		this.vehicleReservations = new HashSet<VehicleReservation>();
@@ -60,20 +59,20 @@ public class RegisteredUser extends User {
 		this.verified = false;
 	}
 
-	public Set<RegisteredUser> getFriendList1() {
-		return friendList1;
+	public Set<RegisteredUser> getFriends() {
+		return friends;
 	}
 
-	public void setFriendList1(Set<RegisteredUser> friendList1) {
-		this.friendList1 = friendList1;
+	public void setFriends(Set<RegisteredUser> friends) {
+		this.friends = friends;
 	}
 
-	public Set<RegisteredUser> getFriendList2() {
-		return friendList2;
+	public Set<RegisteredUser> getFriendshipRequests() {
+		return friendshipRequests;
 	}
 
-	public void setFriendList2(Set<RegisteredUser> friendList2) {
-		this.friendList2 = friendList2;
+	public void setFriendshipRequests(Set<RegisteredUser> friendshipRequests) {
+		this.friendshipRequests = friendshipRequests;
 	}
 
 	public Set<FlightReservation> getFlightReservations() {

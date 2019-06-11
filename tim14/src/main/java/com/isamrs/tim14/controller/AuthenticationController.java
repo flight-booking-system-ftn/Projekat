@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -86,8 +85,8 @@ public class AuthenticationController {
 		authorities.add(a);
 		ru.setAuthorities(authorities);
 		ru.setEnabled(true);
-		ru.setFriendList1(new HashSet<RegisteredUser>());
-		ru.setFriendList2(new HashSet<RegisteredUser>());
+		ru.setFriends(new HashSet<RegisteredUser>());
+		ru.setFriendshipRequests(new HashSet<RegisteredUser>());
 		ru.setLastName(user.getLastName());
 		ru.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
 		ru.setPhoneNumber(user.getPhoneNumber());
@@ -305,6 +304,9 @@ public class AuthenticationController {
 		}
 		else if (user instanceof HotelAdmin) {
 			user = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		else if(user instanceof SystemAdmin) {
+			user = (SystemAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		}
 		else{
 			user = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

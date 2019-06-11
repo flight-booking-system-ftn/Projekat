@@ -295,3 +295,23 @@ div.seatDivForEdit:hover {
 	border: 1px solid #ccc;
 	border-top: none;
 }
+
+#friends {
+	background-color: rgba(0, 0, 0, 0.8);
+	padding: 30px;
+	border-radius: 10px;
+	/* float: right; */
+	position: fixed;
+	top: 0px;
+	right: 0px;
+}
+
+p#searchMessage {
+	color: white;
+	text-align: center;
+}
+
+p#requestsMessage {
+	color: white;
+	text-align: center;
+}

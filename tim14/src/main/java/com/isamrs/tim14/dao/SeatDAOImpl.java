@@ -31,14 +31,13 @@ public class SeatDAOImpl implements SeatDAO {
 		Query query = entityManager.createQuery("SELECT s FROM Seat s WHERE s.id = :seat_id");
 		query.setParameter("seat_id", id);
 		
-		Seat seat = (Seat)query.getSingleResult();
+		List<Seat> result = query.getResultList();
 		
-		if(!seat.getBusy()) {
-			seat.setEnabled(!seat.getEnabled());
+		if(!result.get(0).getBusy()) {
+			Seat managedSeat = entityManager.find(Seat.class, result.get(0).getId());
+			managedSeat.setEnabled(!managedSeat.getEnabled());
 			
-			entityManager.merge(seat);
-			
-			return new ResponseEntity<Seat>(seat, HttpStatus.OK);
+			return new ResponseEntity<Seat>(managedSeat, HttpStatus.OK);
 		} else
 			return new ResponseEntity<Seat>(HttpStatus.FORBIDDEN);
 	}
@@ -49,14 +48,14 @@ public class SeatDAOImpl implements SeatDAO {
 		Query query = entityManager.createQuery("SELECT s FROM Seat s WHERE s.id = :seat_id");
 		query.setParameter("seat_id", id);
 		
-		Seat seat = (Seat)query.getSingleResult();
+		List<Seat> result = query.getResultList();
 		
-		if(!seat.getBusy()) {
-			entityManager.remove(seat);
+		if(!result.get(0).getBusy()) {
+			entityManager.remove(result.get(0));
 			
-			return new ResponseEntity<String>(HttpStatus.OK);
+			return new ResponseEntity<String>("Seat successfully deleted.", HttpStatus.OK);
 		} else
-			return new ResponseEntity<String>(HttpStatus.FORBIDDEN);
+			return new ResponseEntity<String>("Reserved seat can't be deleted.", HttpStatus.FORBIDDEN);
 	}
 
 	@Override

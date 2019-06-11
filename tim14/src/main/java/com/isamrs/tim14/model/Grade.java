@@ -24,7 +24,7 @@ public class Grade {
 	
 	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },  fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	@JsonIgnoreProperties(value={ "friendList1", "friendList2", "flightReservations", "roomReservations", "vehicleReservations" }, allowGetters= true)
+	@JsonIgnoreProperties(value={ "friends", "friendshipRequests", "flightReservations", "roomReservations", "vehicleReservations" }, allowGetters= true)
 	private RegisteredUser user;
 	
 	@Column(name = "grade")

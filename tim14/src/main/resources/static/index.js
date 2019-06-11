@@ -760,6 +760,75 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	$("button#searchUsersButton").click(function() {
+		var input = $("input#searchUsersInput").val();
+		
+		if(input == "") {
+			$("table#searchTable").replaceWith("<p id='searchMessage'>No search results.</p>");
+			return;
+		}
+		
+		$.ajax({
+			type: "GET",
+			url: "/api/registeredUser/search/" + $("input#searchUsersInput").val(),
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				if(data.length == 0) {
+					$("table#searchTable").replaceWith("<p id='searchMessage'>No search results.</p>");
+				} else {
+					$("p#searchMessage").replaceWith("<table id='searchTable'> <thead> <tr><th>First name</th> <th>Last name</th> <th>Username</th> <th>Action</th></tr> </thead> <tbody></tbody> </table>");
+					var friendsTable = $("table#searchTable tbody");
+					friendsTable.empty();
+					
+					$.ajax({
+						type: "GET",
+						url: "/auth/getInfo",
+						headers: createAuthorizationTokenHeader(),
+						success: function(loggedIn) {
+							$.each(data, function(index, user) {
+								var tr = $("<tr><td>" + user.firstName + "</td> <td>" + user.lastName + "</td> <td>" + user.username + "</td></tr>");
+								
+								var action = $("<td><input type='button' class='addFriend' value='Add Friend'></td>");
+								$.each(loggedIn.friends, function(index, friend) {
+									if(user.username == friend.username) {
+										action = $("<td><input type='button' class='unfriend' value='Unfriend'></td>");
+										break;
+									}
+								});
+								
+								tr.append(action);
+								
+								friendsTable.append(tr);
+							});
+						}
+					});
+				}
+			}
+		});
+	});
+	
+	getFriendshipRequests();
+	
+	function getFriendshipRequests() {
+		$.ajax({
+			type: "GET",
+			url: "/api/registeredUser/getFriendRequests",
+			headers: createAuthorizationTokenHeader(),
+			success: function(requests) {
+				if(requests.length > 0) {
+					$("p#requestsMessage").replaceWith("<table id='requestsTable'> <thead><tr><th>First name</th> <th>Last name</th> <th>Username</th> <th>Action</th></tr></thead> <tbody></tbody> </table>");
+					var requestsTable = $("table#requestsTable tbody");
+					
+					$.each(requests, function(index, user) {
+						var tr = $("<tr><td>" + user.firstName + "</td> <td>" + user.lastName + "</td> <td>" + user.username + "</td> <td><input type='button' class='acceptRequest' value='Accept'> &nsbp;&nbsp; <input type='button' class='deleteRequest' value='Delete'></td></tr>");
+						
+						requestsTable.append(tr);
+					});
+				}
+			}
+		});
+	}
     
     //----------------------------------------
 });
