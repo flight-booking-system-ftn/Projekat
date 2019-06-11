@@ -205,12 +205,12 @@ public class RoomDAOImpl implements RoomDAO {
 		List<Room> resultQuery = query.getResultList();
 		if(resultQuery.size()==0) {
 			managedRoom.setRoomNumber(room.getRoomNumber());
+			managedRoom.setBedNumber(room.getBedNumber());
+			managedRoom.setPrice(room.getPrice());
+			return managedRoom;
 		}
 		
-		managedRoom.setBedNumber(room.getBedNumber());
-		managedRoom.setPrice(room.getPrice());
-		
-		return managedRoom;
+		return null;
 	}
 
 }

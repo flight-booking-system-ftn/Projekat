@@ -11,11 +11,12 @@ $(document).ready(function() {
         headers: createAuthorizationTokenHeader(),
         success: function(data){
 			console.log("Admin's hotel: ", data);
+			$('#hiddenPForUserHotelID').val(data.id);
             $('#pNameOfChosenHotelRR').text(data.name);
             $('#pDescriptionOfChosenHotelRR').text(data.description);
             $('#pDestinationOfChosenHotelRR').text(data.destination.name +
                 ", " + data.destination.country);
-            renderTableAllRoomsOfHotel();
+            renderTableAllRoomsAndServicesOfHotel();
             $('#dialogHotelViewRR').css('display', 'block');
         },
         error: function (jqXHR) {
@@ -219,7 +220,7 @@ $(document).ready(function() {
                 $('#pDescriptionOfChosenHotelRR').text(data.description);
                 $('#pDestinationOfChosenHotelRR').text(data.destination.name +
                     ", " + data.destination.country);
-                renderTableAllRoomsOfHotel();
+                renderTableAllRoomsAndServicesOfHotel();
                 $('#dialogHotelViewRR').css('display', 'block');
             },
             error: function (jqXHR) {
@@ -287,6 +288,52 @@ $(document).ready(function() {
     				}
                 }
             });
+        }else if(e.target.id.startsWith("hotelServiceApplyBtn")){
+        	var id = e.target.id.substr(20);
+	        var price = $('#hotelServiceSetPriceField'+id).val();
+	        if(price == ""){
+	        	showMessage('Price cannot be empty!', 'orange');
+	        	return;
+	        }
+	        if(price < 0){
+	        	showMessage('Price must be positive number!', 'orange');
+	        	return;
+	        }
+	        $.ajax({
+            	type: 'GET',
+            	url: '/api/hotelServicesByID/' + id,
+            	headers: createAuthorizationTokenHeader(),
+            	success: function(data){
+            		data.price = price;
+            		$.ajax({
+            			type: 'PUT',
+            			url: '/api/changeHotelService',
+            			headers: createAuthorizationTokenHeader(),
+            			data : JSON.stringify(data),
+            			success: function(data){
+        					showMessage('Successfully updated hotel service price', "green");
+            				renderTableAllRoomsAndServicesOfHotel();
+            			},
+            			error: function (jqXHR) {
+                        	if (jqXHR.status == 401) {
+            					showMessage('Login as hotel administrator!', "orange");
+            				}else if (jqXHR.status == 406) {
+            					showMessage('Hotel service must be unique!', "orange");
+            				}else{
+            					showMessage('[' + jqXHR.status + "]  ", "red");
+            				}
+                        }
+            		});
+            	},
+            	error: function (jqXHR) {
+                	if (jqXHR.status == 401) {
+    					showMessage('Login as hotel administrator!', "orange");
+    				}else{
+    					showMessage('[' + jqXHR.status + "]  ", "red");
+    				}
+                }
+            });
+	        
         }
 	});
 	
@@ -325,11 +372,13 @@ $(document).ready(function() {
         				console.log(data);
         				showMessage('Room is successfully changed!', 'green');
         				$('#dialogEditHotelRoom').css('display', 'none');
-        				renderTableAllRoomsOfHotel();
+        				renderTableAllRoomsAndServicesOfHotel();
         			},
         			error: function (jqXHR) {
                     	if (jqXHR.status == 401) {
         					showMessage('Login as hotel administrator!', "orange");
+        				}else if (jqXHR.status == 406) {
+        					showMessage('Room number must be unique!', "orange");
         				}else{
         					showMessage('[' + jqXHR.status + "]  ", "red");
         				}
@@ -387,6 +436,86 @@ $(document).ready(function() {
 		
 	});
 	
+	$(document).on('click','#editHotelBtn', function(){
+		$.ajax({
+			type: 'GET',
+			url: '/api/hotelAdmin/hotel',
+			headers: createAuthorizationTokenHeader(),
+			success: function(data){
+				$('#editHotelInfoName').val(data.name);
+				$('#editHotelInfoAddress').val(data.destination.address);
+				$('#editHotelInfoDescription').val(data.description);
+				$('#dialogEditHotelInformation').css('display','block');
+			},
+			error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  ", "red");
+				}
+            }
+		});
+	});
+	
+	$(document).on('click','#quitDialogEditHotelInfo', function(){
+		$('#dialogEditHotelInformation').css('display','none');
+	});
+	
+	$(document).on('click','#confirmChangesHotelInformationBtn', function(){
+		var name = $('#editHotelInfoName').val();
+		var address = $('#editHotelInfoAddress').val();
+		var description = $('#editHotelInfoDescription').val();
+		if(name == ""){
+			showMessage('Hotel name cannot be empty!', "orange");
+			return;
+		}
+		if(address == ""){
+			showMessage('Address cannot be empty!', "orange");
+			return;
+		}
+		if(description == ""){
+			showMessage('Description cannot be empty!', "orange");
+			return;
+		}
+		
+		$.ajax({
+			type: 'GET',
+			url: '/api/hotelAdmin/hotel',
+			headers: createAuthorizationTokenHeader(),
+			success: function(data){
+				data.name = name;
+				data.destination.address = address;
+				data.description = description;
+				$.ajax({
+					type: 'PUT',
+					url: '/api/changeHotel',
+					headers: createAuthorizationTokenHeader(),
+        			data : JSON.stringify(data),
+					success: function(data2){
+						showMessage('Hotel is successfully changed!', "green");
+						$('#dialogEditHotelInformation').css('display','none');
+					},
+					error: function (jqXHR) {
+		            	if (jqXHR.status == 401) {
+							showMessage('Login as hotel administrator!', "orange");
+						}else if(jqXHR.status == 406){
+							showMessage('Hotel name must be unique!', "orange");
+						}else{
+							showMessage('[' + jqXHR.status + "]  ", "red");
+						}
+		            }
+				});
+			},
+			error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  ", "red");
+				}
+            }
+		});
+	});
+	
 })
 
 
@@ -422,7 +551,7 @@ var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms,
 	});
 }
 
-var renderTableAllRoomsOfHotel = function(){
+var renderTableAllRoomsAndServicesOfHotel = function(){
 	$.ajax({
 		type: 'GET',
 		url: '/api/unreservedRooms',
@@ -438,6 +567,18 @@ var renderTableAllRoomsOfHotel = function(){
 				<button id=${removeRoomID}>Remove</button></td><td>
 				<button id=${changeRoomID}>Change</button></td></tr>`);
 			}
+			
+			$.get('/api/hotelServicesSearch/'+ $('#hiddenPForUserHotelID').val(), function(servicesData){
+		        console.log("Hotel Services: ", servicesData);
+				var services = servicesData;
+		        $('#hotelServicesTableRR').html(`<tr><th>Name</th><th>Price</th><th>Change</th></tr>`);
+		        for(var i=0;i<services.length;i++){
+		            var red = services[i];
+		            var buttonSEID = "hotelServiceApplyBtn"+ red.id;
+		            var inputTextService = "hotelServiceSetPriceField" + red.id;
+		            $('#hotelServicesTableRR tr:last').after(`<tr><td>${red.name}</td><td><input type="number" min="1" style="text-align:center;" value=${red.price} id=${inputTextService}></td><td><button id=${buttonSEID}>Change price</button></td></tr>`);
+		        }
+		    });
 		},
 		error: function (jqXHR, exception) {
 			if (jqXHR.status == 401) {

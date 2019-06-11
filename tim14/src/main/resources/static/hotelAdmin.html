@@ -18,6 +18,7 @@
 		<button id="addHotelServiceBtn">Add hotel service</button>
 		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
 		<button style="float: right; margin-right:20px;" id="editProfileBtn">Edit profile</button>
+		<button style="float: right; margin-right:20px;" id="editHotelBtn">Edit hotel</button>
 	</div>
 	<br><br>
 	<button id="showHotelInfoBtn" class="mybutton">Show hotel rooms</button>
@@ -144,6 +145,7 @@
 	<div id="dialogHotelViewRR">
 		<div class="dialogContent" style="margin-top:50px;  width:75%;">
 			<h1>Hotel info</h1>
+			<p id="hiddenPForUserHotelID" style="display:none;"></p>
 			<table>
 				<tr><td colspan="2"><h3 id="pNameOfChosenHotelRR">Hotel</h3></td></tr>
 				<tr><td>Description: </td><td><p id="pDescriptionOfChosenHotelRR">Description</p></td></tr>
@@ -155,6 +157,11 @@
 				<tr><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price per day</th><th></th><th></th></tr>
 			</table>
 			<br>
+			<h1>Services</h1>
+			<table id="hotelServicesTableRR">
+				<tr><th>Name</th><th>Price</th><th>Change</th></tr>
+			</table>
+			<br><br>
 			<button id="quitDialogHotelViewRR">Close</button>
 		</div>
 	</div>
@@ -199,6 +206,29 @@
 			<br>
 			<button id="confirmAddingHotelServiceBtn">Add service</button>
 			<button id="quitDialogHotelService">Close</button>
+		</div>
+	</div>
+	
+	<div id="dialogEditHotelInformation" class="dialog">
+		<div class="dialogContent">
+			<h1>Edit hotel information</h1>
+			<table>
+				<tr>
+					<td>Name: </td>
+					<td><input type="text" id="editHotelInfoName" required></td>
+				</tr>
+				<tr>
+					<td>Address: </td>
+					<td><input type="text" id="editHotelInfoAddress" required></td>
+		        </tr>
+		        <tr>
+					<td>Description: </td>
+					<td><input type="text" id="editHotelInfoDescription" required></td>
+		        </tr>
+			</table>
+			<br>
+			<button id="confirmChangesHotelInformationBtn">Edit hotel</button>
+			<button id="quitDialogEditHotelInfo">Close</button>
 		</div>
 	</div>
 	

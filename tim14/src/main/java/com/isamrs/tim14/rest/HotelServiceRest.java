@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.HotelServiceDAO;
 import com.isamrs.tim14.model.HotelService;
+import com.isamrs.tim14.model.Room;
 
 @RestController
 @RequestMapping("/api")
@@ -38,8 +39,6 @@ public class HotelServiceRest {
 		return new ResponseEntity<Collection<HotelService>>(hservices, HttpStatus.OK);
 	}
 	
-	
-	
 	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
 	@RequestMapping(
 			value = "/hotelService",
@@ -53,4 +52,31 @@ public class HotelServiceRest {
 		}
 		return new ResponseEntity<HotelService>(service, HttpStatus.CREATED);
 	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/changeHotelService",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<HotelService> changeHotelService(@RequestBody HotelService service) {
+		HotelService newService = hotelServiceDAO.changeService(service);
+		if(newService == null) {
+			return new ResponseEntity<HotelService>(HttpStatus.NOT_ACCEPTABLE);
+		}
+		return new ResponseEntity<HotelService>(newService, HttpStatus.CREATED);
+	}
+	
+	@RequestMapping(
+			value = "/hotelServicesByID/{serviceID}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<HotelService> getHotelServiceByID(@PathVariable String serviceID){
+		int id = Integer.parseInt(serviceID);
+		HotelService hservice = hotelServiceDAO.getHotelServiceByID(id);
+		
+		return new ResponseEntity<HotelService>(hservice, HttpStatus.OK);
+	}
+	
 }
+

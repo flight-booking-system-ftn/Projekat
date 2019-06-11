@@ -4,11 +4,11 @@ INSERT INTO `authorities` values (3, "ROLE_HOTELADMIN");
 INSERT INTO `authorities` values (4, "ROLE_RENTACARADMIN");
 INSERT INTO `authorities` values (5, "ROLE_SYSTEMADMIN");
 
-INSERT INTO `destination` VALUES (1,'Serbia', 44.75, 20.44, 'Belgrade'); 
-INSERT INTO `destination` VALUES (2,'Serbia', 45.75, 16.44, 'Novi Sad'); 
-INSERT INTO `destination` VALUES (3,'USA', 31.75, 25.44, 'Boston'); 
-INSERT INTO `destination` VALUES (4,'China', 15.75, 24.44, 'Shangai'); 
-INSERT INTO `destination` VALUES (5,'Japan', 11.75, 20.44, 'Tokyo'); 
+INSERT INTO `destination` VALUES (1,'Bulevar Oslobodjenja 15','Serbia', 44.75, 20.44, 'Novi Sad'); 
+INSERT INTO `destination` VALUES (2,'Puskinova 10','Serbia', 45.75, 16.44, 'Novi Sad'); 
+INSERT INTO `destination` VALUES (3,'Hill way 12', 'USA', 31.75, 25.44, 'Boston'); 
+INSERT INTO `destination` VALUES (4,'Pjong jang 55','China', 15.75, 24.44, 'Shangai'); 
+INSERT INTO `destination` VALUES (5,'Cikiki 10','Japan', 11.75, 20.44, 'Tokyo'); 
 
 INSERT INTO `hotel` values (1, "Fancy, good for family trips", "4 seasons", 1);
 INSERT INTO `hotel` values (2, "Quite, near sea coast", "Aqua", 2);
