@@ -345,6 +345,48 @@ $(document).ready(function() {
             }
         });
 	});
+	
+	$(document).on('click','#addHotelServiceBtn', function(){
+		$('#dialogNewHotelService').css("display", "block");
+	});
+	
+	$(document).on('click','#quitDialogHotelService', function(){
+		$('#dialogNewHotelService').css("display", "none");
+	});
+	
+	$(document).on('click','#confirmAddingHotelServiceBtn', function(){
+		var name = $('#newHotelServiceName').val();
+		if(name == ""){
+			showMessage('Name cannot be empty text!', 'orange');
+			return;
+		}
+		var price = $('#newHotelServicePrice').val();
+		if(price < 0){
+			showMessage('Price must be positive number!', 'orange');
+			return;
+		}
+		var data = {price,name}
+		console.log(data);
+		$.ajax({
+			type: 'POST',
+			url: '/api/hotelService',
+			headers: createAuthorizationTokenHeader(),
+			data : JSON.stringify(data),
+			success: function(data){
+				showMessage('Hotel service is successfully added!', 'green');
+				$('#dialogNewHotelService').css('display', 'none');
+			},
+			error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  ", "red");
+				}
+            }
+		});
+		
+	});
+	
 })
 
 

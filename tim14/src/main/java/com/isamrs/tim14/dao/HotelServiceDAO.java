@@ -6,5 +6,5 @@ import com.isamrs.tim14.model.HotelService;
 
 public interface HotelServiceDAO {
 	public List<HotelService> getHotelServicesSearch(Integer hotelID);
-
+	public HotelService save(HotelService service);
 }
