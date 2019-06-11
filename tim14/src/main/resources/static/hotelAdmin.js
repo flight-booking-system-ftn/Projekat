@@ -4,6 +4,30 @@ all_hotel_services = [];
 selected_hotel_services = [];
 
 $(document).ready(function() {
+	
+	$.ajax({
+        type : 'GET',
+        url : '/api/hotelAdmin/hotel',
+        headers: createAuthorizationTokenHeader(),
+        success: function(data){
+			console.log("Admin's hotel: ", data);
+            $('#pNameOfChosenHotelRR').text(data.name);
+            $('#pDescriptionOfChosenHotelRR').text(data.description);
+            $('#pDestinationOfChosenHotelRR').text(data.destination.name +
+                ", " + data.destination.country);
+            renderTableAllRoomsOfHotel();
+            $('#dialogHotelViewRR').css('display', 'block');
+        },
+        error: function (jqXHR) {
+        	if (jqXHR.status == 401) {
+				showMessage('Login as hotel administrator!', "orange");
+			}else{
+				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+			}
+        }
+    });
+	$('#showHotelInfoBtn').css('display', 'none');
+	$('#quitDialogHotelViewRR').css('display','none');
 
 	$(document).on('click', '#addRoomBtn', function() {
 		$(location).attr('href', "/room.html");
@@ -184,6 +208,7 @@ $(document).ready(function() {
 	});
 	
 	$(document).on('click', '#showHotelInfoBtn', function() {
+		$('#showHotelInfoBtn').css('display', 'none');
 		$.ajax({
             type : 'GET',
             url : '/api/hotelAdmin/hotel',
@@ -201,7 +226,7 @@ $(document).ready(function() {
             	if (jqXHR.status == 401) {
 					showMessage('Login as hotel administrator!', "orange");
 				}else{
-					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					showMessage('[' + jqXHR.status + "]  ", "red");
 				}
             }
         });
@@ -231,7 +256,94 @@ $(document).ready(function() {
         			}
         		}
         	});
+        }else if(e.target.id.startsWith("editRoomID")){
+        	var id = e.target.id.substr(10);
+            console.log("Selektovana je soba sa id-em: ", id);
+            $.ajax({
+            	type: 'GET',
+            	url: '/api/room/' + id,
+            	headers: createAuthorizationTokenHeader(),
+            	success: function(data){
+            		console.log("Room: ", data);
+            		$("#bedNumberEditRoom").html('');
+            		var select = document.getElementById("bedNumberEditRoom");
+            		var array = [2,3,4];
+                    for(var i=0;i<array.length;i++){
+                        select.options[select.options.length] = new Option(array[i],''+array[i]);
+                    }
+                    $("#bedNumberEditRoom").val("" + data.bedNumber);
+                    
+                    $('#priceEditRoom').val(data.price);
+                    $('#roomNumberEditRoom').val(data.roomNumber);
+                    
+                    $('#hiddenPForUser').val(id);
+            		$('#dialogEditHotelRoom').css('display', 'block');
+            	},
+            	error: function (jqXHR) {
+                	if (jqXHR.status == 401) {
+    					showMessage('Login as hotel administrator!', "orange");
+    				}else{
+    					showMessage('[' + jqXHR.status + "]  ", "red");
+    				}
+                }
+            });
         }
+	});
+	
+	$(document).on('click', '#quitDialogEditHotelRoom', function(){
+		$('#dialogEditHotelRoom').css('display', 'none');
+	});
+	
+	$(document).on('click', '#editHotelRoomBtn', function(){
+		var price = $('#priceEditRoom').val();
+		var roomNumber = $('#roomNumberEditRoom').val();
+		var bedNumber = $('#bedNumberEditRoom option:selected').val();
+		if(roomNumber < 0){
+			showMessage('Room number must be positive number!', 'orange');
+			return;
+		}
+		if(price < 0){
+			showMessage('Price must be positive number!', 'orange');
+			return;
+		}
+		
+		$.ajax({
+        	type: 'GET',
+        	url: '/api/room/' + $('#hiddenPForUser').val(),
+        	headers: createAuthorizationTokenHeader(),
+        	success: function(roomData){
+        		roomData.price = parseInt(price);
+        		roomData.roomNumber = parseInt(roomNumber);
+        		roomData.bedNumber = parseInt(bedNumber);
+        		console.log("ROOOOM: ", roomData);
+        		$.ajax({
+        			type: 'PUT',
+        			url: '/api/changeRoom',
+        			headers: createAuthorizationTokenHeader(),
+        			data : JSON.stringify(roomData),
+        			success: function(data){
+        				console.log(data);
+        				showMessage('Room is successfully changed!', 'green');
+        				$('#dialogEditHotelRoom').css('display', 'none');
+        				renderTableAllRoomsOfHotel();
+        			},
+        			error: function (jqXHR) {
+                    	if (jqXHR.status == 401) {
+        					showMessage('Login as hotel administrator!', "orange");
+        				}else{
+        					showMessage('[' + jqXHR.status + "]  ", "red");
+        				}
+                    }
+        		});
+        	},
+        	error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  ", "red");
+				}
+            }
+        });
 	});
 })
 
@@ -274,12 +386,15 @@ var renderTableAllRoomsOfHotel = function(){
 		url: '/api/unreservedRooms',
 		headers: createAuthorizationTokenHeader(),
 		success: function(rooms){
-			$('#hotelRoomsTableRR').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price per day</th><th></th></tr>`);
+			$('#hotelRoomsTableRR').html(`<tr><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price per day</th><th>Remove room</th><th>Change room</th></tr>`);
+			rooms.sort((a, b) => (a.roomNumber > b.roomNumber) ? 1 : -1)
 			for(var i=0;i<rooms.length;i++){
 				var red = rooms[i];
 				removeRoomID = "removeRoomID"+ red.id;
-				$('#hotelRoomsTableRR tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price}</td><td>
-				<button id=${removeRoomID}>Remove room</button></td></tr>`);
+				var changeRoomID = "editRoomID" + red.id;
+				$('#hotelRoomsTableRR tr:last').after(`<tr><td>${red.roomNumber}</td><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price}</td><td>
+				<button id=${removeRoomID}>Remove</button></td><td>
+				<button id=${changeRoomID}>Change</button></td></tr>`);
 			}
 		},
 		error: function (jqXHR, exception) {

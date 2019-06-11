@@ -12,4 +12,6 @@ public interface RoomDAO {
 	public void removeRoom(Integer id);
 	public List<Room> getAllRoomsSearch(String hotelName, String destination, Long start, Long end, boolean twoBeds,
 			boolean threeBeds, boolean fourBeds, Double minPrice, Double maxPrice);
+	public Room getRoom(Integer id);
+	public Room changeRoom(Room room);
 }

@@ -31,8 +31,19 @@ public class RoomDAOImpl implements RoomDAO {
 	public Room save(Room room) {
 		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		room.setHotel(admin.getHotel());
-		entityManager.persist(room);
-		return room;
+		boolean check = true;
+		for(Room r : admin.getHotel().getRooms()) {
+			if(r.getRoomNumber() == room.getRoomNumber()) {
+				check = false;
+				break;
+			}
+		}
+		if(check) {
+			entityManager.persist(room);
+			return room;
+		}
+		
+		return null;
 	}
 
 	@Override
@@ -175,6 +186,31 @@ public class RoomDAOImpl implements RoomDAO {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	@Transactional
+	public Room getRoom(Integer id) {
+		Room room = entityManager.find(Room.class, id);
+		return room;
+	}
+
+	@Override
+	@Transactional
+	public Room changeRoom(Room room) {
+		Room managedRoom = entityManager.find(Room.class, room.getId());
+		Query query = entityManager.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :roomNumber and r.hotel.id = :hotelID");
+		query.setParameter("roomNumber", room.getRoomNumber());
+		query.setParameter("hotelID", room.getHotel().getId());
+		List<Room> resultQuery = query.getResultList();
+		if(resultQuery.size()==0) {
+			managedRoom.setRoomNumber(room.getRoomNumber());
+		}
+		
+		managedRoom.setBedNumber(room.getBedNumber());
+		managedRoom.setPrice(room.getPrice());
+		
+		return managedRoom;
 	}
 
 }

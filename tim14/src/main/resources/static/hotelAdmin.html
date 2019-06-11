@@ -15,10 +15,11 @@
 	<div class="menuDiv">
 		<button id="addRoomBtn">Add room</button>
 		<button id="makeQuickReservation">Make quick reservation</button>
-		<button id="showHotelInfoBtn">Show hotel rooms</button>
 		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
 		<button style="float: right; margin-right:20px;" id="editProfileBtn">Edit profile</button>
 	</div>
+	<br><br>
+	<button id="showHotelInfoBtn" class="mybutton">Show hotel rooms</button>
 	
 	<br><br>
 		
@@ -139,8 +140,8 @@
 		</div>
 	</div>
 	
-	<div id="dialogHotelViewRR" class="dialog">
-		<div class="dialogContent">
+	<div id="dialogHotelViewRR">
+		<div class="dialogContent" style="margin-top:50px;  width:75%;">
 			<h1>Hotel info</h1>
 			<table>
 				<tr><td colspan="2"><h3 id="pNameOfChosenHotelRR">Hotel</h3></td></tr>
@@ -150,10 +151,34 @@
 			<br>
 			<h1>Rooms</h1>
 			<table id="hotelRoomsTableRR">
-				<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price per day</th><th></th></tr>
+				<tr><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price per day</th><th></th><th></th></tr>
 			</table>
 			<br>
 			<button id="quitDialogHotelViewRR">Close</button>
+		</div>
+	</div>
+	
+	<div id="dialogEditHotelRoom" class="dialog">
+		<div class="dialogContent">
+			<h1>Edit room</h1>
+			<p id="hiddenPForUser" style="display:none;"></p>
+			<table>
+				<tr>
+					<td>Number of beds: </td>
+					<td><select id="bedNumberEditRoom"></select></td>
+				</tr>
+				<tr>
+					<td>Price: </td>
+					<td><input type="number" id="priceEditRoom" min="1" required></td>
+		        </tr>
+		        <tr>
+					<td>Room number: </td>
+					<td><input type="number" id="roomNumberEditRoom" min="1" required></td>
+		        </tr>
+			</table>
+			<br>
+			<button id="editHotelRoomBtn">Edit room</button>
+			<button id="quitDialogEditHotelRoom">Close</button>
 		</div>
 	</div>
 	
