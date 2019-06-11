@@ -17,6 +17,52 @@
 		<button id="addAirlineAdminBtn">Add airline administrator</button>
 		<button id="addHotelAdminBtn">Add hotel administrator</button>
 		<button id="addRentACarAdminBtn">Add rent-a-car administrator</button>
+		<button id="addNewSystemAdminBtn">Add system administrator</button>
+		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
+	</div>
+	
+	
+	<div id="dialogAddNewSysAdmin" class="dialog">
+		<div class="dialogContent">
+			<h1>New system administrator</h1>
+			<table>
+				<tr>
+					<td>Username: </td>
+					<td><input type="text" id="sysUsername" required></td>
+				</tr>
+				<tr>
+					<td>Password: </td>
+					<td><input type="password" id="sysPassword" required></td>
+				</tr>
+				<tr>
+					<td>Repeat password: </td>
+					<td><input type="password" id="sysRepPassword" required></td>
+				</tr>
+				<tr>
+					<td>First name:</td>
+					<td><input type="text" id="sysFirstName" required></td>
+				</tr>
+				<tr>
+					<td>Last name:</td>
+					<td><input type="text" id="sysLastName" required></td>
+				</tr>
+				<tr>
+					<td>Email address: </td>
+					<td><input type="text" id="sysEmail" required></td>
+				</tr>
+				<tr>
+					<td>City</td>
+					<td><input type="text" id="sysCity" required></td>
+		        </tr>
+		        <tr>
+					<td>Phone</td>
+					<td><input type="text"  id="sysPhone"  pattern="[0-9]{3}/[0-9]{2,}" placeholder="example: 021/123456" required></td>
+		        </tr>
+			</table>
+			<br>
+			<button id="confirmAddingNewSysAdmin">Add system administrator</button>
+			<button id="quitDialogNewSysAdmin">Close</button>
+		</div>
 	</div>
 
 </body>
