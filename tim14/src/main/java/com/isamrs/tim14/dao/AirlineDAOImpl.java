@@ -187,4 +187,11 @@ public class AirlineDAOImpl implements AirlineDAO {
 		entityManager.persist(g);	
 	}
 
+	@Override
+	@Transactional
+	public ResponseEntity<List<Airport>> getAllAirportsOfAirline() {
+		Query query = entityManager.createQuery("SELECT a FROM Airport a");
+		return new ResponseEntity(query.getResultList(), HttpStatus.OK);
+	}
+
 }

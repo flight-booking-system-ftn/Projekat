@@ -433,6 +433,91 @@
 				<tr><td>Hotel</td><td>Destination</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>
 			</table>
         </div>
+        
+        
+        <div class="dialogContent" id="flightSearchDiv" style="margin-top:50px;">
+			<h1>Search flights</h1>
+			<table>
+				<tr>
+					<td>
+						Flight type: 
+					</td>
+					<td>
+						<select id="tripTypeFullSearch">
+	        				<option selected="selected">One-way</option>
+	        				<option>Round trip</option>
+	        			</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Number of passengers: 
+					</td>
+					<td>
+						<input type="number" id="passengersNumFullSearch" value="1" min="1" title="Number of passengers"> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Seat class: 
+					</td>
+					<td>
+						<select id="seatClassFullSearch">
+	        				<option selected="selected">Economy</option>
+	        				<option>Business</option>
+	        				<option>First Class</option>
+	        			</select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Bags: 
+					</td>
+					<td>
+						<input type="number" id="bagsFullSearch" value="0" min="0">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						From: 
+					</td>
+					<td>
+						<select id="fromFullSearch1" class="from" title="Where from?"></select>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						To: 
+					</td>
+					<td>
+						<select id="toFullSearch1" class="to" title="Where to?"></select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						Departure date: 
+					</td>
+					<td>
+						<input type="date" id="departureDateFullSearch1" title="Departure date">
+					</td>
+				</tr>
+				<tr id="arrivalDateTRFullSearch">
+					<td>
+						Return date: 
+					</td>
+					<td>
+						<input type="date" id="returnDateFullSearch1" title="Arrival date">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<button id="flightSearchBtnFullSearch" value="Search flights">Search</button>
+					</td>
+				</tr>
+			</table>
+			<br>
+        </div>
 		
 	</body>
 </html>
