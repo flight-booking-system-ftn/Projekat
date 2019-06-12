@@ -22,9 +22,8 @@ public class Grade {
 	@Column(name = "id")
 	private Integer id;
 	
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },  fetch = FetchType.LAZY)
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },  fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
-	@JsonIgnoreProperties(value={ "friends", "friendshipRequests", "flightReservations", "roomReservations", "vehicleReservations" }, allowGetters= true)
 	private RegisteredUser user;
 	
 	@Column(name = "grade")

@@ -11,6 +11,7 @@ $(document).ready(function(){
     renderAirlineTable();
     renderHotelTable();
     renderRentACarTable();
+    $('#rateDiv').css("display","none");
 
     $(document).on('click','#addAirlineBtn',function(){
         $(location).attr('href',"/airline.html");
@@ -64,6 +65,10 @@ $(document).ready(function(){
         renderRentACarTableSearch();
     });
     
+    $(document).on('click','#allVehiclesBtn',function(){
+        $(location).attr('href',"/allUsedVehicles.html");
+    });
+    
     $(document).on('click','#roomSearchBtn', function(){
         var hotelId = $('#hotelIdField').val();
         var start = stringToDate($('#roomSearchArrivalDate').val());
@@ -95,6 +100,35 @@ $(document).ready(function(){
         $('#dialogHotelView').css("display","none");
     });
 
+    
+    ////rate
+    $(document).on('click','table button',function(e){
+		console.log(e.target.id);
+		if(e.target.id.startsWith("rateRent")){
+	        var id = e.target.id.substr(8);
+	        console.log("HEJHEJ");
+	        $("#entityID").val("rent"+id);
+	        console.log("rent id: ", id);
+	        $.get({url:'/api/getGradeForRent/'+id,
+	    		headers: createAuthorizationTokenHeader()}, function(data){
+	    		var i = 0;
+	    		var onStar = data;
+	    		var stars = $('.li.star');
+	    		console.log("AAAA", onStar);
+	    		$("ul li").each(function() {
+	    			$(this).removeClass('selected');
+	   		    })  
+	    		$("ul li").each(function() {
+	    			if(i<onStar){
+	    				$(this).addClass('selected');
+	    				i++;}
+	    			else return false;
+	   		    })	    			
+	        $('#rateDiv').css("display","block");
+	       })
+		}
+	})
+    
     $(document).on('click','table button',function(e){
         if(e.target.id.startsWith("hotelDetailViewBtn")){
             var message = e.target.id.substr(18);
@@ -961,10 +995,13 @@ var renderHotelTableSearch = function(){
 }
 
 var renderRentACarTable = function(){
-    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th><th>Grade</th><th>Branche offices</th><th></th></tr>`);
+    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th><th>Grade</th><th>Branche offices</th><th></th><th></th></tr>`);
     $.get("/api/rentacars", function(data){
         console.log("Rent-a-cars: ", data);
+        $.get({url :"/api/reservedRents",
+        headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<data.length;i++){
+        	var check = 0;
             var red = data[i];
             var btnID = "rentDetailViewBtn" + red.id;
             var branches = "";
@@ -972,10 +1009,22 @@ var renderRentACarTable = function(){
             for(var j=0; j<data[i].offices.length; j++){
             	branches = branches + data[i].offices[j].destination.name + ", ";
             }
+            for(var k=0; k<reserved.length; k++){
+            	if(reserved[k].id == data[i].id){
+            		check=1;
+            		break;
+            	}
+            }
+            var rate = "";
+            if(check == 1){
+            	rate = "<button id='rateRent"+ red.id+"'>Rate</button>"
+            }
             var len = branches.length-2;
             res = branches.substring(0, len);
-            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td>${res}<td><button id=${btnID}>More details</button></td></tr>`);        }
-    });
+            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td>${res}<td><button id=${btnID}>More details</button></td><td>${rate}</td></tr>`);
+            }
+        });
+    })
 }
 
 var renderRentACarTableSearch = function(){
@@ -1012,6 +1061,9 @@ var renderRentACarTableSearch = function(){
             res = branches.substring(0, len);
             $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td>${res}<td><button id=${btnID}>More details</button></td></tr>`);        }
     });
+    
+
+    
 }
 
 var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, motocycles,num, startDest){

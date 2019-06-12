@@ -12,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.model.Grade;
+import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACarAdmin;
-import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -174,5 +175,37 @@ public class VehicleDAOImpl implements VehicleDAO {
 		}
 		return result;
 	}
+	@Override
+	@Transactional
+	public Integer getGrade(Integer id) {
+		Vehicle vehicle = entityManager.find(Vehicle.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : vehicle.getGrades()) {
+			System.out.println(g.getUser().getEmail());
+			System.out.println("****"+ru.getEmail());
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				return g.getGrade();
+			}
+		}
+		return 0;
+	}
 
+	@Override
+	@Transactional
+	public void setGrade(Integer id, Integer grade) {
+		Vehicle vehicle = entityManager.find(Vehicle.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : vehicle.getGrades()) {
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				g.setGrade(grade);
+				entityManager.persist(g);
+				return;
+				}
+		}
+		Grade g = new Grade();
+		g.setGrade(grade);
+		g.setUser(ru);
+		vehicle.getGrades().add(g);
+		entityManager.persist(g);	
+	}
 }

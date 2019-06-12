@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.VehicleReservationDAO;
 import com.isamrs.tim14.model.RoomReservation;
+import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
 @RestController
@@ -67,5 +68,14 @@ private VehicleReservationDAO VehicleReservationDAO;
 
 		return new ResponseEntity<Collection<VehicleReservation>>(result, HttpStatus.OK);
 	}
+	
+	@RequestMapping(
+			value = "/allUsedVehicles",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Vehicle>> getVehiclesHistory(){
+		return new ResponseEntity<Collection<Vehicle>>(VehicleReservationDAO.getVehicleHistory(), HttpStatus.OK);
+	}
+	
 	
 }

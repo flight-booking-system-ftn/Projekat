@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,5 +87,34 @@ public class RentACarRest {
 			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Collection<BranchOffice>>(rent.getOffices(), HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/reservedRents",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<RentACar>> getReservationRents(){
+		
+		Collection<RentACar> rents = rentDAO.getRentsFromReservations();
+		
+		return new ResponseEntity<Collection<RentACar>>(rents, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/getGradeForRent/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
+		Integer grade = rentDAO.getGrade(id);
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/setGradeForRent/{id}/{grade}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
+		rentDAO.setGrade(id, grade);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 }
