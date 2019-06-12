@@ -51,6 +51,20 @@ $(document).ready(function(){
     		headers: createAuthorizationTokenHeader(),
     		dataType : "application/json"})
         }
+    else if(entityID.startsWith("room")){
+        $.ajax({
+    		type : 'POST',
+    		url : "/api/setGradeForRoom/"+entityID.substring(4)+"/"+onStar,
+    		headers: createAuthorizationTokenHeader(),
+    		dataType : "application/json"})
+        }
+    else if(entityID.startsWith("hotel")){
+        $.ajax({
+    		type : 'POST',
+    		url : "/api/setGradeForHotel/"+entityID.substring(5)+"/"+onStar,
+    		headers: createAuthorizationTokenHeader(),
+    		dataType : "application/json"})
+        }
   });
   
   

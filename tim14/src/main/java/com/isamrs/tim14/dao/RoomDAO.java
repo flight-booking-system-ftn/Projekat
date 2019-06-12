@@ -14,4 +14,6 @@ public interface RoomDAO {
 			boolean threeBeds, boolean fourBeds, Double minPrice, Double maxPrice);
 	public Room getRoom(Integer id);
 	public Room changeRoom(Room room);
+	public Integer getGrade(Integer id);
+	public void setGrade(Integer id, Integer grade);
 }
