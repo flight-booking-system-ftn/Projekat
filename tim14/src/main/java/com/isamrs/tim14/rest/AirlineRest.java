@@ -83,6 +83,11 @@ public class AirlineRest {
 		return airlineDAO.getAirportsOfAirline();
 	}
 	
+	@GetMapping("/airline/allAirports")
+	public ResponseEntity<List<Airport>> getAllAirports() {
+		return airlineDAO.getAllAirportsOfAirline();
+	}
+	
 	@GetMapping("/airline/flights")
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	public ResponseEntity<Set<Flight>> getFlightsOfAirline() {
