@@ -61,9 +61,21 @@ public class RegisteredUserRest {
 	}
 	
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@PostMapping("/registeredUser/acceptFriendshipRequest/{id}")
+	public ResponseEntity<String> acceptFriendshipRequest(@PathVariable Integer id) {
+		return registeredUserDAO.acceptFriendshipRequest(id);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@DeleteMapping("/registeredUser/deleteFriendshipRequest/{id}")
+	public ResponseEntity<String> deleteFriendshipRequest(@PathVariable Integer id) {
+		return registeredUserDAO.deleteFriendshipRequest(id);
+
+  @PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@PutMapping("/registeredUser/updateProfile")
 	public ResponseEntity<String> updateProfile(@RequestBody RegisteredUser user) {
 		return registeredUserDAO.updateProfile(user);
+
 	}
 	
 }

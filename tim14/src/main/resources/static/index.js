@@ -953,6 +953,7 @@ $(document).ready(function(){
 				if(requests.length > 0) {
 					$("p#requestsMessage").replaceWith("<table id='requestsTable'> <thead><tr><th>First name</th> <th>Last name</th> <th>Username</th> <th>Action</th></tr></thead> <tbody></tbody> </table>");
 					var requestsTable = $("table#requestsTable tbody");
+					requestsTable.empty();
 					
 					$.each(requests, function(index, user) {
 						var tr = $("<tr id='" + user.id + "'><td>" + user.firstName + "</td> <td>" + user.lastName + "</td> <td>" + user.username + "</td> <td><input type='button' class='acceptRequest' value='Accept'> &nbsp; <input type='button' class='deleteRequest' value='Delete'></td></tr>");
@@ -993,6 +994,20 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	//******
+	$(document).on("click", "input.acceptRequest", function() {
+		var userID = $(this).parent().parent().attr("id");
+		var btn = $(this);
+		
+		$.ajax({
+			type: "POST",
+			url: "/api/registeredUser/acceptFriendshipRequest/" + userID,
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				$("#"+userID).remove();
+				//btn.replaceWith("<input type='button' class='addFriend' value='Add Friend'>");
+
 	
 	$("button#profileBtn").click( function() {
 		$.ajax({
@@ -1015,6 +1030,21 @@ $(document).ready(function(){
 		});
 	});
 	
+
+	$(document).on("click", "input.deleteRequest", function() {
+		var userID = $(this).parent().parent().attr("id");
+		var btn = $(this);
+		
+		$.ajax({
+			type: "DELETE",
+			url: "/api/registeredUser/deleteFriendshipRequest/" + userID,
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				$("#"+userID).remove();			}
+		});
+	});
+	
+
 	$("form#profileForm").submit(function(e) {
 		e.preventDefault();
 		
@@ -1053,7 +1083,7 @@ $(document).ready(function(){
 		
 		$("div#dialogProfile").hide();
 	});
-    
+ 
     //----------------------------------------
 });
 

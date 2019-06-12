@@ -21,4 +21,8 @@ public interface RegisteredUserDAO {
 
 	public ResponseEntity<String> updateProfile(RegisteredUser user);
 	
+	public ResponseEntity<String> acceptFriendshipRequest(Integer id);
+	
+	public ResponseEntity<String> deleteFriendshipRequest(Integer id);
+	
 }
