@@ -65,6 +65,20 @@ $(document).ready(function(){
     		headers: createAuthorizationTokenHeader(),
     		dataType : "application/json"})
         }
+    else if(entityID.startsWith("airline")){
+        $.ajax({
+    		type : 'POST',
+    		url : "/api/setGradeForAirline/"+entityID.substring(7)+"/"+onStar,
+    		headers: createAuthorizationTokenHeader(),
+    		dataType : "application/json"})
+        }
+    else if(entityID.startsWith("flight")){
+        $.ajax({
+    		type : 'POST',
+    		url : "/flight/setGradeForFlight/"+entityID.substring(6)+"/"+onStar,
+    		headers: createAuthorizationTokenHeader(),
+    		dataType : "application/json"})
+        }
   });
   
   

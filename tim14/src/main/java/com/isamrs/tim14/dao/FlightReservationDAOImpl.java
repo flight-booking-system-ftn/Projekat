@@ -1,6 +1,8 @@
 package com.isamrs.tim14.dao;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Seat;
@@ -83,4 +86,18 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 		return new ResponseEntity("Quick reservation successfully completed.", HttpStatus.OK);
 	}
 
+	@Override
+	@Transactional
+	public Collection<Flight> getFlightHistory() {
+		ArrayList<Flight> allFlights= new ArrayList<Flight>();
+		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		for (FlightReservation fr : u.getFlightReservations()) {
+			//if (vr.getEnd().after(new Date(System.currentTimeMillis()))) {
+				if(!allFlights.contains(fr.getFlight())) {
+						allFlights.add(fr.getFlight());
+				}
+			//}
+		}
+		return allFlights;
+	}
 }

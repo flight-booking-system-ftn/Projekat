@@ -20,6 +20,7 @@ import com.isamrs.tim14.dao.AirlineDAO;
 import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Airport;
 import com.isamrs.tim14.model.Flight;
+import com.isamrs.tim14.model.RentACar;
 
 @RestController
 @RequestMapping("/api")
@@ -88,4 +89,32 @@ public class AirlineRest {
 		return airlineDAO.getFlightsOfAirline();
 	}
 
+	@RequestMapping(
+			value = "/reservedAirlines",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Airline>> getReservationRents(){
+		
+		Collection<Airline> res = airlineDAO.getAirlinesFromReservations();
+		
+		return new ResponseEntity<Collection<Airline>>(res, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/getGradeForAirline/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
+		Integer grade = airlineDAO.getGrade(id);
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/setGradeForAirline/{id}/{grade}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
+		airlineDAO.setGrade(id, grade);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 }

@@ -1,8 +1,11 @@
 package com.isamrs.tim14.rest;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,10 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.FlightReservationDAO;
+import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
+import com.isamrs.tim14.model.Vehicle;
 
 @RestController
 @RequestMapping("/api")
@@ -48,5 +54,13 @@ public class FlightReservationRest {
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	public ResponseEntity<String> buyQuickTicket(@PathVariable Integer reservationID) {
 		return flightReservationDAO.buyQuickTicket(reservationID);
+	}
+	
+	@RequestMapping(
+			value = "/allUsedFlights",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Flight>> getFlightsHistory(){
+		return new ResponseEntity<Collection<Flight>>(flightReservationDAO.getFlightHistory(), HttpStatus.OK);
 	}
 }
