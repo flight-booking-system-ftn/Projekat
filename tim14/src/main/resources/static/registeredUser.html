@@ -23,6 +23,7 @@
 			<button id="addHotelBtn">Add hotel</button>
 			<button id="addRentACarBtn">Add rent-a-car</button>
 			<button id="loginUserBtn">Login</button>
+			<button id="profileBtn">Profile</button>
 			<button id="addRoomBtn">Add room</button>
 			<button id="addVehicleBtn">Add vehicle</button>
 			<button id="registrationBtn">Registration</button>
@@ -39,6 +40,28 @@
 			<button id="addRentACarAdminBtn">Add rent-a-car administrator</button>
 		</div>
 		<br><br><br><br>
+		
+		<div id="dialogProfile" class="dialog">
+	        <div class="dialogContent">
+	        	<h1>Profile</h1>
+	        	<form id="profileForm">
+		        	<table>
+		        		<tbody>
+		        			<tr><td>New password:</td> <td><input type="password" id="newPassword"></td></tr>
+		        			<tr><td>Repeat password:</td> <td><input type="password" id="repeatedPassword"></td></tr>
+		        			<tr><td>First name:</td> <td><input type="text" id="firstName" required="required"></td></tr>
+		        			<tr><td>Last name:</td> <td><input type="text" id="lastName" required="required"></td></tr>
+		        			<tr><td>Email:</td> <td><input type="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required="required"></td></tr>
+		        			<tr><td>City:</td> <td><input type="text" id="city" required="required"></td></tr>
+		        			<tr><td>Phone:</td> <td><input type="tel" id="phone" required="required"></td></tr>
+		        			<tr><td></td> <td><input type="submit" id="save" value="Save"></td></tr>
+		        		</tbody>
+		        	</table>
+	        	</form>
+	        	<br><br>
+	        	<button id="closeProfileDialog">Close</button>
+	        </div>
+		</div>
 		
 		<div id="dialogAirlineView" class="dialog">
 	        <div class="dialogContent">

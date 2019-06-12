@@ -18,6 +18,8 @@ public interface RegisteredUserDAO {
 	public ResponseEntity<Set<RegisteredUser>> getFriendRequestsOfUser(Integer id);
 
 	public ResponseEntity<String> cancelFriendshipRequest(Integer id);
+
+	public ResponseEntity<String> updateProfile(RegisteredUser user);
 	
 	public ResponseEntity<String> acceptFriendshipRequest(Integer id);
 	
