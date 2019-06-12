@@ -1,5 +1,6 @@
 package com.isamrs.tim14.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -8,11 +9,16 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.BranchOffice;
+import com.isamrs.tim14.model.Grade;
+import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarService;
+import com.isamrs.tim14.model.Vehicle;
+import com.isamrs.tim14.model.VehicleReservation;
 
 @Repository
 public class RentDAOImpl implements RentDAO {
@@ -97,5 +103,52 @@ public class RentDAOImpl implements RentDAO {
 		}
 
 		return result.get(0).getOffices();
+	}
+	
+	@Override
+	@Transactional
+	public List<RentACar> getRentsFromReservations() {
+		ArrayList<RentACar> allRents = new ArrayList<RentACar>();
+		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		for (VehicleReservation vr : u.getVehicleReservations()) {
+				if (!(allRents.contains(vr.getRentACar())))
+					allRents.add(vr.getRentACar());
+				}
+			//}
+		return allRents;
+	}
+	
+	@Override
+	@Transactional
+	public Integer getGrade(Integer id) {
+		RentACar rent = entityManager.find(RentACar.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : rent.getGrades()) {
+			System.out.println(g.getUser().getEmail());
+			System.out.println("****"+ru.getEmail());
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				return g.getGrade();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	@Transactional
+	public void setGrade(Integer id, Integer grade) {
+		RentACar rent = entityManager.find(RentACar.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : rent.getGrades()) {
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				g.setGrade(grade);
+				entityManager.persist(g);
+				return;
+				}
+		}
+		Grade g = new Grade();
+		g.setGrade(grade);
+		g.setUser(ru);
+		rent.getGrades().add(g);
+		entityManager.persist(g);	
 	}
 }

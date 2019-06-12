@@ -49,7 +49,7 @@ public class Vehicle {
 	@Column(name = "price")
 	private Double price;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "vehicle_id")
 	@JsonBackReference(value="vehicle-grades")
 	private Set<Grade> grades;

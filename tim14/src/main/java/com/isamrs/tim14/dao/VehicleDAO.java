@@ -10,4 +10,6 @@ public interface VehicleDAO {
 	public List<Vehicle> getAllVehiclesSearch(String rentName, String destination, Long start, Long end, String name, Boolean cars, Boolean motocycles, Double minPrice, Double maxPrice);
 	public List<Vehicle> getUnreservedVehicles();
 	public void removeVehicle(Integer id);
+	public Integer getGrade(Integer id);
+	public void setGrade(Integer id, Integer grade);
 }

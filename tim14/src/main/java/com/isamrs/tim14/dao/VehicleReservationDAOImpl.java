@@ -80,4 +80,20 @@ public class VehicleReservationDAOImpl implements VehicleReservationDAO {
 		res.setRegisteredUser(user);
 		return res;
 	}
+	
+	@Override
+	@Transactional
+	public Collection<Vehicle> getVehicleHistory() {
+		ArrayList<Vehicle> allVehicles = new ArrayList<Vehicle>();
+		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		for (VehicleReservation vr : u.getVehicleReservations()) {
+			//if (vr.getEnd().after(new Date(System.currentTimeMillis()))) {
+				for (Vehicle v : vr.getVehicles()) {
+					if (!allVehicles.contains(v))
+						allVehicles.add(v);
+				}
+			//}
+		}
+		return allVehicles;
+	}
 }
