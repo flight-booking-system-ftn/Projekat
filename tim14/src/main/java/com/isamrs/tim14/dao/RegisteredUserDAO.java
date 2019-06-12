@@ -19,4 +19,8 @@ public interface RegisteredUserDAO {
 
 	public ResponseEntity<String> cancelFriendshipRequest(Integer id);
 	
+	public ResponseEntity<String> acceptFriendshipRequest(Integer id);
+	
+	public ResponseEntity<String> deleteFriendshipRequest(Integer id);
+	
 }

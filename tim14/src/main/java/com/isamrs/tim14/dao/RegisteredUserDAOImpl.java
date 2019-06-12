@@ -101,5 +101,46 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 		
 		return new ResponseEntity<String>("Friendship request has been canceled.", HttpStatus.OK);
 	}
+	
+	@Override
+	@Transactional
+	public ResponseEntity<String> acceptFriendshipRequest(Integer id) {
+		RegisteredUser logged = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RegisteredUser managedUser = entityManager.find(RegisteredUser.class, id);
+		RegisteredUser loggedIn = entityManager.find(RegisteredUser.class, logged.getId());
+		
+		Iterator<RegisteredUser> iterator = loggedIn.getFriendshipRequests().iterator();
+		while(iterator.hasNext()) {
+			RegisteredUser user = iterator.next();
+			
+			if(user.getId() == managedUser.getId()) {
+				iterator.remove();
+				
+				break;
+			}
+		}
+		loggedIn.getFriends().add(managedUser);
+		return new ResponseEntity<String>("Friendship request has been accepted.", HttpStatus.OK);
+	}
+	
+	@Override
+	@Transactional
+	public ResponseEntity<String> deleteFriendshipRequest(Integer id) {
+		RegisteredUser logged= (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RegisteredUser managedUser = entityManager.find(RegisteredUser.class, id);
+		RegisteredUser loggedIn = entityManager.find(RegisteredUser.class, logged.getId()); 
+		Iterator<RegisteredUser> iterator = loggedIn.getFriendshipRequests().iterator();
+		while(iterator.hasNext()) {
+			RegisteredUser user = iterator.next();
+			
+			if(user.getId() == managedUser.getId()) {
+				iterator.remove();
+				
+				break;
+			}
+		}
+		
+		return new ResponseEntity<String>("Friendship request has been deleted.", HttpStatus.OK);
+	}
 
 }
