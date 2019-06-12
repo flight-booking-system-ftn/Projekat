@@ -17,15 +17,15 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 @Entity
 public class RegisteredUser extends User {
 
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinTable(name = "friend_table", joinColumns = { @JoinColumn(name = "friend1") }, inverseJoinColumns = {
 			@JoinColumn(name = "friend2") })
 	@JsonBackReference(value="friends")
 	private Set<RegisteredUser> friends;
 
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-	@JoinTable(name = "friendship_request", joinColumns = { @JoinColumn(name = "request_from") }, inverseJoinColumns = {
-			@JoinColumn(name = "request_for") })
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@JoinTable(name = "friendship_request", joinColumns = { @JoinColumn(name = "request_for") }, inverseJoinColumns = {
+			@JoinColumn(name = "request_from") })
 	@JsonBackReference(value="friendship-request")
 	private Set<RegisteredUser> friendshipRequests;
 

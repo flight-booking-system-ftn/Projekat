@@ -857,7 +857,7 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type: "GET",
-			url: "/api/registeredUser/search/" + $("input#searchUsersInput").val(),
+			url: "/api/registeredUser/search/" + input,
 			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
 				if(data.length == 0) {
@@ -873,19 +873,67 @@ $(document).ready(function(){
 						headers: createAuthorizationTokenHeader(),
 						success: function(loggedIn) {
 							$.each(data, function(index, user) {
-								var tr = $("<tr><td>" + user.firstName + "</td> <td>" + user.lastName + "</td> <td>" + user.username + "</td></tr>");
+								var tr = $("<tr id='" + user.id + "'><td>" + user.firstName + "</td> <td>" + user.lastName + "</td> <td>" + user.username + "</td></tr>");
 								
 								var action = $("<td><input type='button' class='addFriend' value='Add Friend'></td>");
+								
+								var check = false;
 								$.each(loggedIn.friends, function(index, friend) {
 									if(user.username == friend.username) {
 										action = $("<td><input type='button' class='unfriend' value='Unfriend'></td>");
-										break;
+										check = true;
+										
+										tr.append(action);
+										friendsTable.append(tr);
 									}
 								});
 								
-								tr.append(action);
-								
-								friendsTable.append(tr);
+								if(!check) {
+									$.ajax({
+										type: "GET",
+										url: "/api/registeredUser/getFriendRequests/" + user.id,
+										headers: createAuthorizationTokenHeader(),
+										success: function(requestsOfFriend) {
+											$.each(requestsOfFriend, function(index, request) {
+												if(request.id == loggedIn.id) {
+													console.log("POSLAO JE");
+													action = $("<td><input type='button' class='cancelRequest' value='Cancel request'></td>");
+													check = true;
+													
+													tr.append(action);
+													friendsTable.append(tr);
+												}
+											});
+											
+											if(!check) {
+												$.ajax({
+													type: "GET",
+													url: "/api/registeredUser/getFriendRequests",
+													headers: createAuthorizationTokenHeader(),
+													success: function(requests) {
+														$.each(requests, function(index, request) {
+															if(request.id == user.id) {
+																action = $("<td><input type='button' class='acceptRequest' value='Accept'> &nbsp; <input type='button' class='deleteRequest' value='Delete'></td>");
+																check = true;
+																
+																tr.append(action);
+																friendsTable.append(tr);
+															}
+														});
+														
+														if(!check) {
+															tr.append(action);
+															friendsTable.append(tr);
+														}
+													}
+												});
+											}
+										},
+										error: function(data) {
+											console.log("GRESKA");
+										}
+									});
+								} 
 							});
 						}
 					});
@@ -907,7 +955,7 @@ $(document).ready(function(){
 					var requestsTable = $("table#requestsTable tbody");
 					
 					$.each(requests, function(index, user) {
-						var tr = $("<tr><td>" + user.firstName + "</td> <td>" + user.lastName + "</td> <td>" + user.username + "</td> <td><input type='button' class='acceptRequest' value='Accept'> &nsbp;&nbsp; <input type='button' class='deleteRequest' value='Delete'></td></tr>");
+						var tr = $("<tr id='" + user.id + "'><td>" + user.firstName + "</td> <td>" + user.lastName + "</td> <td>" + user.username + "</td> <td><input type='button' class='acceptRequest' value='Accept'> &nbsp; <input type='button' class='deleteRequest' value='Delete'></td></tr>");
 						
 						requestsTable.append(tr);
 					});
@@ -915,6 +963,36 @@ $(document).ready(function(){
 			}
 		});
 	}
+	
+	$(document).on("click", "input.addFriend", function() {
+		var userID = $(this).parent().parent().attr("id");
+		var btn = $(this);
+		
+		$.ajax({
+			type: "POST",
+			url: "/api/registeredUser/sendFriendshipRequest/" + userID,
+			headers: createAuthorizationTokenHeader(),
+			success: function(message) {
+				btn.replaceWith("<input type='button' class='cancelRequest' value='Cancel request'>");
+				
+				showMessage(message, "green");
+			}
+		});
+	})
+	
+	$(document).on("click", "input.cancelRequest", function() {
+		var userID = $(this).parent().parent().attr("id");
+		var btn = $(this);
+		
+		$.ajax({
+			type: "DELETE",
+			url: "/api/registeredUser/cancelFriendshipRequest/" + userID,
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				btn.replaceWith("<input type='button' class='addFriend' value='Add Friend'>");
+			}
+		});
+	});
     
     //----------------------------------------
 });
@@ -952,25 +1030,26 @@ var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms,
 }
 
 var renderAirlineTable = function(){
-    $.get("/api/airlines", function(data){
-    	var table = $("table#airlineTable tbody");
-    	table.empty();
-    	 $.get({url :"/api/reservedAirlines",
-         	headers: createAuthorizationTokenHeader()},  function(reserved){
-         	$.each(data, function(index, airline) {
-        	 for(var k=0; k<reserved.length; k++){
-             	if(reserved[k].id == airline.id){
-             		check=1;
-             		break;
-             	}
-             }
-             var rate = "";
-             if(check == 1){
-             	rate = "<td><button id=rateAirline"+ airline.id+">Rate</button></td>"
-             }
-        	var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td>"+rate+"</tr>");
-        	
-        	table.append(tr);
+	$.get("/api/airlines", function(data){
+		var table = $("table#airlineTable tbody");
+		table.empty();
+		$.get({url :"/api/reservedAirlines",
+			headers: createAuthorizationTokenHeader()},  function(reserved){
+				$.each(data, function(index, airline) {
+					for(var k=0; k<reserved.length; k++){
+						var check = 0;
+	         			if(reserved[k].id == airline.id){
+	         				check=1;
+	         				break;
+	         			}
+	         		}
+	         		var rate = "";
+	         		if(check == 1){
+	         			rate = "<td><button id=rateAirline"+ airline.id+">Rate</button></td>"
+	         		}
+	         		var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td>"+rate+"</tr>");
+	         		
+	         		table.append(tr);
         });
     });
 });

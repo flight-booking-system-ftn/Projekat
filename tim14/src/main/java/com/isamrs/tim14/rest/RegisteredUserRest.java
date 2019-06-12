@@ -6,8 +6,10 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,6 +37,24 @@ public class RegisteredUserRest {
 	@GetMapping("/registeredUser/getFriendRequests")
 	public ResponseEntity<Set<RegisteredUser>> getFriendRequests() {
 		return registeredUserDAO.getFriendRequests();
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@PostMapping("/registeredUser/sendFriendshipRequest/{id}")
+	public ResponseEntity<String> sendFriendshipRequest(@PathVariable Integer id) {
+		return registeredUserDAO.sendFriendshipRequest(id);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@GetMapping("/registeredUser/getFriendRequests/{id}")
+	public ResponseEntity<Set<RegisteredUser>> getFriendRequestsOfUser(@PathVariable Integer id) {
+		return registeredUserDAO.getFriendRequestsOfUser(id);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@DeleteMapping("/registeredUser/cancelFriendshipRequest/{id}")
+	public ResponseEntity<String> cancelFriendshipRequest(@PathVariable Integer id) {
+		return registeredUserDAO.cancelFriendshipRequest(id);
 	}
 	
 }

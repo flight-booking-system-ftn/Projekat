@@ -12,5 +12,11 @@ public interface RegisteredUserDAO {
 	public ResponseEntity<List<RegisteredUser>> searchUsers(String input);
 
 	public ResponseEntity<Set<RegisteredUser>> getFriendRequests();
+
+	public ResponseEntity<String> sendFriendshipRequest(Integer id);
+
+	public ResponseEntity<Set<RegisteredUser>> getFriendRequestsOfUser(Integer id);
+
+	public ResponseEntity<String> cancelFriendshipRequest(Integer id);
 	
 }
