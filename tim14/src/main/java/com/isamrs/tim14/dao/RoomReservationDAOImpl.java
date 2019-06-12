@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,8 @@ import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.User;
+import com.isamrs.tim14.model.Vehicle;
+import com.isamrs.tim14.model.VehicleReservation;
 
 @Repository
 public class RoomReservationDAOImpl implements RoomReservationDAO {
@@ -80,4 +83,19 @@ public class RoomReservationDAOImpl implements RoomReservationDAO {
 		return managedReservation;
 	}
 
+	@Override
+	@Transactional
+	public Collection<Room> getRoomsHistory() {
+		ArrayList<Room> allRooms = new ArrayList<Room>();
+		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		for (RoomReservation rr : u.getRoomReservations()) {
+			//if (vr.getEnd().after(new Date(System.currentTimeMillis()))) {
+				for (Room r: rr.getRooms()) {
+					if (!allRooms.contains(r))
+						allRooms.add(r);
+				}
+			//}
+		}
+		return allRooms;
+	}
 }

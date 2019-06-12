@@ -69,6 +69,10 @@ $(document).ready(function(){
         $(location).attr('href',"/allUsedVehicles.html");
     });
     
+    $(document).on('click','#allRoomsBtn',function(){
+        $(location).attr('href',"/allUsedRooms.html");
+    });
+    
     $(document).on('click','#roomSearchBtn', function(){
         var hotelId = $('#hotelIdField').val();
         var start = stringToDate($('#roomSearchArrivalDate').val());
@@ -110,6 +114,28 @@ $(document).ready(function(){
 	        $("#entityID").val("rent"+id);
 	        console.log("rent id: ", id);
 	        $.get({url:'/api/getGradeForRent/'+id,
+	    		headers: createAuthorizationTokenHeader()}, function(data){
+	    		var i = 0;
+	    		var onStar = data;
+	    		var stars = $('.li.star');
+	    		console.log("AAAA", onStar);
+	    		$("ul li").each(function() {
+	    			$(this).removeClass('selected');
+	   		    })  
+	    		$("ul li").each(function() {
+	    			if(i<onStar){
+	    				$(this).addClass('selected');
+	    				i++;}
+	    			else return false;
+	   		    })	    			
+	        $('#rateDiv').css("display","block");
+	       })
+		}
+		else if(e.target.id.startsWith("rateHotel")){
+	        var id = e.target.id.substr(9);
+	        $("#entityID").val("hotel"+id);
+	        console.log("hotel id: ", id);
+	        $.get({url:'/api/getGradeForHotel/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var i = 0;
 	    		var onStar = data;
@@ -933,16 +959,29 @@ var renderAirlineTableSearch = function(){
 }
 
 var renderHotelTable = function(){
-	$('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
+	$('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th><th></th></tr>`);
     $.get("/api/hotels", function(data){
         console.log("Hotels: ", data);
+        $.get({url :"/api/reservedHotels",
+            headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<data.length;i++){
+        	var check = 0;
             var red = data[i];
             var btnID = "hotelDetailViewBtn" + red.id;
-            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td> - </td><td><button id=${btnID}>More details</button></td></tr>`);
+            for(var k=0; k<reserved.length; k++){
+            	if(reserved[k].id == data[i].id){
+            		check=1;
+            		break;
+            	}
+            }
+            var rate = "";
+            if(check == 1){
+            	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
+            }
+            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td> - </td><td><button id=${btnID}>More details</button></td></td><td>${rate}</td></tr>`);
         }
     });
-}
+})}
 
 var renderHotelTableSearch = function(){
     var hotelName = $('#hotelNameSearchInput').val();

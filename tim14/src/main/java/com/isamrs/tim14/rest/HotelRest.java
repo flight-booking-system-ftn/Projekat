@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.HotelDAO;
 import com.isamrs.tim14.model.Hotel;
-import com.isamrs.tim14.model.Room;
+import com.isamrs.tim14.model.RentACar;
 
 @RestController
 @RequestMapping("/api")
@@ -89,5 +89,34 @@ public class HotelRest {
 			return new ResponseEntity<Hotel>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		return new ResponseEntity<Hotel>(managedHotel, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/getGradeForHotel/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
+		Integer grade = hotelDAO.getGrade(id);
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/setGradeForHotel/{id}/{grade}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
+		hotelDAO.setGrade(id, grade);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/reservedHotels",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Hotel>> getReservationRents(){
+		
+		Collection<Hotel> res = hotelDAO.getHotelsFromReservations();
+		
+		return new ResponseEntity<Collection<Hotel>>(res, HttpStatus.OK);
 	}
 }

@@ -113,5 +113,22 @@ public class RoomRest {
 		}
 		return new ResponseEntity<Room>(newRoom, HttpStatus.CREATED);
 	}
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/getGradeForRoom/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
+		Integer grade = roomDAO.getGrade(id);
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/setGradeForRoom/{id}/{grade}",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
+		roomDAO.setGrade(id, grade);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 	
 }

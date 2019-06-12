@@ -12,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.HotelAdmin;
+import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
+import com.isamrs.tim14.model.Vehicle;
 
 @Repository
 public class RoomDAOImpl implements RoomDAO {
@@ -211,6 +214,40 @@ public class RoomDAOImpl implements RoomDAO {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	@Transactional
+	public Integer getGrade(Integer id) {
+		Room room = entityManager.find(Room.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : room.getGrades()) {
+			System.out.println(g.getUser().getEmail());
+			System.out.println("****"+ru.getEmail());
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				return g.getGrade();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	@Transactional
+	public void setGrade(Integer id, Integer grade) {
+		Room room = entityManager.find(Room.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : room.getGrades()) {
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				g.setGrade(grade);
+				entityManager.persist(g);
+				return;
+				}
+		}
+		Grade g = new Grade();
+		g.setGrade(grade);
+		g.setUser(ru);
+		room.getGrades().add(g);
+		entityManager.persist(g);	
 	}
 
 }

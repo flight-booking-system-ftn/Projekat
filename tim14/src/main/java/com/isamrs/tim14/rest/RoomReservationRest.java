@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RoomReservationDAO;
+import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
+import com.isamrs.tim14.model.Vehicle;
 
 @RestController
 @RequestMapping("/api")
@@ -65,6 +67,14 @@ private RoomReservationDAO roomReservationDAO;
 		Collection<RoomReservation> result = roomReservationDAO.getQuickRoomReservations(hotelID);
 		
 		return new ResponseEntity<Collection<RoomReservation>>(result, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/allUsedRooms",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Room>> getVehiclesHistory(){
+		return new ResponseEntity<Collection<Room>>(roomReservationDAO.getRoomsHistory(), HttpStatus.OK);
 	}
 	
 }
