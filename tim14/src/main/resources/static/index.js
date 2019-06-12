@@ -993,6 +993,66 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	$("button#profileBtn").click( function() {
+		$.ajax({
+			type: "GET",
+			url: "/auth/getInfo",
+			headers: createAuthorizationTokenHeader(),
+			success: function(admin) {
+				$("input#firstName").val(admin.firstName);
+				$("input#lastName").val(admin.lastName);
+				$("input#email").val(admin.email);
+				$("input#city").val(admin.city);
+				$("input#phone").val(admin.phoneNumber);
+				
+				$("div#dialogProfile").show();
+			},
+			error: function(response) {
+				showMessage("You have been logged out. Please login again.", "red");
+				$(location).attr('href',"/login.html");
+			}
+		});
+	});
+	
+	$("form#profileForm").submit(function(e) {
+		e.preventDefault();
+		
+		var newPassword = $("input#newPassword").val();
+		var repeatedPassword = $("input#repeatedPassword").val();
+		
+		var firstName = $("input#firstName").val();
+		var lastName = $("input#lastName").val();
+		var email = $("input#email").val();
+		var city = $("input#city").val();
+		var phone = $("input#phone").val();
+		
+		if(newPassword != "" && repeatedPassword != newPassword) {
+			showMessage("Repeated password doesn't match new password.", "orange");
+			return;
+		}
+		
+		var admin = {
+			"password": newPassword,
+			"firstName": firstName,
+			"lastName": lastName,
+			"email": email,
+			"city": city,
+			"phoneNumber": phone
+		};
+		
+		$.ajax({
+			type: "PUT",
+			url: "/api/registeredUser/updateProfile",
+			headers: createAuthorizationTokenHeader(),
+			data: JSON.stringify(admin),
+			success: function() {
+				showMessage("Profile successfully saved.", "green");
+			}
+		});
+		
+		$("div#dialogProfile").hide();
+	});
     
     //----------------------------------------
 });

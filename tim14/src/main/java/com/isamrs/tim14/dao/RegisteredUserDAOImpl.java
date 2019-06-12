@@ -17,11 +17,15 @@ import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Authority;
 import com.isamrs.tim14.model.RegisteredUser;
+import com.isamrs.tim14.service.CustomUserDetailsService;
 
 @Repository
 public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 	
 	private EntityManager entityManager;
+	
+	@Autowired
+	private CustomUserDetailsService customService;
 	
 	@Autowired
 	public RegisteredUserDAOImpl(EntityManager entityManager) {
@@ -100,6 +104,25 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 		}
 		
 		return new ResponseEntity<String>("Friendship request has been canceled.", HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<String> updateProfile(RegisteredUser user) {
+		RegisteredUser loggedIn = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RegisteredUser managedLoggedIn = entityManager.find(RegisteredUser.class, loggedIn.getId());
+		
+		if(user.getPassword() != "") {
+			managedLoggedIn.setPassword(customService.encodePassword(user.getPassword()));
+		}
+		
+		managedLoggedIn.setFirstName(user.getFirstName());
+		managedLoggedIn.setLastName(user.getLastName());
+		managedLoggedIn.setEmail(user.getEmail());
+		managedLoggedIn.setCity(user.getCity());
+		managedLoggedIn.setPhoneNumber(user.getPhoneNumber());
+		
+		return new ResponseEntity("Profile informations successfully changed.", HttpStatus.OK);
 	}
 
 }
