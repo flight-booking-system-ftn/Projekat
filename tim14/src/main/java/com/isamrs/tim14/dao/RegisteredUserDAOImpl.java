@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -60,6 +61,45 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 		RegisteredUser loggedIn = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		return new ResponseEntity(loggedIn.getFriendshipRequests(), HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<String> sendFriendshipRequest(Integer id) {
+		RegisteredUser loggedIn = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RegisteredUser managedUser = entityManager.find(RegisteredUser.class, id);
+		
+		managedUser.getFriendshipRequests().add(loggedIn);
+		
+		return new ResponseEntity<String>("Friendship request is sent.", HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<Set<RegisteredUser>> getFriendRequestsOfUser(Integer id) {
+		RegisteredUser managedUser = entityManager.find(RegisteredUser.class, id);
+				
+		return new ResponseEntity<Set<RegisteredUser>>(managedUser.getFriendshipRequests(), HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<String> cancelFriendshipRequest(Integer id) {
+		RegisteredUser loggedIn = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RegisteredUser managedUser = entityManager.find(RegisteredUser.class, id);
+		
+		Iterator<RegisteredUser> iterator = managedUser.getFriendshipRequests().iterator();
+		while(iterator.hasNext()) {
+			RegisteredUser user = iterator.next();
+			
+			if(user.getId() == loggedIn.getId()) {
+				iterator.remove();
+				
+				break;
+			}
+		}
+		
+		return new ResponseEntity<String>("Friendship request has been canceled.", HttpStatus.OK);
 	}
 
 }
