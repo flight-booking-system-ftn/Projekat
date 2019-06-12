@@ -16,4 +16,8 @@ public interface FlightDAO {
 	public ResponseEntity<List<List<Flight>>> search(FlightsSearch values);
 	
 	public ResponseEntity<Flight> getFlight(Integer id);
+	
+	public Integer getGrade(Integer id);
+	
+	public void setGrade(Integer id, Integer grade);
 }

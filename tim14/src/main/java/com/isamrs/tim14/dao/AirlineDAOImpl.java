@@ -1,5 +1,6 @@
 package com.isamrs.tim14.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,11 @@ import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.AirlineService;
 import com.isamrs.tim14.model.Airport;
 import com.isamrs.tim14.model.Flight;
+import com.isamrs.tim14.model.FlightReservation;
+import com.isamrs.tim14.model.Grade;
+import com.isamrs.tim14.model.RegisteredUser;
+import com.isamrs.tim14.model.RentACar;
+import com.isamrs.tim14.model.VehicleReservation;
 
 @Repository
 public class AirlineDAOImpl implements AirlineDAO {
@@ -132,6 +138,53 @@ public class AirlineDAOImpl implements AirlineDAO {
 			return new ResponseEntity("No airports were found.", HttpStatus.NOT_FOUND);
 		else
 			return new ResponseEntity(user.getAirline().getAirports(), HttpStatus.OK);
+	}
+	
+	@Override
+	@Transactional
+	public List<Airline> getAirlinesFromReservations() {
+		ArrayList<Airline> all = new ArrayList<Airline>();
+		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		for (FlightReservation fr: u.getFlightReservations()) {
+				if (!(all.contains(fr.getFlight().getAirline())))
+					all.add(fr.getFlight().getAirline());
+				}
+			//}
+		return all;
+	}
+	
+	@Override
+	@Transactional
+	public Integer getGrade(Integer id) {
+		Airline airline = entityManager.find(Airline.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : airline.getGrades()) {
+			System.out.println(g.getUser().getEmail());
+			System.out.println("****"+ru.getEmail());
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				return g.getGrade();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	@Transactional
+	public void setGrade(Integer id, Integer grade) {
+		Airline airline = entityManager.find(Airline.class, id);
+		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(Grade g : airline.getGrades()) {
+			if(g.getUser().getEmail().equals(ru.getEmail())) {
+				g.setGrade(grade);
+				entityManager.persist(g);
+				return;
+				}
+		}
+		Grade g = new Grade();
+		g.setGrade(grade);
+		g.setUser(ru);
+		airline.getGrades().add(g);
+		entityManager.persist(g);	
 	}
 
 }

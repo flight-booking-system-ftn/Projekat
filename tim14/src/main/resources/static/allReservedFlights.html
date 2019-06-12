@@ -1,0 +1,48 @@
+<html>
+	<head>
+	<link rel="stylesheet" type="text/css" media="screen" href="modal.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="snackbar.css">
+		<link rel="stylesheet" type="text/css" href="styles.css">
+		<link rel="stylesheet" type="text/css" href="stars.css">
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="snackbar.js"></script>
+		<script type="text/javascript" src="stars.js"></script>
+		<script type="text/javascript" src="allReservedFlights.js"></script>
+		<script src="authentication.js"></script>
+	</head>
+	<body>
+		<div id="dialogRateView">
+
+		<table id="flightsHistory">
+			<tr><th>From</th><th>To</th><th>Length</th><th>Rate</th></tr>
+		</table>
+		<button id= "allFlightsCancel">Cancel</button>
+		</div>
+		
+	<section class='rating-widget'>
+  
+  <!-- Rating Stars Box -->
+ 		 <div id="rateDiv" class='rating-stars text-center'>
+  			<input type = "hidden" value="" id= "entityID">
+  			  <ul id='stars'>
+  			    <li class='star' title='Poor' data-value='1'>
+    			  <i class='fa fa-star fa-fw'></i>
+   			   </li>
+     		   <li class='star' title='Fair' data-value='2'>
+        		 <i class='fa fa-star fa-fw'></i>
+      		   </li>
+     		   <li class='star' title='Good' data-value='3'>
+       			 <i class='fa fa-star fa-fw'></i>
+      		   </li>
+     		   <li class='star' title='Excellent' data-value='4'>
+        		 <i class='fa fa-star fa-fw'></i>
+      		   </li>
+      		   <li class='star' title='WOW!!!' data-value='5'>
+        		 <i class='fa fa-star fa-fw'></i>
+     		   </li>
+    		 </ul>
+  		</div>
+  </section>
+</body>
+</html>

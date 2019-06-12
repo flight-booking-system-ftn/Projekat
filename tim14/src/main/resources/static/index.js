@@ -69,6 +69,10 @@ $(document).ready(function(){
         $(location).attr('href',"/allUsedVehicles.html");
     });
     
+    $(document).on('click','#allFlightsBtn',function(){
+        $(location).attr('href',"/allReservedFlights.html");
+    });
+    
     $(document).on('click','#allRoomsBtn',function(){
         $(location).attr('href',"/allUsedRooms.html");
     });
@@ -114,6 +118,28 @@ $(document).ready(function(){
 	        $("#entityID").val("rent"+id);
 	        console.log("rent id: ", id);
 	        $.get({url:'/api/getGradeForRent/'+id,
+	    		headers: createAuthorizationTokenHeader()}, function(data){
+	    		var i = 0;
+	    		var onStar = data;
+	    		var stars = $('.li.star');
+	    		console.log("AAAA", onStar);
+	    		$("ul li").each(function() {
+	    			$(this).removeClass('selected');
+	   		    })  
+	    		$("ul li").each(function() {
+	    			if(i<onStar){
+	    				$(this).addClass('selected');
+	    				i++;}
+	    			else return false;
+	   		    })	    			
+	        $('#rateDiv').css("display","block");
+	       })
+		}
+		else if(e.target.id.startsWith("rateAirline")){
+	        var id = e.target.id.substr(11);
+	        $("#entityID").val("airline"+id);
+	        console.log("airline id: ", id);
+	        $.get({url:'/api/getGradeForAirline/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var i = 0;
 	    		var onStar = data;
@@ -929,14 +955,26 @@ var renderAirlineTable = function(){
     $.get("/api/airlines", function(data){
     	var table = $("table#airlineTable tbody");
     	table.empty();
-    	
-        $.each(data, function(index, airline) {
-        	var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td></tr>");
+    	 $.get({url :"/api/reservedAirlines",
+         	headers: createAuthorizationTokenHeader()},  function(reserved){
+         	$.each(data, function(index, airline) {
+        	 for(var k=0; k<reserved.length; k++){
+             	if(reserved[k].id == airline.id){
+             		check=1;
+             		break;
+             	}
+             }
+             var rate = "";
+             if(check == 1){
+             	rate = "<td><button id=rateAirline"+ airline.id+">Rate</button></td>"
+             }
+        	var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td>"+rate+"</tr>");
         	
         	table.append(tr);
         });
     });
-}
+});
+    }
 
 var renderAirlineTableSearch = function(){
     var text = $('#airlineSearchInput').val();
