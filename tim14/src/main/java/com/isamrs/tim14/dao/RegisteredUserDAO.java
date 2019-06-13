@@ -27,5 +27,7 @@ public interface RegisteredUserDAO {
 	public ResponseEntity<String> deleteFriendshipRequest(Integer id);
 	
 	public Collection<RegisteredUser> getUsersFriends();
+
+	public ResponseEntity<String> removeFriend(Integer id);
 	
 }

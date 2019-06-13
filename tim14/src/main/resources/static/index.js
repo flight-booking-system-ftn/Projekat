@@ -989,62 +989,66 @@ $(document).ready(function(){
 								var action = $("<td><input type='button' class='addFriend' value='Add Friend'></td>");
 								
 								var check = false;
-								$.each(loggedIn.friends, function(index, friend) {
-									if(user.username == friend.username) {
-										action = $("<td><input type='button' class='unfriend' value='Unfriend'></td>");
-										check = true;
-										
-										tr.append(action);
-										friendsTable.append(tr);
-									}
-								});
 								
-								if(!check) {
-									$.ajax({
-										type: "GET",
-										url: "/api/registeredUser/getFriendRequests/" + user.id,
-										headers: createAuthorizationTokenHeader(),
-										success: function(requestsOfFriend) {
-											$.each(requestsOfFriend, function(index, request) {
-												if(request.id == loggedIn.id) {
-													console.log("POSLAO JE");
-													action = $("<td><input type='button' class='cancelRequest' value='Cancel request'></td>");
-													check = true;
-													
-													tr.append(action);
-													friendsTable.append(tr);
-												}
-											});
-											
-											if(!check) {
-												$.ajax({
-													type: "GET",
-													url: "/api/registeredUser/getFriendRequests",
-													headers: createAuthorizationTokenHeader(),
-													success: function(requests) {
-														$.each(requests, function(index, request) {
-															if(request.id == user.id) {
-																action = $("<td><input type='button' class='acceptRequest' value='Accept'> &nbsp; <input type='button' class='deleteRequest' value='Delete'></td>");
-																check = true;
-																
-																tr.append(action);
-																friendsTable.append(tr);
-															}
-														});
-														
-														if(!check) {
+								$.ajax({
+									type: "GET",
+									url: "/api/registeredUser/allFriends",
+									headers: createAuthorizationTokenHeader(),
+									success: function(friends) {
+										$.each(friends, function(index, friend) {
+											if(user.id == friend.id) {
+												action = $("<td><input type='button' class='unfriend' value='Unfriend'></td>");
+												check = true;
+												
+												tr.append(action);
+												friendsTable.append(tr);
+											}
+										});
+										
+										if(!check) {
+											$.ajax({
+												type: "GET",
+												url: "/api/registeredUser/getFriendRequests/" + user.id,
+												headers: createAuthorizationTokenHeader(),
+												success: function(requestsOfFriend) {
+													$.each(requestsOfFriend, function(index, request) {
+														if(request.id == loggedIn.id) {
+															action = $("<td><input type='button' class='cancelRequest' value='Cancel request'></td>");
+															check = true;
+															
 															tr.append(action);
 															friendsTable.append(tr);
 														}
+													});
+													
+													if(!check) {
+														$.ajax({
+															type: "GET",
+															url: "/api/registeredUser/getFriendRequests",
+															headers: createAuthorizationTokenHeader(),
+															success: function(requests) {
+																$.each(requests, function(index, request) {
+																	if(request.id == user.id) {
+																		action = $("<td><input type='button' class='acceptRequest' value='Accept'> &nbsp; <input type='button' class='deleteRequest' value='Delete'></td>");
+																		check = true;
+																		
+																		tr.append(action);
+																		friendsTable.append(tr);
+																	}
+																});
+																
+																if(!check) {
+																	tr.append(action);
+																	friendsTable.append(tr);
+																}
+															}
+														});
 													}
-												});
-											}
-										},
-										error: function(data) {
-											console.log("GRESKA");
+												}
+											});
 										}
-									});
-								} 
+									}
+								});
 							});
 						}
 					});
@@ -1099,6 +1103,20 @@ $(document).ready(function(){
 		$.ajax({
 			type: "DELETE",
 			url: "/api/registeredUser/cancelFriendshipRequest/" + userID,
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				btn.replaceWith("<input type='button' class='addFriend' value='Add Friend'>");
+			}
+		});
+	});
+	
+	$(document).on("click", "input.unfriend", function() {
+		var userID = $(this).parent().parent().attr("id");
+		var btn = $(this);
+		
+		$.ajax({
+			type: "DELETE",
+			url: "/api/registeredUser/removeFriend/" + userID,
 			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
 				btn.replaceWith("<input type='button' class='addFriend' value='Add Friend'>");
