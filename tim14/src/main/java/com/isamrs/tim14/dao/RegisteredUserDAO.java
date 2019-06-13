@@ -1,5 +1,6 @@
 package com.isamrs.tim14.dao;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -24,5 +25,7 @@ public interface RegisteredUserDAO {
 	public ResponseEntity<String> acceptFriendshipRequest(Integer id);
 	
 	public ResponseEntity<String> deleteFriendshipRequest(Integer id);
+	
+	public Collection<RegisteredUser> getUsersFriends();
 	
 }

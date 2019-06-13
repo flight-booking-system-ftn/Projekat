@@ -16,6 +16,10 @@ $(document).ready(function(){
     $(document).on('click','#addAirlineBtn',function(){
         $(location).attr('href',"/airline.html");
     });
+    
+    $(document).on('click','#friendsList',function(){
+        $(location).attr('href',"/friendsList.html");
+    });
     $(document).on('click','#addHotelBtn',function(){
         $(location).attr('href',"/hotel.html");
     });
@@ -1007,7 +1011,7 @@ $(document).ready(function(){
 			success: function(data) {
 				$("#"+userID).remove();
 				//btn.replaceWith("<input type='button' class='addFriend' value='Add Friend'>");
-
+			}})})
 	
 	$("button#profileBtn").click( function() {
 		$.ajax({

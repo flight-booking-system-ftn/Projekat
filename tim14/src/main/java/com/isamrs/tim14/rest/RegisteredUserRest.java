@@ -1,9 +1,11 @@
 package com.isamrs.tim14.rest;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -70,11 +72,17 @@ public class RegisteredUserRest {
 	@DeleteMapping("/registeredUser/deleteFriendshipRequest/{id}")
 	public ResponseEntity<String> deleteFriendshipRequest(@PathVariable Integer id) {
 		return registeredUserDAO.deleteFriendshipRequest(id);
-
-  @PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	}
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@PutMapping("/registeredUser/updateProfile")
 	public ResponseEntity<String> updateProfile(@RequestBody RegisteredUser user) {
 		return registeredUserDAO.updateProfile(user);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@GetMapping("/registeredUser/allFriends")
+	public ResponseEntity<Collection<RegisteredUser>> friends() {
+		return new ResponseEntity<Collection<RegisteredUser>>(registeredUserDAO.getUsersFriends(), HttpStatus.OK);
 
 	}
 	
