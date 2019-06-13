@@ -321,6 +321,12 @@
 		<div class="VelikiPregled">
 	        <h1>Airlines: </h1> <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
 	        <br><br>
+	        <select id="sortCriteriaAirline">
+			<option value="name">Name</option>
+			<option value="destination">Destination</option>
+			</select>
+			<button id="sortAirlineBtn">Sort</button>
+			<br><br>
 	        <table id="airlineTable">
 	            <thead>
 	            	<tr><th>Name</th><th>Action</th><th></th></tr>
@@ -338,6 +344,12 @@
 	        <input type="text" placeholder="Check out" id="hotelSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
 	         <button id="hotelSearchBtn" value="Search hotels">Search</button>
 			<br><br>
+			<select id="sortCriteriaHotel">
+			<option value="name">Name</option>
+			<option value="destination">Destination</option>
+			</select>
+			<button id="sortHotelBtn">Sort</button>
+				<br><br>
 			<table id="hotelTable">
 	            <tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>
 	        </table>
@@ -349,6 +361,12 @@
 	        <input type="text" placeholder="Start date" id="rentSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
 	        <input type="text" placeholder="End date" id="rentSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
 	        <button id="rentSearchBtn" value="Search rent">Search</button><br><br>
+			<select id="sortCriteriaRent">
+			<option value="name">Name</option>
+			<option value="destination">Destination</option>
+			</select>
+			<button id="sortRentBtn">Sort</button>
+	       	<br><br>
 	        <table id="rentACarTable">
 	            <tr><th>Name</th><th>Description</th><th>Grade</th><th>Branch offices</th><th></th><th></th></tr>
 	        </table>

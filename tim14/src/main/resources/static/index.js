@@ -6,6 +6,10 @@ selected_hotel_services = [];
 all_vehicles = [];
 selected_vehicles = [];
 
+var globalRent = null;
+var globalHotel = null;
+var globalAirline = null;
+
 $(document).ready(function(){
     
     renderAirlineTable();
@@ -293,6 +297,109 @@ $(document).ready(function(){
         $('#dialogRentView').css("display","none");
 	});
 	
+    $(document).on('click','#sortRentBtn',function(){
+    	var criteria = $("#sortCriteriaRent").val();
+		console.log(criteria);
+		var data = globalRent;
+		if(criteria == "name")
+			data.sort((a, b) => (a.name > b.name) ? 1 : -1);
+		else
+			data.sort((a, b) => (a.destination.name > b.destination.name) ? 1 : -1);
+		console.log("vehicle data",data);
+		$('#rentACarTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th>Branche offices</th><th></th><th></th></tr>`);
+		$.get({url :"/api/reservedRents",
+	        headers: createAuthorizationTokenHeader()},  function(reserved){
+	        for(var i=0;i<data.length;i++){
+	        	var check = 0;
+	            var red = data[i];
+	            var btnID = "rentDetailViewBtn" + red.id;
+	            var branches = "";
+	            var res = "";
+	            for(var j=0; j<data[i].offices.length; j++){
+	            	branches = branches + data[i].offices[j].destination.name + ", ";
+	            }
+	            for(var k=0; k<reserved.length; k++){
+	            	if(reserved[k].id == data[i].id){
+	            		check=1;
+	            		break;
+	            	}
+	            }
+	            var rate = "";
+	            if(check == 1){
+	            	rate = "<button id='rateRent"+ red.id+"'>Rate</button>"
+	            }
+	            var len = branches.length-2;
+	            res = branches.substring(0, len);
+	            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td>${res}<td><button id=${btnID}>More details</button></td><td>${rate}</td></tr>`);
+	            }
+	        });
+		
+	});
+    
+    $(document).on('click','#sortHotelBtn',function(){
+    	var criteria = $("#sortCriteriaHotel").val();
+		console.log(criteria);
+		var data = globalHotel;
+		if(criteria == "name")
+			data.sort((a, b) => (a.name > b.name) ? 1 : -1);
+		else
+			data.sort((a, b) => (a.destination.name > b.destination.name) ? 1 : -1);
+		console.log("vehicle data",data);
+		$('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th><th></th></tr>`);
+	    $.get({url :"/api/reservedHotels",
+	        headers: createAuthorizationTokenHeader()},  function(reserved){
+	        for(var i=0;i<data.length;i++){
+	        	var check = 0;
+	            var red = data[i];
+	            var btnID = "hotelDetailViewBtn" + red.id;
+	            for(var k=0; k<reserved.length; k++){
+	            	if(reserved[k].id == data[i].id){
+	            		check=1;
+	            		break;
+	            	}
+	            }
+	            var rate = "";
+	            if(check == 1){
+	            	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
+	            }
+	            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td> - </td><td><button id=${btnID}>More details</button></td></td><td>${rate}</td></tr>`);
+	        }
+	    });
+	  })
+    
+	 $(document).on('click','#sortAirlineBtn',function(){
+    	var criteria = $("#sortCriteriaAirline").val();
+		console.log(criteria);
+		var data = globalAirline;
+		if(criteria == "name")
+			data.sort((a, b) => (a.name > b.name) ? 1 : -1);
+		else
+			data.sort((a, b) => (a.destination.name > b.destination.name) ? 1 : -1);
+		console.log("vehicle data",data);
+		var table = $("table#airlineTable tbody");
+		table.empty();
+		$.get({url :"/api/reservedAirlines",
+			headers: createAuthorizationTokenHeader()},  function(reserved){
+				$.each(data, function(index, airline) {
+					for(var k=0; k<reserved.length; k++){
+						var check = 0;
+	         			if(reserved[k].id == airline.id){
+	         				check=1;
+	         				break;
+	         			}
+	         		}
+	         		var rate = "";
+	         		if(check == 1){
+	         			rate = "<td><button id=rateAirline"+ airline.id+">Rate</button></td>"
+	         		}
+	         		var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td>"+rate+"</tr>");
+	         		
+	         		table.append(tr);
+				});
+			});
+	 })
+	  
+	  
 	$(document).on('click','#makeHotelReservationBtn',function(){
 		selected_rooms = [];
 		selected_hotel_services = [];
@@ -1146,13 +1253,14 @@ var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms,
 
 var renderAirlineTable = function(){
 	$.get("/api/airlines", function(data){
+		globalAirline = data;
 		var table = $("table#airlineTable tbody");
 		table.empty();
 		$.get({url :"/api/reservedAirlines",
 			headers: createAuthorizationTokenHeader()},  function(reserved){
 				$.each(data, function(index, airline) {
+					var check = 0;
 					for(var k=0; k<reserved.length; k++){
-						var check = 0;
 	         			if(reserved[k].id == airline.id){
 	         				check=1;
 	         				break;
@@ -1181,19 +1289,36 @@ var renderAirlineTableSearch = function(){
     $.get('/api/airlinesSearch/'+text, function(data){
     	var table = $("table#airlineTable tbody");
     	table.empty();
-    	
+    	globalAirline = data;
     	$.each(data, function(index, airline) {
-        	var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td></tr>");
-        	
-        	table.append(tr);
-        });
-    }); 
-}
+    		$.get({url :"/api/reservedAirlines",
+    			headers: createAuthorizationTokenHeader()},  function(reserved){
+    				$.each(data, function(index, airline) {
+    					var check = 0;
+    					for(var k=0; k<reserved.length; k++){
+    	         			if(reserved[k].id == airline.id){
+    	         				check=1;
+    	         				break;
+    	         			}
+    	         		}
+    	         		var rate = "";
+    	         		if(check == 1){
+    	         			rate = "<td><button id=rateAirline"+ airline.id+">Rate</button></td>"
+    	         		}
+    	         		var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td>"+rate+"</tr>");
+    	         		
+    	         		table.append(tr);
+    				});
+    			});
+    		})
+    	}) 
+	}
 
 var renderHotelTable = function(){
 	$('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th><th></th></tr>`);
     $.get("/api/hotels", function(data){
         console.log("Hotels: ", data);
+        globalHotel = data;
         $.get({url :"/api/reservedHotels",
             headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<data.length;i++){
@@ -1254,21 +1379,37 @@ var renderHotelTableSearch = function(){
 	}
 	text = hotelName+"/"+hotelDestination+"/"+checkInTS+"/"+checkOutTS;
 	console.log('/api/hotelsSearch/'+text);
-    $('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
+    $('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th><th></th></tr>`);
     $.get('/api/hotelsSearch/'+text, function(data){
         console.log("Hotels: ", data);
+        $.get({url :"/api/reservedHotels",
+            headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<data.length;i++){
+        	var check = 0;
             var red = data[i];
             var btnID = "hotelDetailViewBtn" + red.id;
-            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td><button id=${btnID}>More details</button></td></tr>`);
+            for(var k=0; k<reserved.length; k++){
+            	if(reserved[k].id == data[i].id){
+            		check=1;
+            		break;
+            	}
+            }
+            var rate = "";
+            if(check == 1){
+            	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
+            }
+            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td> - </td><td><button id=${btnID}>More details</button></td></td><td>${rate}</td></tr>`);
         }
+    });
     });
 }
 
 var renderRentACarTable = function(){
-    $('#rentACarTable').html(`<tr><th>Name</th><th>Description</th><th>Grade</th><th>Branche offices</th><th></th><th></th></tr>`);
+    $('#rentACarTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th>Branche offices</th><th></th><th></th></tr>`);
     $.get("/api/rentacars", function(data){
         console.log("Rent-a-cars: ", data);
+        globalRent = data;
+        data.sort((a, b) => (a.name > b.name) ? 1 : -1)
         $.get({url :"/api/reservedRents",
         headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<data.length;i++){
@@ -1320,21 +1461,34 @@ var renderRentACarTableSearch = function(){
     $('#rentACarTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>`);
     $.get('/api/rentsSearch/'+text, function(data){
         console.log("Rent-a-cars: ", data);
-        for(var i=0;i<data.length;i++){
-            var red = data[i];
-            var btnID = "rentDetailViewBtn" + red.id;
-            var branches = "";
-            var res = "";
-            for(var j=0; j<data[i].offices.length; j++){
-            	branches = branches + data[i].offices[j].destination.name + ", ";
-            }
-            var len = branches.length-2;
-            res = branches.substring(0, len);
-            $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td>${res}<td><button id=${btnID}>More details</button></td></tr>`);        }
+        globalRent = data;
+        $.get({url :"/api/reservedRents",
+            headers: createAuthorizationTokenHeader()},  function(reserved){
+            for(var i=0;i<data.length;i++){
+            	var check = 0;
+                var red = data[i];
+                var btnID = "rentDetailViewBtn" + red.id;
+                var branches = "";
+                var res = "";
+                for(var j=0; j<data[i].offices.length; j++){
+                	branches = branches + data[i].offices[j].destination.name + ", ";
+                }
+                for(var k=0; k<reserved.length; k++){
+                	if(reserved[k].id == data[i].id){
+                		check=1;
+                		break;
+                	}
+                }
+                var rate = "";
+                if(check == 1){
+                	rate = "<button id='rateRent"+ red.id+"'>Rate</button>"
+                }
+                var len = branches.length-2;
+                res = branches.substring(0, len);
+                $('#rentACarTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>-</td><td>${res}<td><button id=${btnID}>More details</button></td><td>${rate}</td></tr>`);
+                }
+            });
     });
-    
-
-    
 }
 
 var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, motocycles,num, startDest){
