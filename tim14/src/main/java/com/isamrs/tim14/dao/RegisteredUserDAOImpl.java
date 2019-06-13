@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -124,6 +125,7 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 			}
 		}
 		loggedIn.getFriends().add(managedUser);
+		managedUser.getFriends().add(loggedIn);
 		return new ResponseEntity<String>("Friendship request has been accepted.", HttpStatus.OK);
 	}
 	
@@ -164,6 +166,14 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 		managedLoggedIn.setPhoneNumber(user.getPhoneNumber());
 		
 		return new ResponseEntity("Profile informations successfully changed.", HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public Collection<RegisteredUser> getUsersFriends() {
+		RegisteredUser loggedIn = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Set<RegisteredUser> friends = loggedIn.getFriends();
+		return friends;
 	}
 
 }
