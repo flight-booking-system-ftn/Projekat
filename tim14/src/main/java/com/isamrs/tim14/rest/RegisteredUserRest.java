@@ -70,8 +70,9 @@ public class RegisteredUserRest {
 	@DeleteMapping("/registeredUser/deleteFriendshipRequest/{id}")
 	public ResponseEntity<String> deleteFriendshipRequest(@PathVariable Integer id) {
 		return registeredUserDAO.deleteFriendshipRequest(id);
+	}
 
-  @PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+    @PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@PutMapping("/registeredUser/updateProfile")
 	public ResponseEntity<String> updateProfile(@RequestBody RegisteredUser user) {
 		return registeredUserDAO.updateProfile(user);
