@@ -87,4 +87,10 @@ public class RegisteredUserRest {
 
 	}
 	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@DeleteMapping("/registeredUser/removeFriend/{id}")
+	public ResponseEntity<String> removeFriend(@PathVariable Integer id) {
+		return registeredUserDAO.removeFriend(id);
+	}
+	
 }
