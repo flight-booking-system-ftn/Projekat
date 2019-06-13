@@ -73,8 +73,37 @@ $(document).ready(function(){
                 $('#vehicleSearchArrivalDate').val(formatDate(new Date()));
                 renderVehicleTable(`/${message}/78123947/3214/true/true/NO_INPUT`);
             });
+        }else if(e.target.id.startsWith("mapLocationAirline")){
+            var id = e.target.id.substr(18);
+            console.log("PORUKA JE ", id);
+            $.get('/api/airlines/'+ id, function(data){
+               console.log("Selected airline: ", data);
+               initMap(data.destination.latitude, data.destination.longitude);
+               $('#dialogMapView').show();
+               
+            });
+        }else if(e.target.id.startsWith("mapLocationHotel")){
+            var id = e.target.id.substr(16);
+            console.log("PORUKA JE ", id);
+            $.get('/api/hotels/'+ id, function(data){
+               console.log("Selected hotel: ", data);
+               initMap(data.destination.latitude, data.destination.longitude);
+               $('#dialogMapView').show();
+            });
+        }else if(e.target.id.startsWith("mapLocationRent")){
+            var id = e.target.id.substr(15);
+            console.log("PORUKA JE ", id);
+            $.get('/api/rentacars/'+ id, function(data){
+               console.log("Selected rent: ", data);
+               initMap(data.destination.latitude, data.destination.longitude);
+               $('#dialogMapView').show();
+            });
         }
     });
+    
+    $(document).on('click','#closeMapBtn', function(){
+    	$('#dialogMapView').hide();
+    })
 
     $(document).on('click','#roomSearchBtn', function(){
         var hotelId = $('#hotelIdField').val();
@@ -371,7 +400,7 @@ var displayAirlines = function(){
         $('#serviceContainer').html('');
         for(var i=0;i<airlines.length;i++){
             var red = airlines[i];
-            var locationID = "mapLocation" + red.id;
+            var locationID = "mapLocationAirline" + red.id;
             $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.name},
             ${red.destination.country}</p><p>${red.description}</p><p>Grade of service</p><p>Destinations list</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button></div></div>`).appendTo("#serviceContainer");
@@ -385,7 +414,7 @@ var displayHotels = function(){
         $('#serviceContainer').html('');
         for(var i=0;i<hotels.length;i++){
             var red = hotels[i];
-            var locationID = "mapLocation" + red.id;
+            var locationID = "mapLocationHotel" + red.id;
             var detailViewButtonID = "hotelDetailsBtn" + red.id;
             $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.name},
             ${red.destination.country}</p><p>${red.description}</p><p>Grade of service</p></div><div class="mapButtonPreview">
@@ -440,7 +469,7 @@ var displayRents = function(){
         $('#serviceContainer').html('');
         for(var i=0;i<rents.length;i++){
             var red = rents[i];
-            var locationID = "mapLocation" + red.id;
+            var locationID = "mapLocationRent" + red.id;
             var detailViewButtonID = "rentDetailsBtn" + red.id;
             $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.name},
             ${red.destination.country}</p><p>${red.description}</p><p>Grade of service</p></div><div class="mapButtonPreview">
@@ -497,6 +526,26 @@ function getAirports(index) {
 	});
 }
 
+
+function initMap(latitude = 20, longitude = 20) {
+	
+	var options = {
+		zoom: 8,
+		center: {lat: latitude, lng: longitude}
+	}
+	
+	var map = new google.maps.Map(document.getElementById('map'), options);
+	
+	var marker = new google.maps.Marker({
+		position: {lat: latitude, lng: longitude},
+		map: map
+	});
+	
+	marker.addListener('click', function() {
+		map.setZoom(11);
+		map.setCenter(marker.getPosition());
+	});
+}
 
 function stringToDate(displayFormat){
 	myDate=displayFormat.split("-");
