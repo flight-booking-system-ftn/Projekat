@@ -9,10 +9,20 @@
 		<script src="authentication.js"></script>
 	</head>
 	<body>
-		<div>
-
+		<div class = "friendsListSort">
+		<h1>Friends list</h1>
+		<select id="sortCriteria">
+			<option value="first">First name</option>
+			<option value="last">Last name</option>
+		</select>
+		<button id="startSort">Sort</button>
+		</div>
+		<br><br>
+		<div class="friendsListSort">
 		<table id="friendsList">
 			<tr><th>Username</th><th>First name</th><th>Last Name</th><th>Email</th><th></th></tr>
 		</table>
+		</div>
+		<div class="cacncelFriends">
 		<button id= "friendsCancel">Cancel</button>
 		</div>

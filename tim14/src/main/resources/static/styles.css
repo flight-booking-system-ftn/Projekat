@@ -26,6 +26,76 @@ a {
 	border: 1px solid #2b77b4;
 }
 
+.cancelFriends{
+	position:relaive;
+}
+.friendsListSort{
+	text-align:center;
+}
+
+.friendsListSort h1 {
+	color: #e8e1de;
+}
+.friendsListSort button {
+	margin-left: 10px;
+	width: 180px;
+	height: 34px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #e8e1de;
+	border: 1px solid #2b77b4;
+}
+.cacncelFriends{
+	float:right;
+}
+#friendsCancel {
+  	margin-right: 10px;
+	margin-top: 20px;
+	width: 180px;
+	height: 34px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #e8e1de;
+	border: 1px solid #2b77b4;
+}
+
+.friendsListSort button:hover {
+	margin-left: 10px;
+	width: 180px;
+	height: 34px;
+	text-align: center;
+	background-color: #2b77b4;
+	color: #e8e1de;
+	border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.friendsListSort select {
+	width: 120px;
+	height: 30px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #e8e1de;
+	border: 1px solid #2b77b4;
+}
+
+.friendsListSort select:hover {
+	width: 120px;
+	height: 30px;
+	text-align: center;
+	background-color: #2b77b4;
+	color: #e8e1de;
+	border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.VelikiPregled select {
+	margin-left: 10px;
+	width: 180px;
+	height: 34px;
+	text-align: center;
+	background-color: #e8e1de;
+	border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
 .VelikiPregled input {
 	margin-left: 10px;
 	width: 180px;
