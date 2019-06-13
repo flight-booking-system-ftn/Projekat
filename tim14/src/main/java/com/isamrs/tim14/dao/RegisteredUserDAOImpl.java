@@ -176,4 +176,36 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 		return friends;
 	}
 
+	@Override
+	@Transactional
+	public ResponseEntity<String> removeFriend(Integer id) {
+		RegisteredUser loggedIn = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RegisteredUser managedLoggedIn = entityManager.find(RegisteredUser.class, loggedIn.getId());
+		RegisteredUser managedFriend = entityManager.find(RegisteredUser.class, id);
+		
+		Iterator<RegisteredUser> iterator = managedLoggedIn.getFriends().iterator();
+		while(iterator.hasNext()) {
+			RegisteredUser friend = iterator.next();
+			
+			if(friend.getId() == id) {
+				iterator.remove();
+				
+				break;
+			}
+		}
+		
+		iterator = managedFriend.getFriends().iterator();
+		while(iterator.hasNext()) {
+			RegisteredUser friend = iterator.next();
+			
+			if(friend.getId() == managedLoggedIn.getId()) {
+				iterator.remove();
+				
+				break;
+			}
+		}
+		
+		return null;
+	}
+
 }
