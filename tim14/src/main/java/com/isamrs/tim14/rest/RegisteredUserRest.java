@@ -73,6 +73,7 @@ public class RegisteredUserRest {
 	public ResponseEntity<String> deleteFriendshipRequest(@PathVariable Integer id) {
 		return registeredUserDAO.deleteFriendshipRequest(id);
 	}
+
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@PutMapping("/registeredUser/updateProfile")
 	public ResponseEntity<String> updateProfile(@RequestBody RegisteredUser user) {

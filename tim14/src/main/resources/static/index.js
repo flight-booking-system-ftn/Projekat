@@ -1011,7 +1011,9 @@ $(document).ready(function(){
 			success: function(data) {
 				$("#"+userID).remove();
 				//btn.replaceWith("<input type='button' class='addFriend' value='Add Friend'>");
-			}})})
+			}
+		})
+	});
 	
 	$("button#profileBtn").click( function() {
 		$.ajax({
@@ -1044,7 +1046,8 @@ $(document).ready(function(){
 			url: "/api/registeredUser/deleteFriendshipRequest/" + userID,
 			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
-				$("#"+userID).remove();			}
+				$("#"+userID).remove();			
+			}
 		});
 	});
 	
@@ -1382,6 +1385,23 @@ var renderQuickRoomReservations = function(reservations){
         <td><button id=${buttonID}>Reserve</button></td></tr>`);
     }
 };
+
+
+function initMap(latitude = 20, longitude = 20) {
+	
+	var options = {
+		zoom: 8,
+		center: {lat: latitude, lng: longitude}
+	}
+	
+	var map = new google.maps.Map(document.getElementById('map'), options);
+	
+	var marker = new google.maps.Marker({
+		position: {lat: latitude, lng: longitude},
+		map: map
+	});
+}
+
 
 function formatDate(date) {
     month = '' + (date.getMonth() + 1);
