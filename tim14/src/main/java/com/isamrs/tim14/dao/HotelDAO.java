@@ -25,4 +25,6 @@ public interface HotelDAO {
 	public void setGrade(Integer id, Integer grade);
 	
 	public List<Hotel> getHotelsFromReservations();
+	
+	public Hotel setDiscount(int discount);
 }

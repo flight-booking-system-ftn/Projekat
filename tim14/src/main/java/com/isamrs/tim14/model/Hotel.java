@@ -37,6 +37,9 @@ public class Hotel {
 	@Column(name = "description")
 	private String description;
 	
+	@Column(name = "extra_service_discount_percentage")
+	private Integer extraServiceDiscount;
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
 	@JsonBackReference(value="hotel-services")
 	private Set<HotelService> services;
@@ -88,6 +91,15 @@ public class Hotel {
 
 	public void setDestination(Destination destination) {
 		this.destination = destination;
+	}
+	
+
+	public Integer getExtraServiceDiscount() {
+		return extraServiceDiscount;
+	}
+
+	public void setExtraServiceDiscount(Integer extraServiceDiscount) {
+		this.extraServiceDiscount = extraServiceDiscount;
 	}
 
 	public String getDescription() {

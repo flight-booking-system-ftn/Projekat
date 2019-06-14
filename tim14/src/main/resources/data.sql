@@ -211,10 +211,10 @@ VALUES (1, 1, b'0', b'1', 1, 1, "FIRST_CLASS"),
 	   (161, 9, b'0', b'1', 6, 2, "ECONOMY"),
 	   (162, 9, b'0', b'1', 6, 3, "ECONOMY");
 
-INSERT INTO `hotel` values (1, "Fancy, good for family trips", "4 seasons", 1);
-INSERT INTO `hotel` values (2, "Quite, near sea coast", "Aqua", 2);
-INSERT INTO `hotel` values (3, "In center of Tokyo", "TokyoCampSide", 5);
-INSERT INTO `hotel` values (4, "All inclusive", "Harito", 4);
+INSERT INTO `hotel` values (1, "Fancy, good for family trips", 0, "4 seasons", 1);
+INSERT INTO `hotel` values (2, "Quite, near sea coast", 0, "Aqua", 2);
+INSERT INTO `hotel` values (3, "In center of Tokyo", 0, "TokyoCampSide", 5);
+INSERT INTO `hotel` values (4, "All inclusive", 0, "Harito", 4);
 
 INSERT INTO `hotel_service` values (1, "Pool", 5, 1);
 INSERT INTO `hotel_service` values (2, "Barbaque", 6, 1);
