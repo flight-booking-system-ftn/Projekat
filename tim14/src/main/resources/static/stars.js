@@ -79,9 +79,8 @@ $(document).ready(function(){
     		headers: createAuthorizationTokenHeader(),
     		dataType : "application/json"})
         }
+    $('#outDiv').css("display","none");
   });
-  
-  
   
 });
 

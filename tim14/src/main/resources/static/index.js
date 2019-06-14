@@ -15,7 +15,7 @@ $(document).ready(function(){
     renderAirlineTable();
     renderHotelTable();
     renderRentACarTable();
-    $('#rateDiv').css("display","none");
+    $('#outDiv').css("display","none");
 
     $(document).on('click','#addAirlineBtn',function(){
         $(location).attr('href',"/airline.html");
@@ -140,7 +140,7 @@ $(document).ready(function(){
 	    				i++;}
 	    			else return false;
 	   		    })	    			
-	        $('#rateDiv').css("display","block");
+	        $('#outDiv').css("display","block");
 	       })
 		}
 		else if(e.target.id.startsWith("rateAirline")){
@@ -162,7 +162,7 @@ $(document).ready(function(){
 	    				i++;}
 	    			else return false;
 	   		    })	    			
-	        $('#rateDiv').css("display","block");
+	        $('#outDiv').css("display","block");
 	       })
 		}
 		else if(e.target.id.startsWith("rateHotel")){
@@ -184,7 +184,7 @@ $(document).ready(function(){
 	    				i++;}
 	    			else return false;
 	   		    })	    			
-	        $('#rateDiv').css("display","block");
+	        $('#outDiv').css("display","block");
 	       })
 		}
 	})

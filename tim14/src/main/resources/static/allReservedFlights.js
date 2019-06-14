@@ -13,7 +13,7 @@ $(document).ready(function(){
 				console.log("-->", red);
 				$('#flightsHistory tr:last').after(`<tr><td>${red.from.name}</td><td>${red.to.name}</td><td>${red.departureDate}</td><td>${red.arrivalDate}</td><td><button id=${buttonID}>Rate</button></td></tr>`);
 			}
-			$('#rateDiv').css("display","none");
+			$('#outDiv').css("display","none");
 		})
 	$(document).on('click','table button',function(e){
 		console.log(e.target.id);
@@ -35,7 +35,7 @@ $(document).ready(function(){
 	    				i++;}
 	    			else return false;
 	   		    })	    			
-	        $('#rateDiv').css("display","block");
+	        $('#outDiv').css("display","block");
 	       })
 		}
 	})

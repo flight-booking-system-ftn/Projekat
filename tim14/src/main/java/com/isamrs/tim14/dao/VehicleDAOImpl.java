@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -207,5 +208,21 @@ public class VehicleDAOImpl implements VehicleDAO {
 		g.setUser(ru);
 		vehicle.getGrades().add(g);
 		entityManager.persist(g);	
+	}
+	
+	@Override
+	@Transactional
+	public Vehicle getVehicle(Integer id) {
+		Vehicle vehicle = entityManager.find(Vehicle.class, id);
+		return vehicle;
+	}
+	
+	@Override
+	@Transactional
+	public Vehicle changeVehicle(Vehicle vehicle) {
+		Vehicle managedVehicle = entityManager.find(Vehicle.class, vehicle.getId());
+			managedVehicle.setBranchOffice(vehicle.getBranchOffice());
+			managedVehicle.setPrice(vehicle.getPrice());
+			return managedVehicle;
 	}
 }
