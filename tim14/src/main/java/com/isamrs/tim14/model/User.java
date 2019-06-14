@@ -63,6 +63,9 @@ public class User implements Serializable, UserDetails {
 	
 	@Column(name = "last_password_reset_date")
 	private Timestamp lastPasswordResetDate;	
+	
+	@Column(name = "password_changed")
+	private boolean passwordChanged;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_authority", 
@@ -122,6 +125,18 @@ public class User implements Serializable, UserDetails {
 		this.email = email;
 	}
 	
+	public boolean isPasswordChanged() {
+		return passwordChanged;
+	}
+
+	public void setPasswordChanged(boolean passwordChanged) {
+		this.passwordChanged = passwordChanged;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
