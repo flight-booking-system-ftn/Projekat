@@ -94,7 +94,6 @@
 					<tr><th>Name</th><th>Price</th></tr>
 				</table>
 				<br>
-				<button id="hotelMapLocationBtn">Show on map</button>
 	            <button id="quitDialogHotelView">Close</button>
 	        </div>
 	    </div>
@@ -109,8 +108,8 @@
 					<tr><td>Destination: </td><td><p id="pDestinationOfChosenRent">Destination</p></td></tr>
 				</table>
 				<br>
-				<h1>Search vehicles</h1>
-				<table>
+				<h1 style="display: none;">Search vehicles</h1>
+				<table style="display: none;">
 					<tr>
 						<td>
 							Start date: 
@@ -171,10 +170,9 @@
                 </table>
                 <h1>Branch offices</h1>
 	            <table id="RentBranchOfficeTable">
-					<tr><th>Column A</th><th>Column B</th></tr>
+					<tr><th>Address</th><th>City</th><th>Country</th></tr>
 				</table>
 				<br>
-				<button id="rentMapLocationBtn">Show on map</button>
 	            <button id="quitDialogRentView">Close</button>
 	        </div>
 	    </div>
@@ -271,7 +269,7 @@
 				</tr>
 				<tr>
 					<td>
-						Destination: 
+						City: 
 					</td>
 					<td>
 						<input type="text" id="vehicleSearchDestinationFullSearch"> 
@@ -341,7 +339,7 @@
 			<br>
 			<h1>Vehicles</h1>
             <table id="selectedRentVehiclesTableFullSearch">
-				<tr><th>Rent-a-car</th><th>Destination</th><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>
+				<tr><th>Rent-a-car</th><th>City</th><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>
             </table>
         </div>
         
@@ -359,7 +357,7 @@
 				</tr>
 				<tr>
 					<td>
-						Destination: 
+						City: 
 					</td>
 					<td>
 						<input type="text" id="roomSearchDestinationFullSearch"> 
@@ -430,7 +428,7 @@
 			<br>
 			<h1>Rooms</h1>
             <table id="selectedHotelRoomsTableFullSearch">
-				<tr><td>Hotel</td><td>Destination</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>
+				<tr><td>Hotel</td><td>City</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>
 			</table>
         </div>
         
@@ -526,6 +524,27 @@
 	        	<button id="closeMapBtn">Close</button>
 	        </div>
 	   	</div>
+	   	
+	   	
+	   	<div id="dialogAirlineView" class="dialog">
+	        <div class="dialogContent">
+	            <h1>Airline review</h1>
+	            <p id="airlineIdField" style="visibility: hidden"></p>
+	            <table>
+					<tr><td colspan="2"><h3 id="pNameOfChosenAirline">Airline</h3></td></tr>
+					<tr><td>Description: </td><td><p id="pDescriptionOfChosenAirline">Description</p></td></tr>
+					<tr><td>Destination: </td><td><p id="pDestinationOfChosenAirline">Destination</p></td></tr>
+				</table>
+				<br>
+                <h1>Airports</h1>
+	            <table id="airlineAirportsTable">
+					<tr><th>Name</th><th>City</th><th>Country</th></tr>
+				</table>
+				<br>
+	            <button id="quitDialogAirlineView">Close</button>
+	        </div>
+	    </div>
+	   	
 		
 		<script async defer
 	    	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS7Tj-OtjMMBnoW_d28O4VoYgt1-3MHGM&callback=initMap">

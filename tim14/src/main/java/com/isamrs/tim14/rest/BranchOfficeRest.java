@@ -1,6 +1,7 @@
 package com.isamrs.tim14.rest;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,14 @@ public class BranchOfficeRest {
 	public ResponseEntity<Collection<BranchOffice>> getOffices() {
 		Set<BranchOffice> offices = branchDAO.getOffices();
 		return new ResponseEntity<Collection<BranchOffice>>(offices, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/branchOfficeByRent/{rentID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<BranchOffice>> getOfficeByRent(@PathVariable Integer rentID) {
+		List<BranchOffice> office = branchDAO.getBranchesByRent(rentID);
+		if (office == null) {
+			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Collection<BranchOffice>>(office, HttpStatus.OK);
 	}
 }
