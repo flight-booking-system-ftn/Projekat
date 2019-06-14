@@ -37,6 +37,65 @@ $(document).ready(function(){
         $(location).attr('href',"/rentacar.html");
     });
     
+    $(document).on('click','#setDiscountRuleBtn',function(){
+    	$.ajax({
+    		type: 'GET',
+    		url: '/api/discount',
+    		headers: createAuthorizationTokenHeader(),
+    		success: function(data){
+    			$('#discountField').val(data.discountPercentage);
+    			$('#dialogDiscountRuleSet').show();
+    		},
+    		error: function (jqXHR, exception) {
+				if (jqXHR.status == 401) {
+					showMessage('Please login as system administrator!', 'orange');
+				} else {
+					showMessage(exception, 'red');
+				}
+			}
+    	});
+        
+    });
+    
+    $(document).on('click','#quitDialogDiscountRuleSet',function(){
+    	$('#dialogDiscountRuleSet').hide();
+    });
+    
+    $(document).on('click','#confirmChangeOfDiscount',function(){
+    	var discountPercentage = $('#discountField').val();
+    	if(discountPercentage == null || discountPercentage == "" || isNaN(discountPercentage)){
+    		showMessage('Discount must be a number!', 'orange');
+    		return;
+    	}
+    	if(discountPercentage < 0 || discountPercentage > 100 ){
+    		showMessage('Discount in percentage must be between 0% - 100%!', 'orange');
+    		return;
+    	}
+    	
+    	var data = {
+    		discountPercentage
+    	}
+    	
+    	$.ajax({
+			type: 'PUT',
+			url: '/api/discount',
+			headers: createAuthorizationTokenHeader(),
+			data : JSON.stringify(data),
+			success: function(data){
+				showMessage('Successfully updated discount based on users bonus points', "green");
+				$('#dialogDiscountRuleSet').hide();
+			},
+			error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as system administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  ", "red");
+				}
+            }
+		});
+    	
+    });
+    
     
     $(document).on('click', '#confirmAddingNewSysAdmin', function(){
     	

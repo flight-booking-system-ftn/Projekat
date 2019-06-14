@@ -210,6 +210,8 @@ VALUES (1, 1, b'0', b'1', 1, 1, "FIRST_CLASS"),
 	   (160, 9, b'0', b'1', 6, 1, "ECONOMY"),
 	   (161, 9, b'0', b'1', 6, 2, "ECONOMY"),
 	   (162, 9, b'0', b'1', 6, 3, "ECONOMY");
+	  
+INSERT INTO `sales` values (1, 5, "Discount based on bonus points");
 
 INSERT INTO `hotel` values (1, "Fancy, good for family trips", 0, "4 seasons", 1);
 INSERT INTO `hotel` values (2, "Quite, near sea coast", 0, "Aqua", 2);
