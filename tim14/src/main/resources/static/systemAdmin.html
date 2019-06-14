@@ -18,6 +18,7 @@
 		<button id="addHotelAdminBtn">Add hotel administrator</button>
 		<button id="addRentACarAdminBtn">Add rent-a-car administrator</button>
 		<button id="addNewSystemAdminBtn">Add system administrator</button>
+		<button id="setDiscountRuleBtn">Set discount rule</button>
 		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
 	</div>
 	<div class="menuDiv" style="height:45px;">
@@ -66,6 +67,22 @@
 			<br>
 			<button id="confirmAddingNewSysAdmin">Add system administrator</button>
 			<button id="quitDialogNewSysAdmin">Close</button>
+		</div>
+	</div>
+	
+	
+	<div id="dialogDiscountRuleSet" class="dialog">
+		<div class="dialogContent">
+			<h1>Set discount rule based on users' bonus points</h1>
+			<table>
+				<tr>
+					<td>100 user's bonus points gives a discount of : </td>
+					<td><input type="text" id="discountField" min="0" max="100" value="1" style="text-align: center;" required> %</td>
+				</tr>
+			</table>
+			<br>
+			<button id="confirmChangeOfDiscount">Change discount rule</button>
+			<button id="quitDialogDiscountRuleSet">Close</button>
 		</div>
 	</div>
 
