@@ -47,7 +47,6 @@ public class Hotel {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch= FetchType.LAZY)
 	@JoinColumn(name = "hotel_id")
-	@JsonBackReference(value="hotel-grades")
 	private Set<Grade> grades;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "hotel")

@@ -55,8 +55,8 @@ $(document).ready(function(){
                 $('#hotelIdField').val(message);
                 $('#pNameOfChosenHotel').text(data.name);
                 $('#pDescriptionOfChosenHotel').text(data.description);
-                $('#pDestinationOfChosenHotel').text(data.destination.name +
-                    ", " + data.destination.country);
+                $('#pDestinationOfChosenHotel').text(data.destination.address +
+                        " (" + data.destination.name + ", " + data.destination.country + ")");
                 $('#roomSearchArrivalDate').val(formatDate(new Date()));
                 renderHotelServiceTable(message);
             });
@@ -68,10 +68,21 @@ $(document).ready(function(){
                 $('#rentIdField').val(message);
                 $('#pNameOfChosenRent').text(data.name);
                 $('#pDescriptionOfChosenRent').text(data.description);
-                $('#pDestinationOfChosenRent').text(data.destination.name +
-                    ", " + data.destination.country);
+                $('#pDestinationOfChosenRent').text(data.destination.address +
+                        " (" + data.destination.name + ", " + data.destination.country + ")");
                 $('#vehicleSearchArrivalDate').val(formatDate(new Date()));
-                renderVehicleTable(`/${message}/78123947/3214/true/true/NO_INPUT`);
+                renderVehicleTable(`/${message}/78123947/3214/true/true/NO_INPUT`,message);
+            });
+        }else if(e.target.id.startsWith("airlineDetailsBtn")){
+            var message = e.target.id.substr(17);
+            $.get('/api/airlines/'+ message, function(data){
+                console.log("Selected airline: ", data);
+                $('#airlineIdField').val(message);
+                $('#pNameOfChosenAirline').text(data.name);
+                $('#pDescriptionOfChosenAirline').text(data.description);
+                $('#pDestinationOfChosenAirline').text(data.destination.address +
+                    " (" + data.destination.name + ", " + data.destination.country + ")");
+                renderAirportTable(message);
             });
         }else if(e.target.id.startsWith("mapLocationAirline")){
             var id = e.target.id.substr(18);
@@ -141,12 +152,12 @@ $(document).ready(function(){
     	}
     	
         var start = stringToDate($('#vehicleSearchArrivalDateFullSearch').val());
-        if(start == ""){
+        if(isNaN(start)){
         	start = -1;
         }
         
 		var end = start + $('#vehicleSearchDayNumberFullSearch').val()*24*60*60*1000;
-		if(end == ""){
+		if(isNaN(end)){
 			end = -1;
 		}
 		if(start!=-1 && end!=-1 && start > end){
@@ -190,12 +201,12 @@ $(document).ready(function(){
     	}
     	
         var start = stringToDate($('#roomSearchArrivalDateFullSearch').val());
-        if(start == ""){
+        if(isNaN(start)){
         	start = -1;
         }
         
 		var end = start + $('#roomSearchDayNumberFullSearch').val()*24*60*60*1000;
-		if(end == ""){
+		if(isNaN(end)){
 			end = -1;
 		}
 		if(start!=-1 && end!=-1 && start > end){
@@ -392,6 +403,10 @@ $(document).ready(function(){
     		}
     	});
     });
+    
+    $(document).on('click','#quitDialogAirlineView', function(){
+    	$('#dialogAirlineView').hide();
+    });
 });
 
 var displayAirlines = function(){
@@ -401,9 +416,20 @@ var displayAirlines = function(){
         for(var i=0;i<airlines.length;i++){
             var red = airlines[i];
             var locationID = "mapLocationAirline" + red.id;
-            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.name},
-            ${red.destination.country}</p><p>${red.description}</p><p>Grade of service</p><p>Destinations list</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button></div></div>`).appendTo("#serviceContainer");
+            var detailViewButtonID = "airlineDetailsBtn" + red.id;
+            var grade = 0;
+            var sum = 0;
+            for(var j=0;j<red.grades.length;j++){
+            	sum += red.grades[j].grade;
+            }
+            if(red.grades.length!=0){
+            	grade = sum/red.grades.length;
+            }else{
+            	grade = '-';
+            }
+            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
         }
     });
 }
@@ -416,8 +442,18 @@ var displayHotels = function(){
             var red = hotels[i];
             var locationID = "mapLocationHotel" + red.id;
             var detailViewButtonID = "hotelDetailsBtn" + red.id;
-            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.name},
-            ${red.destination.country}</p><p>${red.description}</p><p>Grade of service</p></div><div class="mapButtonPreview">
+            var grade = 0;
+            var sum = 0;
+            for(var j=0;j<red.grades.length;j++){
+            	sum += red.grades[j].grade;
+            }
+            if(red.grades.length!=0){
+            	grade = sum/red.grades.length;
+            }else{
+            	grade = '-';
+            }
+            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
         }
     });
@@ -455,7 +491,7 @@ var renderRoomTableMainView = function(hotelName, destination, start, end, TwoBe
     $.get('/api/allRoomsSearch'+text, function(RoomData){
 		console.log("Searched rooms: ", RoomData);
 		var rooms = RoomData;
-		$('#selectedHotelRoomsTableFullSearch').html(`<tr><td>Hotel</td><td>Destination</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>`);
+		$('#selectedHotelRoomsTableFullSearch').html(`<tr><td>Hotel</td><td>City</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>`);
 		for(var i=0;i<rooms.length;i++){
 			var red = rooms[i];
 			$('#selectedHotelRoomsTableFullSearch tr:last').after(`<tr><td>${red.hotel.name}</td><td>${red.hotel.destination.name}</td><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price}</td></tr>`);
@@ -471,20 +507,44 @@ var displayRents = function(){
             var red = rents[i];
             var locationID = "mapLocationRent" + red.id;
             var detailViewButtonID = "rentDetailsBtn" + red.id;
-            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.name},
-            ${red.destination.country}</p><p>${red.description}</p><p>Grade of service</p></div><div class="mapButtonPreview">
+            var grade = 0;
+            var sum = 0;
+            for(var j=0;j<red.grades.length;j++){
+            	sum += red.grades[j].grade;
+            }
+            if(red.grades.length!=0){
+            	grade = sum/red.grades.length;
+            }else{
+            	grade = '-';
+            }
+            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
         }
     });
 }
 
-var renderVehicleTable = function(text){
+var renderVehicleTable = function(text,myID){
     $.get('/api/vehiclesSearch'+text, function(vehicles){
         console.log("Vehicles: ", vehicles);
         $('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
             var red = vehicles[i];
             $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
+        }
+        renderBranchOfficesTable(myID);
+    });
+}
+
+
+var renderBranchOfficesTable = function(text){
+	
+	$.get('/api/branchOfficeByRent/' + text, function(offices){
+        console.log("Offices: ", offices);
+        $('#RentBranchOfficeTable').html(`<tr><th>Address</th><th>City</th><th>Country</th></tr>`);
+        for(var i=0;i<offices.length;i++){
+            var red = offices[i];
+            $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
         }
         $('#dialogRentView').css("display","block");
     });
@@ -496,11 +556,23 @@ var renderVehicleTableMainView = function(rentName, destination, start, end, nam
     $.get('/api/allVehiclesSearch'+text, function(VehicleData){
         console.log("Vehicles: ", VehicleData);
         var vehicles = VehicleData;
-    	$('#selectedRentVehiclesTableFullSearch').html(`<tr><th>Rent-a-car</th><th>Destination</th><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
+    	$('#selectedRentVehiclesTableFullSearch').html(`<tr><th>Rent-a-car</th><th>City</th><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
             var red = vehicles[i];
             $('#selectedRentVehiclesTableFullSearch tr:last').after(`<tr><td>${red.rentACar.name}</td><td>${red.rentACar.destination.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
         }
+    });
+}
+
+var renderAirportTable = function(id){
+	$.get('/api/airline/' + id +'/airports', function(airportsData){
+        console.log("Airports: ", airportsData);
+    	$('#airlineAirportsTable').html(`<tr><th>Name</th><th>City</th><th>Country</th></tr>`);
+        for(var i=0;i<airportsData.length;i++){
+            var red = airportsData[i];
+            $('#airlineAirportsTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
+        }
+        $('#dialogAirlineView').show();
     });
 }
 

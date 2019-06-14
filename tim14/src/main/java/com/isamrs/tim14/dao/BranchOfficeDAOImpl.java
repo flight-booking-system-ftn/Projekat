@@ -77,5 +77,19 @@ public class BranchOfficeDAOImpl implements BranchOfficeDAO {
 		RentACarAdmin rent = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return rent.getRentACar().getOffices();
 	}
+
+	@Override
+	@Transactional
+	public List<BranchOffice> getBranchesByRent(int id) {
+		Query query = entityManager.createQuery("SELECT d FROM BranchOffice d WHERE d.rentACar.id = :dId");
+		query.setParameter("dId", id);
+		List<BranchOffice> result = query.getResultList();
+
+		if (result.size() == 0) {
+			return null;
+		} else {
+			return result;
+		}
+	}
 	
 }
