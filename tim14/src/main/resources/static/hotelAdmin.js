@@ -6,6 +6,71 @@ selected_hotel_services = [];
 $(document).ready(function() {
 	
 	$.ajax({
+		type: 'GET',
+		url: '/auth/getInfo',
+		headers: createAuthorizationTokenHeader(),
+		success: function(data){
+			if(data.passwordChanged){
+				$('#passwordChangedTRUE').show();
+				$('#passwordChangedFALSE').hide();
+			}else{
+				$('#passwordChangedTRUE').hide();
+				$('#passwordChangedFALSE').show();
+			}
+		},
+		error: function (jqXHR) {
+        	if (jqXHR.status == 401) {
+				showMessage('Login as hotel administrator!', "orange");
+			}else{
+				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+			}
+        }
+	});
+	
+	$(document).on('click','#firstTimeChangePassword', function(){
+		//var currentPass = $('#oldPasswordField').val();
+		var newPassword = $('#newPasswordField').val();
+		var repNewPassword = $('#reNewPasswordField').val();
+		if(newPassword == "" || repNewPassword == ""){
+			showMessage("Please fill all the fields!", 'orange');
+			return;
+		}
+		if(newPassword != repNewPassword){
+			showMessage('New password and repeat new password fields must be equals!', 'orange');
+			return;
+		}
+		
+		$.ajax({
+			type: 'POST',
+			url: '/auth/initChangePassword',
+			headers: createAuthorizationTokenHeader(),
+			data : JSON.stringify({
+				'currentPassword': '',
+				newPassword,
+				repNewPassword
+			}),
+			success: function(check){
+				if(check){
+					showMessage('Login once again and enjoy!', 'green');
+			        $(location).attr('href',"/logout");
+				}else{
+					showMessage('Old password is not correct!', 'orange');
+				}
+			},
+			error: function (jqXHR, exception) {
+				if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
+			}
+		});
+
+	});
+	
+	
+	
+	$.ajax({
         type : 'GET',
         url : '/api/hotelAdmin/hotel',
         headers: createAuthorizationTokenHeader(),

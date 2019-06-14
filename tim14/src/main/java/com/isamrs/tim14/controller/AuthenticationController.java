@@ -30,12 +30,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.isamrs.tim14.dao.UserDAO;
+import com.isamrs.tim14.dto.InitChangePassword;
 import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.Authority;
 import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.SystemAdmin;
 import com.isamrs.tim14.model.User;
@@ -64,6 +67,9 @@ public class AuthenticationController {
 	@Autowired
 	private EmailService mailService;
 	
+	@Autowired
+	private UserDAO userDAO;
+	
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@RequestBody RegisteredUser user) {
 		User u = userDetailsService.findByUsername(user.getUsername());
@@ -89,6 +95,7 @@ public class AuthenticationController {
 		ru.setFriendshipRequests(new HashSet<RegisteredUser>());
 		ru.setLastName(user.getLastName());
 		ru.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
+		ru.setPasswordChanged(true);
 		ru.setPhoneNumber(user.getPhoneNumber());
 		ru.setCity(user.getCity());
 		ru.setUsername(user.getUsername());
@@ -124,6 +131,7 @@ public class AuthenticationController {
 		a.setUserType(UserType.ROLE_HOTELADMIN);
 		authorities.add(a);
 		hotelAdmin.setAuthorities(authorities);
+		hotelAdmin.setPasswordChanged(false);
 		hotelAdmin.setEnabled(true);
 		hotelAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
 		hotelAdmin.getHotel().getAdmins().add(hotelAdmin);
@@ -157,6 +165,7 @@ public class AuthenticationController {
 		authorities.add(a);
 		rentAdmin.setAuthorities(authorities);
 		rentAdmin.setEnabled(true);
+		rentAdmin.setPasswordChanged(false);
 		rentAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
 		rentAdmin.getRentACar().getAdmins().add(rentAdmin);
 		
@@ -189,6 +198,7 @@ public class AuthenticationController {
 		authorities.add(a);
 		airlineAdmin.setAuthorities(authorities);
 		airlineAdmin.setEnabled(true);
+		airlineAdmin.setPasswordChanged(false);
 		airlineAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
 		airlineAdmin.getAirline().getAdmins().add(airlineAdmin);
 		
@@ -219,6 +229,7 @@ public class AuthenticationController {
 		a.setUserType(UserType.ROLE_SYSTEMADMIN);
 		authorities.add(a);
 		systemAdmin.setAuthorities(authorities);
+		systemAdmin.setPasswordChanged(true);
 		systemAdmin.setEnabled(true);
 		systemAdmin.setLastPasswordResetDate(new Timestamp(System.currentTimeMillis()));
 		
@@ -314,6 +325,19 @@ public class AuthenticationController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 
+	@RequestMapping(
+			value = "/initChangePassword",
+			method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> initChangePass(@RequestBody InitChangePassword pass) {
+		boolean check = userDAO.initChangePassword(pass);
+
+		if(check == false) {
+			return new ResponseEntity<Boolean>(check, HttpStatus.ACCEPTED);
+		}
+		return new ResponseEntity<Boolean>(check, HttpStatus.ACCEPTED);
+	}
 
 	@RequestMapping(value = "/change-password", method = RequestMethod.POST)
 	@PreAuthorize("hasRole('USER')")
