@@ -31,7 +31,7 @@ public class RentACar {
 	@Column(name = "name")
 	private String name;
 	
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST  }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "destination_id")
 	private Destination destination;
 	

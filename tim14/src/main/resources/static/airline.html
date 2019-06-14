@@ -13,40 +13,59 @@
 </head>
 
 <body>
-	<h2>New airline</h2>
-	<form id="add_airline">
+
+	<form id="add_airline" style="width:75%; margin: auto;">
+		<h2>New airline</h2>
 		<table>
 			<tr>
 				<td>Name</td>
-				<td colspan="3"><input type="text"  id="airlineNameField"  required></td>
+				<td colspan="3"><input type="text" style="width:50%;"  id="airlineNameField"  required></td>
 			</tr>
 			<tr>
 				<td>Description</td>
-				<td colspan="3"><input type="text" id="airlineDescriptionField"  required></td>
+				<td colspan="3"><input type="text" style="width:50%;" id="airlineDescriptionField"  required></td>
 			</tr>
 			<tr>
 				<td rowspan="3">Services</td>
 				<td><input type="checkbox" id="service1option"></td>
-				<td>Airline service 1 </td>
-				<td><input type="number" id="service1price" ></td>
+				<td>Food and drink</td>
+				<td><input type="number" style="text-align:center;" placeholder="$$" min="1" id="service1price" ></td>
 			</tr>
-			<tr>
+			<tr style="background: rgba(0, 0, 0, 0.3);">
 				<td><input type="checkbox" id="service2option"></td>
-				<td>Airline service 2 </td>
-				<td><input type="number" id="service2price"></td>
+				<td>TV/movies</td>
+				<td><input type="number" style="text-align:center;" placeholder="$$" min="1" id="service2price"></td>
 			</tr>
 			<tr>
 				<td><input type="checkbox" id="service3option"></td>
-				<td>Airline service 3 </td>
-				<td><input type="number" id="service3price"></td>
+				<td>Massagers</td>
+				<td><input type="number" style="text-align:center;" placeholder="$$" min="1" id="service3price"></td>
 			</tr>
 			<tr>
-				<td>Destination</td>
-				<td colspan="3"><select id="airlineDestination"></select></td>
+				<td rowspan="5">Destination</td>
+			
+				<td colspan="2">Address: </td>
+				<td><input type="text" id="addressName" required></td>
+			</tr>
+			<tr style="background: #2b77b4;">
+				<td colspan="2">City: </td>
+				<td><input type="text" id="cityName" required></td>
+			</tr>
+			<tr>
+				<td colspan="2">Country: </td>
+				<td><input type="text" id="countryName" required></td>
+			</tr>
+			<tr style="background: #2b77b4;">
+				<td colspan="2">Longitude: </td>
+				<td><input type="text" id="lonNumber" required></td>
+			</tr>
+			<tr>
+				<td colspan="2">Latitude: </td>
+				<td><input type="text" id="latNumber" required></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td colspan="3"><input type="submit" value="Add"></td>
+				<td colspan="3"><input type="submit" value="Add new airline"></td>
 			</tr>
 		</table>
 	</form>

@@ -25,6 +25,18 @@ $(document).ready(function(){
     	$('#dialogAddNewSysAdmin').css('display','none');
     });
     
+    $(document).on('click','#addAirlineBtn',function(){
+        $(location).attr('href',"/airline.html");
+    });
+    
+    $(document).on('click','#addHotelBtn',function(){
+        $(location).attr('href',"/hotel.html");
+    });
+    
+    $(document).on('click','#addRentACarBtn',function(){
+        $(location).attr('href',"/rentacar.html");
+    });
+    
     
     $(document).on('click', '#confirmAddingNewSysAdmin', function(){
     	

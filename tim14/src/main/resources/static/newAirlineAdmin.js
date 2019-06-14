@@ -55,7 +55,7 @@ $(document).ready(function(){
                         dataType: "text",
                         success: function(data){
                         	showMessage("Airline admin added successfully!", "green");
-                            $(location).attr('href',"/registeredUser.html");
+                            $(location).attr('href',"/systemAdmin.html");
                         },
                         error: function (jqXHR, exception) {
                         	if (jqXHR.status == 401) {

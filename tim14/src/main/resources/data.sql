@@ -217,15 +217,15 @@ INSERT INTO `hotel` values (3, "In center of Tokyo", 0, "TokyoCampSide", 5);
 INSERT INTO `hotel` values (4, "All inclusive", 0, "Harito", 4);
 
 INSERT INTO `hotel_service` values (1, "Pool", 5, 1);
-INSERT INTO `hotel_service` values (2, "Barbaque", 6, 1);
+INSERT INTO `hotel_service` values (2, "Barbecue", 6, 1);
 INSERT INTO `hotel_service` values (3, "Air condition", 5, 1);
 INSERT INTO `hotel_service` values (4, "Coctail party", 7, 1);
 INSERT INTO `hotel_service` values (5, "Pool", 3, 2);
-INSERT INTO `hotel_service` values (6, "Barbaque", 4, 2);
+INSERT INTO `hotel_service` values (6, "Barbecue", 4, 2);
 INSERT INTO `hotel_service` values (7, "Air condition", 6, 2);
 INSERT INTO `hotel_service` values (8, "Coctail party", 7, 3);
 INSERT INTO `hotel_service` values (9, "Pool", 7, 3);
-INSERT INTO `hotel_service` values (10, "Barbaque", 5, 3);
+INSERT INTO `hotel_service` values (10, "Barbecue", 5, 3);
 INSERT INTO `hotel_service` values (11, "Air condition", 12, 4);
 INSERT INTO `hotel_service` values (12, "Pool", 11, 4);
 
