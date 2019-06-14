@@ -13,7 +13,7 @@ $(document).ready(function(){
 				console.log("-->", red);
 				$('#vehiclesHistory tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td><button id=${buttonID}>Rate</button></td></tr>`);
 			}
-			$('#rateDiv').css("display","none");
+			$('#iddd').css("display","none");
 		})
 	$(document).on('click','table button',function(e){
 		console.log(e.target.id);
@@ -24,7 +24,7 @@ $(document).ready(function(){
 	        $.get({url:'/api/getGradeForVehicle/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var i = 0;
-	    		var onStar = data;
+	    		var onStar = 0;
 	    		var stars = $('.li.star');
 	    		console.log("AAAA", onStar);
 	    		$("ul li").each(function() {
@@ -36,7 +36,7 @@ $(document).ready(function(){
 	    				i++;}
 	    			else return false;
 	   		    })	    			
-	        $('#rateDiv').css("display","block");
+	        $('#outDiv').css("display","block");
 	       })
 		}
 	})

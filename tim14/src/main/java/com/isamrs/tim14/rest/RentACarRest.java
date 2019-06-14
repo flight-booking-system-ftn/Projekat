@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isamrs.tim14.dao.RentDAO;
 import com.isamrs.tim14.model.BranchOffice;
 import com.isamrs.tim14.model.RentACar;
+import com.isamrs.tim14.model.RentACarAdmin;
 
 @RestController
 @RequestMapping("/api")
@@ -87,6 +89,18 @@ public class RentACarRest {
 			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Collection<BranchOffice>>(rent.getOffices(), HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/rentBranchess",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<BranchOffice>> getRentOfficess() {
+		RentACarAdmin rent = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if(rent == null) {
+			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<Collection<BranchOffice>>(rent.getRentACar().getOffices(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(

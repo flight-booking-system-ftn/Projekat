@@ -1,7 +1,6 @@
 package com.isamrs.tim14.dao;
 
 import java.util.List;
-
 import com.isamrs.tim14.model.Vehicle;
 
 public interface VehicleDAO {
@@ -12,4 +11,6 @@ public interface VehicleDAO {
 	public void removeVehicle(Integer id);
 	public Integer getGrade(Integer id);
 	public void setGrade(Integer id, Integer grade);
+	public Vehicle getVehicle(Integer id);
+	public Vehicle changeVehicle(Vehicle vehcle);
 }

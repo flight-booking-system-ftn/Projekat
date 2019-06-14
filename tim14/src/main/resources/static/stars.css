@@ -53,6 +53,7 @@ box-sizing: border-box;
 .rating-stars ul {
   list-style-type:none;
   padding:0;
+  text-align: center;
   
   -moz-user-select:none;
   -webkit-user-select:none;
@@ -76,4 +77,8 @@ box-sizing: border-box;
 /* Selected state of the stars */
 .rating-stars ul > li.star.selected > i.fa {
   color:#FF912C;
+}
+
+#rateDiv{
+	position: float;
 }

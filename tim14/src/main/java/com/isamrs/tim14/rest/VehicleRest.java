@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.VehicleDAO;
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.Vehicle;
 
@@ -110,5 +111,26 @@ public class VehicleRest {
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
 		vehicleDAO.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/vehicle/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Vehicle> getSelectedVehicle(@PathVariable Integer id){
+		Vehicle vehicle = vehicleDAO.getVehicle(id);
+		return new ResponseEntity<Vehicle>(vehicle, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/editVehicle",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Vehicle> changeVehicle(@RequestBody Vehicle vehicle) {
+		Vehicle veh = vehicleDAO.changeVehicle(vehicle);
+		return new ResponseEntity<Vehicle>(veh, HttpStatus.CREATED);
 	}
 }

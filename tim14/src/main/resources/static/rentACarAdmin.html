@@ -115,7 +115,7 @@
 			<br>
 			<h1>Vehicles</h1>
 			<table id="vehicleTableRemove">
-				<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th><th></th></tr>
+				<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th><th></th><th></th></tr>
 			</table>
 			<br>
 			<button id="quitDialogRentViewRemove">Close</button>
@@ -158,6 +158,26 @@
 			<br>
 			<button id="editRentAdminProfile">Edit profile</button>
 			<button id="quitDialogEditRentAdmin">Close</button>
+		</div>
+	</div>
+	
+	<div id="dialogEditHRentVehicle" class="dialog">
+		<div class="dialogContent">
+			<h1>Edit vehicle</h1>
+			<p id="hiddenPForUser" style="display:none;"></p>
+			<table>
+				<tr>
+					<td>Price: </td>
+					<td><input type="number" id="priceEditVehicle" min="1" required></td>
+		        </tr>
+		        <tr>
+					<td>Branch office: </td>
+					<td><select id="vehicleBranchOfficeEdit"></select></td>
+		        </tr>
+			</table>
+			<br>
+			<button id="editRentVehicleBtn">Edit room</button>
+			<button id="quitDialogEditRentVehicle">Close</button>
 		</div>
 	</div>
 </body>

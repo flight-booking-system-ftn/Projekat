@@ -69,8 +69,93 @@ $(document).ready(function() {
         		}
         	});
         }
+        else if(e.target.id.startsWith("editVehicleID")){
+        	var id = e.target.id.substr(13);
+            console.log("vehicle ", id);
+            $.ajax({
+            	type: 'GET',
+            	url: '/api/vehicle/' + id,
+            	headers: createAuthorizationTokenHeader(),
+            	success: function(data){
+            		$("#vehicleBranchOfficeEdit").html('');
+            		$.get({url: '/api/rentBranchess', 
+            			headers: createAuthorizationTokenHeader()}, function(branch){
+            		var select = document.getElementById("vehicleBranchOfficeEdit");
+            		console.log(branch);
+                    for(var i=0;i<branch.length;i++){
+                        var red = branch[i];
+                        select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
+                    }
+                    //$("#vehicleBranchOfficeEdit").val("" + data.branch.id);
+            		$('#priceEditVehicle').val(data.price);
+            		$('#hiddenPForUser').val(id);
+            		$('#dialogEditHRentVehicle').css('display', 'block');
+            			})},
+            	error: function (jqXHR) {
+                	if (jqXHR.status == 401) {
+    					showMessage('Login as hotel administrator!', "orange");
+    				}else{
+    					showMessage('[' + jqXHR.status + "]  ", "red");
+    				}
+                }
+            });
+            }
 	});
 	 
+	$(document).on('click', '#editRentVehicleBtn', function(){
+		var price = $('#priceEditRoom').val();
+		var price = $('#priceEditVehicle').val();
+		var branch = $('#vehicleBranchOfficeEdit option:selected').val();
+		if(price < 0){
+			showMessage('Price must be positive number!', 'orange');
+			return;
+		}
+		
+		$.ajax({
+        	type: 'GET',
+        	url: '/api/vehicle/' + $('#hiddenPForUser').val(),
+        	headers: createAuthorizationTokenHeader(),
+        	success: function(vehicle){
+        		vehicle.price = parseInt(price);
+        		var link = '/api/branchOffice/'+$("#vehicleBranchOfficeEdit option:selected" ).val();
+        		$.get(link, function(branches){
+        			vehicle.branchOffice= branches;
+        		})
+        		console.log("Vehicle: ", vehicle);
+        		$.ajax({
+        			type: 'PUT',
+        			url: '/api/editVehicle',
+        			headers: createAuthorizationTokenHeader(),
+        			data : JSON.stringify(vehicle),
+        			success: function(data){
+        				console.log(data);
+        				showMessage('Vehicle is successfully changed!', 'green');
+        				$('#dialogEditHRentVehicle').css('display', 'none');
+        				renderTableAllRentVehicles();
+        			},
+        			error: function (jqXHR) {
+                    	if (jqXHR.status == 401) {
+        					showMessage('Login as hotel administrator!', "orange");
+        				}else{
+        					showMessage('[' + jqXHR.status + "]  ", "red");
+        				}
+                    }
+        		});
+        	},
+        	error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  ", "red");
+				}
+            }
+        });
+	});
+	
+	$(document).on('click', "#quitDialogEditRentVehicle", function(){
+		$('#dialogEditHRentVehicle').css('display', 'none');
+	})
+	
 	$(document).on('click', '#makeQuickReservation', function() {
 			console.log("heeeej");
 			$('#dialogRentView').css('display', 'block');
@@ -282,8 +367,9 @@ $(document).ready(function() {
 				for(var i=0;i<vehicles.length;i++){
 					var red = vehicles[i];
 					removeVehicleID = "removeVehicleID"+ red.id;
+					editVehicleID="editVehicleID" + red.id;
 					$('#vehicleTableRemove tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.destination.name}</td><td>-</td><td>${red.price}</td><td>
-					<button id=${removeVehicleID}>Remove vehicle</button></td></tr>`);
+					<button id=${removeVehicleID}>Remove vehicle</button></td><td><button id=${editVehicleID}>Edit vehicle</button></td></tr>`);
 				}
 			},
 			error: function (jqXHR, exception) {

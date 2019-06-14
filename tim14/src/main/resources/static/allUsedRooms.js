@@ -13,7 +13,7 @@ $(document).ready(function(){
 				console.log("-->", red);
 				$('#roomsHistory tr:last').after(`<tr><td>${red.roomNumber}</td><td>${red.bedNumber}</td><td>${red.floor}</td><td>${red.hotel.name}</td><td><button id=${buttonID}>Rate</button></td></tr>`);
 			}
-			$('#rateDiv').css("display","none");
+			$('#outDiv').css("display","none");
 		})
 	$(document).on('click','table button',function(e){
 		console.log(e.target.id);
@@ -36,7 +36,7 @@ $(document).ready(function(){
 	    				i++;}
 	    			else return false;
 	   		    })	    			
-	        $('#rateDiv').css("display","block");
+	        $('#outDiv').css("display","block");
 	       })
 		}
 	})
