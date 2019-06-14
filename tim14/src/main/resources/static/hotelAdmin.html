@@ -51,7 +51,7 @@
 	<div class="menuDiv">
 		<button id="addRoomBtn">Add room</button>
 		<button id="makeQuickReservation">Make quick reservation</button>
-		<button id="addHotelServiceBtn">Add hotel service</button>
+		<button id="addHotelServiceBtn">Hotel services</button>
 		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
 		<button style="float: right; margin-right:20px;" id="editProfileBtn">Edit profile</button>
 		<button style="float: right; margin-right:20px;" id="editHotelBtn">Edit hotel</button>
@@ -228,6 +228,7 @@
 	
 	<div id="dialogNewHotelService" class="dialog">
 		<div class="dialogContent">
+			<p id="myPServiceSave" style="display:none"></p>
 			<h1>New hotel service</h1>
 			<table>
 				<tr>
@@ -241,6 +242,16 @@
 			</table>
 			<br>
 			<button id="confirmAddingHotelServiceBtn">Add service</button>
+			<br><br><br>
+			<h1>Discount on rooms with extra services</h1>
+			<table>
+				<tr>
+					<td>Discount (0% - 100%): </td>
+					<td><input type="number" id="extraDiscountHotel" min="0" max="100" required> %</td>
+				</tr>
+			</table>
+			<br>
+			<button id="confirmExtraDiscount">Save discount</button>
 			<button id="quitDialogHotelService">Close</button>
 		</div>
 	</div>

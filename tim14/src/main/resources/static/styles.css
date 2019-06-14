@@ -162,6 +162,24 @@ tbody tr:nth-child(even) {
 	margin-right:15px;
 }
 
+.imagePreview2{
+	width: 200px;
+	height: 200px;
+	float: left;
+	background-size: cover;
+	background-image: url("./images/hotelImage.jpg");
+	margin-right:15px;
+}
+
+.imagePreview3{
+	width: 200px;
+	height: 200px;
+	float: left;
+	background-size: cover;
+	background-image: url("./images/rentImage.jpg");
+	margin-right:15px;
+}
+
 .mapButtonPreview button{
 	width: 200px;
 	height: 28px;
@@ -183,7 +201,7 @@ tbody tr:nth-child(even) {
 }
 
 .listItem{
-	width: 50%;
+	width: 80%;
 	height: 220px;
 	margin: auto;
   	border: rgba(0, 0, 0, 0.8);

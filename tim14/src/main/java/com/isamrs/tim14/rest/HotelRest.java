@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.HotelDAO;
+import com.isamrs.tim14.dto.ServiceDiscount;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RentACar;
 
@@ -74,6 +75,17 @@ public class HotelRest {
 			return new ResponseEntity<Hotel>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<Hotel>(newHotel, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/setRoomDiscountServices",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> saveHotel(@RequestBody ServiceDiscount discount) {
+		Hotel hotel = hotelDAO.setDiscount(discount.getDiscount());
+		return new ResponseEntity<Boolean>(true, HttpStatus.ACCEPTED);
 	}
 	
 	

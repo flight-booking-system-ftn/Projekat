@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.Hotel;
+import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.HotelService;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACar;
@@ -155,6 +156,15 @@ public class HotelDAOImpl implements HotelDAO {
 				}
 			//}
 		return all;
+	}
+
+	@Override
+	@Transactional
+	public Hotel setDiscount(int discount) {
+		HotelAdmin admin =(HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Hotel managedHotel = entityManager.find(Hotel.class, admin.getHotel().getId());
+		managedHotel.setExtraServiceDiscount(discount);
+		return managedHotel;
 	}
 
 }

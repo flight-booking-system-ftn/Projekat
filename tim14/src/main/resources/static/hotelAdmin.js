@@ -461,7 +461,60 @@ $(document).ready(function() {
 	});
 	
 	$(document).on('click','#addHotelServiceBtn', function(){
-		$('#dialogNewHotelService').css("display", "block");
+		$.ajax({
+	        type : 'GET',
+	        url : '/api/hotelAdmin/hotel',
+	        headers: createAuthorizationTokenHeader(),
+	        success: function(data){
+				console.log("Admin's hotel: ", data);
+				$('#myPServiceSave').val(data.id);
+				$('#extraDiscountHotel').val(data.extraServiceDiscount);
+				$('#dialogNewHotelService').css("display", "block");
+	        },
+	        error: function (jqXHR) {
+	        	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				}
+	        }
+	    });
+		
+	});
+	
+	$(document).on('click', '#confirmExtraDiscount', function(){
+		var discount = $('#extraDiscountHotel').val();
+		if(isNaN(discount) || discount == ""){
+			showMessage('Discount must be a number', 'orange');
+			return;
+		}
+		if(discount<0 || discount>100){
+			showMessage('Discount is not in limit between 0% and 100%', 'orange');
+			return;
+		}
+		
+		$.ajax({
+			type: 'PUT',
+			url: '/api/setRoomDiscountServices',
+			headers: createAuthorizationTokenHeader(),
+			data : JSON.stringify({
+				discount
+			}),
+			success: function(data){
+				console.log(data);
+				showMessage('Room discount on extra services is changed!', 'green');
+				$('#dialogNewHotelService').hide();
+			},
+			error: function (jqXHR) {
+            	if (jqXHR.status == 401) {
+					showMessage('Login as hotel administrator!', "orange");
+				}else{
+					showMessage('[' + jqXHR.status + "]  ", "red");
+				}
+            }
+		});
+		
+		
 	});
 	
 	$(document).on('click','#quitDialogHotelService', function(){
