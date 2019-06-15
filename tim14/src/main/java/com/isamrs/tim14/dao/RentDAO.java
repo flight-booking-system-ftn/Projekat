@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.isamrs.tim14.model.BranchOffice;
+import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RentACar;
 
 public interface RentDAO {
@@ -17,5 +18,6 @@ public interface RentDAO {
 	public List<RentACar> getRentsFromReservations();
 	public Integer getGrade(Integer id);
 	public void setGrade(Integer id, Integer grade);	
+	public RentACar changeRent(RentACar rent);
 	
 }

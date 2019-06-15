@@ -14,9 +14,12 @@ import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.BranchOffice;
 import com.isamrs.tim14.model.Grade;
+import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACar;
+import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.RentACarService;
+import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -149,5 +152,23 @@ public class RentDAOImpl implements RentDAO {
 		g.setUser(ru);
 		entityManager.persist(g);	
 		rent.getGrades().add(g);
+	}
+	
+	@Override	
+	@Transactional
+	public RentACar changeRent(RentACar rent) {
+		RentACar managedRent = entityManager.find(RentACar.class, rent.getId());
+		RentACarAdmin r = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Query query = entityManager.createQuery("SELECT r FROM RentACar r WHERE r.name = :rentName");
+		query.setParameter("rentName", rent.getName());
+		List<Vehicle> resultQuery = query.getResultList();
+		if(resultQuery.size()!=0 && !rent.getName().equals(r.getRentACar().getName())) {
+			return null;
+		}
+		managedRent.setDescription(rent.getDescription());
+		managedRent.getDestination().setAddress(rent.getDestination().getAddress());
+		managedRent.setName(rent.getName());
+		return managedRent;
+		
 	}
 }
