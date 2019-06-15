@@ -13,6 +13,42 @@
 
 <body>
 
+	<div id="passwordChangedFALSE" class="dialogContent">
+		<h2>Change password</h2>
+		<br>
+		<table>
+			<tr style="display: none;">
+				<td>
+					Old password: 
+				</td>
+				<td>
+					<input type="password" id="oldPasswordField">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					New password: 
+				</td>
+				<td>
+					<input type="password" id="newPasswordField">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Repeat new password: 
+				</td>
+				<td>
+					<input type="password" id="reNewPasswordField">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<button id="firstTimeChangePassword" value="Change password">Change password</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="passwordChangedTRUE">
 	<div class="menuDiv">
 		<button id="editRentBtn">Edit rent-a-car</button>
 		<button id="addVehicleBtn">Add vehicle</button>
@@ -207,6 +243,7 @@
 			<button id="editRentVehicleBtn">Edit room</button>
 			<button id="quitDialogEditRentVehicle">Close</button>
 		</div>
+	</div>
 	</div>
 </body>
 </html>
