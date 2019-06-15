@@ -32,7 +32,7 @@ $(document).ready(function(){
 			success: function(data) {
 				$("#friendsList tr#" + userID).remove();
 			}
-		});
+		});});
     
 	$(document).on('click', "#startSort", function(){
 		var criteria = $("#sortCriteria").val();
