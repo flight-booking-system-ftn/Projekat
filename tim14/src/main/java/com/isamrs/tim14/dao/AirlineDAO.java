@@ -37,4 +37,6 @@ public interface AirlineDAO {
 	public void setGrade(Integer id, Integer grade);
 	
 	public ResponseEntity<List<Airport>> getAllAirportsOfAirline();
+
+	public ResponseEntity<Airline> getAirline();
 }

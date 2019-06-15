@@ -18,12 +18,11 @@ import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.AirlineService;
 import com.isamrs.tim14.model.Airport;
+import com.isamrs.tim14.model.Destination;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.RegisteredUser;
-import com.isamrs.tim14.model.RentACar;
-import com.isamrs.tim14.model.VehicleReservation;
 
 @Repository
 public class AirlineDAOImpl implements AirlineDAO {
@@ -83,16 +82,29 @@ public class AirlineDAOImpl implements AirlineDAO {
 	@Override
 	@Transactional
 	public ResponseEntity<String> update(Airline airline) {
-		Query query = entityManager.createQuery("SELECT a FROM Airline a WHERE lower(a.name) LIKE :airline_name AND a.destination.id = :destination_id");
-		query.setParameter("airline_name", airline.getName());
-		query.setParameter("destination_id", airline.getDestination().getId());
-		
-		List<Airline> result = query.getResultList();
-		
-		if(result.size() > 0)
-			return new ResponseEntity("Airline with same name at the same destination already exists.", HttpStatus.FORBIDDEN);
-		
 		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Query query = null;
+		
+		if(airline.getName().equals(user.getAirline().getName())) {
+			query = entityManager.createQuery("SELECT d FROM Destination d");
+			
+			List<Destination> destinations = query.getResultList();
+			
+			for(Destination destination : destinations)
+				if(destination.getName().equals(airline.getDestination().getName()) && destination.getAddress().equals(airline.getDestination().getAddress()) && destination.getCountry().equals(airline.getDestination().getCountry())
+						&& !airline.getDestination().getName().equals(user.getAirline().getDestination().getName()) && !airline.getDestination().getCountry().equals(user.getAirline().getDestination().getCountry()) && !airline.getDestination().getAddress().equals(user.getAirline().getDestination().getAddress()))
+					return new ResponseEntity("Some object is already on this location. Please, enter another location.", HttpStatus.NOT_ACCEPTABLE);
+		} else {
+			query = entityManager.createQuery("SELECT a FROM Airline a WHERE lower(a.name) LIKE :airline_name AND lower(a.name) NOT LIKE :admin_airline_name");
+			query.setParameter("airline_name", airline.getName());
+			query.setParameter("admin_airline_name", user.getAirline().getName());
+			
+			List<Airline> result = query.getResultList();
+			
+			if(result.size() > 0)
+				return new ResponseEntity("Airline with same name already exists.", HttpStatus.NOT_ACCEPTABLE);
+		}
+		
 		Airline managedAirline = entityManager.find(Airline.class, user.getAirline().getId());
 
 		managedAirline.setName(airline.getName());
@@ -191,6 +203,14 @@ public class AirlineDAOImpl implements AirlineDAO {
 	public ResponseEntity<List<Airport>> getAllAirportsOfAirline() {
 		Query query = entityManager.createQuery("SELECT a FROM Airport a");
 		return new ResponseEntity(query.getResultList(), HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<Airline> getAirline() {
+		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		return new ResponseEntity<Airline>(user.getAirline(), HttpStatus.OK);
 	}
 
 }

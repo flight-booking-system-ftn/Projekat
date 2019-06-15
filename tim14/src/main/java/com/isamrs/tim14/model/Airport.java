@@ -23,7 +23,7 @@ public class Airport {
 	@Column(name = "name")
 	private String name;
 
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "destination_id")
 	private Destination destination;
 
