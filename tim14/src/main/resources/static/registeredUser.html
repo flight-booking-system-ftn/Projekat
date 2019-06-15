@@ -30,6 +30,7 @@
 			<button id="allFlightsBtn">History of flights</button>
 			<button id="allRoomsBtn">History of  rooms</button>
 			<button id="allVehiclesBtn">History of vehicles</button>
+			<button style="float: right; margin-right:210px; width:370px;" id="showReservationBtn">Show reservation</button>
 		</div>
 		
 		<div id="dialogProfile" class="dialog">
@@ -312,25 +313,35 @@
 	    	<p id="requestsMessage">No friendship requests.</p>
 	    </div>
 	    
-	    <div id="reservationsDiv" style="display: none;">
-	    	<h1 style="color: white;">Reservations</h1>
-	    	<br><br>
-	    	<h2>Flight</h2>
-	    	<br>
-	    	<table id="flightReservations">
-	    		<thead>
-	    			<tr><th>From</th> <th>To</th> <th>Departure</th> <th>Arrival</th> <th>Tickets</th> <th>Price</th></tr>
-	    		</thead>
-	    		
-	    		<tbody>
-	    		</tbody>
-	    	</table>
-	    	<br>
-	    	Use <input type="number" id="bonusPoints" min="0" value="0" style="width: 10%; text-align: center;"> of <label id="userBonusPoints"></label> bonus points.
-	    	<br><br><br>
-	    	<button id="saveReservations">Save reservations</button>
+	    <div id="reservationsDiv" class="dialog">
+	        <div class="dialogContent">
+		    	<h2>Flight</h2>
+		    	<table id="flightReservations">
+		    		<thead>
+		    			<tr><th>From</th> <th>To</th> <th>Departure</th> <th>Arrival</th> <th>Tickets</th> <th>Price</th></tr>
+		    		</thead>
+		    		<tbody>
+		    		</tbody>
+		    	</table>
+		    	<br>
+		    	<hr>
+		    	<h2>Room</h2>
+		    	<table id="reservedRoomTable">
+	    			<tr><th>Hotel</th><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Price</th></tr>
+		    	</table>
+		    	<br>
+		    	<h2>Hotel services</h2>
+		    	<table id="reservedHotelServicesTable">
+	    			<tr><th>Name</th><th>Price</th></tr>
+		    	</table>
+		    	<br><hr><br><br><br><br><br>
+		    	Use <input type="number" id="bonusPoints" min="0" value="0" style="width: 10%; text-align: center;"> of <label id="userBonusPoints"></label> bonus points.
+		    	<br><br><br>
+		    	<button id="saveReservations">Save reservations</button>
+		    	<button id="quitViewReservationBtn">Close</button>
+	        </div>
 	    </div>
-	
+	    
 		<div class="VelikiPregled" style="display: none;>
 	        <h1>Airlines: </h1> <input type="text" id="airlinedsaSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
 	        <br><br>
@@ -391,12 +402,21 @@
 	        </div>
 	   	</div>
   
-  		<script async defer
-	    	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS7Tj-OtjMMBnoW_d28O4VoYgt1-3MHGM&callback=initMap">
-	    </script>
+  		
 	<br><br><br><br><br><br><br><br><br><br>
 	<div id="searchSortContainer"></div>    
   	<div id="serviceContainer"></div>
+  	
+  	
+  	
+  	
+  	
+  	
+  	
+  	<script async defer
+    	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS7Tj-OtjMMBnoW_d28O4VoYgt1-3MHGM&callback=initMap">
+    </script>
+  	
 	</body>
 
 </html>

@@ -22,7 +22,7 @@ $(document).ready(function() {
         	if (jqXHR.status == 401) {
 				showMessage('Login as hotel administrator!', "orange");
 			}else{
-				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				showMessage('[' + jqXHR.status + "]  ", "red");
 			}
         }
 	});
@@ -88,7 +88,7 @@ $(document).ready(function() {
         	if (jqXHR.status == 401) {
 				showMessage('Login as hotel administrator!', "orange");
 			}else{
-				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+				showMessage('[' + jqXHR.status + "]  " , "red");
 			}
         }
     });
@@ -475,7 +475,7 @@ $(document).ready(function() {
 	        	if (jqXHR.status == 401) {
 					showMessage('Login as hotel administrator!', "orange");
 				}else{
-					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					showMessage('[' + jqXHR.status + "]  " , "red");
 				}
 	        }
 	    });
@@ -596,11 +596,15 @@ $(document).ready(function() {
 			return;
 		}
 		
+		
 		$.ajax({
 			type: 'GET',
 			url: '/api/hotelAdmin/hotel',
 			headers: createAuthorizationTokenHeader(),
 			success: function(data){
+				if(data.name != name){
+					data.extraServiceDiscount = -1;
+				}
 				data.name = name;
 				data.destination.address = address;
 				data.description = description;
