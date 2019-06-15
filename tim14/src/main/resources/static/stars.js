@@ -50,6 +50,7 @@ $(document).ready(function(){
     		url : "/api/setGradeForRent/"+entityID.substring(4)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
     		dataType : "application/json"})
+    		displayRents();
         }
     else if(entityID.startsWith("room")){
         $.ajax({
@@ -64,6 +65,7 @@ $(document).ready(function(){
     		url : "/api/setGradeForHotel/"+entityID.substring(5)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
     		dataType : "application/json"})
+    		displayHotels();
         }
     else if(entityID.startsWith("airline")){
         $.ajax({
@@ -71,6 +73,7 @@ $(document).ready(function(){
     		url : "/api/setGradeForAirline/"+entityID.substring(7)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
     		dataType : "application/json"})
+    	    displayAirlines();
         }
     else if(entityID.startsWith("flight")){
         $.ajax({

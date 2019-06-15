@@ -18,29 +18,16 @@
 	<body>
 	
 		<div class="menuDiv">
-			<button id="addAirlineBtn">Add airline</button>
-			
-			<button id="addHotelBtn">Add hotel</button>
-			<button id="addRentACarBtn">Add rent-a-car</button>
-			<button id="loginUserBtn">Login</button>
 			<button id="profileBtn">Profile</button>
-			<button id="addRoomBtn">Add room</button>
-			<button id="addVehicleBtn">Add vehicle</button>
+			<button id="showAirlinesBtn">Airlines</button>
+			<button id="showHotelsBtn">Hotels</button>
+			<button id="showRentsBtn">Rent-a-cars</button>
 			<button id="friendsList">Friends list</button>
-			<button id="registrationBtn">Registration</button>
-			<button id="logoutBtn">Logout</button>
-			<button id="allFlightsBtn">All flights</button>
-			<button id="allRoomsBtn">All rooms</button>
-			<button id="allVehiclesBtn">All vehicles</button>
+			<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
+			<button id="allFlightsBtn">History of flights</button>
+			<button id="allRoomsBtn">History of  rooms</button>
+			<button id="allVehiclesBtn">History of vehicles</button>
 		</div>
-			
-		<br><br><br><br><br><br>
-		<div class="menuDiv">
-			<button id="addAirlineAdminBtn">Add airline administrator</button>
-			<button id="addHotelAdminBtn">Add hotel administrator</button>
-			<button id="addRentACarAdminBtn">Add rent-a-car administrator</button>
-		</div>
-		<br><br><br><br>
 		
 		<div id="dialogProfile" class="dialog">
 	        <div class="dialogContent">
@@ -148,7 +135,7 @@
 		
 		<div id="dialogHotelView" class="dialog">
 	        <div class="dialogContent">
-	            <h1>Hotel review</h1>
+	           <h1>Hotel review</h1>
 	            <p id="hotelIdField" style="visibility: hidden"></p>
 	            <table>
 					<tr><td colspan="2"><h3 id="pNameOfChosenHotel">Hotel</h3></td></tr>
@@ -226,12 +213,17 @@
 	
 		<div id="dialogRentView" class="dialog">
 	        <div class="dialogContent">
-	            <h1>Rent-a-car review</h1>
+	           <h1>Rent-a-car review</h1>
 	            <p id="rentIdField" style="visibility: hidden"></p>
 	            <table>
-					<tr><td colspan="2"><h3 id="pNameOfChosenRent">Rent-a-car</h3></td></tr>
+					<tr><td colspan="2"><h3 id="pNameOfChosenRent">Hotel</h3></td></tr>
 					<tr><td>Description: </td><td><p id="pDescriptionOfChosenRent">Description</p></td></tr>
-					<tr><td>Branch offices: </td><td><p id="pBranchesOfChosenRent">Branch offices</p></td></tr>
+					<tr><td>Destination: </td><td><p id="pDestinationOfChosenRent">Destination</p></td></tr>
+				</table>
+				<br>
+				 <h1>Branch offices</h1>
+	            <table id="RentBranchOfficeTable">
+					<tr><th>Address</th><th>City</th><th>Country</th></tr>
 				</table>
 				<br>
 				<br>
@@ -305,7 +297,7 @@
 	        </div>
 		</div>
 		
-		<div id="friends">
+		<div id="friends" style="display: none;>
 	    	<h1 style="color: white;">Search users</h1>
 	    	<br><br>
 	    	<input type="text" id="searchUsersInput" placeholder="Search"> &nbsp; &nbsp; <button id="searchUsersButton">Search</button>
@@ -318,16 +310,16 @@
 	    	<p id="requestsMessage">No friendship requests.</p>
 	    </div>
 	
-		<div class="VelikiPregled">
-	        <h1>Airlines: </h1> <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
+		<div class="VelikiPregled" style="display: none;>
+	        <h1>Airlines: </h1> <input type="text" id="airlinedsaSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
 	        <br><br>
-	        <select id="sortCriteriaAirline">
+	        <select id="sortCrisdateriaAirline">
 			<option value="name">Name</option>
 			<option value="destination">Destination</option>
 			</select>
-			<button id="sortAirlineBtn">Sort</button>
+			<button id="sortAirldsaineBtn">Sort</button>
 			<br><br>
-	        <table id="airlineTable">
+	        <table id="airlidsaneTable">
 	            <thead>
 	            	<tr><th>Name</th><th>Action</th><th></th></tr>
 	            </thead>
@@ -337,40 +329,7 @@
 	        </table>
 		</div>
 		
-		<div class="VelikiPregled">
-	        <h1>Hotels: </h1> <input type="text" id="hotelNameSearchInput" placeholder="Hotel name">
-	        <input type="text" id="hotelDestinationSearchInput" placeholder="Hotel destination">
-	        <input type="text" placeholder="Check in" id="hotelSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
-	        <input type="text" placeholder="Check out" id="hotelSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
-	         <button id="hotelSearchBtn" value="Search hotels">Search</button>
-			<br><br>
-			<select id="sortCriteriaHotel">
-			<option value="name">Name</option>
-			<option value="destination">Destination</option>
-			</select>
-			<button id="sortHotelBtn">Sort</button>
-				<br><br>
-			<table id="hotelTable">
-	            <tr><th>Name</th><th>Destination</th><th>Grade</th><th></th></tr>
-	        </table>
-		</div>
 		
-		<div class="VelikiPregled">
-	        <h1>Rent-a-car: </h1> <input type="text" id="rentNameSearchInput" placeholder="Rent-a-car name">
-	        <input type="text" id="rentDestinationSearchInput" placeholder="Rent-a-car destination">
-	        <input type="text" placeholder="Start date" id="rentSearchCheckIn" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
-	        <input type="text" placeholder="End date" id="rentSearchCheckOut" onfocusin="(this.type='date')" onfocusout="(this.type='text')">
-	        <button id="rentSearchBtn" value="Search rent">Search</button><br><br>
-			<select id="sortCriteriaRent">
-			<option value="name">Name</option>
-			<option value="destination">Destination</option>
-			</select>
-			<button id="sortRentBtn">Sort</button>
-	       	<br><br>
-	        <table id="rentACarTable">
-	            <tr><th>Name</th><th>Description</th><th>Grade</th><th>Branch offices</th><th></th><th></th></tr>
-	        </table>
-	    </div>
 	    
 <div id = "outDiv" class='dialog'>
 	<div class='dialogContent'>	
@@ -414,7 +373,9 @@
   		<script async defer
 	    	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCS7Tj-OtjMMBnoW_d28O4VoYgt1-3MHGM&callback=initMap">
 	    </script>
-  
+	<br><br><br><br><br><br>
+	<div id="searchSortContainer"></div>    
+  	<div id="serviceContainer"></div>
 	</body>
 
 </html>
