@@ -83,8 +83,7 @@ $(document).ready(function(){
          $('#searchSortContainer').html('');
     	 $(`<div id="vehicleHistContainer" class="dialogContent"><table id="vehiclesHistory">
 			<tr><th>Brand</th><th>Model</th><th>Type</th><th>Rate</th></tr>
-		</table>
-		<button id= "allVehiclesCancel">Cancel</button></div>`).appendTo("#searchSortContainer");
+		</table></div>`).appendTo("#searchSortContainer");
     	 $.get({url:'/api/allUsedVehicles',
     			headers: createAuthorizationTokenHeader()}, function(data){
     				console.log("all vehicles: ", data);	 
@@ -107,8 +106,7 @@ $(document).ready(function(){
         $('#searchSortContainer').html('');
    	 $(`<div id="flightHistContainer" class="dialogContent"><table id="flightsHistory">
 			<tr><th>From</th><th>To</th><th>Length</th><th>Rate</th></tr>
-		</table>
-		<button id= "allFlightsCancel">Cancel</button></div>`).appendTo("#searchSortContainer");
+		</table></div>`).appendTo("#searchSortContainer");
    	$.get({url:'/api/allUsedFlights',
 		headers: createAuthorizationTokenHeader()}, function(data){
 			console.log("all flights: ", data);	 
@@ -156,6 +154,7 @@ $(document).ready(function(){
 	
 	$(document).on('click', "#allVehiclesCancel", function(){
         $("#vehicleHistContainer").css("display", "none");
+        displayAirlines();
         
 	})
     
@@ -186,7 +185,8 @@ $(document).ready(function(){
 	})
 	
 	$(document).on('click', "#allFlightsCancel", function(){
-		$("#flighHistContainer").css("display", "none");
+		$("#flightHistContainer").css("display", "none");
+		displayAirlines();
 	})
 	
     $(document).on('click','#allRoomsBtn',function(){
@@ -194,7 +194,7 @@ $(document).ready(function(){
         $('#searchSortContainer').html('');
    	 $(`<div id="roomHistContainer" class="dialogContent"><table id="roomsHistory">
 			<tr><th>Room number</th><th>Bed number</th><th>Floor</th><th>Hotel</th><th>Rate</th></tr>
-		</table><button id= "allRoomsCancel">Cancel</button></div>`).appendTo("#searchSortContainer");
+		</table></div>`).appendTo("#searchSortContainer");
    	$.get({url:'/api/allUsedRooms',
 		headers: createAuthorizationTokenHeader()}, function(data){
 			console.log("all Rooms: ", data);	 
@@ -241,6 +241,7 @@ $(document).ready(function(){
 	
 	$(document).on('click', "#allRoomsCancel", function(){
 		 $("#roomHistContainer").css("display", "none");
+		 displayAirlines();
 	})
 	
  /* 1. Visualizing things on Hover - See next part for action on click */
@@ -283,8 +284,8 @@ $(document).ready(function(){
     $.ajax({
 		type : 'POST',
 		url : "/api/setGradeForVehicle/"+entityID.substring(7)+"/"+onStar,
-		headers: createAuthorizationTokenHeader(),
-		dataType : "application/json"})
+		headers: createAuthorizationTokenHeader()
+		})
     }
     
     else if(entityID.startsWith("rent")){
@@ -292,41 +293,47 @@ $(document).ready(function(){
     		type : 'POST',
     		url : "/api/setGradeForRent/"+entityID.substring(4)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
-    		dataType : "application/json",
-    		success: function(){displayRents();}})
+    		success: function(){displayRents();}}
+    		)
     		
         }
     else if(entityID.startsWith("room")){
         $.ajax({
     		type : 'POST',
     		url : "/api/setGradeForRoom/"+entityID.substring(4)+"/"+onStar,
-    		headers: createAuthorizationTokenHeader(),
-    		dataType : "application/json"})
+    		headers: createAuthorizationTokenHeader()})
         }
     else if(entityID.startsWith("hotel")){
+    	console.log(entityID.substring(5) + ">>>>>>> " + onStar);
         $.ajax({
-    		type : 'POST',
+    		type : 'GET',
     		url : "/api/setGradeForHotel/"+entityID.substring(5)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
-    		dataType : "application/json",
-    		success: function(){displayHotels();}})
-    		displayHotels();
+    		success: function(){
+    			console.log("<<<<<<<<HOTEL>>>>>>>>");
+    			displayHotels();
+    			},
+    		error : function(e){
+    			console.log(e);
+    		}
+        })
         }
     else if(entityID.startsWith("airline")){
         $.ajax({
     		type : 'POST',
     		url : "/api/setGradeForAirline/"+entityID.substring(7)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
-    		dataType : "application/json",
-    		success: function(){displayAirlines();}})
-    	    
+    		success: function(){
+    			console.log("****AAA");
+    			displayAirlines();
+    		}})
         }
     else if(entityID.startsWith("flight")){
         $.ajax({
     		type : 'POST',
     		url : "/flight/setGradeForFlight/"+entityID.substring(6)+"/"+onStar,
-    		headers: createAuthorizationTokenHeader(),
-    		dataType : "application/json"})
+    		headers: createAuthorizationTokenHeader()
+    		})
         }
     $('#outDiv').css("display","none");
   });
@@ -682,7 +689,7 @@ $(document).ready(function(){
             }
             $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>{rate}</div></div>`).appendTo("#serviceContainer");
+            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
         }
 		
 		
@@ -718,6 +725,8 @@ $(document).ready(function(){
 			data.sort((a, b) => (a.destination.name > b.destination.name) ? 1 : -1);
 		var airlines = data;
 		console.log("airlines",airlines);
+		 $.get({url :"/api/reservedAirlines",
+				headers: createAuthorizationTokenHeader()},  function(reserved){
 		 for(var i=0;i<airlines.length;i++){
 	            var red = airlines[i];
 	            var locationID = "mapLocationAirline" + red.id;
@@ -745,8 +754,8 @@ $(document).ready(function(){
 	            }
 	            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
 	            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-	            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
-	        }
+	            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
+	        }});
 		/*var table = $("table#airlineTable tbody");
 		table.empty();
 		$.get({url :"/api/reservedAirlines",
@@ -1590,7 +1599,10 @@ $(document).ready(function(){
 		
 		$("div#dialogProfile").hide();
 	});
- 
+	
+	$(document).on('click', "#closeProfileDialog", function(){
+		$("#dialogProfile").hide();
+	})
     //----------------------------------------
 });
 
@@ -1657,38 +1669,54 @@ var renderAirlineTableSearch = function(){
     var text = $('#airlineSearchInput').val();
     
     if(text == ""){
-        renderAirlineTable();
+        displayAirlines();
         return;
     }
     
-    $.get('/api/airlinesSearch/'+text, function(data){
-    	var table = $("table#airlineTable tbody");
-    	table.empty();
-    	globalAirline = data;
-    	$.each(data, function(index, airline) {
-    		$.get({url :"/api/reservedAirlines",
-    			headers: createAuthorizationTokenHeader()},  function(reserved){
-    				$.each(data, function(index, airline) {
-    					var check = 0;
-    					for(var k=0; k<reserved.length; k++){
-    	         			if(reserved[k].id == airline.id){
-    	         				check=1;
-    	         				break;
-    	         			}
-    	         		}
-    	         		var rate = "";
-    	         		if(check == 1){
-    	         			rate = "<td><button id=rateAirline"+ airline.id+">Rate</button></td>"
-    	         		}
-    	         		var tr = $("<tr id='" + airline.id + "'><td>" + airline.name + "</td> <td><button class='airlineDetails'>More details</button></td>"+rate+"</tr>");
-    	         		
-    	         		table.append(tr);
-    				});
-    			});
-    		})
-    	}) 
-	}
-
+    $.get('/api/airlinesSearch/'+text, function(airlines){
+    	 $('#serviceContainer').html('');
+         $("#searchSortContainer").html('');
+         $(`<div class="VelikiPregled">  <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
+ 	        <br><br>
+ 	        <select id="sortCriteriaAirline">
+ 			<option value="name">Name</option>
+ 			<option value="destination">Destination</option>
+ 			</select>
+ 			<button id="sortAirlineBtn">Sort</button></div>`).appendTo("#searchSortContainer");
+         $.get({url :"/api/reservedAirlines",
+ 			headers: createAuthorizationTokenHeader()},  function(reserved){
+ 		console.log(reserved);
+         for(var i=0;i<airlines.length;i++){
+             var red = airlines[i];
+             var locationID = "mapLocationAirline" + red.id;
+             var detailViewButtonID = "airlineDetailsBtn" + red.id;
+             var grade = 0;
+             var sum = 0;
+             for(var j=0;j<red.grades.length;j++){
+             	sum += red.grades[j].grade;
+             }
+             if(red.grades.length!=0){
+             	grade = sum/red.grades.length;
+             }else{
+             	grade = '-';
+             }
+             var check = 0;
+             for(var k=0; k<reserved.length; k++){
+             	if(reserved[k].id == airlines[i].id){
+             		check=1;
+             		break;
+             	}
+             }
+             var rate = "";
+             if(check == 1){
+             	rate = "<button id='rateAirline"+ red.id+"'>Rate</button>"
+             }
+             $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
+         }})
+	})
+}
 var renderHotelTable = function(){
 	$('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th><th></th></tr>`);
     $.get("/api/hotels", function(data){
@@ -1754,10 +1782,11 @@ var renderHotelTableSearch = function(){
 	}
 	text = hotelName+"/"+hotelDestination+"/"+checkInTS+"/"+checkOutTS;
 	console.log('/api/hotelsSearch/'+text);
-   // $('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th><th></th></tr>`);
     $.get('/api/hotelsSearch/'+text, function(data){
         console.log("Hotels: ", data);
         hotels = data;
+        $.get({url :"/api/reservedHotels",
+            headers: createAuthorizationTokenHeader()},  function(reserved){
         $('#serviceContainer').html('');
         for(var i=0;i<hotels.length;i++){
             var red = hotels[i];
@@ -1786,28 +1815,8 @@ var renderHotelTableSearch = function(){
             }
             $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
-        }
-        
-        /* $.get({url :"/api/reservedHotels",
-            headers: createAuthorizationTokenHeader()},  function(reserved){
-        for(var i=0;i<data.length;i++){
-        	var check = 0;
-            var red = data[i];
-            var btnID = "hotelDetailViewBtn" + red.id;
-            for(var k=0; k<reserved.length; k++){
-            	if(reserved[k].id == data[i].id){
-            		check=1;
-            		break;
-            	}
-            }
-            var rate = "";
-            if(check == 1){
-            	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
-            }
-            $('#hotelTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.name}</td><td> - </td><td><button id=${btnID}>More details</button></td></td><td>${rate}</td></tr>`);
-        }
-    });*/
+            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
+        }})
     });
 }
 
@@ -1899,7 +1908,7 @@ var renderRentACarTableSearch = function(){
             }
             $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rent}</div></div>`).appendTo("#serviceContainer");
+            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
         }
         
             })
@@ -2051,6 +2060,7 @@ function calculatePriceVehicle(vehicles, days){
 
 
 var displayAirlines = function(){
+	console.log("Ejjj");
     $.get("/api/airlines", function(airlines){
         console.log("Airlines: ", airlines);
         $('#serviceContainer').html('');
@@ -2098,6 +2108,7 @@ var displayAirlines = function(){
 }
 
 var displayHotels = function(){
+	console.log("<<<<<<<<DISPLAY H>>>>>>>>");
     $.get("/api/hotels", function(hotels){
         console.log("Hotels: ", hotels);
         globalHotel = hotels;
@@ -2139,7 +2150,7 @@ var displayHotels = function(){
             }
             var rate = "";
             if(check == 1){
-            	rate = "<button id='rateRent"+ red.id+"'>Rate</button>"
+            	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
             }
             $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">

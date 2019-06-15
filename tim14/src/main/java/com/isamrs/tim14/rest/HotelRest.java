@@ -114,7 +114,7 @@ public class HotelRest {
 	
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@RequestMapping(value = "/setGradeForHotel/{id}/{grade}",
-			method = RequestMethod.POST,
+			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
 		hotelDAO.setGrade(id, grade);

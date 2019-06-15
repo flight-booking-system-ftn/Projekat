@@ -176,15 +176,14 @@ public class AirlineDAOImpl implements AirlineDAO {
 		for(Grade g : airline.getGrades()) {
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				g.setGrade(grade);
-				entityManager.persist(g);
 				return;
 				}
 		}
 		Grade g = new Grade();
 		g.setGrade(grade);
 		g.setUser(ru);
+		entityManager.persist(g);
 		airline.getGrades().add(g);
-		entityManager.persist(g);	
 	}
 
 	@Override
