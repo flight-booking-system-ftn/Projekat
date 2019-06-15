@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -90,7 +91,33 @@ public class HotelDAOImpl implements HotelDAO {
 		query.setParameter("hotelName", "%" + hotelName + "%");
 		query.setParameter("hotelDestination", "%" + hotelDestination + "%");
 		List<Hotel> result = query.getResultList();
-		return result;
+		List<Hotel> fullResult = new ArrayList<Hotel>();
+		List<Room> rooms = new ArrayList<Room>();
+		
+		boolean check = true;
+		Date arrivalDate = new Date(checkIn);
+		Date departureDate =  new Date(checkOut);
+		
+		for(Hotel hotel : result) {
+			rooms.clear();
+			for(Room room : hotel.getRooms()) {
+				check = true;
+				for(RoomReservation reservation : room.getReservations()) {
+					if(!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
+						check = false;
+					}
+				}
+				if(check) {
+					rooms.add(room);
+					break;
+				}
+			}
+			if(!rooms.isEmpty()) {
+				fullResult.add(hotel);
+			}
+		}
+		
+		return fullResult;
 	}
 
 	@Override	
@@ -98,12 +125,15 @@ public class HotelDAOImpl implements HotelDAO {
 	public Hotel changeHotel(Hotel hotel) {
 		Hotel managedHotel = entityManager.find(Hotel.class, hotel.getId());
 		
-		Query query = entityManager.createQuery("SELECT h FROM Hotel h WHERE h.name = :hotelName");
-		query.setParameter("hotelName", hotel.getName());
-		List<Room> resultQuery = query.getResultList();
-		if(resultQuery.size()!=0) {
-			return null;
+		if(hotel.getExtraServiceDiscount().intValue() == -1) {
+			Query query = entityManager.createQuery("SELECT h FROM Hotel h WHERE h.name = :hotelName");
+			query.setParameter("hotelName", hotel.getName());
+			List<Room> resultQuery = query.getResultList();
+			if(resultQuery.size()!=0) {
+				return null;
+			}
 		}
+		
 		managedHotel.setDescription(hotel.getDescription());
 		managedHotel.getDestination().setAddress(hotel.getDestination().getAddress());
 		managedHotel.setName(hotel.getName());

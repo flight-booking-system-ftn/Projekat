@@ -10,7 +10,15 @@ var globalRent = null;
 var globalHotel = null;
 var globalAirline = null;
 var selectedAirline;
-var bigReservation = {};
+var bigReservation = {
+	flightReservation: null,
+	roomReservation: null,
+	vehicleReservation: null,
+	user: null,
+	discountPercentageBonusPoints: 0,
+	discountHotelService: 0,
+	bonusPoints: 0
+};
 
 $(document).ready(function(){
     
@@ -428,6 +436,14 @@ $(document).ready(function(){
     $(document).on('click','#closeMapBtn', function(){
     	$('#dialogMapView').hide();
     })
+    
+    $(document).on('click','#quitViewReservationBtn', function(){
+    	$('#reservationsDiv').hide();
+    })
+    
+    $(document).on('click','#showReservationBtn',function(){
+		$('#reservationsDiv').show();
+	});
 
     
     ////rate
@@ -693,6 +709,8 @@ $(document).ready(function(){
         }
 		
 		
+		
+		
 	    /*$.get({url :"/api/reservedHotels",
 	        headers: createAuthorizationTokenHeader()},  function(reserved){
 	        for(var i=0;i<data.length;i++){
@@ -799,8 +817,13 @@ $(document).ready(function(){
 				selected_hotel_services.push(red);
 			}
 		}
+		
 		var start = stringToDate($('#roomSearchArrivalDate').val());
 		var end = start + ($('#roomSearchDayNumber').val() - 1)*24*60*60*1000;	
+		if(start < new Date().getTime()-24*60*60*1000 || end < new Date().getTime()-24*60*60*1000){
+			showMessage("Cannot select past date", "orange");
+			return;
+		}
 		console.log("Selected rooms: ", selected_rooms);
 		console.log("Selected hotel services: ", selected_hotel_services);
 		if(selected_rooms.length == 0){
@@ -817,23 +840,48 @@ $(document).ready(function(){
 			"price": price
 		};
 		console.log("Hotel reservation: ", reservation);
-		$.ajax({
-			type : 'POST',
-			url : "/api/roomReservations",
-			headers: createAuthorizationTokenHeader(),
-			data : JSON.stringify(reservation),
-			success: function(){
-				$(location).attr('href',"/");
-				showMessage('Room reservation successful!', "green");
-			},
-			error: function (jqXHR, exception) {
-				if (jqXHR.status == 401) {
-					showMessage('Login first!', "orange");
-				}else{
-					showMessage('[' + jqXHR.status + "]  " + exception, "red");
-				}
-			}
-		})
+		
+		bigReservation.roomReservation = reservation;
+		showMessage('Room added to reservation list', "green");
+		$('#dialogHotelView').hide();
+		$('#selectedHotelRoomsTable').html('<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
+		
+		$('#reservedRoomTable').html('<tr><th>Hotel</th><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Price</th></tr>');
+		for(var i=0; i<reservation.rooms.length;i++){
+			var red = reservation.rooms[i];
+			var multi = parseInt($('#roomSearchDayNumber').val())+1;
+			$('#reservedRoomTable tr:last').after(`<tr><td>${reservation.hotel.name}</td><td>${red.roomNumber}</td><td>${red.floor}</td><td>${red.bedNumber}</td><td>${red.price*multi}</td></tr>`);
+		}
+		
+		
+		$('#reservedHotelServicesTable').html('<tr><th>Name</th><th>Price</th></tr>');
+		for(var i=0; i<reservation.services.length;i++){
+			var red = reservation.services[i];
+			var multi = parseInt($('#roomSearchDayNumber').val())+1;
+			$('#reservedHotelServicesTable tr:last').after(`<tr><td>${red.name}</td><td>${red.price*multi}</td></tr>`);
+		}
+		
+		$('#reservationsDiv').show();
+		
+		
+//		$.ajax({
+//			type : 'POST',
+//			url : "/api/roomReservations",
+//			headers: createAuthorizationTokenHeader(),
+//			data : JSON.stringify(reservation),
+//			success: function(){
+//				showMessage('Room reservation successful!', "green");
+//				$('#dialogHotelView').hide();
+//				$('#selectedHotelRoomsTable').html('<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
+//			},
+//			error: function (jqXHR, exception) {
+//				if (jqXHR.status == 401) {
+//					showMessage('Login first!', "orange");
+//				}else{
+//					showMessage('[' + jqXHR.status + "]  " + exception, "red");
+//				}
+//			}
+//		})
 	});
 	
 	$(document).on('click','#makeRentReservationBtn',function(){
@@ -872,8 +920,9 @@ $(document).ready(function(){
 			headers: createAuthorizationTokenHeader(),
 			data : JSON.stringify(reservation),
 			success: function(){
-				$(location).attr('href',"/");
 				showMessage('Vehicle reservation successful!', "green");
+				$('#dialogRentView').hide();
+				$('#selectedRentVehiclesTable').html('<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
 			},
 			error: function (jqXHR, exception) {
 				showMessage('[' + jqXHR.status + "]  " + exception, "red");
@@ -1267,7 +1316,7 @@ $(document).ready(function(){
 							}
 						});
 						
-						showMessage("Flight reservation added to current reservations.", "blue");
+						showMessage("Flight reservation added to current reservations.", "green");
 		    			
 		    			selectedSeats.forEach(function(seatID) {
 		    				$("div.seatDivForReservation#" + seatID).css("background-color", "red");
@@ -1386,7 +1435,7 @@ $(document).ready(function(){
 				tr.remove();
 			},
 			error: function(response) {
-				alert(response);
+				showMessage('error','red');
 			}
 		});
 	});
@@ -2171,10 +2220,10 @@ var displayAirlines = function(){
 }
 
 var displayHotels = function(){
-	console.log("<<<<<<<<DISPLAY H>>>>>>>>");
     $.get("/api/hotels", function(hotels){
         console.log("Hotels: ", hotels);
         globalHotel = hotels;
+        console.log(">>>>", bigReservation.flightReservation);
         $('#serviceContainer').html('');
         $('#searchSortContainer').html('');
         $(`<div class="VelikiPregled"> <input type="text" id="hotelNameSearchInput" placeholder="Hotel name">
@@ -2188,6 +2237,24 @@ var displayHotels = function(){
 			<option value="destination">Destination</option>
 			</select>
 			<button id="sortHotelBtn">Sort</button></div>`).appendTo("#searchSortContainer");
+        if(bigReservation.flightReservation != null){
+        	$('#hotelSearchCheckIn').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	$('#hotelSearchCheckIn').attr("disabled", "disabled");
+        	$('#hotelSearchCheckOut').val(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
+        	$('#hotelSearchCheckOut').attr("disabled", "disabled");
+        	$('#hotelDestinationSearchInput').val(bigReservation.flightReservation[0].flight.to.destination.name);
+        	$('#hotelDestinationSearchInput').attr("disabled", "disabled");
+        	
+        	$('#roomSearchArrivalDate').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	$('#roomSearchArrivalDate').attr("disabled", "disabled");
+        	const date1 = new Date(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	const date2 = new Date(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
+        	const diffTime = Math.abs(date2.getTime() - date1.getTime());
+        	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        	$('#roomSearchDayNumber').val(diffDays);
+        	$('#roomSearchDayNumber').attr("disabled", "disabled");
+        }
+        
         $.get({url :"/api/reservedHotels",
             headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<hotels.length;i++){
@@ -2215,9 +2282,11 @@ var displayHotels = function(){
             if(check == 1){
             	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
             }
-            $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
+            if(bigReservation.flightReservation == null){
+            	$(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+                    ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+                    <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
+            }
         }
     })});
 }
