@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RentDAO;
 import com.isamrs.tim14.model.BranchOffice;
+import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 
@@ -130,5 +131,19 @@ public class RentACarRest {
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
 		rentDAO.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/changeRent",
+			method = RequestMethod.PUT,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RentACar> changeHotel(@RequestBody RentACar rent) {
+		RentACar managedRent = rentDAO.changeRent(rent);
+		if(managedRent == null) {
+			return new ResponseEntity<RentACar>(HttpStatus.NOT_ACCEPTABLE);
+		}
+		return new ResponseEntity<RentACar>(managedRent, HttpStatus.CREATED);
 	}
 }

@@ -12,11 +12,12 @@
 </head>
 
 <body>
+
 	<div class="menuDiv">
+		<button id="editRentBtn">Edit rent-a-car</button>
 		<button id="addVehicleBtn">Add vehicle</button>
 		<button id="addBranchOfficeBtn">Add branch office</button>
 		<button id="makeQuickReservation">Make quick reservation</button>
-		<button id="showRentInfoBtn">Show rent-a-car vehicles</button>
 	
 		<button style="float: right; margin-right:20px;" id="logoutBtn">Logout</button>
 		<button style="float: right; margin-right:20px;" id="editProfileBtn">Edit profile</button>
@@ -104,8 +105,8 @@
 	        </div>
 	    </div>
 	    
-	<div id="dialogRentViewRemove" class="dialog">
-		<div class="dialogContent">
+	<div id="dialogRentViewRemove">
+		<div class="dialogContent" style="margin-top:60px;  width:75%;">
 			<h1>Rent info</h1>
 			<table>
 				<tr><td colspan="2"><h3 id="pNameOfChosenRentRemove">Rent</h3></td></tr>
@@ -113,12 +114,16 @@
 				<tr><td>Destination: </td><td><p id="pDestinationOfChosenRentRemove">Destination</p></td></tr>
 			</table>
 			<br>
+			 <h1>Branch offices</h1>
+	            <table id="RentBranchOfficeTable">
+					<tr><th>Address</th><th>City</th><th>Country</th></tr>
+				</table>
+			<br>
 			<h1>Vehicles</h1>
 			<table id="vehicleTableRemove">
 				<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th><th></th><th></th></tr>
 			</table>
 			<br>
-			<button id="quitDialogRentViewRemove">Close</button>
 		</div>
 	</div>
 	
@@ -158,6 +163,29 @@
 			<br>
 			<button id="editRentAdminProfile">Edit profile</button>
 			<button id="quitDialogEditRentAdmin">Close</button>
+		</div>
+	</div>
+	
+	<div id="dialogEditRentInformation" class="dialog">
+		<div class="dialogContent">
+			<h1>Edit rent information</h1>
+			<table>
+				<tr>
+					<td>Name: </td>
+					<td><input type="text" id="editRentInfoName" required></td>
+				</tr>
+				<tr>
+					<td>Address: </td>
+					<td><input type="text" id="editRentInfoAddress" required></td>
+		        </tr>
+		        <tr>
+					<td>Description: </td>
+					<td><input type="text" id="editRentInfoDescription" required></td>
+		        </tr>
+			</table>
+			<br>
+			<button id="confirmChangesRentInformationBtn">Edit rent</button>
+			<button id="quitDialogEditRentInfo">Close</button>
 		</div>
 	</div>
 	
