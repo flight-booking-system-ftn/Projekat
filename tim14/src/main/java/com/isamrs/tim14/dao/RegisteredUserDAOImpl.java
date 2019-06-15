@@ -36,8 +36,17 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 	@Override
 	@Transactional
 	public ResponseEntity<List<RegisteredUser>> searchUsers(String input) {
-		Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.username LIKE :username OR u.firstName LIKE :username OR u.lastName LIKE :username");
-		query.setParameter("username", input + "%");
+		Query query = null;
+		if(input.split(" ").length > 1) {
+			String[] tokens = input.split(" ");
+			
+			query = entityManager.createQuery("SELECT u FROM User u WHERE u.firstName LIKE :first_name AND u.lastName LIKE :last_name");
+			query.setParameter("first_name", tokens[0] + "%");
+			query.setParameter("last_name", tokens[1] + "%");
+		} else {
+			query = entityManager.createQuery("SELECT u FROM User u WHERE u.firstName LIKE :input OR u.lastName LIKE :input");
+			query.setParameter("input", input + "%");
+		}
 		
 		List<RegisteredUser> users = query.getResultList();
 		
@@ -56,6 +65,9 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 				}
 			}
 		}
+		
+		for(RegisteredUser user : result)
+			System.out.println("PRONADJENI KORISNIK: " + user.getFirstName() + " " + user.getLastName());
 		
 		return new ResponseEntity<List<RegisteredUser>>(result, HttpStatus.OK);
 	}

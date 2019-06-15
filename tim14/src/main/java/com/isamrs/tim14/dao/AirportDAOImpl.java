@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.Airport;
+import com.isamrs.tim14.model.Destination;
 
 @Repository
 public class AirportDAOImpl implements AirportDAO {
@@ -28,15 +29,21 @@ public class AirportDAOImpl implements AirportDAO {
 	@Override
 	@Transactional
 	public ResponseEntity<String> save(Airport airport) {
+		Query query = entityManager.createQuery("SELECT d FROM Destination d");
+		List<Destination> destinations = query.getResultList();
+		
+		for(Destination destination : destinations)
+			if(destination.getName().equals(airport.getDestination().getName()) && destination.getAddress().equals(airport.getDestination().getAddress()) && destination.getCountry().equals(airport.getDestination().getCountry()))
+				return new ResponseEntity("Some object is already on this location. Please, enter another location.", HttpStatus.NOT_ACCEPTABLE);
+		
 		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		for(Airport a : user.getAirline().getAirports())
-			if(a.getName().equals(airport.getName()) && a.getDestination().getId() == airport.getDestination().getId())
+			if(a.getName().equals(airport.getName()))
 				return new ResponseEntity("Airport already exists in airline.", HttpStatus.FORBIDDEN);
 		
-		Query query = entityManager.createQuery("SELECT a FROM Airport a WHERE a.name = :airport_name AND a.destination.id = :destination_id");
+		query = entityManager.createQuery("SELECT a FROM Airport a WHERE a.name = :airport_name");
 		query.setParameter("airport_name", airport.getName());
-		query.setParameter("destination_id", airport.getDestination().getId());
 		
 		List<Airport> result = query.getResultList();
 		Airline managedAirline = entityManager.find(Airline.class, user.getAirline().getId());

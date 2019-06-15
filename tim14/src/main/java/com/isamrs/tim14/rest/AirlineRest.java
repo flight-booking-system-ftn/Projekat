@@ -93,6 +93,12 @@ public class AirlineRest {
 	public ResponseEntity<Set<Flight>> getFlightsOfAirline() {
 		return airlineDAO.getFlightsOfAirline();
 	}
+	
+	@GetMapping("/airline/getAirline")
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	public ResponseEntity<Airline> getAirline() {
+		return airlineDAO.getAirline();
+	}
 
 	@RequestMapping(
 			value = "/reservedAirlines",

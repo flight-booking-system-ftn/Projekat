@@ -20,9 +20,13 @@ $(document).ready(function() {
         e.preventDefault();
 
         var airportName = $("input#airportName").val();
-        var destination = $("select#address").find(":selected").attr("id");
+        var name = $("input#name").val();
+        var address = $("input#address").val();
+        var country = $("input#country").val();
+        var latitude = $("input#latitude").val();
+        var longitude = $("input#longitude").val();
 
-        if(airportName == "") {
+        if(airportName == "" || name == "" || address == "" || country == "" || latitude == "" || longitude == "") {
             showMessage("Some fields are empty!", "red");
         } else {
         	$.ajax({
@@ -32,7 +36,11 @@ $(document).ready(function() {
         		data: JSON.stringify({
                     "name": airportName,
                     "destination": {
-                    	"id": destination
+                    	"name": name,
+                    	"address": address,
+                    	"country": country,
+                    	"latitude": latitude,
+                    	"longitude": longitude
                     }
         		}),
         		success: function(response) {

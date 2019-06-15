@@ -1,34 +1,20 @@
 $(document).ready(function() {
-	getDestinations();
-	
-	function getDestinations() {
-		$.ajax({
-			type: "GET",
-			url: "/api/destinations",
-			success: function(data) {
-				var select = $("select#address");
-				$.each(data, function(index, destination) {
-					var option = $("<option value='' id='" + destination.id + "'>" + destination.name + ", " + destination.country + "</option>");
-					
-					select.append(option);
-				});
-			}
-		});
-	}
-	
 	getAirline();
 	
 	function getAirline() {
 		$.ajax({
 			type: "GET",
-			url: "/api/airlines/1",
+			url: "/api/airline/getAirline",
+			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
-				$("input#name").val(data.name);
+				$("input#airlineName").val(data.name);
+				$("input#name").val(data.destination.name);
+				$("input#address").val(data.destination.address);
+		        $("input#country").val(data.destination.country);
+		        $("input#latitude").val(data.destination.latitude);
+		        $("input#longitude").val(data.destination.longitude);
+				$("input#description").val(data.destination.address);
 				$("input#description").val(data.description);
-				
-				$("select#address option").each(function() {
-					this.selected = (this.text == (data.destination.name + ", " + data.destination.country));
-				});
 			}
 		});
 	}
@@ -36,8 +22,12 @@ $(document).ready(function() {
 	$("form#editAirlineForm").submit(function(e) {
 		e.preventDefault();
 		
+		var airlineName = $("input#airlineName").val();
 		var name = $("input#name").val();
-		var address = $("select#address").find(":selected").attr("id");
+        var address = $("input#address").val();
+        var country = $("input#country").val();
+        var latitude = $("input#latitude").val();
+        var longitude = $("input#longitude").val();
 		var description = $("input#description").val();
 		
 		if(name == "" || description == "") {
@@ -46,8 +36,12 @@ $(document).ready(function() {
 			var airline = {
 				"name": name,
 				"destination": {
-					"id": address
-				},
+                	"name": name,
+                	"address": address,
+                	"country": country,
+                	"latitude": latitude,
+                	"longitude": longitude
+                },
 				"description": description
 			}
 			
