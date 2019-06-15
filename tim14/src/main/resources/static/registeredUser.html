@@ -45,12 +45,11 @@
 		        			<tr><td>Email:</td> <td><input type="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required="required"></td></tr>
 		        			<tr><td>City:</td> <td><input type="text" id="city" required="required"></td></tr>
 		        			<tr><td>Phone:</td> <td><input type="tel" id="phone" required="required"></td></tr>
-		        			<tr><td></td> <td><input type="submit" id="save" value="Save"></td></tr>
 		        		</tbody>
 		        	</table>
 	        	</form>
 	        	<br><br>
-	        	<button id="closeProfileDialog">Close</button>
+	        	<button id="saveProfile">Save</button> <button id="closeProfileDialog">Close</button>
 	        </div>
 		</div>
 		
@@ -118,7 +117,7 @@
 							<h3>Other passengers</h3>
 						</div>
 						
-						<input type="button" id="makeFlightReservation" value="Make reservation" disabled="disabled">
+						<input type="button" id="makeFlightReservation" value="Add to current reservations" disabled="disabled">
 					</div>
 				</div>
 				
@@ -209,7 +208,7 @@
 					<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Price</th><th></th></tr>
 				</table>
 				<br>
-				<button id="makeHotelReservationBtn">Make Reservation</button>
+				<button id="makeHotelReservationBtn" disabled="disabled">Make Reservation</button>
 	            <button id="quitDialogHotelView">Close</button>
 	        </div>
 	    </div>
@@ -295,7 +294,7 @@
 				<table id="quickVehicleReservationsTable">
 					<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Price</th><th>Start Destination</th><th>End Destination</th><th></th></tr>
 				</table>
-				<button id="makeRentReservationBtn">Make Reservation</button>
+				<button id="makeRentReservationBtn" disabled="disabled">Make Reservation</button>
 	            <button id="quitDialogRentView">Close</button>
 	        </div>
 		</div>
@@ -311,6 +310,25 @@
 	    	<h1 style="color: white;">Friendship requests</h1>
 	    	<br><br>
 	    	<p id="requestsMessage">No friendship requests.</p>
+	    </div>
+	    
+	    <div id="reservationsDiv" style="display: none;">
+	    	<h1 style="color: white;">Reservations</h1>
+	    	<br><br>
+	    	<h2>Flight</h2>
+	    	<br>
+	    	<table id="flightReservations">
+	    		<thead>
+	    			<tr><th>From</th> <th>To</th> <th>Departure</th> <th>Arrival</th> <th>Tickets</th> <th>Price</th></tr>
+	    		</thead>
+	    		
+	    		<tbody>
+	    		</tbody>
+	    	</table>
+	    	<br>
+	    	Use <input type="number" id="bonusPoints" min="0" value="0" style="width: 10%; text-align: center;"> of <label id="userBonusPoints"></label> bonus points.
+	    	<br><br><br>
+	    	<button id="saveReservations">Save reservations</button>
 	    </div>
 	
 		<div class="VelikiPregled" style="display: none;>

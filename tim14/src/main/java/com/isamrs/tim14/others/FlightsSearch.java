@@ -3,12 +3,21 @@ package com.isamrs.tim14.others;
 import java.util.List;
 
 public class FlightsSearch {
+	public int airlineID;
 	public String tripType, seatClass;
 	public Integer passengers, bags;
 	public List<FlightPathAndDate> data;
 	
 	public FlightsSearch() {
 		super();
+	}
+
+	public int getAirlineID() {
+		return airlineID;
+	}
+
+	public void setAirlineID(int airlineID) {
+		this.airlineID = airlineID;
 	}
 
 	public String getTripType() {
