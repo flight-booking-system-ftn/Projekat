@@ -134,15 +134,14 @@ public class HotelDAOImpl implements HotelDAO {
 		for(Grade g : hotel.getGrades()) {
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				g.setGrade(grade);
-				entityManager.persist(g);
 				return;
 				}
 		}
 		Grade g = new Grade();
 		g.setGrade(grade);
 		g.setUser(ru);
+		entityManager.persist(g);
 		hotel.getGrades().add(g);
-		entityManager.persist(g);	
 	}
 	
 	@Override

@@ -199,15 +199,14 @@ public class VehicleDAOImpl implements VehicleDAO {
 		for(Grade g : vehicle.getGrades()) {
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				g.setGrade(grade);
-				entityManager.persist(g);
 				return;
 				}
 		}
 		Grade g = new Grade();
 		g.setGrade(grade);
 		g.setUser(ru);
-		vehicle.getGrades().add(g);
-		entityManager.persist(g);	
+		entityManager.persist(g);
+		vehicle.getGrades().add(g);	
 	}
 	
 	@Override

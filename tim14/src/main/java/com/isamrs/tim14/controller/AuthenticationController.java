@@ -279,7 +279,7 @@ public class AuthenticationController {
 //				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
 //			}
 			ut = UserType.ROLE_REGISTEREDUSER;
-			redirectionURL = "/";
+			redirectionURL = "registeredUser.html";
 			}
 		else if (user instanceof AirlineAdmin) {
 			ut = UserType.ROLE_AIRLINEADMIN;

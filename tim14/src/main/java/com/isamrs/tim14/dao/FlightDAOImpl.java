@@ -196,14 +196,13 @@ public class FlightDAOImpl implements FlightDAO {
 		for(Grade g : flight.getGrades()) {
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				g.setGrade(grade);
-				entityManager.persist(g);
 				return;
 				}
 		}
 		Grade g = new Grade();
 		g.setGrade(grade);
 		g.setUser(ru);
-		flight.getGrades().add(g);
-		entityManager.persist(g);	
+		entityManager.persist(g);
+		flight.getGrades().add(g);	
 	}
 }
