@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RegisteredUserDAO;
-import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 
 @RestController
@@ -91,6 +90,12 @@ public class RegisteredUserRest {
 	@DeleteMapping("/registeredUser/removeFriend/{id}")
 	public ResponseEntity<String> removeFriend(@PathVariable Integer id) {
 		return registeredUserDAO.removeFriend(id);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@GetMapping("/registeredUser/getBonusPoints")
+	public ResponseEntity<Integer> getBonusPoints() {
+		return registeredUserDAO.getBonusPoints();
 	}
 	
 }

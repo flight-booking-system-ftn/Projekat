@@ -311,6 +311,16 @@ tbody tr:nth-child(even) {
 	border: 1px solid rgba(0, 0, 0, 0.6);
 }
 
+.dialogContent button[disabled] {
+	margin-left: 10px;
+	width: 170px;
+	height: 30px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #afafaf;
+	border: 1px solid rgba(175, 175, 175, 0.6);
+}
+
 /* --------------- RADOJCIN --------------- */
 table.searchResultTable {
 	margin-top: 100px;
@@ -384,7 +394,7 @@ div.seatDivForEdit:hover {
 	border-top: none;
 }
 
-#friends {
+#friends, #reservationsDiv {
 	background-color: rgba(0, 0, 0, 0.8);
 	padding: 30px;
 	border-radius: 10px;
@@ -392,14 +402,9 @@ div.seatDivForEdit:hover {
 	position: fixed;
 	top: 0px;
 	right: 0px;
+	color: white !important;
 }
 
-p#searchMessage {
-	color: white;
-	text-align: center;
-}
-
-p#requestsMessage {
-	color: white;
+p#searchMessage, p#requestsMessage {
 	text-align: center;
 }

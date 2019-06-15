@@ -335,6 +335,7 @@ $(document).ready(function(){
     	});
     	
     	var search = {
+    		"airlineID": -999,
     		"tripType": tripType,
     		"passengers": parseInt(passengers),
     		"seatClass": seatClass,

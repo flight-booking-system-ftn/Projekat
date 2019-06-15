@@ -207,5 +207,13 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 		
 		return null;
 	}
+	
+	@Override
+	@Transactional
+	public ResponseEntity<Integer> getBonusPoints() {
+		RegisteredUser loggedIn = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		return new ResponseEntity<Integer>(loggedIn.getBonusPoints(), HttpStatus.OK);
+	}
 
 }

@@ -19,7 +19,6 @@ import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Seat;
 import com.isamrs.tim14.model.SeatType;
-import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.others.FlightPathAndDate;
 import com.isamrs.tim14.others.FlightsSearch;
 
@@ -64,7 +63,14 @@ public class FlightDAOImpl implements FlightDAO {
 		List<Flight> flights;
 		
 		for(FlightPathAndDate data : values.getData()) {
-			Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+			Query query = null;
+			
+			if(values.getAirlineID() == -999)
+				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+			else {
+				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.airline.id = :airline_id AND f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+				query.setParameter("airline_id", values.getAirlineID());
+			}
 			query.setParameter("from_airport", data.getFrom());
 			query.setParameter("to_airport", data.getTo());
 			query.setParameter("bags", values.getBags());

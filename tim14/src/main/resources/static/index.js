@@ -10,6 +10,7 @@ var globalRent = null;
 var globalHotel = null;
 var globalAirline = null;
 var selectedAirline;
+var bigReservation = {};
 
 $(document).ready(function(){
     
@@ -344,7 +345,6 @@ $(document).ready(function(){
         $('#vehicleSearchDiv').css("display","none");
         $('#roomsSearchDiv').css("display","none");
         $('#flightSearchDiv').css("display","block");
-        getAirports(1);
         $('#arrivalDateTRFullSearch').hide();
     });
 
@@ -998,6 +998,7 @@ $(document).ready(function(){
     	
     	data = [];
     	
+    	var airlineID = $("p#airlineIdField").val();
     	var from1 = $("select#from1").find(":selected");
 		var to1 = $("select#to1").find(":selected");
 		var departureDate1 = $("input#departureDate1").val();
@@ -1054,6 +1055,7 @@ $(document).ready(function(){
     	});
     	
     	var search = {
+    		"airlineID": parseInt(airlineID),
     		"tripType": tripType,
     		"passengers": parseInt(passengers),
     		"seatClass": seatClass,
@@ -1211,6 +1213,7 @@ $(document).ready(function(){
 			headers: createAuthorizationTokenHeader(),
 			success: function(flight) {
 				var reservations = [];
+				
 				console.log(selectedSeats);
 				$.ajax({
 					type: "POST",
@@ -1218,6 +1221,8 @@ $(document).ready(function(){
 					headers: createAuthorizationTokenHeader(),
 					data: JSON.stringify(selectedSeats),
 					success: function(seats) {
+						var totalPrice = 0;
+						
 						seats.forEach(function(seat) {
 							var price = 0;
 							if(seat.type == "FIRST_CLASS")
@@ -1235,12 +1240,52 @@ $(document).ready(function(){
 								"discount": 0
 							};
 							
+							totalPrice += price;
+							
 							reservations.push(reservation);
 						});
 						
-						console.log(reservations);
+						bigReservation.flightReservation = reservations;
+						
+						console.log(bigReservation);
+						
+						var flightReservationsTable = $("table#flightReservations tbody");
+						flightReservationsTable.empty();
+						
+						var tr = $("<tr><td>" + flight.from.destination.name + "</td> <td>" + flight.to.destination.name + "</td> <td>" + formatDateDet(new Date(flight.departureDate)) + "</td> <td>" + formatDateDet(new Date(flight.arrivalDate)) + "</td> <td>" + reservations.length + "</td> <td>" + totalPrice + "</td></tr>");
+						
+						flightReservationsTable.append(tr);
 						
 						$.ajax({
+							type: "GET",
+							url: "/api/registeredUser/getBonusPoints",
+							headers: createAuthorizationTokenHeader(),
+							success: function(points) {
+								console.log("POENI: " + points);
+								$("input#bonusPoints").attr("max", points);
+								$("label#userBonusPoints").text(points);
+							}
+						});
+						
+						showMessage("Flight reservation added to current reservations.", "blue");
+		    			
+		    			selectedSeats.forEach(function(seatID) {
+		    				$("div.seatDivForReservation#" + seatID).css("background-color", "red");
+		    				$("div.seatDivForReservation#" + seatID).css("border", "0");
+		    			});
+		    			
+		    			$("input#makeFlightReservation").attr("disabled", "disabled");
+		    			$("div#seatsDiv").empty();
+		    			selectedSeats = [];
+		    			$("div#reservationSeatsModal").hide();
+		    			$("div#dialogAirlineView").hide();
+		    			
+		    			$("button#makeHotelReservationBtn").removeAttr("disabled");
+		    			$("button#makeRentReservationBtn").removeAttr("disabled");
+		    			
+		    			$("div#reservationsDiv").show();
+						
+						/*$.ajax({
 							type: "POST",
 							url: "/api/flightReservation/save",
 							headers: createAuthorizationTokenHeader(),
@@ -1257,6 +1302,9 @@ $(document).ready(function(){
 				    			$("div#seatsDiv").empty();
 				    			selectedSeats = [];
 				    			$("div#reservationSeatsModal").hide();
+				    			
+				    			$("button#makeHotelReservationBtn").removeAttr("disabled");
+				    			$("button#makeRentReservationBtn").removeAttr("disabled");
 				    		},
 				    		error: function (jqXHR, exception) {
 				    			if (jqXHR.status == 401) {
@@ -1265,7 +1313,7 @@ $(document).ready(function(){
 				    				showMessage(jqXHR, "red");
 				    			}
 							}
-						});
+						});*/
 					}
 				});
 			}
@@ -1290,6 +1338,7 @@ $(document).ready(function(){
 		 if(e.target.id.startsWith("airlineDetailsBtn")){
 	            selectedAirline = e.target.id.substr(17);
 	            console.log("airline id", selectedAirline);
+	            $("#airlineIdField").val(selectedAirline);
 		
 		$.ajax({
 			type: "GET",
@@ -1561,9 +1610,7 @@ $(document).ready(function(){
 	});
 	
 
-	$("form#profileForm").submit(function(e) {
-		e.preventDefault();
-		
+	$("button#saveProfile").click(function() {
 		var newPassword = $("input#newPassword").val();
 		var repeatedPassword = $("input#repeatedPassword").val();
 		
@@ -1603,6 +1650,22 @@ $(document).ready(function(){
 	$(document).on('click', "#closeProfileDialog", function(){
 		$("#dialogProfile").hide();
 	})
+	
+	$("button#saveReservations").click(function() {
+		if($("input#bonusPoints").val() == "") {
+			showMessage("Bonus points can't be empty.", "orange");
+			return;
+		}
+		//Postaviti novu max granicu za bonus poene i promeniti vrednost labele
+		
+		$("table#flightReservations tbody").empty();
+		
+		$("button#makeHotelReservationBtn").attr("disabled", "disabled");
+		$("button#makeRentReservationBtn").attr("disabled", "disabled");
+		
+		$("div#reservationsDiv").hide();
+	});
+	
     //----------------------------------------
 });
 

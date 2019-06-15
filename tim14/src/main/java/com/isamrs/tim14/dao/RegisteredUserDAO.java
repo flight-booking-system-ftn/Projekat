@@ -29,5 +29,7 @@ public interface RegisteredUserDAO {
 	public Collection<RegisteredUser> getUsersFriends();
 
 	public ResponseEntity<String> removeFriend(Integer id);
+
+	public ResponseEntity<Integer> getBonusPoints();
 	
 }

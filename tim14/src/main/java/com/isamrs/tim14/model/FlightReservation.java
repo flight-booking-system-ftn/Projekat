@@ -49,6 +49,14 @@ public class FlightReservation {
 	
 	@Column(name = "discount")
 	private Integer discount;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "room_reservation")
+	private RoomReservation roomReservation;
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "vehicle_reservation")
+	private VehicleReservation vehicleReservation;
 
 	public FlightReservation() {
 		super();
@@ -124,6 +132,22 @@ public class FlightReservation {
 
 	public void setDiscount(Integer discount) {
 		this.discount = discount;
+	}
+
+	public RoomReservation getRoomReservation() {
+		return roomReservation;
+	}
+
+	public void setRoomReservation(RoomReservation roomReservation) {
+		this.roomReservation = roomReservation;
+	}
+
+	public VehicleReservation getVehicleReservation() {
+		return vehicleReservation;
+	}
+
+	public void setVehicleReservation(VehicleReservation vehicleReservation) {
+		this.vehicleReservation = vehicleReservation;
 	}
 
 }
