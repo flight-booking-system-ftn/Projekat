@@ -12,6 +12,7 @@ var globalAirline = null;
 var selectedAirline;
 var bigReservation = {
 	flightReservation: null,
+	flights: [],
 	roomReservation: null,
 	vehicleReservation: null,
 	user: null,
@@ -1041,6 +1042,8 @@ $(document).ready(function(){
     	var passengers = $("input#passengers").val();
     	var seatClass = $("select#seatClass").find(":selected").text();
     	var bags = $("input#bags").val();
+    	var priceRange = parseInt($("input#priceRange").val());
+    	var durationRange = parseFloat($("input#durationRange").val());
     	
     	if(passengers == "" || bags == "") {
     		showMessage("Some fields are empty!", "red");
@@ -1111,6 +1114,8 @@ $(document).ready(function(){
     		"passengers": parseInt(passengers),
     		"seatClass": seatClass,
     		"bags": parseInt(bags),
+    		"priceRange": priceRange,
+    		"durationRange": durationRange,
     		"data": data
     	}
     	
@@ -1127,7 +1132,7 @@ $(document).ready(function(){
     			
     			$.each(data, function(index, result) {
     				if(result.length > 0) {
-    					var table = $("<table class='searchResultTable'></table>");
+    					var table = $("<table class='searchResultTable' id='" + index + "'></table>");
             			var caption = $("<caption style='color: white;'></caption>")
             			var thead = $("<thead><tr><th>Times</th> <th>Travel time</th> <th>Stops</th> <th>Airline</th> <th>First class price</th> <th>Business class price</th> <th>Economy class price</th> <th>Action</th></tr></thead>");
             			var tbody = $("<tbody></tbody>");
@@ -1178,11 +1183,14 @@ $(document).ready(function(){
     });
     
     var selectedFlight;
+    var selectedTable = -1;
     $(document).on("click", "input.select", function() {
     	var seatsDiv = $("div#seatsDiv"); //var seatsDiv = $("<div id='seatsDiv' style='text-align: center; height: " + ((data.length / 3) * 55) + "px;'></div>");
     	seatsDiv.empty();
     	
     	selectedFlight = $(this).parent().parent().attr("id");
+    	
+    	selectedTable = $(this).parent().parent().parent().parent().attr("id");
     	
     	$.ajax({
 			type: "GET",
@@ -1304,9 +1312,10 @@ $(document).ready(function(){
 							flightReservationsTable.empty();
 						} else {
 							bigReservation.flightReservation = bigReservation.flightReservation.concat(reservations);
-							console.log("NAKON KONKATENIRANJA: ");
-							console.log(bigReservation);
 						}
+						
+						bigReservation.flights[selectedTable] = flight;
+						console.log(bigReservation);
 						
 						var tr = $("<tr><td>" + flight.from.destination.name + "</td> <td>" + flight.to.destination.name + "</td> <td>" + formatDateDet(new Date(flight.departureDate)) + "</td> <td>" + formatDateDet(new Date(flight.arrivalDate)) + "</td> <td>" + reservations.length + "</td> <td>" + totalPrice + "</td></tr>");
 						
@@ -1771,12 +1780,19 @@ $(document).ready(function(){
 		//Postaviti novu max granicu za bonus poene i promeniti vrednost labele
 		
 		$("table#flightReservations tbody").empty();
+		bigReservation.flightReservation = null;
+		bigReservation.flights = [];
+		selectedTable = -1;
 		
 		$("button#makeHotelReservationBtn").attr("disabled", "disabled");
 		$("button#makeRentReservationBtn").attr("disabled", "disabled");
 		
 		$("div#reservationsDiv").hide();
 	});
+	
+	/*$("input#priceRange").on("input", function() {
+		console.log($(this).val());
+	});*/
 	
     //----------------------------------------
 });

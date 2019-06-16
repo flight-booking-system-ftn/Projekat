@@ -66,14 +66,15 @@ public class FlightDAOImpl implements FlightDAO {
 			Query query = null;
 			
 			if(values.getAirlineID() == -999)
-				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags AND f.flightDuration <= :flight_duration");
 			else {
-				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.airline.id = :airline_id AND f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.airline.id = :airline_id AND f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags AND f.flightDuration <= :flight_duration");
 				query.setParameter("airline_id", values.getAirlineID());
 			}
 			query.setParameter("from_airport", data.getFrom());
 			query.setParameter("to_airport", data.getTo());
 			query.setParameter("bags", values.getBags());
+			query.setParameter("flight_duration", values.getDurationRange());
 			
 			flights = query.getResultList();
 			List<Flight> flightResult = new ArrayList<Flight>();
@@ -84,21 +85,21 @@ public class FlightDAOImpl implements FlightDAO {
 					freeSeats = 0;
 					for(Seat seat : flight.getSeats()) {
 						if(seat.getEnabled() == true && seat.getBusy() == false) {
-							if(values.getSeatClass().equals("Economy") && seat.getType() == SeatType.ECONOMY) {
+							if(values.getSeatClass().equals("Economy") && seat.getType() == SeatType.ECONOMY && flight.getTicketPriceEconomyClass() <= values.getPriceRange()) {
 								freeSeats++;
 								if(freeSeats >= values.getPassengers()) {
 									flightResult.add(flight);
 									freeSeats = 0;
 									break;
 								}
-							} else if(values.getSeatClass().equals("Business") && seat.getType() == SeatType.BUSINESS) {
+							} else if(values.getSeatClass().equals("Business") && seat.getType() == SeatType.BUSINESS && flight.getTicketPriceBusinessClass() <= values.getPriceRange()) {
 								freeSeats++;
 								if(freeSeats >= values.getPassengers()) {
 									flightResult.add(flight);
 									freeSeats = 0;
 									break;
 								}
-							} else if(values.getSeatClass().equals("First Class") && seat.getType() == SeatType.FIRST_CLASS) {
+							} else if(values.getSeatClass().equals("First Class") && seat.getType() == SeatType.FIRST_CLASS && flight.getTicketPriceFirstClass() <= values.getPriceRange()) {
 								freeSeats++;
 								if(freeSeats >= values.getPassengers()) {
 									flightResult.add(flight);
@@ -118,10 +119,18 @@ public class FlightDAOImpl implements FlightDAO {
 		}
 		
 		if(values.getTripType().equals("Round trip")) {
-			Query query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags");
+			Query query = null;
+			
+			if(values.getAirlineID() == -999)
+				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags AND f.flightDuration <= :flight_duration");
+			else {
+				query = entityManager.createQuery("SELECT f FROM Flight f WHERE f.airline.id = :airline_id AND f.from = :from_airport AND f.to = :to_airport AND f.luggageQuantity >= :bags AND f.flightDuration <= :flight_duration");
+				query.setParameter("airline_id", values.getAirlineID());
+			}
 			query.setParameter("from_airport", values.getData().get(0).getTo());
 			query.setParameter("to_airport", values.getData().get(0).getFrom());
 			query.setParameter("bags", values.getBags());
+			query.setParameter("flight_duration", values.getDurationRange());
 			
 			flights = query.getResultList();
 			List<Flight> returningFlightResult = new ArrayList<Flight>();
@@ -132,21 +141,21 @@ public class FlightDAOImpl implements FlightDAO {
 					freeSeats = 0;
 					for(Seat seat : flight.getSeats()) {
 						if(seat.getEnabled() == true && seat.getBusy() == false) {
-							if(values.getSeatClass().equals("Economy") && seat.getType() == SeatType.ECONOMY) {
+							if(values.getSeatClass().equals("Economy") && seat.getType() == SeatType.ECONOMY && flight.getTicketPriceEconomyClass() <= values.getPriceRange()) {
 								freeSeats++;
 								if(freeSeats >= values.getPassengers()) {
 									returningFlightResult.add(flight);
 									freeSeats = 0;
 									break;
 								}
-							} else if(values.getSeatClass().equals("Business") && seat.getType() == SeatType.BUSINESS) {
+							} else if(values.getSeatClass().equals("Business") && seat.getType() == SeatType.BUSINESS && flight.getTicketPriceBusinessClass() <= values.getPriceRange()) {
 								freeSeats++;
 								if(freeSeats >= values.getPassengers()) {
 									returningFlightResult.add(flight);
 									freeSeats = 0;
 									break;
 								}
-							} else if(values.getSeatClass().equals("First Class") && seat.getType() == SeatType.FIRST_CLASS) {
+							} else if(values.getSeatClass().equals("First Class") && seat.getType() == SeatType.FIRST_CLASS && flight.getTicketPriceFirstClass() <= values.getPriceRange()) {
 								freeSeats++;
 								if(freeSeats >= values.getPassengers()) {
 									returningFlightResult.add(flight);

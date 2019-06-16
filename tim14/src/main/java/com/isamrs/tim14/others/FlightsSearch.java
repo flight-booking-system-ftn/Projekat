@@ -5,7 +5,8 @@ import java.util.List;
 public class FlightsSearch {
 	public int airlineID;
 	public String tripType, seatClass;
-	public Integer passengers, bags;
+	public Integer passengers, bags, priceRange;
+	public Double durationRange;
 	public List<FlightPathAndDate> data;
 	
 	public FlightsSearch() {
@@ -50,6 +51,22 @@ public class FlightsSearch {
 
 	public void setBags(Integer bags) {
 		this.bags = bags;
+	}
+
+	public Integer getPriceRange() {
+		return priceRange;
+	}
+
+	public void setPriceRange(Integer priceRange) {
+		this.priceRange = priceRange;
+	}
+
+	public Double getDurationRange() {
+		return durationRange;
+	}
+
+	public void setDurationRange(Double durationRange) {
+		this.durationRange = durationRange;
 	}
 
 	public List<FlightPathAndDate> getData() {
