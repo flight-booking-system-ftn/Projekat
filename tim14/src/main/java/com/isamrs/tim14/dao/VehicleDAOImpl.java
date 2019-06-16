@@ -64,7 +64,7 @@ public class VehicleDAOImpl implements VehicleDAO {
 		List<Vehicle> result = new ArrayList<Vehicle>();
 		check = true;
 		Date arrivalDate = new Date(start);
-		Date departureDate = new Date(start);
+		Date departureDate = new Date(end);
 		boolean mycheck = false;
 		if(startDest.equals("NO_INPUT")) {
 			mycheck = true;

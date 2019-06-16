@@ -369,9 +369,17 @@ $(document).ready(function() {
 			var start = stringToDate($('#vehicleSearchArrivalDate').val());
 			var end = start + ($('#vehicleSearchDayNumber').val()-1)*24*60*60*1000;	
 			console.log("Selected vehicles: ", selected_vehicles);
+			if($('#discountId').val() < 0 || $('#discountId').val() > 100){
+				showMessage("Discount must be between 0% and 100% ", 'orange');
+				return;
+			}
 			var price = calculatePrice(selected_vehicles, $('#vehicleSearchDayNumber').val());
-			var discount = (100 - $('#discountId').val())/100;
-			price = price * discount;
+			var discount = $('#discountId').val()
+			price = Math.round(price);
+			if(selected_vehicles.length == 0){
+				showMessage("Select at least 1 vehicle!", "orange");
+				return;
+			}
 			var link = '/api/branchOffice/'+$("#endDestination option:selected" ).val();
 			$.get(link, function(office){
 			var reservation = {
@@ -380,13 +388,10 @@ $(document).ready(function() {
 				"vehicles": selected_vehicles,
 				"rentACar": selected_vehicles[0].rentACar,
 				"price": price,
+				"discount": discount,
 				"endBranchOffice" : office
 			};
 			console.log("Vehicle reservation: ", reservation);
-			if(reservation.vehicles.length == 0){
-				showMessage("Select at least 1 vehicle!", "orange");
-				return;
-			}
 			$.ajax({
 				type : 'POST',
 				url : "/api/vehicleReservations",
