@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,5 +44,10 @@ public class SeatRest {
 	@PostMapping("/getSelectedSeats")
 	public ResponseEntity<Collection<Seat>> getSeats(@RequestBody Collection<Integer> seats) {
 		return seatDAO.getSeats(seats);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Seat> getSeat(@PathVariable Integer id) {
+		return seatDAO.getSeat(id);
 	}
 }

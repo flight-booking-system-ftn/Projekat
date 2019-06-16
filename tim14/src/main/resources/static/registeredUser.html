@@ -109,16 +109,33 @@
 						</div>
 						
 						<div id="chooseSeatsContent" class="tabcontent">
-							<h3>Choose seats</h3>
+							<h3 style="color: black;">Choose seats</h3>
 							<div id="seatsDiv" style="text-align: center; margin-top: 25px;"></div>
 						</div>
 		
 						<div id="inviteFriendsContent" class="tabcontent">
-							<h3>Invite friends</h3>
+							<h3 style="color: black;">Invite friends</h3>
+							<br>
+							<table id="inviteFriendsTable">
+								<thead>
+									<tr><th>First name</th> <th>Last name</th> <th>Passport number</th> <th>Action</th></tr>
+								</thead>
+								
+								<tbody>
+								</tbody>
+							</table>
 						</div>
 		
 						<div id="otherPassengersContent" class="tabcontent">
-							<h3>Other passengers</h3>
+							<h3 style="color: black;">Other passengers</h3>
+							Passenger <label id="indexOfPassenger">2</label> of <label id="freePassengers">0</label>
+							<br>
+							<table>
+								<tr><td>First name:</td> <td><input type="text" id="passengerFirstName"></td></tr>
+								<tr><td>Last name:</td> <td><input type="text" id="passengerLastName"></td></tr>
+								<tr><td>Passport number:</td> <td><input type="text" id="passengerPassportNumber"></td></tr>
+								<tr><td></td> <td><input type="button" id="nextPassenger" value="Next"></td></tr>
+							</table>
 						</div>
 						
 						<input type="button" id="makeFlightReservation" value="Add to current reservations" disabled="disabled">
@@ -303,7 +320,7 @@
 	        </div>
 		</div>
 		
-		<div id="friends" style="display: none;">
+		<div id="friends">
 	    	<h1 style="color: white;">Search users</h1>
 	    	<br><br>
 	    	<input type="text" id="searchUsersInput" placeholder="Search"> &nbsp; &nbsp; <button id="searchUsersButton">Search</button>
