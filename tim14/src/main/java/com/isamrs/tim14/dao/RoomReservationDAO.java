@@ -11,4 +11,5 @@ public interface RoomReservationDAO {
 	public ArrayList<RoomReservation> getQuickRoomReservations(String hotelID);
 	public RoomReservation saveQuick(String roomReservationID);
 	public Collection<Room> getRoomsHistory();
+	public RoomReservation getOneQuickReservation(Integer id);
 }

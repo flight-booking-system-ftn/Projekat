@@ -206,10 +206,10 @@
 				</table>
 				<h1>Quick Reservations</h1>
 				<table id="quickRoomReservationsTable">
-					<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Price</th><th></th></tr>
+					<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Original price</th><th>Sale (%)</th><th></th></tr>
 				</table>
 				<br>
-				<button id="makeHotelReservationBtn" disabled="disabled">Make Reservation</button>
+				<button id="makeHotelReservationBtn" disabled="disabled">Add to reservation list</button>
 	            <button id="quitDialogHotelView">Close</button>
 	        </div>
 	    </div>
@@ -327,13 +327,15 @@
 		    	<hr>
 		    	<h2>Room</h2>
 		    	<table id="reservedRoomTable">
-	    			<tr><th>Hotel</th><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Price</th></tr>
+	    			<tr><th>Hotel</th><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Arrival date</th><th>Departure date</th><th>Price</th></tr>
 		    	</table>
 		    	<br>
 		    	<h2>Hotel services</h2>
 		    	<table id="reservedHotelServicesTable">
 	    			<tr><th>Name</th><th>Price</th></tr>
 		    	</table>
+		    	<br>
+		    	<hr>
 		    	<br>
 		    	<h2>Vehicles</h2>
 		    	<table id="reservedVehicleTable">
