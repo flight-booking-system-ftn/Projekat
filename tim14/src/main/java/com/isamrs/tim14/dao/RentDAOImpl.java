@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -14,12 +15,10 @@ import org.springframework.stereotype.Repository;
 
 import com.isamrs.tim14.model.BranchOffice;
 import com.isamrs.tim14.model.Grade;
-import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.RentACarService;
-import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -81,18 +80,53 @@ public class RentDAOImpl implements RentDAO {
 
 	@Override
 	@Transactional
-	public List<RentACar> getRentSearch(String rentName, String rentDestination, String checkIn, String checkOut) {
+	public List<RentACar> getRentSearch(String rentName, String rentDestination, Long checkIn, Long checkOut) {
 		if(rentName.equals("NO_INPUT")) {
 			rentName = "";
 		}
 		if(rentDestination.equals("NO_INPUT")) {
 			rentDestination = "";
 		}
-		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE rent.name LIKE :rentName AND rent.destination.name LIKE :rentDestination");
+		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE rent.name LIKE :rentName");
 		query.setParameter("rentName", "%" + rentName + "%");
-		query.setParameter("rentDestination", "%" + rentDestination + "%");
-		List<RentACar> result = query.getResultList();
-		return result;
+		List<RentACar> result1 = query.getResultList();
+		System.out.println("<<<<<<<<<<<"+rentDestination);
+		List<RentACar> result = new ArrayList<RentACar>();
+		for(RentACar r : result1) {
+			for(BranchOffice b : r.getOffices()) {
+				System.out.println(">>>>>>>>>>>>>" +b.getDestination().getName());
+				if(b.getDestination().getName().equalsIgnoreCase(rentDestination)) {
+					result.add(r);
+					break;
+				}
+			}
+		}
+		List<RentACar> fullResult = new ArrayList<RentACar>();
+		List<Vehicle> vehicles = new ArrayList<Vehicle>();
+		boolean check = true;
+		Date arrivalDate = new Date(checkIn);
+		Date departureDate =  new Date(checkOut);
+		
+		for(RentACar rent : result) {
+			vehicles.clear();
+			for(Vehicle vehicle : rent.getVehicles()) {
+				check = true;
+				for(VehicleReservation reservation : vehicle.getReservations()) {
+					if(!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
+						check = false;
+					}
+				}
+				if(check) {
+					vehicles.add(vehicle);
+					break;
+				}
+			}
+			if(!vehicles.isEmpty()) {
+				fullResult.add(rent);
+			}
+		}
+		
+		return fullResult;
 	}
 	
 	@Override
