@@ -10,4 +10,5 @@ public interface VehicleReservationDAO {
 	public Collection<VehicleReservation> getQuickVehicleReservations(String hotelID);
 	public VehicleReservation saveQuickVehicleReservation(String reservationID);
 	public Collection<Vehicle> getVehicleHistory();
+	public VehicleReservation getOneQuickReservation(Integer id);
 }

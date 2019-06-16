@@ -535,14 +535,15 @@ $(document).ready(function(){
                         " (" + data.destination.name + ", " + data.destination.country + ")");
                 $('#roomSearchArrivalDate').val(formatDate(new Date()));
                 if(bigReservation.flightReservation != null){
-                	$('#roomSearchArrivalDate').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+                	$('#roomSearchArrivalDate').val(bigReservation.flights[0].arrivalDate.substring(0,10));
                 	$('#roomSearchArrivalDate').attr("disabled", "disabled");
-                	const date1 = new Date(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
-                	const date2 = new Date(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
-                	const diffTime = Math.abs(date2.getTime() - date1.getTime());
-                	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                	$('#roomSearchDayNumber').val(diffDays);
-                	$('#roomSearchDayNumber').attr("disabled", "disabled");
+                	if(bigReservation.flights[1]!=null){
+	                	const date1 = new Date(bigReservation.flights[0].arrivalDate.substring(0,10));
+	                	const date2 = new Date(bigReservation.flights[1].departureDate.substring(0,10));
+	                	const diffTime = Math.abs(date2.getTime() - date1.getTime());
+	                	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+	                	$('#roomSearchDayNumber').val(diffDays);
+	                	$('#roomSearchDayNumber').attr("disabled", "disabled");}
                 }
                 $.get('/api/quickRoomReservations/' + message, function(data){
                 	console.log("quick reservations: ", data);
@@ -625,15 +626,18 @@ $(document).ready(function(){
                 renderVehicleTable2(`/${message}/78123947/3214/true/true/NO_INPUT`,message);
                 $('#vehicleSearchArrivalDate').val(formatDate(new Date()));
                 if(bigReservation.flightReservation != null){
-                	$('#vehicleSearchArrivalDate').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+                	$('#vehicleSearchArrivalDate').val(bigReservation.flights[0].arrivalDate.substring(0,10));
                 	$('#vehicleSearchArrivalDate').attr("disabled", "disabled");
-                	const date1 = new Date(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
-                	const date2 = new Date(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
-                	const diffTime = Math.abs(date2.getTime() - date1.getTime());
-                	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                	$('#vehicleSearchDayNumber').val(diffDays);
-                	$('#vehicleSearchDayNumber').attr("disabled", "disabled");
+                	if(bigReservation.flights[1]!=null){
+	                	const date1 = new Date(bigReservation.flights[0].arrivalDate.substring(0,10));
+	                	const date2 = new Date(bigReservation.flights[1].departureDate.substring(0,10));
+	                	const diffTime = Math.abs(date2.getTime() - date1.getTime());
+	                	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+	                	$('#vehicleSearchDayNumber').val(diffDays);
+	                	$('#vehicleSearchDayNumber').attr("disabled", "disabled");
+                	}
                 }
+                console.log($("#rentIdField").val());
                 var link = '/api/rentBranches/'+$("#rentIdField").val();
                 $.get({url: link, 
         			headers: createAuthorizationTokenHeader()}, function(data){
@@ -645,24 +649,39 @@ $(document).ready(function(){
 		    		console.log(data);
 		            for(var i=0;i<data.length;i++){
 		                var red = data[i];
-		                select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
-		                select2.options[select2.options.length] = new Option(''+red.destination.name,''+red.id);
+		                select.options[select.options.length] = new Option(''+ red.destination.name,''+red.id);
+		                select2.options[select2.options.length] = new Option(''+ red.destination.name,''+red.id);
 		            }
+		            $.get('/api/quickVehicleReservations/' + message, function(data){
+		            	console.log("quick reservations: ", data);
+	                    renderQuickVehicleReservations(data);
+	                });
 		        });
-                $.get('/api/quickVehicleReservations/' + message, function(data){
-                	console.log("quick reservations: ", data);
-                    renderQuickVehicleReservations(data);
-                });
+                
             });
         }else if(e.target.id.startsWith('quickVehicleReservationNumber')){
         	var message = e.target.id.substr(29);
         	$.ajax({
-    			type : 'GET',
-    			url : "/api/reserveQuickVehicleReservation/"+message,
-    			headers: createAuthorizationTokenHeader(),
-    			success: function(){
-    				showMessage('Successfully reserved quick vehicle reservation');
-    				$('#dialogRentView').css('display', 'none');
+        		type: 'GET',
+        		url: '/api/getQuickReservationRent/' + message,
+        		headers: createAuthorizationTokenHeader(),
+    			success: function(reservation){
+    				console.log(reservation);
+    				bigReservation.vehicleReservation = reservation;
+    	    		showMessage('Vehicle added to reservation list', "green");
+    	    		$('#dialogRentView').hide();
+    	    		$('#selectedRentVehiclesTable').html('<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
+    	    		console.log("BIG RESERVATION : ", bigReservation);
+    	    		$('#reservedVehicleTable').html('<tr><th>Rent-a-car</th><th>Model</th><th>Brand</th><th>Type</th><th>Seats</th><th>Price</th></tr>');
+    	    		for(var i=0; i<reservation.vehicles.length;i++){
+    	    			var red = reservation.vehicles[i];
+    	    			var multi = parseInt($('#vehicleSearchDayNumber').val())+1;
+    	    			var diss = (100 - reservation.discount)/100;
+    	    			var myPrice = Math.round(red.price*multi*diss);
+    	    			$('#reservedVehicleTable tr:last').after(`<tr><td>${reservation.rentACar.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.seatsNumber}</td><td>${myPrice}</td></tr>`);
+    	    		}
+
+    	    		$('#reservationsDiv').show();
     			},
     			error: function (jqXHR, exception) {
     				if (jqXHR.status == 401) {
@@ -968,6 +987,10 @@ $(document).ready(function(){
 		console.log("Selected vehicles: ", selected_vehicles);
 		var price = calculatePriceVehicle(selected_vehicles, $('#vehicleSearchDayNumber').val());
 		var link = '/api/branchOffice/'+$("#endDestination option:selected" ).val();
+		if(selected_vehicles.length == 0) {
+			showMessage("Select at least 1 vehicle!", "orange");
+			return;
+		}
 		$.get(link, function(office){
 		var reservation = {
 			"start": new Date(start),
@@ -975,12 +998,9 @@ $(document).ready(function(){
 			"vehicles": selected_vehicles,
 			"rentACar": selected_vehicles[0].rentACar,
 			"price": price,
+			"discount": 0,
 			"endBranchOffice" : office
 		};
-		if(reservation.vehicles.length == 0){
-			showMessage("Select at least 1 vehicle!", "orange");
-			return;
-		}		
 		console.log("Vehicle reservation: ", reservation);
 		
 		bigReservation.vehicleReservation = reservation;
@@ -992,7 +1012,8 @@ $(document).ready(function(){
 		for(var i=0; i<reservation.vehicles.length;i++){
 			var red = reservation.vehicles[i];
 			var multi = parseInt($('#vehicleSearchDayNumber').val())+1;
-			var myPrice = Math.round(red.price*multi);
+			var diss = (100 - reservation.discount)/100;
+			var myPrice = Math.round(red.price*multi*diss);
 			$('#reservedVehicleTable tr:last').after(`<tr><td>${reservation.rentACar.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${myPrice}</td></tr>`);
 		}
 		
@@ -2020,7 +2041,7 @@ var renderHotelTableSearch = function(){
     var hotelDestination = $('#hotelDestinationSearchInput').val();
     var checkIn = $('#hotelSearchCheckIn').val();
     var checkOut = $('#hotelSearchCheckOut').val();	
-
+    $("#sortHotelBtn").removeAttr("disabled");
     if(hotelName == ""){
         hotelName = "NO_INPUT";
     }
@@ -2057,6 +2078,7 @@ var renderHotelTableSearch = function(){
     $.get('/api/hotelsSearch/'+text, function(data){
         console.log("Hotels: ", data);
         hotels = data;
+        globalHotel = data;
         $.get({url :"/api/reservedHotels",
             headers: createAuthorizationTokenHeader()},  function(reserved){
         $('#serviceContainer').html('');
@@ -2132,6 +2154,7 @@ var renderRentACarTableSearch = function(){
     var rentDestination = $('#rentDestinationSearchInput').val();
     var checkIn = $('#rentSearchCheckIn').val();
     var checkOut = $('#rentSearchCheckOut').val();
+    $("sortRentBtn").removeAttr("disabled");
     console.log(checkIn, checkOut);
     if(rentName == ""){
         rentName = "NO_INPUT";
@@ -2139,12 +2162,23 @@ var renderRentACarTableSearch = function(){
     if(rentDestination == ""){
         rentDestination = "NO_INPUT";
     }
-    if(checkIn == ""){
-        checkIn = "NO_INPUT";
-    }
-    if(checkOut == ""){
-        checkOut = "NO_INPUT";
-    }
+    if(checkIn == "" && checkOut == ""){
+		checkIn = "NO_INPUT";
+		checkOut = "NO_INPUT";
+	}else if(checkIn != "" && checkOut == ""){
+		showMessage("Fill check-out field!", "orange");
+		return;
+	}else if(checkIn == "" && checkOut != ""){
+		showMessage("Fill check-in field!", "orange");
+		return;
+	}else {
+		var checkInTS = stringToDate(checkIn);
+		var checkOutTS = stringToDate(checkOut);
+		if(checkInTS >= checkOutTS){
+			showMessage("Check-in must be before Check-out", "orange");
+			return;
+		}
+	}
     var checkInTS = stringToDate(checkIn);
 	var checkOutTS = stringToDate(checkOut);
 	if(checkIn == "NO_INPUT"){
@@ -2213,7 +2247,8 @@ var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, moto
 }
 
 var renderQuickVehicleReservations = function(reservations){
-	$('#quickVehicleReservationsTable').html(`<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Price</th><th>Start Destination</th><th>End Destination</th><th></th></tr>`);
+	console.log("quick vehicle res", reservations);
+	$('#quickVehicleReservationsTable').html(`<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Original price</th><th>Discount (%)</th><th>Start Destination</th><th>End Destination</th><th></th></tr>`);
     for(var i=0;i<reservations.length;i++){
         var red = reservations[i];
         var cars = 0;
@@ -2226,16 +2261,32 @@ var renderQuickVehicleReservations = function(reservations){
         	}else if(miniRed.type == "MOTOCYCLE"){
         		motocycles ++;
         	}
-        	var price = price + red.vehicles[k].price;
         }
         console.log(cars, motocycles);
         buttonID = "quickVehicleReservationNumber"+ red.id;
         console.log("-->", red);
-        var myPrice = Math.round(price);
-        $('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${myPrice}</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
-        <td><button id=${buttonID}>Reserve</button></td></tr>`);
+        var myPrice = Math.round(red.price);
+        if(bigReservation.flightReservation != null){
+        	console.log(red.start);
+        	console.log($('#rentSearchCheckIn').val())
+        	console.log(red.start == $('#rentSearchCheckIn').val());
+        	console.log(red.end);
+        	console.log($('#rentSearchCheckOut').val())
+        	console.log(red.end == $('#rentSearchCheckOut').val());
+        	if(red.start == $('#rentSearchCheckIn').val() && red.end == $('#rentSearchCheckOut').val()){
+        		if(bigReservation.vehicleReservation != null){
+        			if(bigReservation.vehicleReservation.id == red.id){
+        				continue;
+        			}
+        		}
+        		$('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${myPrice}</td><td>${red.discount} %</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
+                <td><button id=${buttonID}>Add to reservation list</button></td></tr>`);
+        	}
+        }else{
+        	$('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${myPrice}</td><td>${red.discount} %</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
+            <td></td></tr>`);
+        	}
         }
-    $('#dialogRentView').css("display","block");
 };
 
 var renderQuickRoomReservations = function(reservations){
@@ -2404,6 +2455,7 @@ var displayAirlines = function(){
 }
 
 var displayHotels = function(){
+	console.log(bigReservation);
     $.get("/api/hotels", function(hotels){
         console.log("Hotels: ", hotels);
         globalHotel = hotels;
@@ -2422,10 +2474,13 @@ var displayHotels = function(){
 			</select>
 			<button id="sortHotelBtn">Sort</button></div>`).appendTo("#searchSortContainer");
         if(bigReservation.flightReservation != null){
-        	$('#hotelSearchCheckIn').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	$("#sortHotelBtn").attr("disabled", "disabled");
+        	$('#hotelSearchCheckIn').val(bigReservation.flights[0].arrivalDate.substring(0,10));
         	$('#hotelSearchCheckIn').attr("disabled", "disabled");
-        	$('#hotelSearchCheckOut').val(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
-        	$('#hotelSearchCheckOut').attr("disabled", "disabled");
+        	if(bigReservation.flights[1]!=null){
+	        	$('#hotelSearchCheckOut').val(bigReservation.flights[1].departureDate.substring(0,10));
+	        	$('#hotelSearchCheckOut').attr("disabled", "disabled");
+	        }
         	$('#hotelDestinationSearchInput').val(bigReservation.flightReservation[0].flight.to.destination.name);
         	$('#hotelDestinationSearchInput').attr("disabled", "disabled");
         	
@@ -2476,6 +2531,7 @@ var displayHotels = function(){
 }
 
 var displayRents = function(){
+	console.log(bigReservation);
     $.get("/api/rentacars", function(rents){
         console.log("Rents: ", rents);
         globalRent = rents;
@@ -2493,21 +2549,16 @@ var displayRents = function(){
     			</select>
     			<button id="sortRentBtn">Sort</button></div>`).appendTo("#searchSortContainer");
         if(bigReservation.flightReservation != null){
-        	$('#rentSearchCheckIn').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	$("#sortRentBtn").attr("disabled", "disabled");
+        	$('#rentSearchCheckIn').val(bigReservation.flights[0].arrivalDate.substring(0,10));
         	$('#rentSearchCheckIn').attr("disabled", "disabled");
-        	$('#rentSearchCheckOut').val(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
-        	$('#rentSearchCheckOut').attr("disabled", "disabled");
+        	if(bigReservation.flights[1]!=null){
+	        	$('#rentSearchCheckOut').val(bigReservation.flights[1].departureDate.substring(0,10));
+	        	$('#rentSearchCheckOut').attr("disabled", "disabled");
+	        }
         	$('#rentDestinationSearchInput').val(bigReservation.flightReservation[0].flight.to.destination.name);
         	$('#rentDestinationSearchInput').attr("disabled", "disabled");
 
-//        	$('#vehicleSearchArrivalDate').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
-//        	$('#vehicleSearchArrivalDate').attr("disabled", "disabled");
-//        	const date1 = new Date(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
-//        	const date2 = new Date(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
-//        	const diffTime = Math.abs(date2.getTime() - date1.getTime());
-//        	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-//        	$('#vehicleSearchDayNumber').val(diffDays);
-//        	$('#vehicleSearchDayNumber').attr("disabled", "disabled");
         }
         $.get({url :"/api/reservedRents",
 	        headers: createAuthorizationTokenHeader()},  function(reserved){

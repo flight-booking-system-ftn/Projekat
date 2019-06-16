@@ -96,4 +96,11 @@ public class VehicleReservationDAOImpl implements VehicleReservationDAO {
 		}
 		return allVehicles;
 	}
+	
+	@Override
+	@Transactional
+	public VehicleReservation getOneQuickReservation(Integer id) {
+		VehicleReservation reservation = entityManager.find(VehicleReservation.class, id);
+		return reservation;
+	}
 }

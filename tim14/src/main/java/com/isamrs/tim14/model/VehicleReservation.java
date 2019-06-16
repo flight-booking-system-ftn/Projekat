@@ -54,6 +54,12 @@ public class VehicleReservation {
     @JoinColumn(name = "user_id")
 	private RegisteredUser registeredUser;
 	
+	@Column(name = "price")
+	private Double price;
+	
+	@Column(name = "discount")
+	private Integer discount;
+	
 	public VehicleReservation() {
 		super();
 		this.vehicles = new HashSet<Vehicle>();
@@ -124,5 +130,27 @@ public class VehicleReservation {
 	public void setEndBranchOffice(BranchOffice endBranchOffice) {
 		this.endBranchOffice = endBranchOffice;
 	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+	
+	
 
 }

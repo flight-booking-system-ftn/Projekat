@@ -92,6 +92,7 @@ public class RentDAOImpl implements RentDAO {
 		List<RentACar> result1 = query.getResultList();
 		System.out.println("<<<<<<<<<<<"+rentDestination);
 		List<RentACar> result = new ArrayList<RentACar>();
+		if(!rentDestination.equals("")) {
 		for(RentACar r : result1) {
 			for(BranchOffice b : r.getOffices()) {
 				System.out.println(">>>>>>>>>>>>>" +b.getDestination().getName());
@@ -101,6 +102,8 @@ public class RentDAOImpl implements RentDAO {
 				}
 			}
 		}
+		}
+		else result= result1;
 		List<RentACar> fullResult = new ArrayList<RentACar>();
 		List<Vehicle> vehicles = new ArrayList<Vehicle>();
 		boolean check = true;
@@ -112,7 +115,7 @@ public class RentDAOImpl implements RentDAO {
 			for(Vehicle vehicle : rent.getVehicles()) {
 				check = true;
 				for(VehicleReservation reservation : vehicle.getReservations()) {
-					if(!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
+					if(!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate) && reservation.getRegisteredUser()!=null) {
 						check = false;
 					}
 				}

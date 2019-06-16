@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.VehicleReservationDAO;
-import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -75,6 +74,17 @@ private VehicleReservationDAO VehicleReservationDAO;
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Vehicle>> getVehiclesHistory(){
 		return new ResponseEntity<Collection<Vehicle>>(VehicleReservationDAO.getVehicleHistory(), HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/getQuickReservationRent/{reservationID}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<VehicleReservation> getOneQuickReservation(@PathVariable Integer reservationID){
+		
+		VehicleReservation result = VehicleReservationDAO.getOneQuickReservation(reservationID);
+		
+		return new ResponseEntity<VehicleReservation>(result, HttpStatus.OK);
 	}
 	
 	
