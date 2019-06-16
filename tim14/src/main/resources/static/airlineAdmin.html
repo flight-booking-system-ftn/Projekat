@@ -61,6 +61,174 @@
 		<button id="logoutBtn">Logout</button>
 	</div>
 	
+	<div id="dialogNewFlight" class="dialog">
+        <div class="dialogContent">
+        	<h1>New flight</h1>
+	        <table id="newFlightTable">
+	            <tr>
+	                <td>From:</td>
+	                <td><select id="from"></select></td>
+	            </tr>
+	            <tr>
+	                <td>To:</td>
+	                <td><select id="to"></select></td>
+	            </tr>
+	            <tr>
+	                <td>Stops:</td>
+	                <td><div id="stopsDiv" style="overflow-y: scroll; height: 40px;"></div></td>
+	            </tr>
+	            <tr>
+	                <td>Departure date:</td>
+	                <td><input type="datetime-local" id="departureDate"></td>
+	            </tr>
+	            <tr>
+	                <td>Arrival date:</td>
+	                <td><input type="datetime-local" id="arrivalDate"></td>
+	            </tr>
+	            <tr>
+	            	<td>Length:</td>
+	            	<td><input type="number" min="1" id="length"></td>
+	            </tr>
+	            <tr>
+	            	<td>Rows in first class:</td>
+	            	<td><input type="number" min="0" id="rowsInFirstClass"></td>
+	            </tr>
+	            <tr>
+	            	<td>Rows in business class:</td>
+	            	<td><input type="number" min="0" id="rowsInBusinessClass"></td>
+	            </tr>
+	            <tr>
+	            	<td>Rows in economy class:</td>
+	            	<td><input type="number" min="0" id="rowsInEconomyClass"></td>
+	            </tr>
+	            <tr>
+	            	<td>Bags per person:</td>
+	            	<td><input type="number" min="0" id="luggageQuantity"></td>
+	            </tr>
+	            <tr>
+	            	<td>Ticket price for first class:</td>
+	            	<td><input type="number" min="1" id="ticketPriceFirstClass"></td>
+	            </tr>
+	            <tr>
+	            	<td>Ticket price for business class:</td>
+	            	<td><input type="number" min="1" id="ticketPriceBusinessClass"></td>
+	            </tr>
+	            <tr>
+	            	<td>Ticket price for economy class:</td>
+	            	<td><input type="number" min="1" id="ticketPriceEconomyClass"></td>
+	            </tr>
+	        </table>
+        	<br><br>
+	        <button id="addFlight">Add</button> <button id="closeNewFlightDialog">Close</button>
+        </div>
+	</div>
+	
+	<div id="dialogNewAirport" class="dialog">
+        <div class="dialogContent">
+			<h1 style="color: white;">New airport</h1>
+	        <br>
+            <table>
+                <tr>
+                    <td>Airport name:</td>
+                    <td><input type="text" id="airportName"></td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td><input type="text" id="airportAddress"></td>
+                </tr>
+                <tr>
+                    <td>Place:</td>
+                    <td><input type="text" id="airportPlace"></td>
+                </tr>
+                <tr>
+                    <td>Country:</td>
+                    <td><input type="text" id="airportCountry"></td>
+                </tr>
+                <tr>
+                    <td>Latitude:</td>
+                    <td><input type="number" id="airportLatitude" step="0.0001"></td>
+                </tr>
+                <tr>
+                    <td>Longitude:</td>
+                    <td><input type="number" id="airportLongitude" step="0.0001"></td>
+                </tr>
+            </table>
+	        <br><br>
+	        <button id="addAirport">Add</button> <button id="closeNewAirportDialog">Close</button>
+        </div>
+	</div>
+	
+	<div id="dialogNewLuggagePricelistItem" class="dialog">
+        <div class="dialogContent">
+	        <h1>New luggage pricelist item</h1>
+			<table>
+				<tr>
+					<td>Dimensions:</td>
+					<td><input type="text" id="dimensions" placeholder="w × l × h"></td>
+				</tr>
+				<tr>
+					<td>Weight:</td>
+					<td><input type="number" id="weight" min="1"></td>
+				</tr>
+				<tr>
+					<td>Price:</td>
+					<td><input type="number" id="price" min="0.1" step="0.1"></td>
+				</tr>
+			</table>
+			<br><br>
+	        <button id="addPricelistItem">Add</button> <button id="closeNewLuggagePricelistItemDialog">Close</button>
+			<br><br>
+			<table id="luggagePricelistTable">
+				<thead>
+					<tr>
+						<th>Dimensions</th> <th>Weight</th> <th>Price</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+				</tbody>
+			</table>
+        </div>
+	</div>
+	
+	<div id="dialogEditAirline" class="dialog">
+        <div class="dialogContent">
+        	<h1>Edit airline</h1>
+			<table>
+				<tr>
+					<td>Name:</td>
+					<td><input type="text" id="airlineName"></td>
+				</tr>
+				<tr>
+					<td>Address:</td>
+				    <td><input type="text" id="airlineAddress"></td>
+				</tr>
+				<tr>
+				    <td>Place:</td>
+				    <td><input type="text" id="airlinePlace"></td>
+				</tr>
+				<tr>
+				    <td>Country:</td>
+				    <td><input type="text" id="airlineCountry"></td>
+				</tr>
+				<tr>
+				    <td>Latitude:</td>
+				    <td><input type="number" id="airlineLatitude" step="0.0001"></td>
+				</tr>
+				<tr>
+				    <td>Longitude:</td>
+				    <td><input type="number" id="airlineLongitude" step="0.0001"></td>
+				</tr>
+				<tr>
+					<td>Description:</td>
+					<td><input type="text" id="description"></td>
+				</tr>
+			</table>
+			<br><br>
+	        <button id="editAirline">Save</button> <button id="closeEditAirlineDialog">Close</button>
+        </div>
+	</div>
+	
 	<div id="dialogProfile" class="dialog">
         <div class="dialogContent">
         	<h1>Profile</h1>
@@ -74,7 +242,6 @@
 	        			<tr><td>Email:</td> <td><input type="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required="required"></td></tr>
 	        			<tr><td>City:</td> <td><input type="text" id="city" required="required"></td></tr>
 	        			<tr><td>Phone:</td> <td><input type="tel" id="phone" required="required"></td></tr>
-	        			<tr><td></td> <td><input type="submit" id="save" value="Save"></td></tr>
 	        		</tbody>
 	        	</table>
         	</form>

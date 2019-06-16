@@ -271,6 +271,9 @@ $(document).ready(function(){
     	var passengers = $("input#passengersNumFullSearch").val();
     	var seatClass = $("select#seatClassFullSearch").find(":selected").text();
     	var bags = $("input#bagsFullSearch").val();
+    	var priceRange = parseInt($("input#priceRange").val());
+    	var durationRange = parseFloat($("input#durationRange").val());
+    	var airlineID = parseInt($("select#airlineCompany").children(":selected").attr("id"));
     	
     	if(passengers == "" || bags == "") {
     		showMessage("Some fields are empty!", "red");
@@ -335,11 +338,13 @@ $(document).ready(function(){
     	});
     	
     	var search = {
-    		"airlineID": -999,
+    		"airlineID": airlineID,
     		"tripType": tripType,
     		"passengers": parseInt(passengers),
     		"seatClass": seatClass,
     		"bags": parseInt(bags),
+    		"priceRange": priceRange,
+    		"durationRange": durationRange,
     		"data": data
     	}
     	
@@ -411,6 +416,11 @@ $(document).ready(function(){
 });
 
 var displayAirlines = function(){
+	var airlineCompanySelect = $("select#airlineCompany");
+	airlineCompanySelect.empty();
+	
+	airlineCompanySelect.append($("<option id='-999'>Any</option>"));
+	
     $.get("/api/airlines", function(airlines){
         console.log("Airlines: ", airlines);
         $('#serviceContainer').html('');
@@ -431,7 +441,11 @@ var displayAirlines = function(){
             $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
+            
+            airlineCompanySelect.append($("<option id='" + red.id + "' selected>" + red.name + "</option>"));
         }
+        
+        airlineCompanySelect.val("Any");
     });
 }
 

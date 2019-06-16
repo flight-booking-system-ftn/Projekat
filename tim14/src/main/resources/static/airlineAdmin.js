@@ -64,6 +64,36 @@ $(document).ready(function() {
 	
 	var options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
 	
+	getAirports();
+	
+    function getAirports() {
+    	$.ajax({
+    		type: "GET",
+    		url: "/api/airline/airports",
+    		headers: createAuthorizationTokenHeader(),
+    		success: function(data) {
+    			var from = $("select#from");
+    			var to = $("select#to");
+    			var stops = $("div#stopsDiv");
+    			var i = 0;
+    	    	
+    	    	$.each(data, function(index, airport) {
+    	    		var fromOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
+    	    		var toOption = $("<option id='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</option>")
+    	    		var stopBox = $("<input type='checkbox' id='" + airport.id + "'><label for='" + airport.id + "'>" + airport.name + " - " + airport.destination.name + ", " + airport.destination.country + "</label>")
+    	    		
+    	    		from.append(fromOption);
+    	    		to.append(toOption);
+    	    		stops.append(stopBox);
+    	    		stops.append("<br>");
+    	    	});
+    		},
+    		error: function(response) {
+    			showMessage(response.responseText, "orange");
+    		}
+    	});
+    }
+	
 	getFlights();
 	
 	function getFlights() {
@@ -426,20 +456,337 @@ $(document).ready(function() {
 	});
 	
 	$("button#addFlightBtn").click(function() {
-		$(location).attr('href', "/newFlight.html");
+		$("div#dialogNewFlight").show();
+	});
+	
+	$("button#addFlight").click(function() {
+		var from = $("select#from").find(":selected").attr("id");
+    	var to = $("select#to").find(":selected").attr("id");
+    	var stops = $("div#stopsDiv").children("input");
+    	var departureDate = new Date($("input#departureDate").val());
+    	var arrivalDate = new Date($("input#arrivalDate").val());
+    	var length = parseInt($("input#length").val());
+    	var rowsInFirstClass = parseInt($("input#rowsInFirstClass").val());
+    	var rowsInBusinessClass = parseInt($("input#rowsInBusinessClass").val());
+    	var rowsInEconomyClass = parseInt($("input#rowsInEconomyClass").val());
+    	var luggageQuantity = parseInt($("input#luggageQuantity").val());
+    	var ticketPriceFirstClass = parseInt($("input#ticketPriceFirstClass").val());
+    	var ticketPriceBusinessClass = parseInt($("input#ticketPriceBusinessClass").val());
+    	var ticketPriceEconomyClass = parseInt($("input#ticketPriceEconomyClass").val());
+    	
+    	if(!departureDate || !arrivalDate || !length || !luggageQuantity || !ticketPriceFirstClass || !ticketPriceBusinessClass || !ticketPriceEconomyClass) {
+    		showMessage("Some fields are empty!", "red");
+    		return;
+    	} else if(departureDate - new Date() <= 0) {
+			showMessage("The departure date can't be before current date!", "red");
+			return;
+    	} else if(arrivalDate - departureDate <= 0) {
+    		showMessage("The date of landing can't be before the date of departure!", "red");
+    		return;
+		} else {
+    		if(from == to) {
+    			showMessage("The start destination can't be same as the end destination!", "red");
+    			return;
+    		} else 
+	    		for(var i = 0; i < stops.length; i++)
+	    			if(stops[i].checked && ($(stops[i]).next('label').text() == from || $(stops[i]).next('label').text() == to)) {
+	    				showMessage("Some of the stops are same as start or end destination!", "red");
+	    				return;
+	    			}
+    	}
+    	
+    	var selectedStops = [];
+    	
+    	for(var i = 0; i < stops.length; i++)
+    		if(stops[i].checked) {
+    			//selectedStops.push(findAirport($(stops[i]).next("label").text().split(" - ")[0], $(stops[i]).next("label").text().split(" - ")[1]));
+    			selectedStops.push({
+    				"id": $(stops[i]).attr("id")
+    			});
+    		}
+    	
+    	var seats = [];
+    	
+    	for(var i = 0; i < rowsInFirstClass * 3; i++) {
+    		seats.push({
+    			"seatRow": Math.ceil((i + 1) / 3),
+    			"number": (i % 3) + 1,
+    			"busy": false,
+    			"enabled": true,
+    			"type": "FIRST_CLASS"
+    		});
+    	}
+    	
+    	for(var i = rowsInFirstClass * 3; i < rowsInFirstClass * 3 + rowsInBusinessClass * 3; i++) {
+    		seats.push({
+    			"seatRow": Math.ceil((i + 1) / 3),
+    			"number": (i % 3) + 1,
+    			"busy": false,
+    			"enabled": true,
+    			"type": "BUSINESS"
+    		});
+    	}
+    	
+    	for(var i = rowsInFirstClass * 3 + rowsInBusinessClass * 3; i < rowsInFirstClass * 3 + rowsInBusinessClass * 3 + rowsInEconomyClass * 3; i++) {
+    		seats.push({
+    			"seatRow": Math.ceil((i + 1) / 3),
+    			"number": (i % 3) + 1,
+    			"busy": false,
+    			"enabled": true,
+    			"type": "ECONOMY"
+    		});
+    	}
+    	
+    	var flight = {
+    		"from": {
+    			"id": from
+    		},
+    		"to": {
+    			"id": to
+    		},
+    		"stops": selectedStops,
+    		"departureDate": departureDate,
+    		"arrivalDate": arrivalDate,
+    		"flightLength": length,
+    		"luggageQuantity": luggageQuantity,
+    		"flightDuration": (arrivalDate - departureDate)/1000/60/60,
+    		"ticketPriceFirstClass": ticketPriceFirstClass,
+    		"ticketPriceBusinessClass": ticketPriceBusinessClass,
+    		"ticketPriceEconomyClass": ticketPriceEconomyClass,
+    		"seats": seats
+    	}
+    	
+    	console.log(flight);
+    	
+    	$.ajax({
+    		type: "POST",
+    		url: "/flight/new",
+    		headers: createAuthorizationTokenHeader(),
+    		data: JSON.stringify(flight),
+    		success: function(message) {
+    			showMessage(message, "green");
+    			
+    			var table = $("table#flightsTable tbody");
+    			
+    			var tr = $("<tr id='" + flight.id + "'></tr>");
+				var id = $("<input type='hidden' value='" + flight.id + "'>");
+				var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
+				var to = $("<td>" + flight.to.name + " - " + flight.to.destination.name + ", " + flight.to.destination.country + "</td>");
+				var stops = $("<td>" + flight.stops.length + "</td>");
+				var departureDate = $("<td>" + formatDate(new Date(flight.departureDate)) + "</td>");
+				var arrivalDate = $("<td>" + formatDate(new Date(flight.arrivalDate)) + "</td>");
+				var luggageQuantity = $("<td>" + flight.luggageQuantity + "</td>");
+				var ticketPriceFirstClass = $("<td>" + flight.ticketPriceFirstClass + "</td>");
+				var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
+				var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
+				var actions = $("<td><input type='button' class='edit' value='Edit seats'> &nbsp; &nbsp; &nbsp; &nbsp; <input type='button' class='makeQuickReservation' value='Make quick reservation'></td>");
+				
+				tr.append(id);
+				tr.append(from);
+				tr.append(to);
+				tr.append(stops);
+				tr.append(departureDate);
+				tr.append(arrivalDate);
+				tr.append(luggageQuantity);
+				tr.append(ticketPriceFirstClass);
+				tr.append(ticketPriceBusinessClass);
+				tr.append(ticketPriceEconomyClass);
+				tr.append(actions);
+				
+				table.append(tr);
+    			
+    			$("div#dialogNewFlight").hide();
+    		}
+    	});
+	});
+	
+	$("button#closeNewFlightDialog").click(function() {
+		$("div#dialogNewFlight").hide();
 	});
 	
 	$("button#addAirportBtn").click(function() {
-		$(location).attr('href',"/newAirport.html");
+		$("div#dialogNewAirport").show();
+	});
+	
+	$("button#addAirport").click(function() {
+		var airportName = $("input#airportName").val();
+        var name = $("input#airportAddress").val();
+        var address = $("input#airportPlace").val();
+        var country = $("input#airportCountry").val();
+        var latitude = $("input#airportLatitude").val();
+        var longitude = $("input#airportLongitude").val();
+
+        if(airportName == "" || name == "" || address == "" || country == "" || latitude == "" || longitude == "") {
+            showMessage("Some fields are empty!", "red");
+        } else {
+        	$.ajax({
+        		type: "POST",
+        		url: "/airport/new",
+        		headers: createAuthorizationTokenHeader(),
+        		data: JSON.stringify({
+                    "name": airportName,
+                    "destination": {
+                    	"name": name,
+                    	"address": address,
+                    	"country": country,
+                    	"latitude": latitude,
+                    	"longitude": longitude
+                    }
+        		}),
+        		success: function(response) {
+        			showMessage(response, "green");
+        			
+        			$("div#dialogNewAirport").show();
+        		},
+        		error: function(response) {
+        			showMessage(response.responseText, "orange");
+        		}
+        	});
+        }
+	});
+	
+	$("button#closeNewAirportDialog").click(function() {
+		$("div#dialogNewAirport").hide();
 	});
 	
 	$("button#editAirlineBtn").click(function() {
-		$(location).attr('href',"/editAirline.html");
+		$.ajax({
+			type: "GET",
+			url: "/api/airline/getAirline",
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				$("input#airlineName").val(data.name);
+				$("input#airlinePlace").val(data.destination.name);
+				$("input#airlineAddress").val(data.destination.address);
+		        $("input#airlineCountry").val(data.destination.country);
+		        $("input#airlineLatitude").val(data.destination.latitude);
+		        $("input#airlineLongitude").val(data.destination.longitude);
+				$("input#description").val(data.description);
+			}
+		});
+		
+		$("div#dialogEditAirline").show();
+	});
+	
+	$("button#editAirline").click(function() {
+		var airlineName = $("input#airlineName").val();
+		var name = $("input#airlinePlace").val();
+        var address = $("input#airlineAddress").val();
+        var country = $("input#airlineCountry").val();
+        var latitude = $("input#airlineLatitude").val();
+        var longitude = $("input#airlineLongitude").val();
+		var description = $("input#description").val();
+		
+		if(name == "" || description == "") {
+			showMessage("Some fields are empty!", "red");
+		} else {
+			var airline = {
+				"name": name,
+				"destination": {
+                	"name": name,
+                	"address": address,
+                	"country": country,
+                	"latitude": latitude,
+                	"longitude": longitude
+                },
+				"description": description
+			}
+			
+			$.ajax({
+				type: "PUT",
+				url: "/api/airlines",
+				headers: createAuthorizationTokenHeader(),
+				data: JSON.stringify(airline),
+				dataType: "text",
+				success: function(response) {
+        			showMessage(response, "green");
+        			
+        			$("div#dialogEditAirline").hide();
+        		},
+        		error: function(response) {
+        			showMessage(response.responseText, "red");
+        		}
+			});
+		}
+	});
+	
+	$("button#closeEditAirlineDialog").click(function() {
+		$("div#dialogEditAirline").hide();
 	});
 	
 	$("button#defineLuggagePricelistBtn").click(function(){
-        $(location).attr('href',"/luggagePricelist.html");
+		$.ajax({
+			type: "GET",
+			url: "/luggage/getPricelist",
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				var table = $("table#luggagePricelistTable tbody");
+				table.empty();
+				
+				$.each(data, function(index, luggage) {
+					var tr = $("<tr></tr>");
+					var dimensionsTD = $("<td>" + luggage.dimensions + "</td>");
+					var weightTD = $("<td>" + luggage.weight + "</td>");
+					var priceTD = $("<td>" + luggage.price + "</td>");
+					
+					tr.append(dimensionsTD);
+					tr.append(weightTD);
+					tr.append(priceTD);
+					
+					table.append(tr);
+				});
+				
+				$("div#dialogNewLuggagePricelistItem").show();
+			}
+		});
     });
+	
+	$("button#addPricelistItem").click(function() {
+		var dimensions = $("input#dimensions").val();
+		var weight = parseInt($("input#weight").val());
+		var price = parseFloat($("input#price").val());
+		
+		if(dimensions == "") {
+			showMessage("Dimensions must be entered.", "red");
+		} else {
+			var luggage = {
+				"dimensions": dimensions,
+				"weight": weight,
+				"price": price
+			}
+			
+			$.ajax({
+				type: "POST",
+				url: "/luggage/add",
+				headers: createAuthorizationTokenHeader(),
+				data: JSON.stringify(luggage),
+				dataType: "text",
+				success: function(response) {
+					var table = $("table#luggagePricelistTable tbody");
+					var tr = $("<tr></tr>");
+					var dimensionsTD = $("<td>" + luggage.dimensions + "</td>");
+					var weightTD = $("<td>" + luggage.weight + "</td>");
+					var priceTD = $("<td>" + luggage.price + "</td>");
+					
+					tr.append(dimensionsTD);
+					tr.append(weightTD);
+					tr.append(priceTD);
+					table.append(tr);
+					
+					showMessage(response, "green");
+					
+					$("div#dialogNewLuggagePricelistItem").hide();
+				},
+				error: function(response) {
+					showMessage(response.responseText, "red");
+				}
+			});
+		}
+	});
+	
+	$("button#closeNewLuggagePricelistItemDialog").click(function() {
+		$("div#dialogNewLuggagePricelistItem").hide();
+	});
 	
 	$("button#logoutBtn").click(function(){
     	removeJwtToken();
