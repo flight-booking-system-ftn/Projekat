@@ -18,5 +18,7 @@ public interface FlightReservationDAO {
 	public ResponseEntity<String> buyQuickTicket(Integer reservationID);
 	
 	public Collection<Flight> getFlightHistory();
+
+	public ResponseEntity<FlightReservation> getQuickReservation(Integer reservationID);
 }
 
