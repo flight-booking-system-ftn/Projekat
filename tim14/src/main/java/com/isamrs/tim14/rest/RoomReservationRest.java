@@ -77,4 +77,15 @@ private RoomReservationDAO roomReservationDAO;
 		return new ResponseEntity<Collection<Room>>(roomReservationDAO.getRoomsHistory(), HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/getQuickReservation/{reservationID}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RoomReservation> getOneQuickReservation(@PathVariable Integer reservationID){
+		
+		RoomReservation result = roomReservationDAO.getOneQuickReservation(reservationID);
+		
+		return new ResponseEntity<RoomReservation>(result, HttpStatus.OK);
+	}
+	
 }

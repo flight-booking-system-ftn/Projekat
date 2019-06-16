@@ -38,12 +38,15 @@ public class RoomReservation {
 	@Column(name = "price")
 	private double price;
 	
+	@Column(name = "discount")
+	private Integer discount;
+	
 	@ManyToMany(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "reservations")
 	private Set<Room> rooms;
 	
 	@ManyToMany(cascade= {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)  
     @JoinTable(name="roomReservations_services", joinColumns=@JoinColumn(name="reservation_id"), inverseJoinColumns=@JoinColumn(name="service_id"))
-	@JsonBackReference(value="reservation-services")
+	//@JsonBackReference(value="reservation-services")
 	private Set<HotelService> services;
 	
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.LAZY)
@@ -77,6 +80,14 @@ public class RoomReservation {
 		this.end = end;
 	}
 	
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
 	public RegisteredUser getRegisteredUser() {
 		return registeredUser;
 	}
@@ -100,8 +111,6 @@ public class RoomReservation {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	
 
 	public double getPrice() {
 		return price;

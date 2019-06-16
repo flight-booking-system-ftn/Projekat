@@ -169,16 +169,22 @@ $(document).ready(function() {
 			showMessage("Select at least 1 room!", "orange");
 			return;
 		}
+		if($('#discountId').val() < 0 || $('#discountId').val() > 100){
+			showMessage("Discount must be between 0% and 100% ", 'orange');
+			return;
+		}
 		var price = calculatePrice(selected_rooms, selected_hotel_services, $('#roomSearchDayNumber').val());
-		var discount = (100 - $('#discountId').val())/100;
-		price = price * discount;
+		var discount = $('#discountId').val()
+		price = Math.round(price);
+		
 		var reservation = {
 			"start": new Date(start),
 			"end": new Date(end),
 			"rooms": selected_rooms,
 			"services": selected_hotel_services,
 			"hotel": selected_rooms[0].hotel,
-			"price": price
+			"price": price,
+			discount
 		};
 		console.log("Hotel reservation: ", reservation);
 		$.ajax({

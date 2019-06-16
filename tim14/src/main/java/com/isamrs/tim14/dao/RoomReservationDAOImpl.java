@@ -98,4 +98,11 @@ public class RoomReservationDAOImpl implements RoomReservationDAO {
 		}
 		return allRooms;
 	}
+
+	@Override
+	@Transactional
+	public RoomReservation getOneQuickReservation(Integer id) {
+		RoomReservation reservation = entityManager.find(RoomReservation.class, id);
+		return reservation;
+	}
 }
