@@ -13,4 +13,6 @@ public interface SeatDAO {
 	public ResponseEntity<String> delete(Integer id);
 	
 	public ResponseEntity<Collection<Seat>> getSeats(Collection<Integer> seats);
+
+	public ResponseEntity<Seat> getSeat(Integer id);
 }

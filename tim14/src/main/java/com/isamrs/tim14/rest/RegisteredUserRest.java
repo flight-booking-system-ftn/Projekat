@@ -98,4 +98,10 @@ public class RegisteredUserRest {
 		return registeredUserDAO.getBonusPoints();
 	}
 	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@GetMapping("/registeredUser/{id}")
+	public ResponseEntity<RegisteredUser> getUser(@PathVariable Integer id) {
+		return registeredUserDAO.getUser(id);
+	}
+	
 }

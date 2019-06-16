@@ -75,4 +75,12 @@ public class SeatDAOImpl implements SeatDAO {
 		return new ResponseEntity(result, HttpStatus.OK);
 	}
 
+	@Override
+	@Transactional
+	public ResponseEntity<Seat> getSeat(Integer id) {
+		Seat managedSeat = entityManager.find(Seat.class, id);
+		
+		return new ResponseEntity<Seat>(managedSeat, HttpStatus.OK);
+	}
+
 }

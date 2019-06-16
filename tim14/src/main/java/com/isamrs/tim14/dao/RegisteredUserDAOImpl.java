@@ -228,4 +228,11 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 		return new ResponseEntity<Integer>(loggedIn.getBonusPoints(), HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<RegisteredUser> getUser(Integer id) {
+		RegisteredUser managedFriend = entityManager.find(RegisteredUser.class, id);
+		
+		return new ResponseEntity<RegisteredUser>(managedFriend, HttpStatus.OK);
+	}
+
 }
