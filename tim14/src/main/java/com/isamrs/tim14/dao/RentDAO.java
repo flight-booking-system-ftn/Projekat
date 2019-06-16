@@ -14,7 +14,7 @@ public interface RentDAO {
 	public RentACar getRent(int id);
 	public void deleteRent(int id);
 	public Set<BranchOffice> getRentOffices(int id);
-	public List<RentACar> getRentSearch(String rentName, String rentDestination, String checkIn, String checkOut);
+	public List<RentACar> getRentSearch(String rentName, String rentDestination, Long checkIn, Long checkOut);
 	public List<RentACar> getRentsFromReservations();
 	public Integer getGrade(Integer id);
 	public void setGrade(Integer id, Integer grade);	

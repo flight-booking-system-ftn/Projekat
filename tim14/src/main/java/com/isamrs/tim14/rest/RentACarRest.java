@@ -73,7 +73,7 @@ public class RentACarRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<RentACar>> getRentSearch(@PathVariable String rentName,
-			@PathVariable String rentDestination, @PathVariable String checkIn, @PathVariable String checkOut){
+			@PathVariable String rentDestination, @PathVariable long checkIn, @PathVariable long checkOut){
 		
 		Collection<RentACar> rents = rentDAO.getRentSearch(rentName, rentDestination, checkIn, checkOut);
 		

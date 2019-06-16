@@ -899,7 +899,11 @@ $(document).ready(function(){
 		}
 		var start = stringToDate($('#vehicleSearchArrivalDate').val());
 		var end = start + ($('#vehicleSearchDayNumber').val()-1)*24*60*60*1000;	
-		console.log("Selected vehicles: ", selected_rooms);
+		if(start < new Date().getTime()-24*60*60*1000 || end < new Date().getTime()-24*60*60*1000){
+			showMessage("Cannot select past date", "orange");
+			return;
+		}
+		console.log("Selected vehicles: ", selected_vehicles);
 		var price = calculatePriceVehicle(selected_vehicles, $('#vehicleSearchDayNumber').val());
 		var link = '/api/branchOffice/'+$("#endDestination option:selected" ).val();
 		$.get(link, function(office){
@@ -911,12 +915,26 @@ $(document).ready(function(){
 			"price": price,
 			"endBranchOffice" : office
 		};
-		console.log("Vehicle reservation: ", reservation);
 		if(reservation.vehicles.length == 0){
 			showMessage("Select at least 1 vehicle!", "orange");
 			return;
+		}		
+		console.log("Vehicle reservation: ", reservation);
+		
+		bigReservation.vehicleReservation = reservation;
+		showMessage('Vehicle added to reservation list', "green");
+		$('#dialogRentView').hide();
+		$('#selectedRentVehiclesTable').html('<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
+
+		$('#reservedVehicleTable').html('<tr><th>Rent-a-car</th><th>Model</th><th>Brand</th><th>Type</th><th>Price</th></tr>');
+		for(var i=0; i<reservation.vehicles.length;i++){
+			var red = reservation.vehicles[i];
+			var multi = parseInt($('#vehicleSearchDayNumber').val())+1;
+			$('#reservedVehicleTable tr:last').after(`<tr><td>${reservation.rentACar.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.price*multi}</td></tr>`);
 		}
-		$.ajax({
+		
+		$('#reservationsDiv').show();
+		/*$.ajax({
 			type : 'POST',
 			url : "/api/vehicleReservations",
 			headers: createAuthorizationTokenHeader(),
@@ -929,7 +947,8 @@ $(document).ready(function(){
 			error: function (jqXHR, exception) {
 				showMessage('[' + jqXHR.status + "]  " + exception, "red");
 			}
-		})});
+		})*/
+		});
 	});
 	
     
@@ -2048,7 +2067,15 @@ var renderRentACarTableSearch = function(){
     if(checkOut == ""){
         checkOut = "NO_INPUT";
     }
-    text = rentName+"/"+rentDestination+"/"+checkIn+"/"+checkOut;
+    var checkInTS = stringToDate(checkIn);
+	var checkOutTS = stringToDate(checkOut);
+	if(checkIn == "NO_INPUT"){
+		checkInTS = 0;
+	}
+	if(checkOut == "NO_INPUT"){
+		checkOutTS = 0;
+	}
+    text = rentName+"/"+rentDestination+"/"+checkInTS+"/"+checkOutTS;
     $.get('/api/rentsSearch/'+text, function(data){
         console.log("Rent-a-cars: ", data);
         globalRent = data;
@@ -2371,6 +2398,23 @@ var displayRents = function(){
     			<option value="destination">Destination</option>
     			</select>
     			<button id="sortRentBtn">Sort</button></div>`).appendTo("#searchSortContainer");
+        if(bigReservation.flightReservation != null){
+        	$('#rentSearchCheckIn').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	$('#rentSearchCheckIn').attr("disabled", "disabled");
+        	$('#rentSearchCheckOut').val(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
+        	$('#rentSearchCheckOut').attr("disabled", "disabled");
+        	$('#rentDestinationSearchInput').val(bigReservation.flightReservation[0].flight.to.destination.name);
+        	$('#rentDestinationSearchInput').attr("disabled", "disabled");
+
+        	$('#vehicleSearchArrivalDate').val(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	$('#vehicleSearchArrivalDate').attr("disabled", "disabled");
+        	const date1 = new Date(bigReservation.flightReservation[0].flight.departureDate.substring(0,10));
+        	const date2 = new Date(bigReservation.flightReservation[0].flight.arrivalDate.substring(0,10));
+        	const diffTime = Math.abs(date2.getTime() - date1.getTime());
+        	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        	$('#vehicleSearchDayNumber').val(diffDays);
+        	$('#vehicleSearchDayNumber').attr("disabled", "disabled");
+        }
         $.get({url :"/api/reservedRents",
 	        headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<rents.length;i++){
@@ -2398,11 +2442,11 @@ var displayRents = function(){
             if(check == 1){
             	rate = "<button id='rateRent"+ red.id+"'>Rate</button>"
             }
-            
+            if(bigReservation.flightReservation == null){
             $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-        }})
+            } }})
     });
 }
 
