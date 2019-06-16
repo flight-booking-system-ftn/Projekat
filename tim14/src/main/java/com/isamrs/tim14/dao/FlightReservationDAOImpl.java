@@ -100,4 +100,12 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 		}
 		return allFlights;
 	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<FlightReservation> getQuickReservation(Integer reservationID) {
+		FlightReservation reservation = entityManager.find(FlightReservation.class, reservationID);
+		
+		return new ResponseEntity<FlightReservation>(reservation, HttpStatus.OK);
+	}
 }

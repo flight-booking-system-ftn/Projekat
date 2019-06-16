@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isamrs.tim14.dao.FlightReservationDAO;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
-import com.isamrs.tim14.model.Vehicle;
 
 @RestController
 @RequestMapping("/api")
@@ -54,6 +53,12 @@ public class FlightReservationRest {
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	public ResponseEntity<String> buyQuickTicket(@PathVariable Integer reservationID) {
 		return flightReservationDAO.buyQuickTicket(reservationID);
+	}
+	
+	@GetMapping("/flightReservation/getQuickReservation/{reservationID}")
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	public ResponseEntity<FlightReservation> getQuickReservation(@PathVariable Integer reservationID) {
+		return flightReservationDAO.getQuickReservation(reservationID);
 	}
 	
 	@RequestMapping(
