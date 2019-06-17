@@ -20,7 +20,7 @@ import com.isamrs.tim14.dao.AirlineDAO;
 import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Airport;
 import com.isamrs.tim14.model.Flight;
-import com.isamrs.tim14.model.RentACar;
+import com.isamrs.tim14.model.Luggage;
 
 @RestController
 @RequestMapping("/api")
@@ -99,6 +99,11 @@ public class AirlineRest {
 	public ResponseEntity<Airline> getAirline() {
 		return airlineDAO.getAirline();
 	}
+	
+	@GetMapping("/airline/{id}/luggagePricelist")
+	public ResponseEntity<Set<Luggage>> getLuggagePricelist(@PathVariable Integer id) {
+		return airlineDAO.getLuggagePricelist(id);
+	}
 
 	@RequestMapping(
 			value = "/reservedAirlines",
@@ -128,4 +133,5 @@ public class AirlineRest {
 		airlineDAO.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
+	
 }

@@ -22,6 +22,7 @@ import com.isamrs.tim14.model.Destination;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.Grade;
+import com.isamrs.tim14.model.Luggage;
 import com.isamrs.tim14.model.RegisteredUser;
 
 @Repository
@@ -211,6 +212,14 @@ public class AirlineDAOImpl implements AirlineDAO {
 		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		return new ResponseEntity<Airline>(user.getAirline(), HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<Set<Luggage>> getLuggagePricelist(Integer id) {
+		Flight managedFlight = entityManager.find(Flight.class, id);
+		
+		return new ResponseEntity<Set<Luggage>>(managedFlight.getAirline().getLuggagePricelist(), HttpStatus.OK);
 	}
 
 }

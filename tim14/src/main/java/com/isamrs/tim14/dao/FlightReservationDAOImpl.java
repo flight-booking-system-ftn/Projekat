@@ -36,6 +36,7 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 	public ResponseEntity<String> saveReservation(List<FlightReservation> reservations) {
 		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		reservations.get(0).setUser(user);
+		reservations.get(0).setPassportNumber("123456789");
 		
 		for(FlightReservation reservation : reservations) {
 			Seat managedSeat = entityManager.find(Seat.class, reservation.getSeat().getId());
