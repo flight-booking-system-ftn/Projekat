@@ -1,6 +1,8 @@
 package com.isamrs.tim14.dao;
 
+import java.util.Collection;
 import java.util.List;
+
 import com.isamrs.tim14.model.Vehicle;
 
 public interface VehicleDAO {
@@ -13,4 +15,6 @@ public interface VehicleDAO {
 	public void setGrade(Integer id, Integer grade);
 	public Vehicle getVehicle(Integer id);
 	public Vehicle changeVehicle(Vehicle vehcle);
+	public Collection<Vehicle> getAllRentsVehicles();
+	public Integer getIntermediateGrade(Integer id);
 }

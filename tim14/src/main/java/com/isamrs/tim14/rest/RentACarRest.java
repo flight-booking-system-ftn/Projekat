@@ -1,6 +1,7 @@
 package com.isamrs.tim14.rest;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RentDAO;
 import com.isamrs.tim14.model.BranchOffice;
-import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 
@@ -124,6 +124,15 @@ public class RentACarRest {
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(value = "/getGradeForRent",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getGrade() {
+		Integer grade = rentDAO.getGradeRent();
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@RequestMapping(value = "/setGradeForRent/{id}/{grade}",
 			method = RequestMethod.POST,
@@ -139,11 +148,23 @@ public class RentACarRest {
 			method = RequestMethod.PUT,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RentACar> changeHotel(@RequestBody RentACar rent) {
+	public ResponseEntity<RentACar> changeRent(@RequestBody RentACar rent) {
 		RentACar managedRent = rentDAO.changeRent(rent);
 		if(managedRent == null) {
 			return new ResponseEntity<RentACar>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		return new ResponseEntity<RentACar>(managedRent, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/getRentIncomes/{startDate}/{endDate}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Double> getIncome(@PathVariable Long startDate, @PathVariable Long endDate) {
+		Date start = new Date(startDate);
+		Date end = new Date(endDate);
+		double income = rentDAO.getIncome(start, end);
+		return new ResponseEntity<Double>(income, HttpStatus.OK);
 	}
 }

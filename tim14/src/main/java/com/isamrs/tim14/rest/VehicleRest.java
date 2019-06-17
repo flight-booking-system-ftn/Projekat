@@ -81,7 +81,7 @@ public class VehicleRest {
 			value = "/unreservedVehicles",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Vehicle>> getUnreservedRooms(){
+	public ResponseEntity<Collection<Vehicle>> getUnreservedVehcles(){
 		Collection<Vehicle> vehicles = vehicleDAO.getUnreservedVehicles();
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
@@ -101,6 +101,15 @@ public class VehicleRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
 		Integer grade = vehicleDAO.getGrade(id);
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/getMediumGradeForVehicle/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getGrade(@PathVariable Integer id) {
+		Integer grade = vehicleDAO.getIntermediateGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -132,5 +141,15 @@ public class VehicleRest {
 	public ResponseEntity<Vehicle> changeVehicle(@RequestBody Vehicle vehicle) {
 		Vehicle veh = vehicleDAO.changeVehicle(vehicle);
 		return new ResponseEntity<Vehicle>(veh, HttpStatus.CREATED);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
+	@RequestMapping(
+			value = "/allVehicles",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Vehicle>> getAllVehicles(){
+		Collection<Vehicle> vehicles = vehicleDAO.getAllRentsVehicles();
+		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
 }
