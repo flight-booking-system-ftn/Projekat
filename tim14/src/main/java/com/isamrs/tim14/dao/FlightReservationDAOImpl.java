@@ -1,7 +1,10 @@
 package com.isamrs.tim14.dao;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.hibernate.mapping.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,8 @@ import org.springframework.mail.MailException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
+import com.isamrs.tim14.dto.GraphsDTO;
+import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.RegisteredUser;
@@ -141,5 +147,119 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 		entityManager.remove(managedReservation);
 		
 		return new ResponseEntity<String>("Invitation declined.", HttpStatus.OK);
+	}
+	
+	@Override
+	@Transactional
+	public GraphsDTO getFlightsDaily() throws ParseException {
+		GraphsDTO graph = new GraphsDTO();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Date start = null;
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date()); // Now use today date.
+		c.add(Calendar.DATE, -13);
+		start = sdf.parse(sdf.format(c.getTime()));
+		AirlineAdmin admin = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Flight> flights = admin.getAirline().getFlights();
+		Query query = entityManager.createQuery("SELECT fr FROM FlightReservation fr");
+		List<FlightReservation> reservations = query.getResultList();
+		for(int i = 0; i<14; i++) {
+			start = sdf.parse(sdf.format(c.getTime()));
+			System.out.println(c.getTime());
+			String dateX = sdf.format(start);
+			graph.getX().add(dateX);
+			int sum = 0;
+			for(Flight f: flights) {
+				for(FlightReservation fr : reservations) {
+					if(fr.getFlight().getId()==f.getId()) {
+						if(sdf.parse(sdf.format(fr.getFlight().getDepartureDate())).equals(start)) {
+							sum++;
+						}
+					}
+				}
+			}
+			graph.getY().add(sum);
+			c.add(Calendar.DATE, 1);
+		}	
+		return graph;
+	}
+
+	@Override
+	@Transactional
+	public GraphsDTO getFlightsWeekly() throws ParseException {
+		GraphsDTO graph = new GraphsDTO();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM");
+		Date end = null;
+		Date start = null;
+		Calendar c = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+		c.setTime(new Date()); // Now use today date.
+		c.add(Calendar.WEEK_OF_YEAR, -13);
+		start = sdf.parse(sdf.format(c.getTime()));
+		c.add(Calendar.WEEK_OF_YEAR, 1);
+		end = sdf.parse(sdf.format(c.getTime()));
+		System.out.println("start " + start + "\n end "+ end);
+		AirlineAdmin admin = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Flight> flights = admin.getAirline().getFlights();
+		Query query = entityManager.createQuery("SELECT fr FROM FlightReservation fr");
+		List<FlightReservation> reservations = query.getResultList();
+		for(int i = 0; i<12; i++) {
+			start = end;
+			c.add(Calendar.DATE, 7);
+			System.out.println(c.getTime());
+			end = sdf.parse(sdf.format(c.getTime()));
+			int sum = 0;
+			for(Flight f: flights) {
+				for(FlightReservation fr : reservations) {
+					if(fr.getFlight().getId()==f.getId()) {
+						if(sdf.parse(sdf.format(fr.getFlight().getDepartureDate())).before(end) && sdf.parse(sdf.format(fr.getFlight().getDepartureDate())).after(start) ||
+						sdf.parse(sdf.format(fr.getFlight().getDepartureDate())).equals(end)) {
+							sum++;
+						}
+					}
+				}
+			}
+			c2.setTime(start);
+			c2.add(Calendar.DATE, 1);
+			start = sdf.parse(sdf.format(c2.getTime()));
+			String dateX = sdf2.format(start)+"-"+sdf2.format(end);
+			graph.getX().add(dateX);
+			graph.getY().add(sum);
+		}
+		return graph;
+	}
+
+	@Override
+	@Transactional
+	public GraphsDTO getFlightsMonthly() throws ParseException {
+		GraphsDTO graph = new GraphsDTO();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/yy");
+		Date date = null;
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, -11);
+		date = sdf.parse(sdf.format(c.getTime()));
+		AirlineAdmin admin = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Collection<Flight> flights = admin.getAirline().getFlights();
+		Query query = entityManager.createQuery("SELECT fr FROM FlightReservation fr");
+		List<FlightReservation> reservations = query.getResultList();
+		for(int i = 0; i<12; i++) {
+			String dateX = sdf.format(c.getTime());
+			date = sdf.parse(sdf.format(c.getTime()));
+			int sum = 0;
+			for(Flight f: flights) {
+				for(FlightReservation fr : reservations) {
+					if(fr.getFlight().getId()==f.getId()) {
+						if(sdf.parse(sdf.format(fr.getFlight().getDepartureDate())).equals(date)) {
+						sum++;
+						}
+					}
+				}
+			}
+			graph.getX().add(dateX);
+			graph.getY().add(sum);
+			c.add(Calendar.MONTH, 1);
+		}
+		return graph;
 	}
 }

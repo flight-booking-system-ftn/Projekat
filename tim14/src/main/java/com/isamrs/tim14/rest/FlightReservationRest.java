@@ -1,5 +1,6 @@
 package com.isamrs.tim14.rest;
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.isamrs.tim14.dao.FlightReservationDAO;
+import com.isamrs.tim14.dto.GraphsDTO;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
 
@@ -84,5 +86,32 @@ public class FlightReservationRest {
 		flightReservationDAO.declineInvitation(reservationID);
 		
 		return new RedirectView("/login.html");
+	}
+	
+	@RequestMapping(
+			value = "/getDailyFlights",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getDaily() throws ParseException{
+		GraphsDTO g = flightReservationDAO.getFlightsDaily();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
+
+	@RequestMapping(
+			value = "/getWeeklyFlights",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getWeekly() throws ParseException{
+		GraphsDTO g = flightReservationDAO.getFlightsWeekly();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
+
+	@RequestMapping(
+			value = "/getMonthlyFlights",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getMonthly() throws ParseException{
+		GraphsDTO g = flightReservationDAO.getFlightsMonthly();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 }

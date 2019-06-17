@@ -1,5 +1,6 @@
 package com.isamrs.tim14.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +10,6 @@ import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Airport;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.Luggage;
-import com.isamrs.tim14.model.RentACar;
 
 public interface AirlineDAO {
 
@@ -32,7 +32,7 @@ public interface AirlineDAO {
 	public ResponseEntity<List<Airport>> getAirportsOfAirline();
 	
 	public List<Airline> getAirlinesFromReservations();
-	
+
 	public Integer getGrade(Integer id);
 
 	public void setGrade(Integer id, Integer grade);
@@ -42,4 +42,9 @@ public interface AirlineDAO {
 	public ResponseEntity<Airline> getAirline();
 
 	public ResponseEntity<Set<Luggage>> getLuggagePricelist(Integer id);
+	
+	public Integer getGradeAirline();
+	
+	public double getIncome(Date start, Date end);
+	
 }

@@ -1,5 +1,6 @@
 package com.isamrs.tim14.rest;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +67,25 @@ public class FlightRest {
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
 		flightDAO.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	@RequestMapping(value = "/getMediumGradeForFlight/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getGrade(@PathVariable String id) {
+		int idd = Integer.parseInt(id);
+		Integer grade = flightDAO.getIntermediateGrade(idd);
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	@RequestMapping(
+			value = "/allFlights",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Flight>> getAllVehicles(){
+		Collection<Flight> vehicles = flightDAO.getAllRentsVehicles();
+		return new ResponseEntity<Collection<Flight>>(vehicles, HttpStatus.OK);
 	}
 }

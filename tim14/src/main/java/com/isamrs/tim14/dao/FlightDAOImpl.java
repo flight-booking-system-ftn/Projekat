@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -219,5 +220,28 @@ public class FlightDAOImpl implements FlightDAO {
 		g.setUser(ru);
 		entityManager.persist(g);
 		flight.getGrades().add(g);	
+	}
+	
+	@Override
+	@Transactional
+	public Integer getIntermediateGrade(Integer id) {
+		Flight flight = entityManager.find(Flight.class, id);
+		int sum = 0;
+		int count = 0;
+		for(Grade g : flight.getGrades()) {
+			sum+= g.getGrade();
+			count++;
+		}
+		if(count==0)
+			return 0;
+		else
+			return sum/count;
+	}
+	
+	@Override
+	@Transactional
+	public Collection<Flight> getAllRentsVehicles() {
+		AirlineAdmin admin = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return admin.getAirline().getFlights();
 	}
 }
