@@ -51,4 +51,12 @@ public class LuggageDAOImpl implements LuggageDAO {
 		return new ResponseEntity(user.getAirline().getLuggagePricelist(), HttpStatus.OK);
 	}
 
+	@Override
+	@Transactional
+	public ResponseEntity<Luggage> getLuggage(Integer id) {
+		Luggage managedLuggage = entityManager.find(Luggage.class, id);
+		
+		return new ResponseEntity<Luggage>(managedLuggage, HttpStatus.OK);
+	}
+
 }

@@ -18,6 +18,7 @@ var bigReservation = {
 	user: null,
 	discountPercentageBonusPoints: 0,
 	discountHotelService: 0,
+	flightReservationType: null,
 	roomReservationType: null,
 	vehicleReservationType: null,
 	bonusPoints: 0
@@ -1106,6 +1107,25 @@ $(document).ready(function(){
 		$("input#deleteSeat").attr("disabled", "disabled");
 		$("div#editSeatsModal").hide();
 		
+		bigReservation = {
+			flightReservation: null,
+			flights: [],
+			roomReservation: null,
+			vehicleReservation: null,
+			user: null,
+			discountPercentageBonusPoints: 0,
+			discountHotelService: 0,
+			flightReservationType: null,
+			roomReservationType: null,
+			vehicleReservationType: null,
+			bonusPoints: 0
+		};
+		
+		$("label#priceWithoutDiscount").text(0);
+		$("label#roomServicesDiscount").text(0);
+		$("label#bonusPointsDiscount").text(0);
+		$("label#totalPrice").text(0);
+		
 		//---------------- REZERVACIJA ----------------
 		
 		$("div#seatsDiv").empty();
@@ -1425,8 +1445,45 @@ $(document).ready(function(){
 				selectedSeats.splice(i, 1);
 				bigReservation.flightReservation.splice(i, 1);
 				if(bigReservation.flightReservation.length == 0) {
-					bigReservation.flightReservation = null;
+					bigReservation = {
+						flightReservation: null,
+						flights: [],
+						roomReservation: null,
+						vehicleReservation: null,
+						user: null,
+						discountPercentageBonusPoints: 0,
+						discountHotelService: 0,
+						flightReservationType: null,
+						roomReservationType: null,
+						vehicleReservationType: null,
+						bonusPoints: 0
+					};
 				}
+				
+				$.ajax({
+					type: "GET",
+					url: "/flight/" + selectedFlight,
+					headers: createAuthorizationTokenHeader(),
+					success: function(flight) {
+						$.ajax({
+							type: "GET",
+							url: "/seats/" + parseInt(seatId),
+							success: function(seat) {
+								var price = 0;
+								
+								if(seat.type == "FIRST_CLASS")
+									price = flight.ticketPriceFirstClass;
+								else if(seat.type == "BUSINESS")
+									price = flight.ticketPriceBusinessClass;
+								else
+									price = flight.ticketPriceEconomyClass;
+								
+								$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) - price);
+								$("label#totalPrice").text(parseInt($("label#totalPrice").text()) - price);
+							}
+						});
+					}
+				});
 				
 				$(this).css("border", "0");
 				
@@ -1434,10 +1491,13 @@ $(document).ready(function(){
 				
 				if(selectedSeats.length == 0) {
 					$("input#makeFlightReservation").attr("disabled", "disabled");
+					$("button#chooseServicesTab").attr("disabled", "disabled");
+					$("input.flightServiceCheck").prop("checked", false);
 				}
 				else if(selectedSeats.length < 2) {
 					$("button#inviteFriendsTab").attr("disabled", "disabled");
 					$("button#otherPassengersTab").attr("disabled", "disabled");
+					$("input#makeFlightReservation").removeAttr("disabled");
 				}
 				
 				break;
@@ -1474,6 +1534,7 @@ $(document).ready(function(){
 								"seat": seat,
 								"passportNumber": null,
 								"dateOfPurchase": new Date(),
+								"luggages": [],
 								"price": price,
 								"discount": 0,
 								"roomReservation": null,
@@ -1499,13 +1560,14 @@ $(document).ready(function(){
 							
 							if(bigReservation.flightReservation == null || bigReservation.flightReservation == undefined) {
 								bigReservation.flightReservation = [];
-								bigReservation.flightReservation.push(reservation);
 								flightReservationsTable.empty();
-								$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) + price);
-								$("label#totalPrice").text(parseInt($("label#totalPrice").text()) + price);
-							} else {
-								bigReservation.flightReservation.push(reservation);
 							}
+							
+							bigReservation.flightReservation.push(reservation);
+							bigReservation.flightReservationType = "regular";
+							
+							$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) + price);
+							$("label#totalPrice").text(parseInt($("label#totalPrice").text()) + price);
 							
 							bigReservation.flights[selectedTable] = flight;
 						}
@@ -1518,12 +1580,43 @@ $(document).ready(function(){
 			$("label#freePassengers").text(parseInt($("label#freePassengers").text()) + 1);
 			
 			$("input#makeFlightReservation").removeAttr("disabled");
+			$("button#chooseServicesTab").removeAttr("disabled");
 			if(selectedSeats.length > 1) {
 				$("button#inviteFriendsTab").removeAttr("disabled");
 				$("button#otherPassengersTab").removeAttr("disabled");
 				$("input#makeFlightReservation").attr("disabled", "disabled");
 			}
 		}
+	});
+	
+	$(document).on("change", "input.flightServiceCheck", function() {
+		var luggageID = $(this).parent().parent().attr("id");
+		
+		if($(this).is(":checked")) {
+			$.ajax({
+				type: "GET",
+				url: "/luggage/" + luggageID,
+				success: function(luggage) {
+					bigReservation.flightReservation[0].luggages.push(luggage);
+					
+					$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) + luggage.price);
+					$("label#totalPrice").text(parseInt($("label#totalPrice").text()) + luggage.price);
+				}
+			});
+		} else {
+			for(var i = 0; i < bigReservation.flightReservation[0].luggages.length; i++) {
+				if(bigReservation.flightReservation[0].luggages[i].id == luggageID) {
+					bigReservation.flightReservation[0].luggages.splice(i, 1);
+					
+					$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) - luggage.price);
+					$("label#totalPrice").text(parseInt($("label#totalPrice").text()) - luggage.price);
+					
+					break;
+				}
+			}
+		}
+		
+		console.log(bigReservation);
 	});
 	
     $(document).on("input", "input.friendPassportNumber", function() {
@@ -1572,7 +1665,7 @@ $(document).ready(function(){
     	};
     	
     	bigReservation.flightReservation[passengerIndex].passportNumber = passengerPassportNumber;
-		bigReservation.flightReservation[passengerIndex].passenger = passenger;=
+		bigReservation.flightReservation[passengerIndex].passenger = passenger;
     	
     	passengerIndex += 1;
     	$("label#indexOfPassenger").text(parseInt($("label#indexOfPassenger").text()) + 1);
@@ -1692,8 +1785,9 @@ $(document).ready(function(){
 			headers: createAuthorizationTokenHeader(),
 			success: function(reservation) {
 				bigReservation.flightReservation = [reservation];
-				bihReservation.flights = [];
-				bihReservation.flights.push(reservation.flight);
+				bigReservation.flightReservationType = "quick";
+				bigReservation.flights = [];
+				bigReservation.flights.push(reservation.flight);
 				
 				bigReservation.roomReservation = null;
 				bigReservation.vehicleReservation = null;
@@ -1717,6 +1811,11 @@ $(document).ready(function(){
 				var tr = $("<tr><td>" + reservation.flight.from.destination.name + "</td> <td>" + reservation.flight.to.destination.name + "</td> <td>" + formatDateDet(new Date(reservation.flight.departureDate)) + "</td> <td>" + formatDateDet(new Date(reservation.flight.arrivalDate)) + "</td> <td>1</td> <td>" + price + "</td></tr>");
 				flightReservationsTable.append(tr);
 				
+				$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) + (price * (100 - reservation.discount)/100));
+				$("label#totalPrice").text(parseInt($("label#totalPrice").text()) + (price * (100 - reservation.discount)/100));
+		
+				console.log(bigReservation);
+				
 				$.ajax({
 					type: "GET",
 					url: "/api/registeredUser/getBonusPoints",
@@ -1725,7 +1824,7 @@ $(document).ready(function(){
 						$("input#bonusPoints").attr("max", points);
 						$("label#userBonusPoints").text(points);
 					}
-				});=
+				});
 				
 				showMessage("Flight reservation added to current reservations.", "green");
 				
@@ -2031,12 +2130,21 @@ $(document).ready(function(){
 		//Postaviti novu max granicu za bonus poene i promeniti vrednost labele
 		
 		if(bigReservation.flightReservation != null) {
-			$.ajax({
-				type: "POST",
-				url: "/api/flightReservation/save",
-				headers: createAuthorizationTokenHeader(),
-				data: JSON.stringify(bigReservation.flightReservation)
-			});
+			if(bigReservation.flightReservationType == "regular")
+				$.ajax({
+					type: "POST",
+					url: "/api/flightReservation/save",
+					headers: createAuthorizationTokenHeader(),
+					data: JSON.stringify(bigReservation.flightReservation)
+				});
+			else {
+				$.ajax({
+					type: "PUT",
+					url: "/api/flightReservation/buyQuickTicket",
+					headers: createAuthorizationTokenHeader(),
+					data: JSON.stringify(bigReservation.flightReservation[0])
+				});
+			}
 		}
 		if(bigReservation.roomReservation != null) {
 			if(bigReservation.roomReservationType == "regular")
@@ -2081,6 +2189,7 @@ $(document).ready(function(){
 			user: null,
 			discountPercentageBonusPoints: 0,
 			discountHotelService: 0,
+			flightReservationType: null,
 			roomReservationType: null,
 			vehicleReservationType: null,
 			bonusPoints: 0

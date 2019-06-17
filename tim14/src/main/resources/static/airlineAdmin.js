@@ -320,7 +320,6 @@ $(document).ready(function() {
 			headers: createAuthorizationTokenHeader(),
 			success: function(flight) {
 				var reservations = [];
-				console.log(selectedSeats);
 				$.ajax({
 					type: "POST",
 					url: "/seats/getSelectedSeats",
@@ -345,8 +344,6 @@ $(document).ready(function() {
 							
 							reservations.push(reservation);
 						});
-						
-						console.log(reservations);
 						
 						$.ajax({
 							type: "POST",
@@ -555,8 +552,6 @@ $(document).ready(function() {
     		"ticketPriceEconomyClass": ticketPriceEconomyClass,
     		"seats": seats
     	}
-    	
-    	console.log(flight);
     	
     	$.ajax({
     		type: "POST",

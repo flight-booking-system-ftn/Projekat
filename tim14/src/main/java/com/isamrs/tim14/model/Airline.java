@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -38,9 +39,9 @@ public class Airline {
 	@Column(name = "description")
 	private String description;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
-	//@JsonBackReference(value="airline-flights")
+	@JsonBackReference(value="airline-flights")
 	private Set<Flight> flights;
 	
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
@@ -64,7 +65,7 @@ public class Airline {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
-	//@JsonBackReference(value="airline-luggages")
+	//@JsonBackReference(value="airline-services")
 	private Set<Luggage> luggagePricelist;
 
 	public Airline() {

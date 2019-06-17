@@ -10,4 +10,6 @@ public interface LuggageDAO {
 	public ResponseEntity<String> add(Luggage luggage);
 
 	public ResponseEntity<Set<Luggage>> getPricelist();
+
+	public ResponseEntity<Luggage> getLuggage(Integer id);
 }

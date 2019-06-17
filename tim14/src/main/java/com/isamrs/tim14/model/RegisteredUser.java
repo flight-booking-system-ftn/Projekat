@@ -29,11 +29,9 @@ public class RegisteredUser extends User {
 	@JsonBackReference(value="friendship-request")
 	private Set<RegisteredUser> friendshipRequests;
 	
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-	@JoinTable(name = "flight_invitations", joinColumns = { @JoinColumn(name = "invite_for") }, inverseJoinColumns = {
-			@JoinColumn(name = "invite_from") })
+	/*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy="user")
 	@JsonBackReference(value="flight-invitations")
-	private Set<RegisteredUser> flightInvitations;
+	private Set<FlightReservation> flightInvitations;*/
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
@@ -81,13 +79,13 @@ public class RegisteredUser extends User {
 		this.friendshipRequests = friendshipRequests;
 	}
 
-	public Set<RegisteredUser> getFlightInvitations() {
+	/*public Set<FlightReservation> getFlightInvitations() {
 		return flightInvitations;
 	}
 
-	public void setFlightInvitations(Set<RegisteredUser> flightInvitations) {
+	public void setFlightInvitations(Set<FlightReservation> flightInvitations) {
 		this.flightInvitations = flightInvitations;
-	}
+	}*/
 
 	public Set<FlightReservation> getFlightReservations() {
 		return flightReservations;
