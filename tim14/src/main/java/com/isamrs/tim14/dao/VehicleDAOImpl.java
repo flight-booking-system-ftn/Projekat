@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACarAdmin;
-import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -190,6 +190,22 @@ public class VehicleDAOImpl implements VehicleDAO {
 		}
 		return 0;
 	}
+	
+	@Override
+	@Transactional
+	public Integer getIntermediateGrade(Integer id) {
+		Vehicle vehicle = entityManager.find(Vehicle.class, id);
+		int sum = 0;
+		int count = 0;
+		for(Grade g : vehicle.getGrades()) {
+			sum+= g.getGrade();
+			count++;
+		}
+		if(count==0)
+			return 0;
+		else
+			return sum/count;
+	}
 
 	@Override
 	@Transactional
@@ -223,5 +239,12 @@ public class VehicleDAOImpl implements VehicleDAO {
 			managedVehicle.setBranchOffice(vehicle.getBranchOffice());
 			managedVehicle.setPrice(vehicle.getPrice());
 			return managedVehicle;
+	}
+
+	@Override
+	@Transactional
+	public Collection<Vehicle> getAllRentsVehicles() {
+		RentACarAdmin admin = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return admin.getRentACar().getVehicles();
 	}
 }

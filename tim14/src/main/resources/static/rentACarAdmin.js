@@ -13,6 +13,22 @@ $(document).ready(function() {
 		            url : '/api/rentAdmin/rent',
 		            headers: createAuthorizationTokenHeader(),
 		            success: function(data){
+		            	 $.get({url:'/api/getGradeForRent',
+		     	    		headers: createAuthorizationTokenHeader()}, function(data){
+		     	    		var i = 0;
+		     	    		var onStar = data;
+		     	    		var stars = $('.li.star');
+		     	    		console.log("AAAA", onStar);
+		     	    		$("ul li").each(function() {
+		     	    			$(this).removeClass('selected');
+		     	   		    })  
+		     	    		$("ul li").each(function() {
+		     	    			if(i<onStar){
+		     	    				$(this).addClass('selected');
+		     	    				i++;}
+		     	    			else return false;
+		     	   		    })
+		     	       })
 						console.log("Admin's rent: ", data);
 		                $('#pNameOfChosenRentRemove').text(data.name);
 		                $('#pDescriptionOfChosenRentRemove').text(data.description);
@@ -93,6 +109,15 @@ $(document).ready(function() {
         $(location).attr('href',"/branchOffice.html");
     });
     
+    $(document).on('click','#allVehicles',function(){
+    	renderTableRentVehicles();
+    	$("#allVehiclesContainer").css("display", "block");
+    });
+    
+    $(document).on('click','#quitAllVehicles',function(){
+    	$("#allVehiclesContainer").css("display", "none");
+    });
+    
     $(document).on('click','#editRentBtn', function(){
 		$.ajax({
 			type: 'GET',
@@ -113,6 +138,183 @@ $(document).ready(function() {
             }
 		});
 	});
+    
+    $(document).on('click', "#showReports", function(){
+    	$("#chartContainer").css('display', 'block');
+    	
+    })
+    
+    $(document).on('click', '#showRentIncomes', function(){
+    	console.log("e");
+    	var startCheck = $('#startIncomeRent').val();
+    	var endCheck = $('#endIncomeRent').val();
+    	if(startCheck == "" || endCheck == ""){
+    		showMessage("Enter start and end date", "orange");
+    		return;
+    	}
+    	var start = stringToDate($('#startIncomeRent').val());
+    	console.log(start);
+    	var end = stringToDate($('#endIncomeRent').val());
+    	if(start>end){
+    		showMessage("Start date must be later then end date", "orange");
+    		return;
+    	}
+    	var start = stringToDate($('#startIncomeRent').val())- 24*60*60*1000
+    	var end = stringToDate($('#endIncomeRent').val()) + 24*60*60*1000
+    	$.get({url: '/api/getRentIncomes/'+start+'/'+end, 
+			headers: createAuthorizationTokenHeader()}, function(income){
+				console.log(income);
+				$("#rentIncomeVal").html(income);
+			})
+    })
+    
+    $(document).on('click', '#showGraph', function(){
+    	var ctx = $("#myChart");
+    	var type = $("#chartType").val();
+    	if(type=="daily"){
+    		$.get({url: '/api/getDailyVehicles', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of vehicles',
+			    	      data: data.x,
+			    	      backgroundColor:[
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}else if(type=="weekly"){
+    		$.get({url: '/api/getWeeklyVehicles', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of vehicles',
+			    	      data: data.y,
+			    	      backgroundColor: [
+			    	    	  	'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	    	  	'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}else if(type=="monthly"){
+    		$.get({url: '/api/getMonthlyVehicles', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of vehicles',
+			    	      data: data.y,
+			    	      backgroundColor: [
+			    	    	  'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	    	  'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}
+			  
+    })
+    
+    $(document).on('click', "#hideReports", function(){
+    	$("#chartContainer").css('display', 'none');
+    	
+    })
     
     $(document).on('click','#quitDialogEditRentInfo', function(){
 		$('#dialogEditRentInformation').css('display','none');
@@ -526,7 +728,67 @@ $(document).ready(function() {
 		});
 	}
 
-	
+	var renderTableRentVehicles = function(){
+		$.ajax({
+			type: 'GET',
+			url: '/api/allVehicles',
+			headers: createAuthorizationTokenHeader(),
+			success: function(vehicles){
+				console.log(vehicles)
+				$('#allVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th></tr>`);
+				for(var i=0;i<vehicles.length;i++){
+					var red = vehicles[i];
+					var forGrade = `<section class='rating-widget'>
+					<div class='rating-stars text-center' height="20" width="100">
+					  <ul>
+					      <li class='star' title='Poor' data-value='1'>
+		    			  	<i class='fa fa-star fa-fw'></i>
+			   			 </li>
+			     		 <li class='star' title='Fair' data-value='2'>
+			        		<i class='fa fa-star fa-fw'></i>
+			      		 </li>
+			     		 <li class='star' title='Good' data-value='3'>
+			       			<i class='fa fa-star fa-fw'></i>
+			      		 </li>
+			     		 <li class='star' title='Excellent' data-value='4'>
+			        		<i class='fa fa-star fa-fw'></i>
+			      		 </li>
+			      		 <li class='star' title='WOW!!!' data-value='5'>
+			        	 	<i class='fa fa-star fa-fw'></i>
+			     		 </li>
+		    		 </ul>
+  				</div>	
+  			</section>`
+			$('#allVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.destination.name}</td><td>${forGrade}</td><td>${red.price}</td></tr>`);
+			$.get({url:'/api/getGradeForRent',
+				headers: createAuthorizationTokenHeader()}, function(data){
+	     	    	var i = 0;
+	     	    	var onStar = data;
+	     	    	var stars = $('.li.star');
+	     	    	console.log("AAAA", onStar);
+	     	    	$("ul li").each(function() {
+	     	    		$(this).removeClass('selected');
+	     	   		})  
+	     	    	$("ul li").each(function() {
+	     	    		if(i<onStar){
+	     	    			$(this).addClass('selected');
+	     	    			i++;
+	     	    		}
+	     	    		else
+	     	    			return false;
+	     	   		 })
+	     	      })
+			}
+		},
+		error: function (jqXHR, exception) {
+			if (jqXHR.status == 401) {
+				showMessage('Login first!', "orange");
+			}else{
+				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+			}
+		}
+	});
+	}
 	
 
 	function formatDate(date) {

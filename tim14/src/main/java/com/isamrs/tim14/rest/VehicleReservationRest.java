@@ -1,5 +1,6 @@
 package com.isamrs.tim14.rest;
 
+import java.text.ParseException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.VehicleReservationDAO;
+import com.isamrs.tim14.dto.GraphsDTO;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
 
@@ -87,5 +89,31 @@ private VehicleReservationDAO VehicleReservationDAO;
 		return new ResponseEntity<VehicleReservation>(result, HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/getDailyVehicles",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getDaily() throws ParseException{
+		GraphsDTO g = VehicleReservationDAO.getVehiclesDaily();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/getWeeklyVehicles",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getWeekly() throws ParseException{
+		GraphsDTO g = VehicleReservationDAO.getVehiclesWeekly();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/getMonthlyVehicles",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getMonthly() throws ParseException{
+		GraphsDTO g = VehicleReservationDAO.getVehiclesMonthly();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
 	
 }

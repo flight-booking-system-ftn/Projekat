@@ -175,6 +175,22 @@ public class RentDAOImpl implements RentDAO {
 
 	@Override
 	@Transactional
+	public Integer getGradeRent() {
+		RentACarAdmin admin =(RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int sum = 0;
+		int count = 0;
+		for(Grade g : admin.getRentACar().getGrades()) {
+			sum+=g.getGrade();
+			count++;
+		}
+		if(count==0)
+			return 0;
+		else
+			return sum/count;
+	}
+	
+	@Override
+	@Transactional
 	public void setGrade(Integer id, Integer grade) {
 		RentACar rent = entityManager.find(RentACar.class, id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -207,5 +223,19 @@ public class RentDAOImpl implements RentDAO {
 		managedRent.setName(rent.getName());
 		return managedRent;
 		
+	}
+
+	@Override
+	public double getIncome(Date start, Date end) {
+		RentACarAdmin admin = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int sum = 0;
+		for(Vehicle v: admin.getRentACar().getVehicles()) {
+			for(VehicleReservation vr: v.getReservations()) {
+				if(vr.getStart().before(end) && vr.getStart().after(start)) {
+					sum +=  vr.getPrice() - vr.getPrice()*vr.getDiscount()/100;
+				}
+			}
+		}
+		return sum;
 	}
 }
