@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.isamrs.tim14.dao.FlightReservationDAO;
 import com.isamrs.tim14.model.Flight;
@@ -49,10 +50,10 @@ public class FlightReservationRest {
 		return flightReservationDAO.getQuickTickets(airlineID);
 	}
 	
-	@PutMapping("/flightReservation/buyQuickTicket/{reservationID}")
+	@PutMapping("/flightReservation/buyQuickTicket")
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
-	public ResponseEntity<String> buyQuickTicket(@PathVariable Integer reservationID) {
-		return flightReservationDAO.buyQuickTicket(reservationID);
+	public ResponseEntity<String> buyQuickTicket(@RequestBody FlightReservation flightReservation) {
+		return flightReservationDAO.buyQuickTicket(flightReservation);
 	}
 	
 	@GetMapping("/flightReservation/getQuickReservation/{reservationID}")
@@ -67,5 +68,21 @@ public class FlightReservationRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Flight>> getFlightsHistory(){
 		return new ResponseEntity<Collection<Flight>>(flightReservationDAO.getFlightHistory(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/flightReservation/acceptInvitation/{reservationID}")
+	//@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	public RedirectView acceptInvitation(@PathVariable Integer reservationID) {
+		//flightReservationDAO.acceptInvitation(reservationID);
+		
+		return new RedirectView("/login.html");
+	}
+	
+	@GetMapping("/flightReservation/declineInvitation/{reservationID}")
+	//@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	public RedirectView declineInvitation(@PathVariable Integer reservationID) {
+		flightReservationDAO.declineInvitation(reservationID);
+		
+		return new RedirectView("/login.html");
 	}
 }

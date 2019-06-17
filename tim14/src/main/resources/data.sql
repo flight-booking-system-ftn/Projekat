@@ -391,19 +391,36 @@ INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALU
 INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (10,28,5); 
 INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (11,34,6);
 
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (1, "BMW", "X5", 100, 2005, 4, "CAR", 1, 1);  
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (2, "Audi", "A7", 200, 2006, 4, "CAR", 2, 1);  
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (3, "Porsche", "Cayenne", 200, 2010, 4, "CAR", 2, 1);  
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (4, "Volkswagen", "Golf 6", 90, 2015, 4, "CAR", 3, 1);  
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (5, "Porsche", "Panamera", 170, 2009, 4, "CAR", 4, 2);
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (6, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 5, 2);
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (7, "Harley Davidson", "Iron 883", 170, 2019, 1, "MOTOCYCLE", 4, 2);
-INSERT INTO bookingdb.vehicle (`id`,`brand`,`model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES (8, "Yamaha", "N MAX 125", 70, 2015, 2, "MOTOCYCLE", 1, 1);
+INSERT INTO `vehicle` (`id`, `brand`, `model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES
+		(1, "BMW", "X5", 100, 2005, 4, "CAR", 1, 1),
+		(2, "Audi", "A7", 200, 2006, 4, "CAR", 1, 1),
+		(3, "Porsche", "Cayenne", 200, 2010, 4, "CAR", 2, 1),
+		(4, "Volkswagen", "Golf 6", 90, 2015, 4, "CAR", 2, 1),
+		(5, "Porsche", "Panamera", 170, 2009, 4, "CAR", 3, 2),
+		(6, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 3, 2),
+		(7, "Harley Davidson", "Iron 883", 170, 2019, 1, "MOTOCYCLE", 4, 2),
+		(8, "Yamaha", "N MAX 125", 70, 2015, 2, "MOTOCYCLE", 2, 1),
+		(9, "Citroen", "C5", 100, 2005, 4, "CAR", 5, 3),
+		(10, "Citroen", "C4", 200, 2006, 4, "CAR", 5, 3),
+		(11, "Fiat", "Punto", 200, 2010, 4, "CAR", 6, 3),
+		(12, "BMW", "i8", 90, 2015, 4, "CAR", 8, 4),
+		(13, "Porsche", "Panamera", 170, 2013, 4, "CAR", 7, 4),
+		(14, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 7, 4),
+		(15, "Yamaha", "R6", 170, 2019, 1, "MOTOCYCLE", 8, 4),
+		(16, "Yamaha", "R1", 100, 2015, 2, "MOTOCYCLE", 6, 3),
+		(17, "Audi", "R8", 100, 2018, 4, "CAR", 9, 5),
+		(18, "Audi", "A7", 200, 2016, 4, "CAR", 9, 5),
+		(19, "Fiat", "Bravo", 100, 2008, 4, "CAR", 9, 5),
+		(20, "Opel", "Corsa", 90, 2006, 4, "CAR", 10, 5),
+		(21, "Opel", "Antara", 170, 2009, 4, "CAR", 11, 6),
+		(22, "Honda", "CR-V", 260, 2017, 4, "CAR", 11, 6),
+		(23, "Honda", "Activa 5G", 100, 2019, 2, "MOTOCYCLE", 11, 6),
+		(24, "Honda", "Dio", 70, 2015, 2, "MOTOCYCLE", 10, 5);
 
 INSERT INTO `users` values ("SystemAdmin", 1, "Novi Sad", "sysadmin@gmail.com", b'1', "Lisa", "Tobias", '2019-06-10 00:00:01', "$2a$10$CCCR0ZK7vfrJsrKHKWeanuYpuchsLOaACUWIXmZFOl7Np3qAJHvX2", b'1', "021/542122", "system", 0, b'1', null,null,null);
-INSERT INTO `users` values ("RegisteredUser", 2, "Madrid", "user1@gmail.com", b'1', "Rocky", "Balboa", '2019-06-10 04:00:01', "$2a$10$23uC9cD//AG1wBl3UBK8eO6fmisGo00jEOSp/xFLAOeaZ6ISkQ396", b'1', "021/35353", "user1", 0, b'1', null,null,null);
-INSERT INTO `users` values ("RegisteredUser", 3, "Beograd", "user2@gmail.com", b'1', "Harry", "Potter", '2019-06-12 04:00:01', "$2a$10$5D0Ew/t/773X3k8We3PNWeTjC65GrhDS4uwLZEyr6MaiGU3mTTJca", b'1', "021/35353", "user2", 0, b'1', null,null,null);
-INSERT INTO `users` values ("RegisteredUser", 4, "New York", "user3@gmail.com", b'1', "Frodo", "Baggins", '2019-06-12 04:00:01', "$2a$10$YsngqlDx/4aI7dx2kC2jROl53qD9MIbsK6.3KBhe8eluZwKi7ayvy", b'1', "021/35353", "user3", 0, b'1', null,null,null);
+INSERT INTO `users` values ("RegisteredUser", 2, "Madrid", "isamrsproba1@gmail.com", b'1', "Rocky", "Balboa", '2019-06-10 04:00:01', "$2a$10$23uC9cD//AG1wBl3UBK8eO6fmisGo00jEOSp/xFLAOeaZ6ISkQ396", b'1', "021/35353", "user1", 0, b'1', null,null,null);
+INSERT INTO `users` values ("RegisteredUser", 3, "Beograd", "isamrsproba1@gmail.com", b'1', "Harry", "Potter", '2019-06-12 04:00:01', "$2a$10$5D0Ew/t/773X3k8We3PNWeTjC65GrhDS4uwLZEyr6MaiGU3mTTJca", b'1', "021/35353", "user2", 0, b'1', null,null,null);
+INSERT INTO `users` values ("RegisteredUser", 4, "New York", "isamrsproba1@gmail.com", b'1', "Frodo", "Baggins", '2019-06-12 04:00:01', "$2a$10$YsngqlDx/4aI7dx2kC2jROl53qD9MIbsK6.3KBhe8eluZwKi7ayvy", b'1', "021/35353", "user3", 0, b'1', null,null,null);
 INSERT INTO `users` values ("AirlineAdmin", 5, "Rome", "airlineadmin1@gmail.com", b'1', "Aleksa", "Aleksic", '2019-06-10 07:00:01', "$2a$10$A7Csp98n2w.UmhQMCnIe4ujgPKbahoBX1mBt2mRJ9TpXjL2uqIA7O", b'0', "021/75223", "airline1", 0, b'1', null,1,null);
 INSERT INTO `users` values ("AirlineAdmin", 6, "Berlin", "airlineadmin2@gmail.com", b'1', "Marko", "Markovic", '2019-06-12 07:00:01', "$2a$10$/5W6j.EO7WEm.nn19HdtPezGUtW1iFEfmjdd3tLHVAAl16J6oQG2i", b'0', "021/751324", "airline2", 0, b'1', null,1,null);
 INSERT INTO `users` values ("AirlineAdmin", 7, "Moscow", "airlineadmin3@gmail.com", b'1', "Dusan", "Bulat", '2019-06-12 07:00:01', "$2a$10$wtxa0A87Q3f.iGTMemOrcuNo4fyN1Dt4mKwpkRDgOvZ6O/lCiLgki", b'0', "021/123456", "airline3", 0, b'1', null,2,null);

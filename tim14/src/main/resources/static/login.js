@@ -3,13 +3,13 @@ var loginUrl = "auth/login";
 $(document).ready(function() {
 	$(document).on('submit', '#loginForm', function(e) {
 		e.preventDefault();
+		
 		var username = $('#username').val();
 		var password = $('#password').val();
 		if (username == "" || password == "") {
-			alert("You havent enetered usernme or password");
+			showMessage("You haven't entered username or password.", "red");
 			return;
 		} else {
-			console.log(username, password);
 			$.ajax({
 				type : 'POST',
 				url : loginUrl,
@@ -20,7 +20,7 @@ $(document).ready(function() {
 				}),
 				dataType: 'json',
 				success : function(response) {
-					setJwtToken(response.accessToken);			
+					setJwtToken(response.accessToken);
 					$(location).attr('href', response.redirectionURL);
 				},
 				error: function (xhr, status) {

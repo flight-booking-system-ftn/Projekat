@@ -1,6 +1,7 @@
 package com.isamrs.tim14.model;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -43,6 +46,10 @@ public class FlightReservation {
 	
 	@Column(name = "date_of_purchase")
 	private Timestamp dateOfPurchase;
+	
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinTable(name = "flight_reservation_service", joinColumns = @JoinColumn(name = "flight_reservation_id"), inverseJoinColumns = @JoinColumn(name = "service_id"))
+	private Set<Luggage> luggages;
 	
 	@Column(name = "price")
 	private Double price;
@@ -116,6 +123,14 @@ public class FlightReservation {
 
 	public void setDateOfPurchase(Timestamp dateOfPurchase) {
 		this.dateOfPurchase = dateOfPurchase;
+	}
+
+	public Set<Luggage> getLuggages() {
+		return luggages;
+	}
+
+	public void setLuggages(Set<Luggage> luggages) {
+		this.luggages = luggages;
 	}
 
 	public Double getPrice() {
