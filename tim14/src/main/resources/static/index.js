@@ -1572,7 +1572,7 @@ $(document).ready(function(){
     	};
     	
     	bigReservation.flightReservation[passengerIndex].passportNumber = passengerPassportNumber;
-		bigReservation.flightReservation[passengerIndex].passenger = passenger;=
+		bigReservation.flightReservation[passengerIndex].passenger = passenger;
     	
     	passengerIndex += 1;
     	$("label#indexOfPassenger").text(parseInt($("label#indexOfPassenger").text()) + 1);
@@ -1725,7 +1725,7 @@ $(document).ready(function(){
 						$("input#bonusPoints").attr("max", points);
 						$("label#userBonusPoints").text(points);
 					}
-				});=
+				});
 				
 				showMessage("Flight reservation added to current reservations.", "green");
 				

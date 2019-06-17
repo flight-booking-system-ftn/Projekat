@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -247,6 +248,29 @@ public class RoomDAOImpl implements RoomDAO {
 		g.setUser(ru);
 		entityManager.persist(g);
 		room.getGrades().add(g);	
+	}
+
+	@Override
+	@Transactional
+	public Collection<Room> getAllHotelRooms() {
+		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return admin.getHotel().getRooms();
+	}
+
+	@Override
+	@Transactional
+	public Integer getIntermediateGrade(Integer id) {
+		Room room = entityManager.find(Room.class, id);
+		int sum = 0;
+		int count = 0;
+		for(Grade g : room.getGrades()) {
+			sum+= g.getGrade();
+			count++;
+		}
+		if(count==0)
+			return 0;
+		else
+			return sum/count;
 	}
 
 }

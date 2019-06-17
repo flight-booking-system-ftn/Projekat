@@ -81,8 +81,24 @@ $(document).ready(function() {
             $('#pDescriptionOfChosenHotelRR').text(data.description);
             $('#pDestinationOfChosenHotelRR').text(data.destination.name +
                 ", " + data.destination.country);
-            renderTableAllRoomsAndServicesOfHotel();
-            $('#dialogHotelViewRR').css('display', 'block');
+            $.get({ url:'/api/getGradeForHotel',
+ 	    			headers: createAuthorizationTokenHeader()
+ 	    	},function(data){
+ 	    		var i = 0;
+ 	    		var onStar = data;
+ 	    		var stars = $('.li.star');
+ 	    		$("ul li").each(function() {
+ 	    			$(this).removeClass('selected');
+ 	   		    })  
+ 	    		$("ul li").each(function() {
+ 	    			if(i<onStar){
+ 	    				$(this).addClass('selected');
+ 	    				i++;}
+ 	    			else return false;
+ 	   		    })
+ 	   		    renderTableAllRoomsAndServicesOfHotel();
+ 	       });
+            
         },
         error: function (jqXHR) {
         	if (jqXHR.status == 401) {
@@ -92,7 +108,52 @@ $(document).ready(function() {
 			}
         }
     });
+	
+	
 	$('#showHotelInfoBtn').css('display', 'none');
+	
+	$(document).on('click','#allRooms',function(){
+		renderTableHotelRooms();
+	 });
+
+    $(document).on('click','#quitAllRooms',function(){
+    	$("#allRoomsContainer").css("display", "none");
+    });
+    
+    $(document).on('click', "#showReports", function(){
+    	$("#chartContainer").css('display', 'block');
+    });
+    
+    $(document).on('click', '#showHotelIncomes', function(){
+    	console.log("e");
+    	var startCheck = $('#startIncomeHotel').val();
+    	var endCheck = $('#endIncomeHotel').val();
+    	if(startCheck == "" || endCheck == ""){
+    		showMessage("Enter start and end date", "orange");
+    		return;
+    	}
+    	var start = stringToDate($('#startIncomeHotel').val());
+    	console.log(start);
+    	var end = stringToDate($('#endIncomeHotel').val());
+    	if(start>end){
+    		showMessage("Start date must be later then end date", "orange");
+    		return;
+    	}
+    	var start = stringToDate($('#startIncomeHotel').val())- 24*60*60*1000
+    	var end = stringToDate($('#endIncomeHotel').val()) + 24*60*60*1000
+    	$.get({
+    		url: '/api/getHotelIncomes/'+start+'/'+end, 
+    		headers: createAuthorizationTokenHeader()
+		}, 
+		function(income){
+			console.log(income);
+			$("#hotelIncomeVal").html(income);
+		});
+    });
+    
+    
+    
+	
 	$('#quitDialogHotelViewRR').css('display','none');
 
 	$(document).on('click', '#addRoomBtn', function() {
@@ -644,7 +705,156 @@ $(document).ready(function() {
 		});
 	});
 	
-})
+	$(document).on('click', '#showGraph', function(){
+    	var ctx = $("#myChart");
+    	var type = $("#chartType").val();
+    	if(type=="daily"){
+    		$.get({url: '/api/getDailyRooms', 
+    			headers: createAuthorizationTokenHeader()},
+    			function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of rooms',
+			    	      data: data.x,
+			    	      backgroundColor:[
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}else if(type=="weekly"){
+    		$.get({url: '/api/getWeeklyRooms', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of rooms',
+			    	      data: data.y,
+			    	      backgroundColor: [
+			    	    	  	'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	    	  	'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}else if(type=="monthly"){
+    		$.get({url: '/api/getMonthlyRooms', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of rooms',
+			    	      data: data.y,
+			    	      backgroundColor: [
+			    	    	  'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	    	  'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}
+
+    });
+	
+	$(document).on('click', "#hideReports", function(){
+    	$("#chartContainer").css('display', 'none');
+
+    });
+	
+});
 
 
 var renderHotelServiceTable = function(hotelId){
@@ -706,9 +916,73 @@ var renderTableAllRoomsAndServicesOfHotel = function(){
 		            var inputTextService = "hotelServiceSetPriceField" + red.id;
 		            $('#hotelServicesTableRR tr:last').after(`<tr><td>${red.name}</td><td><input type="number" min="1" style="text-align:center;" value=${red.price} id=${inputTextService}></td><td><button id=${buttonSEID}>Change price</button></td></tr>`);
 		        }
+		        $('#dialogHotelViewRR').css('display', 'block');
 		    });
 		},
 		error: function (jqXHR, exception) {
+			if (jqXHR.status == 401) {
+				showMessage('Login first!', "orange");
+			}else{
+				showMessage('[' + jqXHR.status + "]  " + exception, "red");
+			}
+		}
+	});
+}
+
+var renderTableHotelRooms = function(){
+	$.ajax({
+		type: 'GET',
+		url: '/api/allRooms',
+		headers: createAuthorizationTokenHeader(),
+		success: function(rooms){
+			console.log("><>< ", rooms)
+			$('#allRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>`);
+			for(var i=0;i<rooms.length;i++){
+				var red = rooms[i];
+				var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' height="20" width="100">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>	
+				</section>`
+				$('#allRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>${forGrade}</td><td>${red.price}</td></tr>`);
+				$.get({url:'/api/getGradeForHotel',headers: createAuthorizationTokenHeader()}, 
+					function(data){
+		     	    	var i = 0;
+		     	    	var onStar = data;
+		     	    	var stars = $('.li.star');
+		     	    	$("ul li").each(function() {
+		     	    		$(this).removeClass('selected');
+		     	   		})  
+		     	    	$("ul li").each(function() {
+		     	    		if(i<onStar){
+		     	    			$(this).addClass('selected');
+		     	    			i++;
+		     	    		}
+		     	    		else
+		     	    			return false;
+		     	   		 })
+		     	   	$("#allRoomsContainer").show();
+	     	      }
+				);
+				
+			}
+		},error: function (jqXHR, exception) {
 			if (jqXHR.status == 401) {
 				showMessage('Login first!', "orange");
 			}else{
