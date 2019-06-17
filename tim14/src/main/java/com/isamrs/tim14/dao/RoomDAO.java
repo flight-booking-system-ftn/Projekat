@@ -16,4 +16,6 @@ public interface RoomDAO {
 	public Room changeRoom(Room room);
 	public Integer getGrade(Integer id);
 	public void setGrade(Integer id, Integer grade);
+	public Collection<Room> getAllHotelRooms();
+	public Integer getIntermediateGrade(Integer id);
 }

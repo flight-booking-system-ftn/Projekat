@@ -1,5 +1,6 @@
 package com.isamrs.tim14.rest;
 
+import java.text.ParseException;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RoomReservationDAO;
+import com.isamrs.tim14.dto.GraphsDTO;
 import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.Vehicle;
@@ -87,5 +89,34 @@ private RoomReservationDAO roomReservationDAO;
 		
 		return new ResponseEntity<RoomReservation>(result, HttpStatus.OK);
 	}
+	
+	@RequestMapping(
+			value = "/getDailyRooms",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getDaily() throws ParseException{
+		GraphsDTO g = roomReservationDAO.getRoomsDaily();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
+
+	@RequestMapping(
+			value = "/getWeeklyRooms",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getWeekly() throws ParseException{
+		GraphsDTO g = roomReservationDAO.getRoomsWeekly();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
+
+	@RequestMapping(
+			value = "/getMonthlyRooms",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GraphsDTO> getMonthly() throws ParseException{
+		GraphsDTO g = roomReservationDAO.getRoomsMonthly();
+		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
+	}
+	
+	
 	
 }

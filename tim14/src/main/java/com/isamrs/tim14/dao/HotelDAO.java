@@ -1,5 +1,6 @@
 package com.isamrs.tim14.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.isamrs.tim14.model.Hotel;
@@ -27,4 +28,8 @@ public interface HotelDAO {
 	public List<Hotel> getHotelsFromReservations();
 	
 	public Hotel setDiscount(int discount);
+	
+	public Integer getGradeHotel();
+	
+	public double getIncome(Date start, Date end);
 }

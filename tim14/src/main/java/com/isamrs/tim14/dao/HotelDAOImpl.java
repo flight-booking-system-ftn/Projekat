@@ -196,4 +196,38 @@ public class HotelDAOImpl implements HotelDAO {
 		return managedHotel;
 	}
 
+	@Override
+	@Transactional
+	public Integer getGradeHotel() {
+		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int sum = 0;
+		int count = 0;
+		for(Grade g : admin.getHotel().getGrades()) {
+			sum+=g.getGrade();
+			count++;
+		}
+		if(count == 0) {
+			return 0;
+		}
+		return sum/count;
+	}
+
+	@Override
+	@Transactional
+	public double getIncome(Date start, Date end) {
+		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		double sum = 0;
+		for(Room room : admin.getHotel().getRooms()) {
+			for(RoomReservation rr : room.getReservations()) {
+				if(rr.getStart().before(end) && rr.getStart().after(start)) {
+					sum += rr.getPrice() - rr.getPrice()*rr.getDiscount()/100;
+				}
+			}
+		}
+		
+		return sum;
+	}
+	
+	
+
 }

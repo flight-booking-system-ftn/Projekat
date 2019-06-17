@@ -131,4 +131,23 @@ public class RoomRest {
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@RequestMapping(value = "/getMediumGradeForRoom/{id}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getGrade(@PathVariable Integer id) {
+		Integer grade = roomDAO.getIntermediateGrade(id);
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/allRooms",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<Room>> getAllRooms(){
+		Collection<Room> rooms = roomDAO.getAllHotelRooms();
+		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
+	}
+	
 }

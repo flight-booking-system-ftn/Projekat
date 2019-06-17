@@ -1,6 +1,7 @@
 package com.isamrs.tim14.rest;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import com.isamrs.tim14.dao.HotelDAO;
 import com.isamrs.tim14.dto.ServiceDiscount;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RentACar;
+import com.isamrs.tim14.model.Room;
 
 @RestController
 @RequestMapping("/api")
@@ -125,10 +127,35 @@ public class HotelRest {
 			value = "/reservedHotels",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Hotel>> getReservationRents(){
+	public ResponseEntity<Collection<Hotel>> getReservationHotel(){
 		
 		Collection<Hotel> res = hotelDAO.getHotelsFromReservations();
 		
 		return new ResponseEntity<Collection<Hotel>>(res, HttpStatus.OK);
 	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/getGradeForHotel",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getGrade() {
+		Integer grade = hotelDAO.getGradeHotel();
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
+	@RequestMapping(
+			value = "/getHotelIncomes/{startDate}/{endDate}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Double> getIncome(@PathVariable Long startDate, @PathVariable Long endDate) {
+		Date start = new Date(startDate);
+		Date end = new Date(endDate);
+		double income = hotelDAO.getIncome(start, end);
+		return new ResponseEntity<Double>(income, HttpStatus.OK);
+	}
+	
+	
+	
 }
