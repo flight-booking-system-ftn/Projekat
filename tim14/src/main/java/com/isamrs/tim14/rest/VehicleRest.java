@@ -104,7 +104,7 @@ public class VehicleRest {
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
+	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
 	@RequestMapping(value = "/getMediumGradeForVehicle/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)

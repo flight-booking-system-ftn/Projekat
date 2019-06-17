@@ -1,6 +1,7 @@
 package com.isamrs.tim14.rest;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -134,4 +135,24 @@ public class AirlineRest {
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	@RequestMapping(value = "/getGradeForAirline",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Integer> getGrade() {
+		Integer grade = airlineDAO.getGradeAirline();
+		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
+	@RequestMapping(
+			value = "/getAirlineIncomes/{startDate}/{endDate}",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Double> getIncome(@PathVariable Long startDate, @PathVariable Long endDate) {
+		Date start = new Date(startDate);
+		Date end = new Date(endDate);
+		double income = airlineDAO.getIncome(start, end);
+		return new ResponseEntity<Double>(income, HttpStatus.OK);
+	}
 }

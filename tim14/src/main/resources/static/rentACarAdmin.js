@@ -760,7 +760,7 @@ $(document).ready(function() {
   				</div>	
   			</section>`
 			$('#allVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.destination.name}</td><td>${forGrade}</td><td>${red.price}</td></tr>`);
-			$.get({url:'/api/getGradeForRent',
+			$.get({url:'/api/getMediumGradeForVehicle/'+red.id,
 				headers: createAuthorizationTokenHeader()}, function(data){
 	     	    	var i = 0;
 	     	    	var onStar = data;

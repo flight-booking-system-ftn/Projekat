@@ -1,6 +1,7 @@
 package com.isamrs.tim14.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -222,4 +223,35 @@ public class AirlineDAOImpl implements AirlineDAO {
 		return new ResponseEntity<Set<Luggage>>(managedFlight.getAirline().getLuggagePricelist(), HttpStatus.OK);
 	}
 
+	@Override
+	@Transactional
+	public Integer getGradeAirline() {
+		AirlineAdmin admin =(AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int sum = 0;
+		int count = 0;
+		for(Grade g : admin.getAirline().getGrades()) {
+			sum+=g.getGrade();
+			count++;
+		}
+		if(count==0)
+			return 0;
+		else
+			return sum/count;
+	}
+	
+	@Override
+	public double getIncome(Date start, Date end) {
+		Query query = entityManager.createQuery("SELECT fr FROM FlightReservation fr");
+		List<FlightReservation> reservations = query.getResultList();
+		AirlineAdmin admin = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		int sum = 0;
+		for(FlightReservation fr: reservations) {
+			if(fr.getFlight().getAirline().getId()==admin.getAirline().getId()) {
+				if(fr.getFlight().getArrivalDate().before(end) && fr.getFlight().getDepartureDate().after(start)) {
+					sum +=  fr.getPrice() - fr.getPrice()*fr.getDiscount()/100;
+				}
+			}
+		}
+		return sum;
+	}
 }

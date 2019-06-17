@@ -117,6 +117,27 @@ $(document).ready(function() {
 					var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
 					var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
 					var actions = $("<td><input type='button' class='edit' value='Edit seats'> &nbsp; &nbsp; &nbsp; &nbsp; <input type='button' class='makeQuickReservation' value='Make quick reservation'></td>");
+					var forGrade = $("<td width='10%'><section class='rating-widget'>" +
+							"<div class='rating-stars text-center' height='20' width='100'>" +
+								"<ul>" +
+									"<li class='star' title='Poor' data-value='1'>" +
+										"<i class='fa fa-star fa-fw'></i>" +
+									"</li>" +
+									"<li class='star' title='Fair' data-value='2'>" +
+									"<i class='fa fa-star fa-fw'></i>" +
+									"</li>" +
+									"<li class='star' title='Good' data-value='3'>" +
+									"<i class='fa fa-star fa-fw'></i>" +
+									"</li>" +
+									"<li class='star' title='Excellent' data-value='4'>" +
+									"<i class='fa fa-star fa-fw'></i>" +
+									"</li>" +
+									"<li class='star' title='WOW!!!' data-value='5'>" +
+									"<i class='fa fa-star fa-fw'></i>" +
+									"</li>" +
+									"</ul>" +
+									"</div>	" +
+									"</section></td>");
 					
 					tr.append(id);
 					tr.append(from);
@@ -128,13 +149,213 @@ $(document).ready(function() {
 					tr.append(ticketPriceFirstClass);
 					tr.append(ticketPriceBusinessClass);
 					tr.append(ticketPriceEconomyClass);
+					tr.append(forGrade);
 					tr.append(actions);
 					
 					table.append(tr);
+
+					$.get({url:'/flight/getMediumGradeForFlight/'+flight.id,
+						headers: createAuthorizationTokenHeader()}, function(data){
+			     	    	var i = 0;
+			     	    	var onStar = data;
+			     	    	var stars = $('.li.star');
+			     	    	console.log("AAAA", onStar);
+			     	    	$("ul li").each(function() {
+			     	    		$(this).removeClass('selected');
+			     	   		})  
+			     	    	$("ul li").each(function() {
+			     	    		if(i<onStar){
+			     	    			$(this).addClass('selected');
+			     	    			i++;
+			     	    		}
+			     	    		else
+			     	    			return false;
+			     	   		 })
+			     	      })
+					
 				});
 			}
 		});
 	}
+	
+	
+    $(document).on('click', "#showReports", function(){
+    	$("#chartContainer").css('display', 'block');
+
+    })
+
+    $(document).on('click', '#showAirlineIncomes', function(){
+    	console.log("e");
+    	var startCheck = $('#startIncomeAirline').val();
+    	var endCheck = $('#endIncomeAirline').val();
+    	if(startCheck == "" || endCheck == ""){
+    		showMessage("Enter start and end date", "orange");
+    		return;
+    	}
+    	var start = stringToDate($('#startIncomeAirline').val());
+    	console.log(start);
+    	var end = stringToDate($('#endIncomeAirline').val());
+    	if(start>end){
+    		showMessage("Start date must be later then end date", "orange");
+    		return;
+    	}
+    	var start = stringToDate($('#startIncomeAirline').val())- 24*60*60*1000
+    	var end = stringToDate($('#endIncomeAirline').val()) + 24*60*60*1000
+    	$.get({url: '/api/getAirlineIncomes/'+start+'/'+end, 
+			headers: createAuthorizationTokenHeader()}, function(income){
+				console.log(income);
+				$("#airlineIncomeVal").html(income);
+			})
+    })
+
+    $(document).on('click', '#showGraph', function(){
+    	var ctx = $("#myChart");
+    	var type = $("#chartType").val();
+    	if(type=="daily"){
+    		$.get({url: '/api/getDailyFlights', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of flights',
+			    	      data: data.x,
+			    	      backgroundColor:[
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)',
+			    	        'rgba(54, 162, 235, 0.3)',
+			    	        'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)',
+			    	        'rgba(54, 162, 235, 1)',
+			    	        'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}else if(type=="weekly"){
+    		$.get({url: '/api/getWeeklyFlights', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of flights',
+			    	      data: data.y,
+			    	      backgroundColor: [
+			    	    	  	'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)',
+				    	        'rgba(54, 162, 235, 0.3)',
+				    	        'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	    	  	'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)',
+				    	        'rgba(54, 162, 235, 1)',
+				    	        'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}else if(type=="monthly"){
+    		$.get({url: '/api/getMonthlyFlights', 
+    			headers: createAuthorizationTokenHeader()}, function(data){
+    				console.log("data", data);
+			    	var myChart = new Chart(ctx, {
+			    	  type: 'bar',
+			    	  data: {
+			    	    labels: data.x,
+			    	    datasets: [{
+			    	      label: 'Number of flights',
+			    	      data: data.y,
+			    	      backgroundColor: [
+			    	    	  'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)',
+				    	      'rgba(54, 162, 235, 0.3)',
+				    	      'rgba(75, 192, 192, 0.3)'
+			    	      ],
+			    	      borderColor: [
+			    	    	  'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)',
+				    	      'rgba(54, 162, 235, 1)',
+				    	      'rgba(75, 192, 192, 1)'
+			    	      ],
+			    	      borderWidth: 1
+			    	    }]
+			    	 },
+			    })
+			 })
+    	}
+
+    })
+
+    $(document).on('click', "#hideReports", function(){
+    	$("#chartContainer").css('display', 'none');
+
+    })
+	
 	
 	function formatDate(date) {
 		return date.toLocaleDateString("en", options) + " " + (date.getHours() < 10 ? "0" + (date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
@@ -788,3 +1009,11 @@ $(document).ready(function() {
         $(location).attr('href',"/logout");
     });
 })
+
+function stringToDate(displayFormat){
+		console.log(displayFormat);
+		myDate=displayFormat.split("-");
+		var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
+		console.log(newDate);
+		return new Date(newDate).getTime();
+	}

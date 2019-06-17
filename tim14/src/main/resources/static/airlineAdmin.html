@@ -3,6 +3,9 @@
 
 <head>
 	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" media="screen" href="stars2.css">
+	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 	<link rel="stylesheet" type="text/css" media="screen" href="modal.css">
 	<link rel="stylesheet" type="text/css" media="screen" href="snackbar.css">
 	<link rel="stylesheet" type="text/css" media="screen" href="styles.css">
@@ -57,6 +60,9 @@
 		<button id="addAirportBtn">Add airport</button>
 		<button id="defineLuggagePricelistBtn">Define luggage pricelist</button>
 		<button id="editAirlineBtn">Edit airline</button>
+		<button id="allFlights">All flights</button>
+		<button id="showReports">Flights graphs</button>
+		
 		<button id="profileBtn">Profile</button>
 		<button id="logoutBtn">Logout</button>
 	</div>
@@ -254,7 +260,7 @@
 		<h1>Flights</h1>
 		<table id="flightsTable" border="1">
 			<thead>
-				<tr><th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Bags</th> <th>First class price</th> <th>Business class price</th> <th>Economy class price</th> <th>Actions</th></tr>
+				<tr><th>From</th> <th>To</th> <th>Stops</th> <th>Departure date</th> <th>Arrival date</th> <th>Bags</th> <th>First class price</th> <th>Business class price</th> <th>Economy class price</th> <th>Grade</th> <th>Actions</th></tr>
 			</thead>
 			
 			<tbody>
@@ -284,6 +290,51 @@
 				<input type="button" id="makeQuickReservation" value="Make quick reservation" disabled="disabled">
 			</div>
 		</div>
+		
+		<div id="chartContainer" class = "dialog" style="margin-top:30px;">
+		<div class="dialogContent" >
+			<div style="height:70%;">
+			<select id="chartType" style="float:top, right">
+				<option value="daily">Daily</option>
+				<option value="weekly">Weekly</option>
+				<option value="monthly">Monthly</option>
+			</select>
+			<button id="showGraph">Show graph</button>
+			<canvas id="myChart"></canvas>
+			</div>
+			<br>
+			<div>
+				<h2>Airline income</h2>
+				<table>
+					<tr>
+						<td>
+							Start date: 
+						</td>
+						<td>
+							<input type="text" placeholder="Start date" id="startIncomeAirline" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+						</td>
+					</tr>
+					<tr>
+						<td>
+							End date: 
+						</td>
+						<td>
+							<input type="text" placeholder="End date" id="endIncomeAirline" onfocusin="(this.type='date')" onfocusout="(this.type='text')"> 
+						</td>
+					</tr>
+					<tr>
+						<td>Income:</td>
+						<td id="airlineIncomeVal"></td>
+					</tr>
+					<tr>
+						<td colspan="2"><button id="showAirlineIncomes">Show incomes</button></td>
+					</tr>
+				</table>
+			</div>
+			<br><br>
+			<button id= "hideReports">Cancel</button>
+		</div>
+	</div>
 	</div>
 	</div>
 </body>
