@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Airport;
 import com.isamrs.tim14.model.Flight;
+import com.isamrs.tim14.model.Luggage;
 import com.isamrs.tim14.model.RentACar;
 
 public interface AirlineDAO {
@@ -39,4 +40,6 @@ public interface AirlineDAO {
 	public ResponseEntity<List<Airport>> getAllAirportsOfAirline();
 
 	public ResponseEntity<Airline> getAirline();
+
+	public ResponseEntity<Set<Luggage>> getLuggagePricelist(Integer id);
 }
