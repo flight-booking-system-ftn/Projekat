@@ -57,11 +57,11 @@ public class FlightReservation {
 	@Column(name = "discount")
 	private Integer discount;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "room_reservation")
 	private RoomReservation roomReservation;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "vehicle_reservation")
 	private VehicleReservation vehicleReservation;
 
