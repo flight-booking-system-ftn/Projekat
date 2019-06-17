@@ -19,6 +19,8 @@ import com.isamrs.tim14.dto.ServiceDiscount;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.Room;
+import com.isamrs.tim14.repository.IHotelRepository;
+import com.isamrs.tim14.service.HotelService;
 
 @RestController
 @RequestMapping("/api")
@@ -31,13 +33,16 @@ public class HotelRest {
 		this.hotelDAO = hotelDAO;
 	}
 	
+	@Autowired
+	private HotelService hotelService;
+	
 	@RequestMapping(
 			value = "/hotels",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Hotel>> getHotels(){
 		
-		Collection<Hotel> hotels = hotelDAO.getHotels();
+		Collection<Hotel> hotels = hotelService.getHotels();
 		
 		return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
 	}
@@ -48,8 +53,7 @@ public class HotelRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Hotel>> getHotelsSearch(@PathVariable String hotelName, @PathVariable String hotelDestination, @PathVariable long checkIn, @PathVariable long checkOut){
-		System.out.println(hotelName + " " + hotelDestination + " " + checkIn + " " + checkOut);
-		Collection<Hotel> hotels = hotelDAO.getHotelsSearch(hotelName, hotelDestination, checkIn, checkOut);
+		Collection<Hotel> hotels = hotelService.getHotelsSearch(hotelName, hotelDestination, checkIn, checkOut);
 		
 		return new ResponseEntity<Collection<Hotel>>(hotels, HttpStatus.OK);
 	}
@@ -59,7 +63,7 @@ public class HotelRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Hotel> getHotel(@PathVariable Integer hotelID) {
-		Hotel hotel =  hotelDAO.getHotel(hotelID);
+		Hotel hotel =  hotelService.getHotel(hotelID);
 		if(hotel == null) {
 			return new ResponseEntity<Hotel>(HttpStatus.NOT_FOUND);
 		}
@@ -72,7 +76,7 @@ public class HotelRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Hotel> saveHotel(@RequestBody Hotel hotel) {
-		Hotel newHotel = hotelDAO.save(hotel);
+		Hotel newHotel = hotelService.save(hotel);
 		if(newHotel == null) {
 			return new ResponseEntity<Hotel>(HttpStatus.NOT_FOUND);
 		}
@@ -86,7 +90,7 @@ public class HotelRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> saveHotel(@RequestBody ServiceDiscount discount) {
-		Hotel hotel = hotelDAO.setDiscount(discount.getDiscount());
+		Hotel hotel = hotelService.setDiscount(discount.getDiscount());
 		return new ResponseEntity<Boolean>(true, HttpStatus.ACCEPTED);
 	}
 	
@@ -98,7 +102,7 @@ public class HotelRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Hotel> changeHotel(@RequestBody Hotel hotel) {
-		Hotel managedHotel = hotelDAO.changeHotel(hotel);
+		Hotel managedHotel = hotelService.changeHotel(hotel);
 		if(managedHotel == null) {
 			return new ResponseEntity<Hotel>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -110,7 +114,7 @@ public class HotelRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
-		Integer grade = hotelDAO.getGrade(id);
+		Integer grade = hotelService.getGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -119,7 +123,7 @@ public class HotelRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
-		hotelDAO.setGrade(id, grade);
+		hotelService.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -129,7 +133,7 @@ public class HotelRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Hotel>> getReservationHotel(){
 		
-		Collection<Hotel> res = hotelDAO.getHotelsFromReservations();
+		Collection<Hotel> res = hotelService.getHotelsFromReservations();
 		
 		return new ResponseEntity<Collection<Hotel>>(res, HttpStatus.OK);
 	}
@@ -140,7 +144,7 @@ public class HotelRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getGrade() {
-		Integer grade = hotelDAO.getGradeHotel();
+		Integer grade = hotelService.getGradeHotel();
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -152,7 +156,7 @@ public class HotelRest {
 	public ResponseEntity<Double> getIncome(@PathVariable Long startDate, @PathVariable Long endDate) {
 		Date start = new Date(startDate);
 		Date end = new Date(endDate);
-		double income = hotelDAO.getIncome(start, end);
+		double income = hotelService.getIncome(start, end);
 		return new ResponseEntity<Double>(income, HttpStatus.OK);
 	}
 	
