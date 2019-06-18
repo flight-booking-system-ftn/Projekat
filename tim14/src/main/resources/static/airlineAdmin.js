@@ -95,6 +95,56 @@ $(document).ready(function() {
     }
 	
 	getFlights();
+	getAirline();
+
+	function getAirline(){
+		$.ajax({
+			type: "GET",
+			url : "api/airline/getAirline",
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				getAirports(data.id);
+				 $.get({url:'/api/getGradeForAirline',
+	     	    		headers: createAuthorizationTokenHeader()}, function(data){
+	     	    		var i = 0;
+	     	    		var onStar = data;
+	     	    		var stars = $('.li.star');
+	     	    		console.log("AAAA", onStar);
+	     	    		$("ul li").each(function() {
+	     	    			$(this).removeClass('selected');
+	     	   		    })  
+	     	    		$("ul li").each(function() {
+	     	    			if(i<onStar){
+	     	    				$(this).addClass('selected');
+	     	    				i++;}
+	     	    			else return false;
+	     	   		    })
+	     	       })
+					console.log("Admin's airline: ", data);
+	                $('#pNameOfChosenAirline').text(data.name);
+	                $('#pDescriptionOfChosenAirline').text(data.description);
+	                $('#pDestinationOfChosenAirline').text(data.destination.name +
+	                    ", " + data.destination.country);
+			}
+		})
+	}
+	
+	
+	function getAirports(airlineId){
+		$.ajax({
+			type: "GET",
+			url : "api/airline/"+airlineId+"/airports",
+			headers: createAuthorizationTokenHeader(),
+			success: function(data) {
+				 $('#airportsTable').html(`<tr><th>Name</th><th>Address</th><th>City</th><th>Country</th></tr>`);
+			        for(var i=0;i<data.length;i++){
+			            var red = data[i];
+			            $('#airportsTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
+			        }
+			}
+		})
+	}
+	
 	
 	function getFlights() {
 		$.ajax({
