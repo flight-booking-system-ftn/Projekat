@@ -22,7 +22,7 @@ public class Grade {
 	@Column(name = "id")
 	private Integer id;
 	
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },  fetch = FetchType.EAGER)
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },  fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private RegisteredUser user;
 	

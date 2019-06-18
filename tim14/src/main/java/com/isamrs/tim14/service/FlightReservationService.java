@@ -89,6 +89,7 @@ public class FlightReservationService {
 		
 		reservation.setPassportNumber("123456789");
 		reservation.setUser(user);
+		reservation.setUserWhoReserved(user);
 		reservation.setDateOfPurchase(new Timestamp(new Date().getTime()));
 		reservation.setRoomReservation(flightReservation.getRoomReservation());
 		reservation.setVehicleReservation(flightReservation.getVehicleReservation());

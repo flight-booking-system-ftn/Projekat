@@ -1,7 +1,5 @@
 package com.isamrs.tim14.rest;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.UserDAO;
-import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.Sales;
 
 @RestController
@@ -28,7 +25,6 @@ public class DiscountRest {
 		this.userDAO = userDAO;
 	}
 	
-	@PreAuthorize("hasRole('ROLE_SYSTEMADMIN')")
 	@RequestMapping(
 			value = "/discount",
 			method = RequestMethod.GET,

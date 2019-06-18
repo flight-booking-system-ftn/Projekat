@@ -15,29 +15,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isamrs.tim14.dao.RentDAO;
 import com.isamrs.tim14.model.BranchOffice;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.service.RentService;
 
 @RestController
 @RequestMapping("/api")
 public class RentACarRest {
 	
-	private RentDAO rentDAO;
-	
 	@Autowired
-	public RentACarRest(RentDAO rentDAO) {
-		this.rentDAO = rentDAO;
-	}
+	private RentService rentService;
 	
 	@RequestMapping(
 			value = "/rentacars",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<RentACar>> getRents(){
-		
-		Collection<RentACar> rents = rentDAO.getRents();
+		Collection<RentACar> rents = rentService.findAll();
 		
 		return new ResponseEntity<Collection<RentACar>>(rents, HttpStatus.OK);
 	}
@@ -47,7 +42,8 @@ public class RentACarRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentACar> getRentACar(@PathVariable Integer rentID) {
-		RentACar rent =  rentDAO.getRent(rentID);
+		RentACar rent =  rentService.findById(rentID);
+		
 		if(rent == null) {
 			return new ResponseEntity<RentACar>(HttpStatus.NOT_FOUND);
 		}
@@ -60,7 +56,8 @@ public class RentACarRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentACar> saveRent(@RequestBody RentACar rentacar) {
-		RentACar newRent = rentDAO.save(rentacar);
+		RentACar newRent = rentService.save(rentacar);
+		
 		if(newRent == null) {
 			return new ResponseEntity<RentACar>(HttpStatus.NOT_FOUND);
 		}
@@ -74,8 +71,7 @@ public class RentACarRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<RentACar>> getRentSearch(@PathVariable String rentName,
 			@PathVariable String rentDestination, @PathVariable long checkIn, @PathVariable long checkOut){
-		
-		Collection<RentACar> rents = rentDAO.getRentSearch(rentName, rentDestination, checkIn, checkOut);
+		Collection<RentACar> rents = rentService.getRentSearch(rentName, rentDestination, checkIn, checkOut);
 		
 		return new ResponseEntity<Collection<RentACar>>(rents, HttpStatus.OK);
 	}
@@ -85,7 +81,8 @@ public class RentACarRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<BranchOffice>> getRentOffices(@PathVariable Integer rentID) {
-		RentACar rent =  rentDAO.getRent(rentID);
+		RentACar rent =  rentService.findById(rentID);
+		
 		if(rent == null) {
 			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
 		}
@@ -98,6 +95,7 @@ public class RentACarRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<BranchOffice>> getRentOfficess() {
 		RentACarAdmin rent = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
 		if(rent == null) {
 			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
 		}
@@ -109,8 +107,7 @@ public class RentACarRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<RentACar>> getReservationRents(){
-		
-		Collection<RentACar> rents = rentDAO.getRentsFromReservations();
+		Collection<RentACar> rents = rentService.getRentsFromReservations();
 		
 		return new ResponseEntity<Collection<RentACar>>(rents, HttpStatus.OK);
 	}
@@ -120,7 +117,8 @@ public class RentACarRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
-		Integer grade = rentDAO.getGrade(id);
+		Integer grade = rentService.getGrade(id);
+		
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -129,7 +127,8 @@ public class RentACarRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getGrade() {
-		Integer grade = rentDAO.getGradeRent();
+		Integer grade = rentService.getGradeRent();
+		
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -138,7 +137,8 @@ public class RentACarRest {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
-		rentDAO.setGrade(id, grade);
+		rentService.setGrade(id, grade);
+		
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -149,7 +149,8 @@ public class RentACarRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentACar> changeRent(@RequestBody RentACar rent) {
-		RentACar managedRent = rentDAO.changeRent(rent);
+		RentACar managedRent = rentService.changeRent(rent);
+		
 		if(managedRent == null) {
 			return new ResponseEntity<RentACar>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -164,7 +165,8 @@ public class RentACarRest {
 	public ResponseEntity<Double> getIncome(@PathVariable Long startDate, @PathVariable Long endDate) {
 		Date start = new Date(startDate);
 		Date end = new Date(endDate);
-		double income = rentDAO.getIncome(start, end);
+		double income = rentService.getIncome(start, end);
+		
 		return new ResponseEntity<Double>(income, HttpStatus.OK);
 	}
 }

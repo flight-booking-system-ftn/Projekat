@@ -34,7 +34,7 @@ public class VehicleReservation {
 	@Column(name = "end")
 	private Date end;
 	
-	@ManyToMany(fetch = FetchType.EAGER, mappedBy = "reservations")
+	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "reservations")
 	private Set<Vehicle> vehicles;
 	
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
@@ -42,11 +42,11 @@ public class VehicleReservation {
 	@JsonBackReference(value="vehicle-services")
 	private Set<RentACarService> services;
 	
-	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.EAGER)
+	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.LAZY)
     @JoinColumn(name = "rent_a_car_id")
 	private RentACar rentACar;
 	
-	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_office_id")
 	private BranchOffice endBranchOffice;
 

@@ -1051,9 +1051,23 @@ $(document).ready(function(){
 		bigReservation.roomReservation = reservation;
 		bigReservation.roomReservationType = "regular";
 		
-		$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) + reservation.price);
-		$("label#totalPrice").text(parseInt($("label#totalPrice").text()) +  + (reservation.price * (100 - reservation.hotel.extraServiceDiscount)/100));
-		$("label#roomServicesDiscount").text(parseInt($("label#roomServicesDiscount").text()) + reservation.hotel.extraServiceDiscount);
+		/*var roomPrice = bigReservation.roomReservation.price;
+		var vehiclePrice = bigReservation.vehicleReservation.price;
+		var flightPrice = 0;
+		
+		for(var i = 0; i < bigReservation.flightReservation.length; i++)
+			flightPrice += bigReservation.flightReservation[i].price;
+		
+		$("label#priceWithoutDiscount").text(flightPrice + roomPrice + vehiclePrice);
+		
+		var total = 0;
+		
+		roomPrice = roomPrice * (100 - bigReservation.roomReservation.hotel.extraServiceDiscount) / 100;
+		total = flightPrice + roomPrice + vehiclePrice;
+		total = total * (parseInt($("label#bonusPointsDiscount").text()) / 100) * parseInt($("label#userBonusPoints").text());
+		
+		$("label#totalPrice").text(total);
+		$("label#roomServicesDiscount").text(bigReservation.roomReservation.hotel.extraServiceDiscount);*/
 		
 		for(var i = 0; i < bigReservation.flightReservation.length; i++) {
 			bigReservation.flightReservation[i].roomReservation = reservation;
@@ -1079,8 +1093,6 @@ $(document).ready(function(){
 			var myPrice = Math.round(red.price);
 			$('#reservedHotelServicesTable tr:last').after(`<tr><td>${red.name}</td><td>${myPrice}</td></tr>`);
 		}
-		
-		console.log(bigReservation);
 		
 		$('#reservationsDiv').show();
 		
@@ -1144,8 +1156,23 @@ $(document).ready(function(){
 		bigReservation.vehicleReservation = reservation;
 		bigReservation.vehicleReservationType = "regular";
 		
-		$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) + reservation.price);
-		$("label#totalPrice").text(parseInt($("label#totalPrice").text()) + reservation.price);
+		/*var roomPrice = bigReservation.roomReservation.price;
+		var vehiclePrice = bigReservation.vehicleReservation.price;
+		var flightPrice = 0;
+		
+		for(var i = 0; i < bigReservation.flightReservation.length; i++)
+			flightPrice += bigReservation.flightReservation[i].price;
+		
+		$("label#priceWithoutDiscount").text(flightPrice + roomPrice + vehiclePrice);
+		
+		var total = 0;
+		
+		roomPrice = roomPrice * (100 - bigReservation.roomReservation.hotel.extraServiceDiscount) / 100;
+		total = flightPrice + roomPrice + vehiclePrice;
+		total = total * (parseInt($("label#bonusPointsDiscount").text()) / 100) * parseInt($("label#userBonusPoints").text());
+		
+		$("label#totalPrice").text(total);
+		$("label#roomServicesDiscount").text(bigReservation.roomReservation.hotel.extraServiceDiscount);
 		
 		for(var i = 0; i < bigReservation.flightReservation.length; i++) {
 			bigReservation.flightReservation[i].vehicleReservation = reservation;
@@ -1153,7 +1180,7 @@ $(document).ready(function(){
 		
 		showMessage('Vehicle added to reservation list', "green");
 		$('#dialogRentView').hide();
-		$('#selectedRentVehiclesTable').html('<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
+		$('#selectedRentVehiclesTable').html('<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');*/
 
 		$('#reservedVehicleTable').html('<tr><th>Rent-a-car</th><th>Model</th><th>Brand</th><th>Type</th><th>Price</th></tr>');
 		for(var i=0; i<reservation.vehicles.length;i++){
@@ -1199,8 +1226,20 @@ $(document).ready(function(){
 			url: "/api/registeredUser/getBonusPoints",
 			headers: createAuthorizationTokenHeader(),
 			success: function(points) {
-				$("input#bonusPoints").attr("max", points);
 				$("label#userBonusPoints").text(points);
+			}
+		});
+	}
+	
+	getDiscount();
+	
+	function getDiscount() {
+		$.ajax({
+			type: "GET",
+			url: "/api/discount",
+			headers: createAuthorizationTokenHeader(),
+			success: function(discount) {
+				$("label#bonusPointsDiscount").text(discount.discountPercentage);
 			}
 		});
 	}
@@ -1830,6 +1869,8 @@ $(document).ready(function(){
 			$("table#flightReservations").append(tr);
 		}
 		
+		$("label#totalPrice").text(flightTicketsPrice * (100 - parseInt($("label#bonusPointsDiscount").text())) / 100);
+		
 		$("div#reservationsDiv").show();
 	});
 	
@@ -1923,7 +1964,6 @@ $(document).ready(function(){
 					url: "/api/registeredUser/getBonusPoints",
 					headers: createAuthorizationTokenHeader(),
 					success: function(points) {
-						$("input#bonusPoints").attr("max", points);
 						$("label#userBonusPoints").text(points);
 					}
 				});
@@ -2224,9 +2264,26 @@ $(document).ready(function(){
 		$("#dialogProfile").hide();
 	})
 	
+	$("input#bonusPoints").on("input", function() {
+		$("label#totalPrice").text(parseInt($("label#totalPrice").text()) * (100 - $("label#bonusPointsDiscount").text()) / 100);
+		
+		if($("input#bonusPoints").val() > parseInt($("label#userBonusPoints").text())) {
+			showMessage("You don't have enough bonus points.", "orange");
+
+			$("button#saveReservations").attr("disabled", "disabled");
+		} else if($("input#bonusPoints").val() < 0){
+			showMessage("Bonus points can't be less than zero.", "orange");
+
+			$("button#saveReservations").attr("disabled", "disabled");
+		}
+	});
+	
 	$("button#saveReservations").click(function() {
 		if($("input#bonusPoints").val() == "") {
 			showMessage("Bonus points can't be empty.", "orange");
+			return;
+		} else if($("input#bonusPoints").val() > parseInt($("label#userBonusPoints").text())) {
+			showMessage("You don't have enough bonus points.", "orange");
 			return;
 		}
 		//Postaviti novu max granicu za bonus poene i promeniti vrednost labele

@@ -13,20 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isamrs.tim14.dao.RentAdminDAO;
 import com.isamrs.tim14.dto.UserDTO;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.service.RentAdminService;
 
 @RestController
 @RequestMapping("/api")
 public class RentAdminRest {
-	private RentAdminDAO rentAdminDAO;
-	
+
 	@Autowired
-	public RentAdminRest(RentAdminDAO rentAdminDAO) {
-		this.rentAdminDAO = rentAdminDAO;
-	}
+	private RentAdminService rentAdminService;
 	
 	@RequestMapping(
 			value = "/rentacaradmins",
@@ -34,7 +31,7 @@ public class RentAdminRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<RentACarAdmin>> getRentAdmins(){
 		
-		Collection<RentACarAdmin> rentAdmins = rentAdminDAO.getRentAdmins();
+		Collection<RentACarAdmin> rentAdmins = rentAdminService.getRentAdmins();
 		
 		return new ResponseEntity<Collection<RentACarAdmin>>(rentAdmins, HttpStatus.OK);
 	}
@@ -44,7 +41,8 @@ public class RentAdminRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentACarAdmin> getRentAdmin(@PathVariable Integer rentID) {
-		RentACarAdmin rentACarAdmin = rentAdminDAO.getRentAdmin(rentID);
+		RentACarAdmin rentACarAdmin = rentAdminService.findById(rentID);
+		
 		if(rentACarAdmin == null) {
 			return new ResponseEntity<RentACarAdmin>(HttpStatus.NOT_FOUND);
 		}
@@ -58,7 +56,8 @@ public class RentAdminRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentACarAdmin> saveRentAdmin(@RequestBody RentACarAdmin rentAdmin) {
-		RentACarAdmin newRentAdmin = rentAdminDAO.save(rentAdmin);
+		RentACarAdmin newRentAdmin = rentAdminService.save(rentAdmin);
+		
 		if(newRentAdmin == null) {
 			return new ResponseEntity<RentACarAdmin>(HttpStatus.NOT_FOUND);
 		}
@@ -71,8 +70,7 @@ public class RentAdminRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentACar> getAdminsHotel(){
-		
-		RentACar currRent= rentAdminDAO.getCurrentRent();
+		RentACar currRent= rentAdminService.getCurrentRent();
 		
 		return new ResponseEntity<RentACar>(currRent, HttpStatus.OK);
 	}
@@ -84,7 +82,7 @@ public class RentAdminRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RentACarAdmin> updateRentACarAdmin(@RequestBody UserDTO rentAdmin) {
-		RentACarAdmin updatedRentACarAdmin = rentAdminDAO.updateAdmin(rentAdmin);
+		RentACarAdmin updatedRentACarAdmin = rentAdminService.updateAdmin(rentAdmin);
 		if(updatedRentACarAdmin == null) {
 			return new ResponseEntity<RentACarAdmin>(HttpStatus.NOT_FOUND);
 		}

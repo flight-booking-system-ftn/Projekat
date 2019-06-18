@@ -14,7 +14,6 @@ public interface IAirlineRepository extends JpaRepository<Airline, Integer>{
 	@Query(value = "select * from airline a where a.name like ?1 and a.name not like ?2", nativeQuery = true)
 	Airline findOneByNameAndNotName(String newName, String oldName);
 	
-	@Query(value = "select * from airline a where a.name like %?1%", nativeQuery = true)
-	List<Airline> findByName(String airlineName);
+	List<Airline> findByNameContaining(String airlineName);
 	
 }

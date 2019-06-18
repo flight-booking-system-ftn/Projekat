@@ -686,6 +686,13 @@ $(document).ready(function() {
         			data : JSON.stringify(data),
 					success: function(data2){
 						showMessage('Hotel is successfully changed!', "green");
+						
+						console.log(data2);
+						
+						$("#pNameOfChosenHotelRR").text(data2.name);
+						$("#pDescriptionOfChosenHotelRR").text(data2.description);
+						$("#pDestinationOfChosenHotelRR").text(data2.destination.name + ", " + data2.destination.country);
+						
 						$('#dialogEditHotelInformation').css('display','none');
 					},
 					error: function (jqXHR) {
