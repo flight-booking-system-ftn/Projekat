@@ -36,8 +36,8 @@ public class BranchOfficeRest {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<BranchOffice> saveRent(@RequestBody Destination destination) {
-		BranchOffice newRent = branchDAO.save(destination);
+	public ResponseEntity<BranchOffice> saveRent(@RequestBody BranchOffice br) {
+		BranchOffice newRent = branchDAO.save(br);
 		if(newRent == null) {
 			return new ResponseEntity<BranchOffice>(HttpStatus.NOT_FOUND);
 		}

@@ -29,10 +29,10 @@ public class BranchOfficeDAOImpl implements BranchOfficeDAO {
 	
 	@Override
 	@Transactional
-	public BranchOffice save(Destination destination) {
+	public BranchOffice save(BranchOffice bo) {
 		BranchOffice branch = new BranchOffice();
-		branch.setDestination(destination);
-		System.out.println(destination.getName() + destination.getLatitude());
+		branch.setDestination(bo.getDestination());
+		branch.setName(bo.getName());
 		RentACar rent =((RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getRentACar();
 		branch.setRentACar(rent);
 		rent.getOffices().add(branch);
@@ -43,13 +43,10 @@ public class BranchOfficeDAOImpl implements BranchOfficeDAO {
 		List<BranchOffice> result = query.getResultList();
 		System.out.println("VElicina :"+ result.size()+ "dest" + rent.getDestination());
 		if (result.size() != 0) {
-			System.out.println("EEEEEEE"+destination.getName() + destination.getLatitude() + destination.getLongitude());
-			for(BranchOffice bo : result) {
-				System.out.println(bo.getDestination().getName() + bo.getDestination().getLatitude() + bo.getDestination().getLongitude());
-				/*if((bo.getDestination().getLatitude().doubleValue() == destination.getLatitude().doubleValue()) 
-						&& (bo.getDestination().getLongitude().doubleValue() == destination.getLongitude().doubleValue())) {
-					*/
-				if(bo.getDestination().getName().equals(destination.getName()))
+			for(BranchOffice b : result) {
+				System.out.println("EEEEEEEE");
+				if(b.getDestination().getLatitude().equals(bo.getDestination().getLatitude()) &&
+						b.getDestination().getLongitude().equals(bo.getDestination().getLongitude()))
 				return null;
 				}
 			}

@@ -379,17 +379,17 @@ INSERT INTO bookingdb.rent_a_car (`id`,`description`,`name`, `destination_id`) V
 INSERT INTO bookingdb.rent_a_car_service (`id`, `name`, `price`, `rent_a_car_id`, `vehicle_reservation_id`) values (1, 'Air conditioner', 10, 1, null);
 INSERT INTO bookingdb.rent_a_car_service (`id`, `name`, `price`, `rent_a_car_id`, `vehicle_reservation_id`) values (2, 'Sidecar', 100, 1, null);
 
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (1,7,1); 
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (2,8,1); 
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (3,9,2);
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (4,10,2); 
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (5,16,3);  
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (6,17,3); 
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (7,21,4);
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (8,22,4); 
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (9,27,5);
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (10,28,5); 
-INSERT INTO bookingdb.branch_office (`id`,`destination_id`,`rent_a_car_id`) VALUES (11,34,6);
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (1,"Fent Rent 1", 7,1); 
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (2, "Fent Rent 2", 8,1); 
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (3, "Rent Rent 1", 9,2);
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (4, "Rent Rent 2", 10,2); 
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (5, "Deus Rent 1", 16,3);  
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (6, "Deus Rent 2", 17,3); 
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (7, "Uni Rent 1", 21,4);
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (8, "Uni Rent 2", 22,4); 
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (9, "Gurkinen Rent 1", 27,5);
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (10,"Gurkinen Rent 2", 28,5); 
+INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (11, "Espanol Rent 1", 34,6);
 
 INSERT INTO `vehicle` (`id`, `brand`, `model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES
 		(1, "BMW", "X5", 100, 2005, 4, "CAR", 1, 1),

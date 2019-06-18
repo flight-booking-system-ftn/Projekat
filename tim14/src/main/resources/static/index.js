@@ -662,8 +662,8 @@ $(document).ready(function(){
 		    		console.log(data);
 		            for(var i=0;i<data.length;i++){
 		                var red = data[i];
-		                select.options[select.options.length] = new Option(''+ red.destination.name,''+red.id);
-		                select2.options[select2.options.length] = new Option(''+ red.destination.name,''+red.id);
+		                select.options[select.options.length] = new Option(''+ red.name,''+red.id);
+		                select2.options[select2.options.length] = new Option(''+ red.name,''+red.id);
 		            }
 		            $.get('/api/quickVehicleReservations/' + message, function(data){
 		            	console.log("quick reservations: ", data);
@@ -2597,11 +2597,11 @@ var renderQuickVehicleReservations = function(reservations){
         				continue;
         			}
         		}
-        		$('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${myPrice}</td><td>${red.discount} %</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
+        		$('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${myPrice}</td><td>${red.discount} %</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.address}</td>
                 <td><button id=${buttonID}>Add to reservation list</button></td></tr>`);
         	}
         }else{
-        	$('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${myPrice}</td><td>${red.discount} %</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
+        	$('#quickVehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${myPrice}</td><td>${red.discount} %</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.address}</td>
             <td></td></tr>`);
         	}
         }
@@ -2930,10 +2930,10 @@ var renderBranchOfficesTable = function(text){
 	
 	$.get('/api/branchOfficeByRent/' + text, function(offices){
         console.log("Offices: ", offices);
-        $('#RentBranchOfficeTable').html(`<tr><th>Address</th><th>City</th><th>Country</th></tr>`);
+        $('#RentBranchOfficeTable').html(`<tr><th>Name</th><th>Address</th><th>City</th><th>Country</th></tr>`);
         for(var i=0;i<offices.length;i++){
             var red = offices[i];
-            $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
+            $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
         }
         $('#dialogRentView').css("display","block");
     });
