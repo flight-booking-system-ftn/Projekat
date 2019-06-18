@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.isamrs.tim14.dao.HotelServiceDAO;
 import com.isamrs.tim14.model.HotelService;
 import com.isamrs.tim14.model.Room;
+import com.isamrs.tim14.service.HotelServiceService;
 
 @RestController
 @RequestMapping("/api")
@@ -28,13 +29,16 @@ public class HotelServiceRest {
 		this.hotelServiceDAO = hotelServiceDAO;
 	}
 	
+	@Autowired
+	private HotelServiceService hotelServiceService;
+	
 	@RequestMapping(
 			value = "/hotelServicesSearch/{hotelId}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<HotelService>> getHotelServiceSearch(@PathVariable String hotelId){
 		int id = Integer.parseInt(hotelId);
-		Collection<HotelService> hservices = hotelServiceDAO.getHotelServicesSearch(id);
+		Collection<HotelService> hservices = hotelServiceService.getHotelServicesSearch(id);
 		
 		return new ResponseEntity<Collection<HotelService>>(hservices, HttpStatus.OK);
 	}
@@ -46,7 +50,7 @@ public class HotelServiceRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HotelService> saveNewService(@RequestBody HotelService hotelService){
-		HotelService service = hotelServiceDAO.save(hotelService);
+		HotelService service = hotelServiceService.save(hotelService);
 		if(service == null) {
 			return new ResponseEntity<HotelService>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -60,7 +64,7 @@ public class HotelServiceRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HotelService> changeHotelService(@RequestBody HotelService service) {
-		HotelService newService = hotelServiceDAO.changeService(service);
+		HotelService newService = hotelServiceService.changeService(service);
 		if(newService == null) {
 			return new ResponseEntity<HotelService>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -73,7 +77,7 @@ public class HotelServiceRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HotelService> getHotelServiceByID(@PathVariable String serviceID){
 		int id = Integer.parseInt(serviceID);
-		HotelService hservice = hotelServiceDAO.getHotelServiceByID(id);
+		HotelService hservice = hotelServiceService.getHotelServiceByID(id);
 		
 		return new ResponseEntity<HotelService>(hservice, HttpStatus.OK);
 	}

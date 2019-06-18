@@ -8,7 +8,7 @@ import com.isamrs.tim14.model.Destination;
 
 public interface BranchOfficeDAO {
 
-	public BranchOffice save(Destination dest);
+	public BranchOffice save(BranchOffice bo);
 	public BranchOffice getOffice(int id);
 	public Set<BranchOffice> getOffices();
 	public List<BranchOffice> getBranchesByRent(int id);

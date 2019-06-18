@@ -74,9 +74,12 @@ public class HotelService {
 				check = true;
 				for(RoomReservation reservation : room.getReservations()) {
 					if(!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
-						check = false;
+						if(reservation.getRegisteredUser() != null) {
+							check = false;
+						}
 					}
 				}
+				
 				if(check) {
 					rooms.add(room);
 					break;
@@ -103,12 +106,6 @@ public class HotelService {
 		managedHotel.setDescription(hotel.getDescription());
 		managedHotel.getDestination().setAddress(hotel.getDestination().getAddress());
 		managedHotel.setName(hotel.getName());
-		
-//		try {
-//			hotelRepository.save(managedHotel);
-//		}catch(Exception ex) {
-//			return null;
-//		}
 		
 		return managedHotel;
 	}

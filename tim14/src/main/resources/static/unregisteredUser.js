@@ -556,10 +556,11 @@ var renderBranchOfficesTable = function(text){
 	
 	$.get('/api/branchOfficeByRent/' + text, function(offices){
         console.log("Offices: ", offices);
-        $('#RentBranchOfficeTable').html(`<tr><th>Address</th><th>City</th><th>Country</th></tr>`);
+        $('#RentBranchOfficeTable').html(`<tr><th>Name</th><th>Address</th><th>City</th><th>Country</th></tr>`);
         for(var i=0;i<offices.length;i++){
             var red = offices[i];
-            $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
+            console.log(red);
+            $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
         }
         $('#dialogRentView').css("display","block");
     });

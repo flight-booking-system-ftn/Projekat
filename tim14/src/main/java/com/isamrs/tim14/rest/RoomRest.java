@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.RoomDAO;
 import com.isamrs.tim14.model.Room;
+import com.isamrs.tim14.service.RoomService;
 
 @RestController
 @RequestMapping("/api")
@@ -27,6 +28,9 @@ public class RoomRest {
 		this.roomDAO = roomDAO;
 	}
 	
+	@Autowired
+	private RoomService roomService;
+	
 	@PreAuthorize("hasRole('ROLE_HOTELADMIN')")
 	@RequestMapping(
 			value = "/rooms",
@@ -34,7 +38,7 @@ public class RoomRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Room> saveRoom(@RequestBody Room room) {
-		Room newRoom = roomDAO.save(room);
+		Room newRoom = roomService.save(room);
 
 		if(newRoom == null) {
 			return new ResponseEntity<Room>(HttpStatus.NOT_ACCEPTABLE);
@@ -52,7 +56,7 @@ public class RoomRest {
 		boolean twoBeds = (twoBed.equals("true")) ? true: false;
 		boolean threeBeds = (threeBed.equals("true")) ? true: false;
 		boolean fourBeds = (fourBed.equals("true")) ? true: false;
-		Collection<Room> rooms = roomDAO.getRoomsSearch(id, arriveDateTS, departureDateTS, twoBeds, threeBeds, fourBeds);
+		Collection<Room> rooms = roomService.getRoomsSearch(id, arriveDateTS, departureDateTS, twoBeds, threeBeds, fourBeds);
 		
 		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
 	}
@@ -66,7 +70,7 @@ public class RoomRest {
 		boolean twoBeds = (twoBed.equals("true")) ? true: false;
 		boolean threeBeds = (threeBed.equals("true")) ? true: false;
 		boolean fourBeds = (fourBed.equals("true")) ? true: false;
-		Collection<Room> rooms = roomDAO.getAllRoomsSearch(hotelName, destination, start, end, twoBeds, threeBeds, fourBeds, minPrice, maxPrice);
+		Collection<Room> rooms = roomService.getAllRoomsSearch(hotelName, destination, start, end, twoBeds, threeBeds, fourBeds, minPrice, maxPrice);
 		
 		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
 	}
@@ -77,7 +81,7 @@ public class RoomRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Room>> getUnreservedRooms(){
-		Collection<Room> rooms = roomDAO.getUnreservedRooms();
+		Collection<Room> rooms = roomService.getUnreservedRooms();
 		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
 	}
 	
@@ -86,7 +90,7 @@ public class RoomRest {
 			value = "/removeRoom/{id}",
 			method = RequestMethod.DELETE)
 	public ResponseEntity<?> removeRoom(@PathVariable Integer id){
-		roomDAO.removeRoom(id);
+		roomService.removeRoom(id);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -96,7 +100,7 @@ public class RoomRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Room> getSelectedRoom(@PathVariable Integer id){
-		Room room = roomDAO.getRoom(id);
+		Room room = roomService.getRoom(id);
 		return new ResponseEntity<Room>(room, HttpStatus.OK);
 	}
 	
@@ -107,7 +111,7 @@ public class RoomRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Room> changeRoom(@RequestBody Room room) {
-		Room newRoom = roomDAO.changeRoom(room);
+		Room newRoom = roomService.changeRoom(room);
 		if(newRoom == null) {
 			return new ResponseEntity<Room>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -118,7 +122,7 @@ public class RoomRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
-		Integer grade = roomDAO.getGrade(id);
+		Integer grade = roomService.getGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -127,7 +131,7 @@ public class RoomRest {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
-		roomDAO.setGrade(id, grade);
+		roomService.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -136,7 +140,7 @@ public class RoomRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getGrade(@PathVariable Integer id) {
-		Integer grade = roomDAO.getIntermediateGrade(id);
+		Integer grade = roomService.getIntermediateGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -146,7 +150,7 @@ public class RoomRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Room>> getAllRooms(){
-		Collection<Room> rooms = roomDAO.getAllHotelRooms();
+		Collection<Room> rooms = roomService.getAllHotelRooms();
 		return new ResponseEntity<Collection<Room>>(rooms, HttpStatus.OK);
 	}
 	

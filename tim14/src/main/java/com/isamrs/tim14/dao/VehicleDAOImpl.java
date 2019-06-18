@@ -71,7 +71,7 @@ public class VehicleDAOImpl implements VehicleDAO {
 		}
 		for (Vehicle selectedVehicle : resultQuery) {
 			check = true;
-			if (mycheck || selectedVehicle.getBranchOffice().getDestination().getName().equalsIgnoreCase(startDest)) {
+			if (mycheck || selectedVehicle.getBranchOffice().getName().equalsIgnoreCase(startDest)) {
 				for (VehicleReservation reservation : selectedVehicle.getReservations()) {
 					if (!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
 						check = false;
@@ -154,7 +154,7 @@ public class VehicleDAOImpl implements VehicleDAO {
 		Date departureDate =  new Date(end);
 		for (Vehicle selectedVehicle : resultQuery) {
 			check = true;
-			if(!selectedVehicle.getRentACar().getDestination().getName().toLowerCase().contains(destination.toLowerCase())) {
+			if(!selectedVehicle.getBranchOffice().getName().toLowerCase().contains(destination.toLowerCase())) {
 				continue;
 			}
 			if(!selectedVehicle.getRentACar().getName().toLowerCase().contains(rentName.toLowerCase())) {

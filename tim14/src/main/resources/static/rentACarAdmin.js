@@ -425,7 +425,7 @@ $(document).ready(function() {
             		console.log(branch);
                     for(var i=0;i<branch.length;i++){
                         var red = branch[i];
-                        select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
+                        select.options[select.options.length] = new Option(''+red.name,''+red.id);
                     }
                     //$("#vehicleBranchOfficeEdit").val("" + data.branch.id);
             		$('#priceEditVehicle').val(data.price);
@@ -444,7 +444,6 @@ $(document).ready(function() {
 	});
 	 
 	$(document).on('click', '#editRentVehicleBtn', function(){
-		var price = $('#priceEditRoom').val();
 		var price = $('#priceEditVehicle').val();
 		var branch = $('#vehicleBranchOfficeEdit option:selected').val();
 		if(price < 0){
@@ -459,7 +458,9 @@ $(document).ready(function() {
         	success: function(vehicle){
         		vehicle.price = parseInt(price);
         		var link = '/api/branchOffice/'+$("#vehicleBranchOfficeEdit option:selected" ).val();
+        		console.log(link);
         		$.get(link, function(branches){
+        			console.log(branches);
         			vehicle.branchOffice= branches;
         		})
         		console.log("Vehicle: ", vehicle);
@@ -531,8 +532,8 @@ $(document).ready(function() {
 	        		console.log(data);
 	                for(var i=0;i<data.length;i++){
 	                    var red = data[i];
-	                    select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
-	                    select2.options[select2.options.length] = new Option(''+red.destination.name,''+red.id);
+	                    select.options[select.options.length] = new Option(''+red.name,''+red.id);
+	                    select2.options[select2.options.length] = new Option(''+red.name,''+red.id);
 	                }
 	            });
 	                $('#dialogRentView').css("display","block");
@@ -714,7 +715,7 @@ $(document).ready(function() {
 					var red = vehicles[i];
 					removeVehicleID = "removeVehicleID"+ red.id;
 					editVehicleID="editVehicleID" + red.id;
-					$('#vehicleTableRemove tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.destination.name}</td><td>-</td><td>${red.price}</td><td>
+					$('#vehicleTableRemove tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.name}</td><td>-</td><td>${red.price}</td><td>
 					<button id=${removeVehicleID}>Remove vehicle</button></td><td><button id=${editVehicleID}>Edit vehicle</button></td></tr>`);
 				}
 			},
@@ -759,7 +760,7 @@ $(document).ready(function() {
 		    		 </ul>
   				</div>	
   			</section>`
-			$('#allVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.destination.name}</td><td>${forGrade}</td><td>${red.price}</td></tr>`);
+			$('#allVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${red.branchOffice.name}</td><td>${forGrade}</td><td>${red.price}</td></tr>`);
 			$.get({url:'/api/getMediumGradeForVehicle/'+red.id,
 				headers: createAuthorizationTokenHeader()}, function(data){
 	     	    	var i = 0;
@@ -846,10 +847,10 @@ $(document).ready(function() {
 		$.get({url: '/api/branchOfficeByRentt',
 			headers: createAuthorizationTokenHeader()}, function(offices){
 	        console.log("Offices: ", offices);
-	        $('#RentBranchOfficeTable').html(`<tr><th>Address</th><th>City</th><th>Country</th><th></tr>`);
+	        $('#RentBranchOfficeTable').html(`<tr><th>Name</th><th>Address</th><th>City</th><th>Country</th></tr>`);
 	        for(var i=0;i<offices.length;i++){
 	            var red = offices[i];
-	            $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
+	            $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
 	        }
 	    });
 	}

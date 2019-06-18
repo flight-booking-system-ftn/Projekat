@@ -26,6 +26,9 @@ public class BranchOffice {
 	@Column(name = "id")
 	private Integer id;
 	
+	@Column(name = "name")
+	private String name;
+	
 	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinColumn(name = "destination_id")
 	private Destination destination;
@@ -73,6 +76,14 @@ public class BranchOffice {
 
 	public void setVehicles(Set<Vehicle> vehicles) {
 		this.vehicles = vehicles;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

@@ -410,6 +410,7 @@ $(document).ready(function() {
                     $('#roomNumberEditRoom').val(data.roomNumber);
                     
                     $('#hiddenPForUser').val(id);
+                    $('#hiddenPForUserName').val(data.roomNumber);
             		$('#dialogEditHotelRoom').css('display', 'block');
             	},
             	error: function (jqXHR) {
@@ -494,6 +495,9 @@ $(document).ready(function() {
         		roomData.price = parseInt(price);
         		roomData.roomNumber = parseInt(roomNumber);
         		roomData.bedNumber = parseInt(bedNumber);
+        		if($('#hiddenPForUserName').val() != roomData.roomNumber){
+        			roomData.floor = -1;
+        		}
         		console.log("ROOOOM: ", roomData);
         		$.ajax({
         			type: 'PUT',
