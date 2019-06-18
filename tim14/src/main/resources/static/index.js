@@ -976,6 +976,8 @@ $(document).ready(function(){
 			$('#reservedHotelServicesTable tr:last').after(`<tr><td>${red.name}</td><td>${myPrice}</td></tr>`);
 		}
 		
+		console.log(bigReservation);
+		
 		$('#reservationsDiv').show();
 		
 		
@@ -1416,7 +1418,7 @@ $(document).ready(function(){
     	
     	$.ajax({
     		type: "GET",
-    		url: "/api/airline/" + selectedFlight + "/luggagePricelist",
+    		url: "/flight/" + selectedFlight + "/luggagePricelist",
     		headers: createAuthorizationTokenHeader(),
     		success: function(pricelist) {
     			var flightServicesTable = $("table#flightServicesTable tbody");
@@ -1615,8 +1617,6 @@ $(document).ready(function(){
 				}
 			}
 		}
-		
-		console.log(bigReservation);
 	});
 	
     $(document).on("input", "input.friendPassportNumber", function() {
@@ -1813,8 +1813,6 @@ $(document).ready(function(){
 				
 				$("label#priceWithoutDiscount").text(parseInt($("label#priceWithoutDiscount").text()) + (price * (100 - reservation.discount)/100));
 				$("label#totalPrice").text(parseInt($("label#totalPrice").text()) + (price * (100 - reservation.discount)/100));
-		
-				console.log(bigReservation);
 				
 				$.ajax({
 					type: "GET",
@@ -2157,7 +2155,7 @@ $(document).ready(function(){
 			else
 				$.ajax({
 					type: "GET",
-					url: "/api/reserveQuickRoomReservation" + bigReservation.roomReservation.id,
+					url: "/api/reserveQuickRoomReservation/" + bigReservation.roomReservation.id,
 					headers: createAuthorizationTokenHeader()
 				});
 		}
@@ -2172,7 +2170,7 @@ $(document).ready(function(){
 			else
 				$.ajax({
 					type: "GET",
-					url: "/api/reserveQuickVehicleReservation/" + bigReservation.vehicleReservation.id,
+					url: "/api/reserveQuickVehicleReservation" + bigReservation.vehicleReservation.id,
 					headers: createAuthorizationTokenHeader()
 				});
 		}
@@ -2209,10 +2207,6 @@ $(document).ready(function(){
 		
 		showMessage("Reservations successfully created.", "green");
 	});
-	
-	/*$("input#priceRange").on("input", function() {
-		console.log($(this).val());
-	});*/
 	
     //----------------------------------------
 });

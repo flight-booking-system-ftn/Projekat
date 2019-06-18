@@ -4,7 +4,7 @@ $(document).ready(function() {
 	function getPricelist() {
 		$.ajax({
 			type: "GET",
-			url: "/luggage/getPricelist",
+			url: "/api/airline/getPricelist",
 			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
 				var table = $("table#luggagePricelistTable tbody");

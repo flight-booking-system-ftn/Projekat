@@ -1,7 +1,7 @@
 package com.isamrs.tim14.rest;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,47 +16,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isamrs.tim14.dao.FlightDAO;
 import com.isamrs.tim14.model.Flight;
+import com.isamrs.tim14.model.Luggage;
 import com.isamrs.tim14.model.Seat;
 import com.isamrs.tim14.others.FlightsSearch;
+import com.isamrs.tim14.service.FlightService;
 
 @RestController
 @RequestMapping("/flight")
 public class FlightRest {
-	private FlightDAO flightDAO;
-	
 	@Autowired
-	public FlightRest(FlightDAO flightDAO) {
-		this.flightDAO = flightDAO;
-	}
+	private FlightService flightService;
 	
 	@PostMapping("/new")
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
-	public ResponseEntity<String> save(@RequestBody Flight flight) {
-		return flightDAO.save(flight);
+	public Flight save(@RequestBody Flight flight) {
+		return flightService.save(flight);
 	}
 	
 	@GetMapping("/{id}/seats")
-	public ResponseEntity<List<Seat>> getSeats(@PathVariable Integer id) {
-		return flightDAO.getSeats(id);
+	public List<Seat> getSeats(@PathVariable Integer id) {
+		return flightService.getSeats(id);
 	}
 	
 	@PostMapping("/search")
 	public ResponseEntity<List<List<Flight>>> search(@RequestBody FlightsSearch values) {
-		return flightDAO.search(values);
+		return flightService.search(values);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Flight> getFlight(@PathVariable Integer id){
-		return flightDAO.getFlight(id);
+	public Flight getFlight(@PathVariable Integer id){
+		return flightService.findById(id);
 	}
+	
+	@GetMapping("/{id}/luggagePricelist")
+	public Set<Luggage> getLuggagePricelist(@PathVariable Integer id) {
+		return flightService.getLuggagePricelist(id);
+	}
+	
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@RequestMapping(value = "/getGradeForFlight/{id}",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
-		Integer grade = flightDAO.getGrade(id);
+		Integer grade = flightService.getGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -65,7 +68,7 @@ public class FlightRest {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
-		flightDAO.setGrade(id, grade);
+		flightService.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -75,17 +78,7 @@ public class FlightRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getGrade(@PathVariable String id) {
 		int idd = Integer.parseInt(id);
-		Integer grade = flightDAO.getIntermediateGrade(idd);
+		Integer grade = flightService.getIntermediateGrade(idd);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
-	}
-	
-	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
-	@RequestMapping(
-			value = "/allFlights",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Flight>> getAllVehicles(){
-		Collection<Flight> vehicles = flightDAO.getAllRentsVehicles();
-		return new ResponseEntity<Collection<Flight>>(vehicles, HttpStatus.OK);
 	}
 }

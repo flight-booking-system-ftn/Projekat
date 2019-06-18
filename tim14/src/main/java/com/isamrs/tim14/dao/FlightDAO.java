@@ -1,6 +1,5 @@
 package com.isamrs.tim14.dao;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,6 @@ public interface FlightDAO {
 	public Integer getGrade(Integer id);
 	
 	public void setGrade(Integer id, Integer grade);
-	
-	public Collection<Flight> getAllRentsVehicles();
 	
 	public Integer getIntermediateGrade(Integer id);
 	
