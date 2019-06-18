@@ -48,6 +48,8 @@ public class FlightReservationService {
 			Seat managedSeat = seatRepository.getOne(reservation.getSeat().getId());
 			managedSeat.setBusy(true);
 			
+			int bonusPoints = user.getBonusPoints() + reservation.getFlight().getFlightLength()/25;
+			user.setBonusPoints(bonusPoints);
 			reservation.setUserWhoReserved(user);
 			
 			flightReservationRepository.save(reservation);
