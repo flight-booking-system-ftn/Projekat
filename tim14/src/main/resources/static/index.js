@@ -745,9 +745,27 @@ $(document).ready(function(){
             }
             if(red.grades.length!=0){
             	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
             }
+            var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>`	;
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == data[i].id){
@@ -761,9 +779,23 @@ $(document).ready(function(){
             }
             
             $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+            ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
 	        }});
+			var onStar = grade;
+	    	var stars = $('.li.star');
+	    	console.log("AAAA", onStar);
+	    	$("ul li").each(function() {
+	    		$(this).removeClass('selected');
+	   		})  
+	    	$("ul li").each(function() {
+	    		if(i<onStar){
+	    			$(this).addClass('selected');
+	    			i++;
+	    		}
+	    		else
+	    			return false;
+	   		 })
 	});
     
     $(document).on('click','#sortHotelBtn',function(){
@@ -790,9 +822,27 @@ $(document).ready(function(){
             }
             if(red.grades.length!=0){
             	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
             }
+            var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>`	;
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == hotels[i].id){
@@ -805,9 +855,23 @@ $(document).ready(function(){
             	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
             }
             $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+            ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-        }
+            var onStar = grade;
+ 	    	var stars = $('.li.star');
+ 	    	console.log("AAAA", onStar);
+ 	    	$("ul li").each(function() {
+ 	    		$(this).removeClass('selected');
+ 	   		})  
+ 	    	$("ul li").each(function() {
+ 	    		if(i<onStar){
+ 	    			$(this).addClass('selected');
+ 	    			i++;
+ 	    		}
+ 	    		else
+ 	    			return false;
+ 	   		 })
+		}
 		
 		
 		
@@ -857,9 +921,27 @@ $(document).ready(function(){
 	            }
 	            if(red.grades.length!=0){
 	            	grade = sum/red.grades.length;
-	            }else{
-	            	grade = '-';
 	            }
+	            var forGrade = `<section class='rating-widget'>
+					<div class='rating-stars text-center' style="float:left">
+					  <ul>
+					      <li class='star' title='Poor' data-value='1'>
+		    			  	<i class='fa fa-star fa-fw'></i>
+			   			 </li>
+			     		 <li class='star' title='Fair' data-value='2'>
+			        		<i class='fa fa-star fa-fw'></i>
+			      		 </li>
+			     		 <li class='star' title='Good' data-value='3'>
+			       			<i class='fa fa-star fa-fw'></i>
+			      		 </li>
+			     		 <li class='star' title='Excellent' data-value='4'>
+			        		<i class='fa fa-star fa-fw'></i>
+			      		 </li>
+			      		 <li class='star' title='WOW!!!' data-value='5'>
+			        	 	<i class='fa fa-star fa-fw'></i>
+			     		 </li>
+		    		 </ul>
+					</div>`	;
 	            var check = 0;
 	            for(var k=0; k<reserved.length; k++){
 	            	if(reserved[k].id == airlines[i].id){
@@ -872,9 +954,24 @@ $(document).ready(function(){
 	            	rate = "<button id='rateAirline"+ red.id+"'>Rate</button>"
 	            }
 	            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-	            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+	            ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
 	            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-	        }});
+	            var onStar = grade;
+	 	    	var stars = $('.li.star');
+	 	    	console.log("AAAA", onStar);
+	 	    	$("ul li").each(function() {
+	 	    		$(this).removeClass('selected');
+	 	   		})  
+	 	    	$("ul li").each(function() {
+	 	    		if(i<onStar){
+	 	    			$(this).addClass('selected');
+	 	    			i++;
+	 	    		}
+	 	    		else
+	 	    			return false;
+	 	   		 })
+	        }
+		 });
 		/*var table = $("table#airlineTable tbody");
 		table.empty();
 		$.get({url :"/api/reservedAirlines",
@@ -2416,9 +2513,27 @@ var renderAirlineTableSearch = function(){
              }
              if(red.grades.length!=0){
              	grade = sum/red.grades.length;
-             }else{
-             	grade = '-';
              }
+             var forGrade = `<section class='rating-widget'>
+ 				<div class='rating-stars text-center' style="float:left">
+ 				  <ul>
+ 				      <li class='star' title='Poor' data-value='1'>
+ 	    			  	<i class='fa fa-star fa-fw'></i>
+ 		   			 </li>
+ 		     		 <li class='star' title='Fair' data-value='2'>
+ 		        		<i class='fa fa-star fa-fw'></i>
+ 		      		 </li>
+ 		     		 <li class='star' title='Good' data-value='3'>
+ 		       			<i class='fa fa-star fa-fw'></i>
+ 		      		 </li>
+ 		     		 <li class='star' title='Excellent' data-value='4'>
+ 		        		<i class='fa fa-star fa-fw'></i>
+ 		      		 </li>
+ 		      		 <li class='star' title='WOW!!!' data-value='5'>
+ 		        	 	<i class='fa fa-star fa-fw'></i>
+ 		     		 </li>
+ 	    		 </ul>
+ 				</div>`	;
              var check = 0;
              for(var k=0; k<reserved.length; k++){
              	if(reserved[k].id == airlines[i].id){
@@ -2431,9 +2546,24 @@ var renderAirlineTableSearch = function(){
              	rate = "<button id='rateAirline"+ red.id+"'>Rate</button>"
              }
              $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-             ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+             ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
              <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-         }})
+             var onStar = grade;
+  	    	 var stars = $('.li.star');
+  	    	 console.log("AAAA", onStar);
+  	    	 $("ul li").each(function() {
+  	    	 	$(this).removeClass('selected');
+  	   		 })  
+  	    	 $("ul li").each(function() {
+  	    		if(i<onStar){
+  	    			$(this).addClass('selected');
+  	    			i++;
+  	    		}
+  	    		else
+  	    			return false;
+  	   		 })
+         }
+       })
 	})
 }
 var renderHotelTable = function(){
@@ -2519,9 +2649,27 @@ var renderHotelTableSearch = function(){
             }
             if(red.grades.length!=0){
             	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
             }
+            var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>`;
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == hotels[i].id){
@@ -2534,9 +2682,24 @@ var renderHotelTableSearch = function(){
             	rate = "<button id='rateHotel"+ red.id+"'>Rate</button>"
             }
             $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+            ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-        }})
+            var onStar = grade;
+ 	    	var stars = $('.li.star');
+ 	    	console.log("AAAA", onStar);
+ 	    	$("ul li").each(function() {
+ 	    		$(this).removeClass('selected');
+ 	   		})  
+ 	    	$("ul li").each(function() {
+ 	    		if(i<onStar){
+ 	    			$(this).addClass('selected');
+ 	    			i++;
+ 	    		}
+ 	    		else
+ 	    			return false;
+ 	   		 })
+        }
+       })
     });
 }
 
@@ -2632,9 +2795,27 @@ var renderRentACarTableSearch = function(){
             }
             if(red.grades.length!=0){
             	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
             }
+            var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>`	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == rents[i].id){
@@ -2647,11 +2828,25 @@ var renderRentACarTableSearch = function(){
             	rate = "<button id='rateRent"+ red.id+"'>Rate</button>"
             }
             $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+            ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-        }
+            var onStar = grade;
+ 	    	var stars = $('.li.star');
+ 	    	console.log("AAAA", onStar);
+ 	    	$("ul li").each(function() {
+ 	    		$(this).removeClass('selected');
+ 	   		})  
+ 	    	$("ul li").each(function() {
+ 	    		if(i<onStar){
+ 	    			$(this).addClass('selected');
+ 	    			i++;
+ 	    		}
+ 	    		else
+ 	    			return false;
+ 	   		 });
+		}
         
-            })
+        })
     });
 }
 
@@ -2691,6 +2886,10 @@ var renderQuickVehicleReservations = function(reservations){
         console.log(cars, motocycles);
         buttonID = "quickVehicleReservationNumber"+ red.id;
         console.log("-->", red);
+        var resStart = stringToDate(red.start);
+        var resEnd = stringToDate(red.end);
+        var searchStart = stringToDate($('#rentSearchCheckIn').val());
+        var searchEnd = stringToDate($('#rentSearchCheckOut').val());
         var myPrice = Math.round(red.price);
         if(bigReservation.flightReservation != null){
         	console.log(red.start);
@@ -2699,7 +2898,7 @@ var renderQuickVehicleReservations = function(reservations){
         	console.log(red.end);
         	console.log($('#rentSearchCheckOut').val())
         	console.log(red.end == $('#rentSearchCheckOut').val());
-        	if(red.start == $('#rentSearchCheckIn').val() && red.end == $('#rentSearchCheckOut').val()){
+        	if(resStart >= searchStart && resEnd <= searchEnd){
         		if(bigReservation.vehicleReservation != null){
         			if(bigReservation.vehicleReservation.id == red.id){
         				continue;
@@ -2746,7 +2945,7 @@ var renderQuickRoomReservations = function(reservations){
         console.log("Search end: ", searchEnd);
         var myPrice = Math.round(red.price);
         if(bigReservation.flightReservation != null){
-        	if(red.start >= $('#hotelSearchCheckIn').val() && red.end <= $('#hotelSearchCheckOut').val()){
+        	if(resStart >= searchStart && resEnd <= searchEnd){
         		if(bigReservation.roomReservation != null){
         			if(bigReservation.roomReservation.id == red.id){
         				continue;
@@ -2867,9 +3066,27 @@ var displayAirlines = function(){
             }
             if(red.grades.length!=0){
             	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
             }
+            var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>`	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == airlines[i].id){
@@ -2882,8 +3099,22 @@ var displayAirlines = function(){
             	rate = "<button id='rateAirline"+ red.id+"'>Rate</button>"
             }
             $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+            ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
+            var onStar = grade;
+ 	    	var stars = $('.li.star');
+ 	    	console.log("AAAA", onStar);
+ 	    	$("ul li").each(function() {
+ 	    		$(this).removeClass('selected');
+ 	   		})  
+ 	    	$("ul li").each(function() {
+ 	    		if(i<onStar){
+ 	    			$(this).addClass('selected');
+ 	    			i++;
+ 	    		}
+ 	    		else
+ 	    			return false;
+ 	   		 })
         }
     });})
 }
@@ -2941,9 +3172,27 @@ var displayHotels = function(){
             }
             if(red.grades.length!=0){
             	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
             }
+            var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>`	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == hotels[i].id){
@@ -2957,9 +3206,23 @@ var displayHotels = function(){
             }
             if(bigReservation.flightReservation == null){
             	$(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-                    ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+                    ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
                     <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
             }
+            var onStar = grade;
+ 	    	var stars = $('.li.star');
+ 	    	console.log("AAAA", onStar);
+ 	    	$("ul li").each(function() {
+ 	    		$(this).removeClass('selected');
+ 	   		})  
+ 	    	$("ul li").each(function() {
+ 	    		if(i<onStar){
+ 	    			$(this).addClass('selected');
+ 	    			i++;
+ 	    		}
+ 	    		else
+ 	    			return false;
+ 	   		 })
         }
     })});
 }
@@ -3005,11 +3268,28 @@ var displayRents = function(){
             for(var j=0;j<red.grades.length;j++){
             	sum += red.grades[j].grade;
             }
-            if(red.grades.length!=0){
+            if(red.grades.length!=0)
             	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
-            }
+            var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul>
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div>`	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == rents[i].id){
@@ -3023,9 +3303,26 @@ var displayRents = function(){
             }
             if(bigReservation.flightReservation == null){
             $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
+            ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-            } }})
+            }
+            
+            var onStar = grade;
+ 	    	var stars = $('.li.star');
+ 	    	console.log("AAAA", onStar);
+ 	    	$("ul li").each(function() {
+ 	    		$(this).removeClass('selected');
+ 	   		})  
+ 	    	$("ul li").each(function() {
+ 	    		if(i<onStar){
+ 	    			$(this).addClass('selected');
+ 	    			i++;
+ 	    		}
+ 	    		else
+ 	    			return false;
+ 	   		 })
+            
+        }})
     });
 }
 
