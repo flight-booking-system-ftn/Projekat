@@ -18,7 +18,7 @@ import com.isamrs.tim14.dao.RoomReservationDAO;
 import com.isamrs.tim14.dto.GraphsDTO;
 import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
-import com.isamrs.tim14.model.Vehicle;
+import com.isamrs.tim14.service.RoomReservationService;
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +31,9 @@ private RoomReservationDAO roomReservationDAO;
 		this.roomReservationDAO = roomReservationDAO;
 	}
 	
+	@Autowired
+	private RoomReservationService roomReservationService;
+	
 	@PreAuthorize("hasRole('ROLE_HOTELADMIN') or hasRole('ROLE_REGISTEREDUSER')")
 	@RequestMapping(
 			value = "/roomReservations",
@@ -38,8 +41,7 @@ private RoomReservationDAO roomReservationDAO;
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RoomReservation> saveRoomReservation(@RequestBody RoomReservation reservation) {
-		RoomReservation newRoomReservation = roomReservationDAO.save(reservation);
-
+		RoomReservation newRoomReservation = roomReservationService.save(reservation);
 		if(newRoomReservation == null) {
 			return new ResponseEntity<RoomReservation>(HttpStatus.NOT_FOUND);
 		}
@@ -52,7 +54,7 @@ private RoomReservationDAO roomReservationDAO;
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RoomReservation> saveQuickRoomReservation(@PathVariable String reservationID) {
-		RoomReservation newRoomReservation = roomReservationDAO.saveQuick(reservationID);
+		RoomReservation newRoomReservation = roomReservationService.saveQuick(reservationID);
 
 		if(newRoomReservation == null) {
 			return new ResponseEntity<RoomReservation>(HttpStatus.NOT_FOUND);
@@ -66,7 +68,7 @@ private RoomReservationDAO roomReservationDAO;
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<RoomReservation>> getQuickRoomReservations(@PathVariable String hotelID){
 		
-		Collection<RoomReservation> result = roomReservationDAO.getQuickRoomReservations(hotelID);
+		Collection<RoomReservation> result = roomReservationService.getQuickRoomReservations(hotelID);
 		
 		return new ResponseEntity<Collection<RoomReservation>>(result, HttpStatus.OK);
 	}
@@ -75,8 +77,8 @@ private RoomReservationDAO roomReservationDAO;
 			value = "/allUsedRooms",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<Room>> getVehiclesHistory(){
-		return new ResponseEntity<Collection<Room>>(roomReservationDAO.getRoomsHistory(), HttpStatus.OK);
+	public ResponseEntity<Collection<Room>> getRoomsHistory(){
+		return new ResponseEntity<Collection<Room>>(roomReservationService.getRoomsHistory(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(
@@ -85,7 +87,7 @@ private RoomReservationDAO roomReservationDAO;
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RoomReservation> getOneQuickReservation(@PathVariable Integer reservationID){
 		
-		RoomReservation result = roomReservationDAO.getOneQuickReservation(reservationID);
+		RoomReservation result = roomReservationService.getOneQuickReservation(reservationID);
 		
 		return new ResponseEntity<RoomReservation>(result, HttpStatus.OK);
 	}
@@ -95,7 +97,7 @@ private RoomReservationDAO roomReservationDAO;
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GraphsDTO> getDaily() throws ParseException{
-		GraphsDTO g = roomReservationDAO.getRoomsDaily();
+		GraphsDTO g = roomReservationService.getRoomsDaily();
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 
@@ -104,7 +106,7 @@ private RoomReservationDAO roomReservationDAO;
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GraphsDTO> getWeekly() throws ParseException{
-		GraphsDTO g = roomReservationDAO.getRoomsWeekly();
+		GraphsDTO g = roomReservationService.getRoomsWeekly();
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 
@@ -113,7 +115,7 @@ private RoomReservationDAO roomReservationDAO;
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GraphsDTO> getMonthly() throws ParseException{
-		GraphsDTO g = roomReservationDAO.getRoomsMonthly();
+		GraphsDTO g = roomReservationService.getRoomsMonthly();
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 	

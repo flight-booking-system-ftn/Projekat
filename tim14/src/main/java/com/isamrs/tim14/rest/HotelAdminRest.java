@@ -17,6 +17,7 @@ import com.isamrs.tim14.dao.HotelAdminDAO;
 import com.isamrs.tim14.dto.UserDTO;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelAdmin;
+import com.isamrs.tim14.service.HotelAdminService;
 
 @RestController
 @RequestMapping("/api")
@@ -27,6 +28,9 @@ public class HotelAdminRest {
 	public HotelAdminRest(HotelAdminDAO hotelAdminDAO) {
 		this.hotelAdminDAO = hotelAdminDAO;
 	}
+	
+	@Autowired
+	private HotelAdminService hotelAdminService;
 	
 	@RequestMapping(
 			value = "/hoteladmins",
@@ -44,7 +48,7 @@ public class HotelAdminRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HotelAdmin> getHotelAdmin(@PathVariable Integer hotelAdminID) {
-		HotelAdmin hotelAdmin =  hotelAdminDAO.getHotelAdmin(hotelAdminID);
+		HotelAdmin hotelAdmin =  hotelAdminService.getHotelAdmin(hotelAdminID);
 		if(hotelAdmin == null) {
 			return new ResponseEntity<HotelAdmin>(HttpStatus.NOT_FOUND);
 		}
@@ -58,7 +62,7 @@ public class HotelAdminRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Hotel> getAdminsHotel(){
 		
-		Hotel currentHotel = hotelAdminDAO.getCurrentHotel();
+		Hotel currentHotel = hotelAdminService.getCurrentHotel();
 		
 		return new ResponseEntity<Hotel>(currentHotel, HttpStatus.OK);
 	}
@@ -86,7 +90,7 @@ public class HotelAdminRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HotelAdmin> updateHotelAdmin(@RequestBody UserDTO hotelAdmin) {
-		HotelAdmin updatedHotelAdmin = hotelAdminDAO.updateAdmin(hotelAdmin);
+		HotelAdmin updatedHotelAdmin = hotelAdminService.updateAdmin(hotelAdmin);
 		if(updatedHotelAdmin == null) {
 			return new ResponseEntity<HotelAdmin>(HttpStatus.NOT_FOUND);
 		}

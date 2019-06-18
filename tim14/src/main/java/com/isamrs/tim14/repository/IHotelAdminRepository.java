@@ -6,4 +6,6 @@ import com.isamrs.tim14.model.HotelAdmin;
 
 public interface IHotelAdminRepository extends JpaRepository<HotelAdmin, Integer>{
 
+	HotelAdmin findOneById(Integer id);
+	
 }

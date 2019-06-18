@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.isamrs.tim14.dao.DestinationDAO;
 import com.isamrs.tim14.model.Destination;
+import com.isamrs.tim14.service.DestinationService;
 
 @RestController
 @RequestMapping("/api")
@@ -26,15 +27,19 @@ public class DestinationRest {
 	public DestinationRest(DestinationDAO destinationDAO) {
 		this.destinationDAO = destinationDAO;
 	}
+	
+	
+	@Autowired
+	private DestinationService destinationService;
 
 	@PostMapping("/new")
 	public void addDestination(@RequestBody Destination destination) {
-		destinationDAO.save(destination);
+		destinationService.save(destination);
 	}
 
 	@RequestMapping(value = "/destinations/{destID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Destination> getDestination(@PathVariable Integer destID) {
-		Destination destination = destinationDAO.getDestination(destID);
+		Destination destination = destinationService.getDestination(destID);
 		if (destination == null) {
 			return new ResponseEntity<Destination>(HttpStatus.NOT_FOUND);
 		}
@@ -43,13 +48,13 @@ public class DestinationRest {
 
 	@RequestMapping(value = "/destinations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Destination>> getDestinations() {
-		List<Destination> destinations = destinationDAO.getDestinations();
+		List<Destination> destinations = destinationService.getDestinations();
 		return new ResponseEntity<Collection<Destination>>(destinations, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/destinations", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Destination> saveDestination(@RequestBody Destination destination) {
-		Destination newDest = destinationDAO.save(destination);
+		Destination newDest = destinationService.save(destination);
 		if (newDest == null) {
 			return new ResponseEntity<Destination>(HttpStatus.NOT_FOUND);
 		}
