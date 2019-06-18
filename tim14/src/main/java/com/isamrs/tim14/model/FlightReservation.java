@@ -29,11 +29,15 @@ public class FlightReservation {
 	@JoinColumn(name = "user_id")
 	private RegisteredUser user;
 	
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_who_reserved_id")
+	private RegisteredUser userWhoReserved;
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "passenger_id")
 	private Passenger passenger;
 	
-	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "flight_id")
 	private Flight flight;
 	
@@ -83,6 +87,14 @@ public class FlightReservation {
 
 	public void setUser(RegisteredUser user) {
 		this.user = user;
+	}
+
+	public RegisteredUser getUserWhoReserved() {
+		return userWhoReserved;
+	}
+
+	public void setUserWhoReserved(RegisteredUser userWhoReserved) {
+		this.userWhoReserved = userWhoReserved;
 	}
 
 	public Passenger getPassenger() {

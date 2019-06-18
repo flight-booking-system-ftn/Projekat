@@ -17,34 +17,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isamrs.tim14.dao.AirlineDAO;
 import com.isamrs.tim14.model.Airline;
 import com.isamrs.tim14.model.Airport;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.Luggage;
+import com.isamrs.tim14.service.AirlineService;
 
 @RestController
 @RequestMapping("/api")
 public class AirlineRest {
 
-	private AirlineDAO airlineDAO;
-
 	@Autowired
-	public AirlineRest(AirlineDAO airlineDAO) {
-		this.airlineDAO = airlineDAO;
-	}
+	private AirlineService airlineService;
 
 	@RequestMapping(value = "/airlines", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Airline>> getAirlines() {
-
-		Collection<Airline> airlines = airlineDAO.getAirlines();
+		Collection<Airline> airlines = airlineService.findAll();
 
 		return new ResponseEntity<Collection<Airline>>(airlines, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/airlines/{airlineID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Airline> getAirline(@PathVariable Integer airlineID) {
-		Airline airline = airlineDAO.getAirline(airlineID);
+		Airline airline = airlineService.findById(airlineID);
 		if (airline == null) {
 			return new ResponseEntity<Airline>(HttpStatus.NOT_FOUND);
 		}
@@ -53,7 +48,7 @@ public class AirlineRest {
 
 	@RequestMapping(value = "/airlines", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Airline> saveAirline(@RequestBody Airline airline) {
-		Airline newAirline = airlineDAO.save(airline);
+		Airline newAirline = airlineService.save(airline);
 		if (newAirline == null) {
 			return new ResponseEntity<Airline>(HttpStatus.NOT_FOUND);
 		}
@@ -63,47 +58,42 @@ public class AirlineRest {
 	@RequestMapping(value = "/airlines", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	public ResponseEntity<String> editAirline(@RequestBody Airline airline) {
-		return airlineDAO.update(airline);
+		return airlineService.update(airline);
 	}
 
 	@RequestMapping(value = "/airlinesSearch/{airlineName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Airline>> searchAirlines(@PathVariable String airlineName) {
-		Collection<Airline> airlines = airlineDAO.search(airlineName);
+		Collection<Airline> airlines = airlineService.search(airlineName);
 
 		return new ResponseEntity<Collection<Airline>>(airlines, HttpStatus.OK);
 	}
 	
 	@GetMapping("/airline/{id}/airports")
-	public ResponseEntity<List<Airport>> getAirports(@PathVariable Integer id) {
-		return airlineDAO.getAirports(id);
+	public Set<Airport> getAirports(@PathVariable Integer id) {
+		return airlineService.getAirports(id);
 	}
 	
 	@GetMapping("/airline/airports")
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	public ResponseEntity<List<Airport>> getAirportsOfAirline() {
-		return airlineDAO.getAirportsOfAirline();
-	}
-	
-	@GetMapping("/airline/allAirports")
-	public ResponseEntity<List<Airport>> getAllAirports() {
-		return airlineDAO.getAllAirportsOfAirline();
+		return airlineService.getAirportsOfAirline();
 	}
 	
 	@GetMapping("/airline/flights")
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
-	public ResponseEntity<Set<Flight>> getFlightsOfAirline() {
-		return airlineDAO.getFlightsOfAirline();
+	public Set<Flight> getFlightsOfAirline() {
+		return airlineService.getFlightsOfAirline();
 	}
 	
 	@GetMapping("/airline/getAirline")
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
-	public ResponseEntity<Airline> getAirline() {
-		return airlineDAO.getAirline();
+	public Airline getAirline() {
+		return airlineService.getAirline();
 	}
 	
-	@GetMapping("/airline/{id}/luggagePricelist")
-	public ResponseEntity<Set<Luggage>> getLuggagePricelist(@PathVariable Integer id) {
-		return airlineDAO.getLuggagePricelist(id);
+	@GetMapping("/airline/getPricelist")
+	public Set<Luggage> getPricelist() {
+		return airlineService.getPricelist();
 	}
 
 	@RequestMapping(
@@ -112,7 +102,7 @@ public class AirlineRest {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Airline>> getReservationRents(){
 		
-		Collection<Airline> res = airlineDAO.getAirlinesFromReservations();
+		Collection<Airline> res = airlineService.getAirlinesFromReservations();
 		
 		return new ResponseEntity<Collection<Airline>>(res, HttpStatus.OK);
 	}
@@ -122,7 +112,7 @@ public class AirlineRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
-		Integer grade = airlineDAO.getGrade(id);
+		Integer grade = airlineService.getGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -131,7 +121,7 @@ public class AirlineRest {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
-		airlineDAO.setGrade(id, grade);
+		airlineService.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -140,7 +130,7 @@ public class AirlineRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getGrade() {
-		Integer grade = airlineDAO.getGradeAirline();
+		Integer grade = airlineService.getGradeAirline();
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -152,7 +142,7 @@ public class AirlineRest {
 	public ResponseEntity<Double> getIncome(@PathVariable Long startDate, @PathVariable Long endDate) {
 		Date start = new Date(startDate);
 		Date end = new Date(endDate);
-		double income = airlineDAO.getIncome(start, end);
+		double income = airlineService.getIncome(start, end);
 		return new ResponseEntity<Double>(income, HttpStatus.OK);
 	}
 }

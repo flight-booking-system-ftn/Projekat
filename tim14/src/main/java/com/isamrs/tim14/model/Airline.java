@@ -39,12 +39,12 @@ public class Airline {
 	@Column(name = "description")
 	private String description;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "airline")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "airline")
 	@JsonIgnoreProperties("airline")
 	@JsonBackReference(value="airline-flights")
 	private Set<Flight> flights;
 	
-	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	@JoinTable(name = "airline_airport", joinColumns = { @JoinColumn(name = "airline_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "airport_id") })
 	private Set<Airport> airports;

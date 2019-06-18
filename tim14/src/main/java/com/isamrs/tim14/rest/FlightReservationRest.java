@@ -19,49 +19,45 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.isamrs.tim14.dao.FlightReservationDAO;
 import com.isamrs.tim14.dto.GraphsDTO;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
+import com.isamrs.tim14.service.FlightReservationService;
 
 @RestController
 @RequestMapping("/api")
 public class FlightReservationRest {
 
-	private FlightReservationDAO flightReservationDAO;
-
 	@Autowired
-	public FlightReservationRest(FlightReservationDAO flightReservationDAO) {
-		this.flightReservationDAO = flightReservationDAO;
-	}
+	private FlightReservationService flightReservationService;
 	
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	@PostMapping("/flightReservation/save")
-	public ResponseEntity<String> saveReservation(@RequestBody List<FlightReservation> reservations) {
-		return flightReservationDAO.saveReservation(reservations);
+	public void saveReservation(@RequestBody List<FlightReservation> reservations) {
+		flightReservationService.saveReservation(reservations);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	@PostMapping("/flightReservation/makeQuick")
-	public ResponseEntity<String> makeQuickReservation(@RequestBody List<FlightReservation> reservations) {
-		return flightReservationDAO.makeQuickReservation(reservations);
+	public void makeQuickReservation(@RequestBody List<FlightReservation> reservations) {
+		flightReservationService.makeQuickReservation(reservations);
 	}
 	
 	@GetMapping("/flightReservation/getQuickTickets/{airlineID}")
-	public ResponseEntity<List<FlightReservation>> getQuickTickets(@PathVariable Integer airlineID) {
-		return flightReservationDAO.getQuickTickets(airlineID);
+	public List<FlightReservation> getQuickTickets(@PathVariable Integer airlineID) {
+		return flightReservationService.getQuickTickets(airlineID);
 	}
 	
 	@PutMapping("/flightReservation/buyQuickTicket")
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
-	public ResponseEntity<String> buyQuickTicket(@RequestBody FlightReservation flightReservation) {
-		return flightReservationDAO.buyQuickTicket(flightReservation);
+	public void buyQuickTicket(@RequestBody FlightReservation flightReservation) {
+		flightReservationService.buyQuickTicket(flightReservation);
 	}
 	
 	@GetMapping("/flightReservation/getQuickReservation/{reservationID}")
 	@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
-	public ResponseEntity<FlightReservation> getQuickReservation(@PathVariable Integer reservationID) {
-		return flightReservationDAO.getQuickReservation(reservationID);
+	public FlightReservation getQuickReservation(@PathVariable Integer reservationID) {
+		return flightReservationService.getQuickReservation(reservationID);
 	}
 	
 	@RequestMapping(
@@ -69,21 +65,17 @@ public class FlightReservationRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Flight>> getFlightsHistory(){
-		return new ResponseEntity<Collection<Flight>>(flightReservationDAO.getFlightHistory(), HttpStatus.OK);
+		return new ResponseEntity<Collection<Flight>>(flightReservationService.getFlightHistory(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/flightReservation/acceptInvitation/{reservationID}")
-	//@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	public RedirectView acceptInvitation(@PathVariable Integer reservationID) {
-		//flightReservationDAO.acceptInvitation(reservationID);
-		
 		return new RedirectView("/login.html");
 	}
 	
 	@GetMapping("/flightReservation/declineInvitation/{reservationID}")
-	//@PreAuthorize("hasRole('ROLE_REGISTEREDUSER')")
 	public RedirectView declineInvitation(@PathVariable Integer reservationID) {
-		flightReservationDAO.declineInvitation(reservationID);
+		flightReservationService.declineInvitation(reservationID);
 		
 		return new RedirectView("/login.html");
 	}
@@ -93,7 +85,7 @@ public class FlightReservationRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GraphsDTO> getDaily() throws ParseException{
-		GraphsDTO g = flightReservationDAO.getFlightsDaily();
+		GraphsDTO g = flightReservationService.getFlightsDaily();
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 
@@ -102,7 +94,7 @@ public class FlightReservationRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GraphsDTO> getWeekly() throws ParseException{
-		GraphsDTO g = flightReservationDAO.getFlightsWeekly();
+		GraphsDTO g = flightReservationService.getFlightsWeekly();
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 
@@ -111,7 +103,7 @@ public class FlightReservationRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GraphsDTO> getMonthly() throws ParseException{
-		GraphsDTO g = flightReservationDAO.getFlightsMonthly();
+		GraphsDTO g = flightReservationService.getFlightsMonthly();
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 }

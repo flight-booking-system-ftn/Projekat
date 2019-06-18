@@ -596,7 +596,7 @@ var renderAirportTable = function(id){
 function getAirports(index) {
 	$.ajax({
 		type: "GET",
-		url: "/api/airline/allAirports",
+		url: "/airport/all",
 		success: function(data) {
 			var fromSelect = $("select#fromFullSearch1");
 			var toSelect = $("select#toFullSearch1");

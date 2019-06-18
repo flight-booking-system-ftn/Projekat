@@ -45,7 +45,6 @@ public class LuggageDAOImpl implements LuggageDAO {
 	@Override
 	@Transactional
 	public ResponseEntity<Set<Luggage>> getPricelist() {
-		System.out.println("ULOGOVANI ADMIN:");
 		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		return new ResponseEntity(user.getAirline().getLuggagePricelist(), HttpStatus.OK);

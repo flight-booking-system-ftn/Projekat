@@ -209,7 +209,6 @@ $(document).ready(function() {
 			     	    	var i = 0;
 			     	    	var onStar = data;
 			     	    	var stars = $('.li.star');
-			     	    	console.log("AAAA", onStar);
 			     	    	$("ul li").each(function() {
 			     	    		$(this).removeClass('selected');
 			     	   		})  
@@ -235,7 +234,6 @@ $(document).ready(function() {
     })
 
     $(document).on('click', '#showAirlineIncomes', function(){
-    	console.log("e");
     	var startCheck = $('#startIncomeAirline').val();
     	var endCheck = $('#endIncomeAirline').val();
     	if(startCheck == "" || endCheck == ""){
@@ -243,7 +241,6 @@ $(document).ready(function() {
     		return;
     	}
     	var start = stringToDate($('#startIncomeAirline').val());
-    	console.log(start);
     	var end = stringToDate($('#endIncomeAirline').val());
     	if(start>end){
     		showMessage("Start date must be later then end date", "orange");
@@ -253,7 +250,6 @@ $(document).ready(function() {
     	var end = stringToDate($('#endIncomeAirline').val()) + 24*60*60*1000
     	$.get({url: '/api/getAirlineIncomes/'+start+'/'+end, 
 			headers: createAuthorizationTokenHeader()}, function(income){
-				console.log(income);
 				$("#airlineIncomeVal").html(income);
 			})
     })
@@ -264,7 +260,6 @@ $(document).ready(function() {
     	if(type=="daily"){
     		$.get({url: '/api/getDailyFlights', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -312,7 +307,6 @@ $(document).ready(function() {
     	}else if(type=="weekly"){
     		$.get({url: '/api/getWeeklyFlights', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -356,7 +350,6 @@ $(document).ready(function() {
     	}else if(type=="monthly"){
     		$.get({url: '/api/getMonthlyFlights', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -487,9 +480,6 @@ $(document).ready(function() {
 				previousSeat.css("background-color", bgcolor);
 				
 				showMessage("Seat status successfully changed.", "green");
-			},
-			error: function(jqXHR, exception) {
-				showMessage("Reserved seat can't be disabled.", "red");
 			}
 		});
 	});
@@ -502,11 +492,8 @@ $(document).ready(function() {
 			url: "seats/delete/" + seatID,
 			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
-				showMessage(data);
+				showMessage("Seat successfully deleted.", "green");
 				previousSeat.remove();
-			},
-			error: function(jqXHR, exception) {
-				showMessage(jqXHR, "red");
 			}
 		});
 	});
@@ -622,7 +609,7 @@ $(document).ready(function() {
 							headers: createAuthorizationTokenHeader(),
 				    		data: JSON.stringify(reservations),
 				    		success: function(data) {
-				    			showMessage(data, "green");
+				    			showMessage("Quick reservation successfully created.", "green");
 				    			
 				    			selectedSeats.forEach(function(seatID) {
 				    				$("div.seatDivForReservation#" + seatID).css("background-color", "red");
@@ -829,23 +816,44 @@ $(document).ready(function() {
     		url: "/flight/new",
     		headers: createAuthorizationTokenHeader(),
     		data: JSON.stringify(flight),
-    		success: function(message) {
-    			showMessage(message, "green");
+    		success: function(data) {
+    			showMessage("Flight successully added.", "green");
     			
     			var table = $("table#flightsTable tbody");
     			
-    			var tr = $("<tr id='" + flight.id + "'></tr>");
-				var id = $("<input type='hidden' value='" + flight.id + "'>");
-				var from = $("<td>" + flight.from.name + " - " + flight.from.destination.name + ", " + flight.from.destination.country + "</td>");
-				var to = $("<td>" + flight.to.name + " - " + flight.to.destination.name + ", " + flight.to.destination.country + "</td>");
-				var stops = $("<td>" + flight.stops.length + "</td>");
-				var departureDate = $("<td>" + formatDate(new Date(flight.departureDate)) + "</td>");
-				var arrivalDate = $("<td>" + formatDate(new Date(flight.arrivalDate)) + "</td>");
-				var luggageQuantity = $("<td>" + flight.luggageQuantity + "</td>");
-				var ticketPriceFirstClass = $("<td>" + flight.ticketPriceFirstClass + "</td>");
-				var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
-				var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
+    			var tr = $("<tr id='" + data.id + "'></tr>");
+				var id = $("<input type='hidden' value='" + data.id + "'>");
+				var from = $("<td>" + data.from.name + " - " + data.from.destination.name + ", " + data.from.destination.country + "</td>");
+				var to = $("<td>" + data.to.name + " - " + data.to.destination.name + ", " + data.to.destination.country + "</td>");
+				var stops = $("<td>" + data.stops.length + "</td>");
+				var departureDate = $("<td>" + formatDate(new Date(data.departureDate)) + "</td>");
+				var arrivalDate = $("<td>" + formatDate(new Date(data.arrivalDate)) + "</td>");
+				var luggageQuantity = $("<td>" + data.luggageQuantity + "</td>");
+				var ticketPriceFirstClass = $("<td>" + data.ticketPriceFirstClass + "</td>");
+				var ticketPriceBusinessClass = $("<td>" + data.ticketPriceBusinessClass + "</td>");
+				var ticketPriceEconomyClass = $("<td>" + data.ticketPriceEconomyClass + "</td>");
 				var actions = $("<td><input type='button' class='edit' value='Edit seats'> &nbsp; &nbsp; &nbsp; &nbsp; <input type='button' class='makeQuickReservation' value='Make quick reservation'></td>");
+				var forGrade = $("<td width='10%'><section class='rating-widget'>" +
+						"<div class='rating-stars text-center' height='20' width='100'>" +
+							"<ul>" +
+								"<li class='star' title='Poor' data-value='1'>" +
+									"<i class='fa fa-star fa-fw'></i>" +
+								"</li>" +
+								"<li class='star' title='Fair' data-value='2'>" +
+								"<i class='fa fa-star fa-fw'></i>" +
+								"</li>" +
+								"<li class='star' title='Good' data-value='3'>" +
+								"<i class='fa fa-star fa-fw'></i>" +
+								"</li>" +
+								"<li class='star' title='Excellent' data-value='4'>" +
+								"<i class='fa fa-star fa-fw'></i>" +
+								"</li>" +
+								"<li class='star' title='WOW!!!' data-value='5'>" +
+								"<i class='fa fa-star fa-fw'></i>" +
+								"</li>" +
+								"</ul>" +
+								"</div>	" +
+								"</section></td>");
 				
 				tr.append(id);
 				tr.append(from);
@@ -857,6 +865,7 @@ $(document).ready(function() {
 				tr.append(ticketPriceFirstClass);
 				tr.append(ticketPriceBusinessClass);
 				tr.append(ticketPriceEconomyClass);
+				tr.append(forGrade);
 				tr.append(actions);
 				
 				table.append(tr);
@@ -983,7 +992,7 @@ $(document).ready(function() {
 	$("button#defineLuggagePricelistBtn").click(function(){
 		$.ajax({
 			type: "GET",
-			url: "/luggage/getPricelist",
+			url: "/api/airline/getPricelist",
 			headers: createAuthorizationTokenHeader(),
 			success: function(data) {
 				var table = $("table#luggagePricelistTable tbody");
@@ -1039,7 +1048,7 @@ $(document).ready(function() {
 					tr.append(priceTD);
 					table.append(tr);
 					
-					showMessage(response, "green");
+					showMessage("Item added to pricelist.", "green");
 					
 					$("div#dialogNewLuggagePricelistItem").hide();
 				},
@@ -1061,9 +1070,7 @@ $(document).ready(function() {
 })
 
 function stringToDate(displayFormat){
-		console.log(displayFormat);
 		myDate=displayFormat.split("-");
 		var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
-		console.log(newDate);
 		return new Date(newDate).getTime();
 	}
