@@ -388,7 +388,7 @@ $(document).ready(function(){
         var FourBedRooms = $('#roomSearch4Bed').prop('checked');
         console.log('Hotel id: ', hotelId ,'....', start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms);
 
-        renderRoomTable(hotelId, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms,$('#roomSearchDayNumber').val());
+        renderRoomTable(hotelId, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, parseInt($('#roomSearchDayNumber').val()) + 1);
     });
     
     $(document).on('click','#vehicleSearchBtn', function(){
@@ -1017,7 +1017,7 @@ $(document).ready(function(){
 		}
 		
 		var start = stringToDate($('#roomSearchArrivalDate').val());
-		var end = start + ($('#roomSearchDayNumber').val() - 1)*24*60*60*1000;	
+		var end = start + parseInt($('#roomSearchDayNumber').val())*24*60*60*1000;	
 		if(start < new Date().getTime()-24*60*60*1000 || end < new Date().getTime()-24*60*60*1000){
 			showMessage("Cannot select past date", "orange");
 			return;
@@ -1028,7 +1028,15 @@ $(document).ready(function(){
 			showMessage("Select at least 1 room!", "orange");
 			return;
 		}
-		var price = calculatePrice(selected_rooms, selected_hotel_services, $('#roomSearchDayNumber').val());
+		var numOfBedsTotal = 0;
+		for(var k=0;k<selected_rooms.length;k++){
+			numOfBedsTotal += selected_rooms[k].bedNumber;
+		}
+		if(numOfBedsTotal < bigReservation.flightReservation.length){
+			showMessage("Not enough rooms!", "orange");
+			return;
+		}
+		var price = calculatePrice(selected_rooms, selected_hotel_services, parseInt($('#roomSearchDayNumber').val()) + 1);
 		var reservation = {
 			"start": new Date(start),
 			"end": new Date(end),
@@ -1068,8 +1076,7 @@ $(document).ready(function(){
 		$('#reservedHotelServicesTable').html('<tr><th>Name</th><th>Price</th></tr>');
 		for(var i=0; i<reservation.services.length;i++){
 			var red = reservation.services[i];
-			var multi = parseInt($('#roomSearchDayNumber').val())+1;
-			var myPrice = Math.round(red.price*multi);
+			var myPrice = Math.round(red.price);
 			$('#reservedHotelServicesTable tr:last').after(`<tr><td>${red.name}</td><td>${myPrice}</td></tr>`);
 		}
 		
@@ -3020,13 +3027,15 @@ function openTab(evt, tabName) {
 
 function calculatePrice(rooms, services, days){
 	price = 0;
+	console.log("PRICE: ", rooms, services, days);
 	for(var i=0;i<rooms.length;i++){
 		price += (days * rooms[i].price);
 	}
+	console.log("PRICE AFTER ROOMS: ", price);
 	for(var i=0;i<services.length;i++){
 		price += services[i].price;
 	}
-
+	console.log("PRICE AFTER SERVICES: ", price);
 	return price;
 }
 

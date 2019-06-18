@@ -8,7 +8,10 @@
 		<link rel="stylesheet" type="text/css" href="styles.css">
 		<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 		<script type="text/javascript" src="snackbar.js"></script>
+		<script type="text/javascript" src="stars.js"></script>
+		<link rel="stylesheet" type="text/css" href="stars.css">
 		<script type="text/javascript" src="unregisteredUser.js"></script>
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 		<script src="authentication.js"></script>
 	</head>
 	
@@ -23,6 +26,12 @@
 		</div>
         
         <br><br><br><br><br><br><br>
+        <div class="searchDiv" style="background-color: rgba(0, 0, 0, 0.4); height:35px; width:550px; margin-left:9%;">
+        	<input type="text" id="searchNameUN" placeholder="Airline name" style="height:25px; text-align:center; margin-right:10px;">
+        	<input type="text" id="searchDestinationUN" placeholder="Airline destination" style="height:25px; text-align:center;">
+        	<button id="searchUNBtn" >Search</button>
+        </div>
+        <br><br><br><br><br>
         <div id="serviceContainer"></div>
 		
 		<div id="dialogHotelView" class="dialog">

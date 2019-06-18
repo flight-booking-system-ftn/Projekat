@@ -54,7 +54,7 @@ public class FlightReservationService {
 			
 			flightReservationRepository.save(reservation);
 			
-			if(reservation.getUser().getId() != user.getId() && reservation.getUser() != null)
+			if(reservation.getUser() != null && reservation.getUser().getId() != user.getId())
 				try {
 					String message = "User " + reservations.get(0).getUser().getEmail() + " inviting you to the flight " + reservation.getFlight().getFrom().getDestination().getName() + " --> " + reservation.getFlight().getTo().getDestination().getName() + ".\n\nAccept invitation: http://localhost:5000/api/flightReservation/acceptInvitation/" + reservation.getId() + ".\nDecline invitation: http://localhost:5000/api/flightReservation/declineInvitation/" + reservation.getId();
 					mailService.sendNotificaitionAsync(reservation.getUser(), "Invitation on flight", message);
