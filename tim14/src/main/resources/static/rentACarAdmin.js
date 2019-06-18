@@ -19,10 +19,10 @@ $(document).ready(function() {
 		     	    		var onStar = data;
 		     	    		var stars = $('.li.star');
 		     	    		console.log("AAAA", onStar);
-		     	    		$("ul li").each(function() {
+		     	    		$("#stars li").each(function() {
 		     	    			$(this).removeClass('selected');
 		     	   		    })  
-		     	    		$("ul li").each(function() {
+		     	    		$("#stars li").each(function() {
 		     	    			if(i<onStar){
 		     	    				$(this).addClass('selected');
 		     	    				i++;}
@@ -741,7 +741,7 @@ $(document).ready(function() {
 					var red = vehicles[i];
 					var forGrade = `<section class='rating-widget'>
 					<div class='rating-stars text-center' height="20" width="100">
-					  <ul>
+					  <ul id=${red.id}>
 					      <li class='star' title='Poor' data-value='1'>
 		    			  	<i class='fa fa-star fa-fw'></i>
 			   			 </li>
@@ -767,10 +767,10 @@ $(document).ready(function() {
 	     	    	var onStar = data;
 	     	    	var stars = $('.li.star');
 	     	    	console.log("AAAA", onStar);
-	     	    	$("ul li").each(function() {
+	     	    	$("#"+red.id+" li").each(function() {
 	     	    		$(this).removeClass('selected');
 	     	   		})  
-	     	    	$("ul li").each(function() {
+	     	    	$("#"+red.id+" li").each(function() {
 	     	    		if(i<onStar){
 	     	    			$(this).addClass('selected');
 	     	    			i++;
