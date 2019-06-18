@@ -225,6 +225,33 @@ tbody tr:nth-child(even) {
 	padding: 10px;
 }
 
+.searchDiv {
+	float: left;
+	background-color: #1e2838;
+	height: 60px;
+	padding: 10px;
+}
+
+.searchDiv button {
+	margin-left:15px;
+	width: 100px;
+	height: 30px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0);
+	color: #e8e1de;
+	border: 1px solid #2b77b4;
+}
+
+.searchDiv button:hover {
+	margin-left:15px;
+	width: 100px;
+	height: 30px;
+	text-align: center;
+	background-color: #2b77b4;
+	color: #e8e1de;
+	border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
 .menuDiv button {
 	margin-left: 10px;
 	width: 180px;

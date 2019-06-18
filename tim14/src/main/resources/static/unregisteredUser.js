@@ -2,10 +2,11 @@ all_rooms = [];
 selected_rooms = [];
 all_hotel_services = [];
 selected_hotel_services = [];
+var positionTab = 1;
 
 $(document).ready(function(){
     
-    displayAirlines();
+    displayAirlines("","");
     $('#vehicleSearchDiv').css("display","none");
     $('#roomsSearchDiv').css("display","none");
     $('#flightSearchDiv').css("display","block");
@@ -22,28 +23,43 @@ $(document).ready(function(){
     });
 
     $(document).on('click','#showAirlinesBtn',function(){
-        displayAirlines();
+    	displayAirlines("","");
         $('#vehicleSearchDiv').css("display","none");
         $('#roomsSearchDiv').css("display","none");
         $('#flightSearchDiv').css("display","block");
         getAirports(1);
         $('#arrivalDateTRFullSearch').hide();
+        $("#searchNameUN").val("");
+        $("#searchNameUN").attr("placeholder","Airline name");
+        $("#searchDestinationUN").val("");
+        $("#searchDestinationUN").attr("placeholder","Airline name");
+        positionTab = 1;
     });
 
     $(document).on('click','#showHotelsBtn',function(){
-        displayHotels();
+        displayHotels("NO_INPUT", "NO_INPUT");
         $('#vehicleSearchDiv').css("display","none");
         $('#roomSearchArrivalDateFullSearch').val(formatDate(new Date()));
         $('#roomsSearchDiv').css("display","block");
         $('#flightSearchDiv').css("display","none");
+        $("#searchNameUN").val("");
+        $("#searchNameUN").attr("placeholder","Hotel name");
+        $("#searchDestinationUN").val("");
+        $("#searchDestinationUN").attr("placeholder","Hotel name");
+        positionTab = 2;
     });
 
     $(document).on('click','#showRentsBtn',function(){
-        displayRents();
+        displayRents("NO_INPUT", "NO_INPUT");
         $('#vehicleSearchArrivalDateFullSearch').val(formatDate(new Date()));
         $('#vehicleSearchDiv').css("display","block");
         $('#roomsSearchDiv').css("display","none");
         $('#flightSearchDiv').css("display","none");
+        $("#searchNameUN").val("");
+        $("#searchNameUN").attr("placeholder","Rent-a-car name");
+        $("#searchDestinationUN").val("");
+        $("#searchDestinationUN").attr("placeholder","Rent-a-car name");
+        positionTab = 3;
     });
 
 
@@ -413,64 +429,38 @@ $(document).ready(function(){
     $(document).on('click','#quitDialogAirlineView', function(){
     	$('#dialogAirlineView').hide();
     });
+    
+    $(document).on('click','#searchUNBtn', function(){
+    	var name = $("#searchNameUN").val();
+    	var dest = $("#searchDestinationUN").val();
+    	if(positionTab == 1){
+    		displayAirlines(name, dest);
+    	}else if(positionTab == 2){
+    		if(name == "")
+    			name = "NO_INPUT";
+    		if(dest == "")
+    			dest = "NO_INPUT";
+    		displayHotels(name, dest);
+    	}else if(positionTab == 3){
+    		if(name == "")
+    			name = "NO_INPUT";
+    		if(dest == "")
+    			dest = "NO_INPUT";
+    		displayRents(name, dest);
+    	}
+    });
 });
 
-var displayAirlines = function(){
-	var airlineCompanySelect = $("select#airlineCompany");
-	airlineCompanySelect.empty();
-	
-	airlineCompanySelect.append($("<option id='-999'>Any</option>"));
-	
+var displayAirlines = function(name, dest){
     $.get("/api/airlines", function(airlines){
-        console.log("Airlines: ", airlines);
-        $('#serviceContainer').html('');
-        for(var i=0;i<airlines.length;i++){
-            var red = airlines[i];
-            var locationID = "mapLocationAirline" + red.id;
-            var detailViewButtonID = "airlineDetailsBtn" + red.id;
-            var grade = 0;
-            var sum = 0;
-            for(var j=0;j<red.grades.length;j++){
-            	sum += red.grades[j].grade;
-            }
-            if(red.grades.length!=0){
-            	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
-            }
-            $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
-            
-            airlineCompanySelect.append($("<option id='" + red.id + "' selected>" + red.name + "</option>"));
-        }
-        
-        airlineCompanySelect.val("Any");
+    	showAirlines(airlines, name, dest);
     });
 }
 
-var displayHotels = function(){
-    $.get("/api/hotels", function(hotels){
-        console.log("Hotels: ", hotels);
-        $('#serviceContainer').html('');
-        for(var i=0;i<hotels.length;i++){
-            var red = hotels[i];
-            var locationID = "mapLocationHotel" + red.id;
-            var detailViewButtonID = "hotelDetailsBtn" + red.id;
-            var grade = 0;
-            var sum = 0;
-            for(var j=0;j<red.grades.length;j++){
-            	sum += red.grades[j].grade;
-            }
-            if(red.grades.length!=0){
-            	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
-            }
-            $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
-        }
+var displayHotels = function(name, dest){
+	var linkText = name + "/" + dest + "/10/20";
+    $.get("/api/hotelsSearch/" + linkText, function(hotels){
+    	showHotels(hotels);
     });
 }
 
@@ -514,28 +504,10 @@ var renderRoomTableMainView = function(hotelName, destination, start, end, TwoBe
 	});
 }
 
-var displayRents = function(){
-    $.get("/api/rentacars", function(rents){
-        console.log("Rents: ", rents);
-        $('#serviceContainer').html('');
-        for(var i=0;i<rents.length;i++){
-            var red = rents[i];
-            var locationID = "mapLocationRent" + red.id;
-            var detailViewButtonID = "rentDetailsBtn" + red.id;
-            var grade = 0;
-            var sum = 0;
-            for(var j=0;j<red.grades.length;j++){
-            	sum += red.grades[j].grade;
-            }
-            if(red.grades.length!=0){
-            	grade = sum/red.grades.length;
-            }else{
-            	grade = '-';
-            }
-            $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
-            ${red.destination.country})</p><p>${red.description}</p><p>Grade: ${grade}</p></div><div class="mapButtonPreview">
-            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
-        }
+var displayRents = function(name, dest){
+	var linkText = name + "/" + dest + "/10/20";
+    $.get("/api/rentsSearch/" + linkText, function(rents){
+    	showRents(rents);
     });
 }
 
@@ -612,6 +584,202 @@ function getAirports(index) {
 	    	});
 		}
 	});
+}
+
+
+var showHotels = function(hotels){
+	console.log("Hotels: ", hotels);
+    $('#serviceContainer').html('');
+    for(var i=0;i<hotels.length;i++){
+        var red = hotels[i];
+        var locationID = "mapLocationHotel" + red.id;
+        var detailViewButtonID = "hotelDetailsBtn" + red.id;
+        var grade = 0;
+        var sum = 0;
+        for(var j=0;j<red.grades.length;j++){
+        	sum += red.grades[j].grade;
+        }
+        if(red.grades.length!=0){
+        	grade = sum/red.grades.length;
+        }
+        
+        var forGrade = `<section class='rating-widget'>
+			<div class='rating-stars text-center' style="float:left">
+			  <ul id="${red.id}Rent">
+			      <li class='star' title='Poor' data-value='1'>
+    			  	<i class='fa fa-star fa-fw'></i>
+	   			 </li>
+	     		 <li class='star' title='Fair' data-value='2'>
+	        		<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	     		 <li class='star' title='Good' data-value='3'>
+	       			<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	     		 <li class='star' title='Excellent' data-value='4'>
+	        		<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	      		 <li class='star' title='WOW!!!' data-value='5'>
+	        	 	<i class='fa fa-star fa-fw'></i>
+	     		 </li>
+    		 </ul>
+			</div><section>`
+        
+        $(`<div class='listItem'><div class="imagePreview2"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+        ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
+        <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
+        
+        var j = 0;
+        var onStar = grade;
+    	var stars = $('.li.star');
+    	console.log("AAAA", onStar);
+    	$("#"+red.id+"Rent li").each(function() {
+    		$(this).removeClass('selected');
+   		})  
+    	$("#"+red.id+"Rent li").each(function() {
+    		if(j<onStar){
+    			$(this).addClass('selected');
+    			j++;
+    		}
+    		else
+    			return false;
+    	})
+        
+    }
+}
+
+
+var showRents = function(rents){
+	console.log("Rents: ", rents);
+    $('#serviceContainer').html('');
+    for(var i=0;i<rents.length;i++){
+        var red = rents[i];
+        var locationID = "mapLocationRent" + red.id;
+        var detailViewButtonID = "rentDetailsBtn" + red.id;
+        var grade = 0;
+        var sum = 0;
+        for(var j=0;j<red.grades.length;j++){
+        	sum += red.grades[j].grade;
+        }
+        if(red.grades.length!=0){
+        	grade = sum/red.grades.length;
+        }
+        
+        var forGrade = `<section class='rating-widget'>
+			<div class='rating-stars text-center' style="float:left">
+			  <ul id="${red.id}Rent">
+			      <li class='star' title='Poor' data-value='1'>
+    			  	<i class='fa fa-star fa-fw'></i>
+	   			 </li>
+	     		 <li class='star' title='Fair' data-value='2'>
+	        		<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	     		 <li class='star' title='Good' data-value='3'>
+	       			<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	     		 <li class='star' title='Excellent' data-value='4'>
+	        		<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	      		 <li class='star' title='WOW!!!' data-value='5'>
+	        	 	<i class='fa fa-star fa-fw'></i>
+	     		 </li>
+    		 </ul>
+			</div><section>`
+        
+        $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+        ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
+        <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
+        
+        var j = 0;
+        var onStar = grade;
+    	var stars = $('.li.star');
+    	console.log("AAAA", onStar);
+    	$("#"+red.id+"Rent li").each(function() {
+    		$(this).removeClass('selected');
+   		})  
+    	$("#"+red.id+"Rent li").each(function() {
+    		if(j<onStar){
+    			$(this).addClass('selected');
+    			j++;
+    		}
+    		else
+    			return false;
+    	})
+        
+    }
+}
+
+
+var showAirlines = function(airlines, name, dest){
+	var airlineCompanySelect = $("select#airlineCompany");
+	airlineCompanySelect.empty();
+	airlineCompanySelect.append($("<option id='-999'>Any</option>"));
+	
+    console.log("Airlines: ", airlines);
+    $('#serviceContainer').html('');
+    for(var i=0;i<airlines.length;i++){
+        var red = airlines[i];
+        if(!red.destination.name.toLowerCase().includes(dest.toLowerCase())){
+        	continue;
+        }
+        if(!red.name.toLowerCase().includes(name.toLowerCase())){
+        	continue;
+        }
+        var locationID = "mapLocationAirline" + red.id;
+        var detailViewButtonID = "airlineDetailsBtn" + red.id;
+        var grade = 0;
+        var sum = 0;
+        for(var j=0;j<red.grades.length;j++){
+        	sum += red.grades[j].grade;
+        }
+        if(red.grades.length!=0){
+        	grade = sum/red.grades.length;
+        }
+        
+        var forGrade = `<section class='rating-widget'>
+			<div class='rating-stars text-center' style="float:left">
+			  <ul id="${red.id}Rent">
+			      <li class='star' title='Poor' data-value='1'>
+    			  	<i class='fa fa-star fa-fw'></i>
+	   			 </li>
+	     		 <li class='star' title='Fair' data-value='2'>
+	        		<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	     		 <li class='star' title='Good' data-value='3'>
+	       			<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	     		 <li class='star' title='Excellent' data-value='4'>
+	        		<i class='fa fa-star fa-fw'></i>
+	      		 </li>
+	      		 <li class='star' title='WOW!!!' data-value='5'>
+	        	 	<i class='fa fa-star fa-fw'></i>
+	     		 </li>
+    		 </ul>
+			</div><section>`
+        
+        $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
+        ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
+        <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button></div></div>`).appendTo("#serviceContainer");
+        
+        var j = 0;
+        var onStar = grade;
+    	var stars = $('.li.star');
+    	console.log("AAAA", onStar);
+    	$("#"+red.id+"Rent li").each(function() {
+    		$(this).removeClass('selected');
+   		})  
+    	$("#"+red.id+"Rent li").each(function() {
+    		if(j<onStar){
+    			$(this).addClass('selected');
+    			j++;
+    		}
+    		else
+    			return false;
+    	})
+        
+        airlineCompanySelect.append($("<option id='" + red.id + "' selected>" + red.name + "</option>"));
+    }
+    
+    airlineCompanySelect.val("Any");
 }
 
 
