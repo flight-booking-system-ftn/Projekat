@@ -60,6 +60,7 @@ public class Room {
 		super();
 		this.grades = new HashSet<Grade>();
 		this.reservations = new HashSet<RoomReservation>();
+		this.hotel = new Hotel();
 	}
 
 	public Integer getId() {

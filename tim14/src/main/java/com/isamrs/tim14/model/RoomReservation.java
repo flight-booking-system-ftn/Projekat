@@ -62,6 +62,8 @@ public class RoomReservation {
 		this.price = 0;
 		this.rooms = new HashSet<Room>();
 		this.services = new HashSet<HotelService>();
+		this.registeredUser = new RegisteredUser();
+		this.hotel = new Hotel();
 	}
 	
 	public Date getStart() {

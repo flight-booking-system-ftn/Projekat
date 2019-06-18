@@ -2129,6 +2129,7 @@ $(document).ready(function(){
 		}
 		//Postaviti novu max granicu za bonus poene i promeniti vrednost labele
 		
+		
 		if(bigReservation.flightReservation != null) {
 			if(bigReservation.flightReservationType == "regular")
 				$.ajax({
@@ -2208,6 +2209,8 @@ $(document).ready(function(){
 		$("div#reservationsDiv").hide();
 		
 		showMessage("Reservations successfully created.", "green");
+		
+		
 	});
 	
 	/*$("input#priceRange").on("input", function() {
@@ -2216,6 +2219,8 @@ $(document).ready(function(){
 	
     //----------------------------------------
 });
+
+
 
 var renderHotelServiceTable = function(hotelId){
     $.get('/api/hotelServicesSearch/'+hotelId, function(servicesData){

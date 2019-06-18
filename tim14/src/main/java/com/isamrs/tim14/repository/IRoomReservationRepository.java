@@ -6,4 +6,6 @@ import com.isamrs.tim14.model.RoomReservation;
 
 public interface IRoomReservationRepository extends JpaRepository<RoomReservation, Integer>{
 
+	RoomReservation findOneById(Integer id);
+	
 }
