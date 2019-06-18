@@ -96,7 +96,7 @@ public class RentDAOImpl implements RentDAO {
 		for(RentACar r : result1) {
 			for(BranchOffice b : r.getOffices()) {
 				System.out.println(">>>>>>>>>>>>>" +b.getDestination().getName());
-				if(b.getDestination().getName().equalsIgnoreCase(rentDestination)) {
+				if(b.getDestination().getName().toLowerCase().contains(rentDestination.toLowerCase())) {
 					result.add(r);
 					break;
 				}

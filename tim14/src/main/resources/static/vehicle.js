@@ -6,7 +6,7 @@ $(document).ready(function() {
 		console.log(data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
-            select.options[select.options.length] = new Option(''+red.destination.name,''+red.id);
+            select.options[select.options.length] = new Option(''+red.name,''+red.id);
         }
     });
 	
