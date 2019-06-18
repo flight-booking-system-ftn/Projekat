@@ -6,4 +6,6 @@ import com.isamrs.tim14.model.AirlineAdmin;
 
 public interface IAirlineAdminRepository extends JpaRepository<AirlineAdmin, Integer>{
 
+	AirlineAdmin findOneByUsernameAndEmail(String username, String email);
+	
 }

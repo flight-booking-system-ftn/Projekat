@@ -30,7 +30,7 @@ public class Hotel {
 	@Column(name = "name")
 	private String name;
 	
-    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST }, fetch = FetchType.EAGER)
+    @OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST }, fetch = FetchType.LAZY)
     @JoinColumn(name = "destination_id")
     private Destination destination;
 	
@@ -52,7 +52,7 @@ public class Hotel {
 	@JoinColumn(name = "hotel_id")
 	private Set<Grade> grades;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "hotel")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "hotel")
 	@JsonBackReference(value="hotel-reservations")
 	private Set<RoomReservation> reservations;
 	

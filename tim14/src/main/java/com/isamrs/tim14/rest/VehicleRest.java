@@ -7,29 +7,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isamrs.tim14.dao.VehicleDAO;
-import com.isamrs.tim14.model.RentACarAdmin;
-import com.isamrs.tim14.model.Room;
-import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.Vehicle;
+import com.isamrs.tim14.service.VehicleService;
 
 @RestController
 @RequestMapping("/api")
 public class VehicleRest {
 
-	private VehicleDAO vehicleDAO;
-	
 	@Autowired
-	public VehicleRest(VehicleDAO vehicleDAO) {
-		this.vehicleDAO = vehicleDAO;
-	}
+	private VehicleService vehicleService;
 	
 	@PreAuthorize("hasRole('ROLE_RENTACARADMIN')")
 	@RequestMapping(
@@ -38,7 +30,8 @@ public class VehicleRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vehicle> saveVehicle(@RequestBody Vehicle vehicle) {
-		Vehicle newVehicle = vehicleDAO.save(vehicle);
+		Vehicle newVehicle = vehicleService.save(vehicle);
+		
 		if(newVehicle == null) {
 			return new ResponseEntity<Vehicle>(HttpStatus.NOT_FOUND);
 		}
@@ -55,7 +48,7 @@ public class VehicleRest {
 		int id = Integer.parseInt(vehicleId);
 		boolean car = (cars.equals("true")) ? true: false;
 		boolean moto = (motocycles.equals("true")) ? true: false;
-		Collection<Vehicle> vehicles = vehicleDAO.getVehiclesSearch(id, arriveDate, dayNum, car, moto, startDest);
+		Collection<Vehicle> vehicles = vehicleService.getVehiclesSearch(id, arriveDate, dayNum, car, moto, startDest);
 		
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
@@ -71,7 +64,7 @@ public class VehicleRest {
 		boolean moto = (motocycles.equals("true")) ? true: false;
 		rentName = (rentName.equals("NO_INPUT")) ? "" : rentName;
 		destination = (destination.equals("NO_INPUT")) ? "" : destination;
-		Collection<Vehicle> vehicles = vehicleDAO.getAllVehiclesSearch(rentName, destination, start, end, name, car, moto, minPrice, maxPrice);
+		Collection<Vehicle> vehicles = vehicleService.getAllVehiclesSearch(rentName, destination, start, end, name, car, moto, minPrice, maxPrice);
 		
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
@@ -82,7 +75,7 @@ public class VehicleRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Vehicle>> getUnreservedVehcles(){
-		Collection<Vehicle> vehicles = vehicleDAO.getUnreservedVehicles();
+		Collection<Vehicle> vehicles = vehicleService.getUnreservedVehicles();
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
 
@@ -91,7 +84,7 @@ public class VehicleRest {
 			value = "/removeVehicle/{id}",
 			method = RequestMethod.DELETE)
 	public ResponseEntity<?> removeRoom(@PathVariable Integer id){
-		vehicleDAO.removeVehicle(id);
+		vehicleService.removeVehicle(id);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -100,7 +93,7 @@ public class VehicleRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getUserGrade(@PathVariable Integer id) {
-		Integer grade = vehicleDAO.getGrade(id);
+		Integer grade = vehicleService.getGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -109,7 +102,7 @@ public class VehicleRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Integer> getGrade(@PathVariable Integer id) {
-		Integer grade = vehicleDAO.getIntermediateGrade(id);
+		Integer grade = vehicleService.getIntermediateGrade(id);
 		return new ResponseEntity<Integer>(grade, HttpStatus.OK);
 	}
 	
@@ -118,7 +111,7 @@ public class VehicleRest {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> setUserGrade(@PathVariable Integer id, @PathVariable Integer grade) {
-		vehicleDAO.setGrade(id, grade);
+		vehicleService.setGrade(id, grade);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
@@ -128,7 +121,7 @@ public class VehicleRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vehicle> getSelectedVehicle(@PathVariable Integer id){
-		Vehicle vehicle = vehicleDAO.getVehicle(id);
+		Vehicle vehicle = vehicleService.findById(id);
 		return new ResponseEntity<Vehicle>(vehicle, HttpStatus.OK);
 	}
 	
@@ -139,7 +132,7 @@ public class VehicleRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Vehicle> changeVehicle(@RequestBody Vehicle vehicle) {
-		Vehicle veh = vehicleDAO.changeVehicle(vehicle);
+		Vehicle veh = vehicleService.changeVehicle(vehicle);
 		return new ResponseEntity<Vehicle>(veh, HttpStatus.CREATED);
 	}
 	
@@ -149,7 +142,7 @@ public class VehicleRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<Vehicle>> getAllVehicles(){
-		Collection<Vehicle> vehicles = vehicleDAO.getAllRentsVehicles();
+		Collection<Vehicle> vehicles = vehicleService.getAllRentsVehicles();
 		return new ResponseEntity<Collection<Vehicle>>(vehicles, HttpStatus.OK);
 	}
 }

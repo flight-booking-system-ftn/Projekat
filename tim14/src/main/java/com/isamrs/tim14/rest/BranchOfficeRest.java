@@ -15,21 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isamrs.tim14.dao.BranchOfficeDAO;
 import com.isamrs.tim14.model.BranchOffice;
-import com.isamrs.tim14.model.Destination;
 import com.isamrs.tim14.model.RentACarAdmin;
+import com.isamrs.tim14.service.BranchOfficeService;
 
 @RestController
 @RequestMapping("/api")
 public class BranchOfficeRest {
 
-	private BranchOfficeDAO branchDAO;
-	
 	@Autowired
-	public BranchOfficeRest(BranchOfficeDAO branchDAO) {
-		this.branchDAO = branchDAO;
-	}
+	private BranchOfficeService branchOfficeService;
 	
 	@RequestMapping(
 			value = "/branchOffice",
@@ -37,7 +32,7 @@ public class BranchOfficeRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BranchOffice> saveRent(@RequestBody BranchOffice br) {
-		BranchOffice newRent = branchDAO.save(br);
+		BranchOffice newRent = branchOfficeService.save(br);
 		if(newRent == null) {
 			return new ResponseEntity<BranchOffice>(HttpStatus.NOT_FOUND);
 		}
@@ -46,7 +41,7 @@ public class BranchOfficeRest {
 	
 	@RequestMapping(value = "/branchOffice/{officeID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<BranchOffice> getOffice(@PathVariable Integer officeID) {
-		BranchOffice office = branchDAO.getOffice(officeID);
+		BranchOffice office = branchOfficeService.getOffice(officeID);
 		if (office == null) {
 			return new ResponseEntity<BranchOffice>(HttpStatus.NOT_FOUND);
 		}
@@ -55,13 +50,13 @@ public class BranchOfficeRest {
 
 	@RequestMapping(value = "/branchOffices", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<BranchOffice>> getOffices() {
-		Set<BranchOffice> offices = branchDAO.getOffices();
+		Set<BranchOffice> offices = branchOfficeService.getOffices();
 		return new ResponseEntity<Collection<BranchOffice>>(offices, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/branchOfficeByRent/{rentID}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<BranchOffice>> getOfficeByRent(@PathVariable Integer rentID) {
-		List<BranchOffice> office = branchDAO.getBranchesByRent(rentID);
+		List<BranchOffice> office = branchOfficeService.getBranchesByRent(rentID);
 		if (office == null) {
 			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
 		}
@@ -71,7 +66,7 @@ public class BranchOfficeRest {
 	@RequestMapping(value = "/branchOfficeByRentt", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<BranchOffice>> getOfficeByRentt() {
 		RentACarAdmin r = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		List<BranchOffice> office = branchDAO.getBranchesByRent(r.getRentACar().getId());
+		List<BranchOffice> office = branchOfficeService.getBranchesByRent(r.getRentACar().getId());
 		if (office == null) {
 			return new ResponseEntity<Collection<BranchOffice>>(HttpStatus.NOT_FOUND);
 		}

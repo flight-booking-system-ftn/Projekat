@@ -14,27 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.isamrs.tim14.dao.AirlineAdminDAO;
 import com.isamrs.tim14.model.AirlineAdmin;
+import com.isamrs.tim14.service.AirlineAdminService;
 
 @RestController
 @RequestMapping("/api")
 public class AirlineAdminRest {
 	
-	private AirlineAdminDAO airlineAdminDAO;
-	
 	@Autowired
-	public AirlineAdminRest(AirlineAdminDAO airlineAdminDAO) {
-		this.airlineAdminDAO = airlineAdminDAO;
-	}
+	private AirlineAdminService airlineAdminService;
 	
 	@RequestMapping(
 			value = "/airlineadmins",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<AirlineAdmin>> getAirlineAdmins(){
-		
-		Collection<AirlineAdmin> airlineAdmins = airlineAdminDAO.getAirlineAdmins();
+		Collection<AirlineAdmin> airlineAdmins = airlineAdminService.getAirlineAdmins();
 		
 		return new ResponseEntity<Collection<AirlineAdmin>>(airlineAdmins, HttpStatus.OK);
 	}
@@ -44,7 +39,8 @@ public class AirlineAdminRest {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AirlineAdmin> getAirlineAdmin(@PathVariable Integer airlineAdminID) {
-		AirlineAdmin airlineAdmin =  airlineAdminDAO.getAirlineAdmin(airlineAdminID);
+		AirlineAdmin airlineAdmin = airlineAdminService.findById(airlineAdminID);
+		
 		if(airlineAdmin == null) {
 			return new ResponseEntity<AirlineAdmin>(HttpStatus.NOT_FOUND);
 		}
@@ -58,16 +54,18 @@ public class AirlineAdminRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AirlineAdmin> saveAirlineAdmin(@RequestBody AirlineAdmin airlineAdmins) {
-		AirlineAdmin newAirlineAdmin = airlineAdminDAO.save(airlineAdmins);
+		AirlineAdmin newAirlineAdmin = airlineAdminService.save(airlineAdmins);
+		
 		if(newAirlineAdmin == null) {
 			return new ResponseEntity<AirlineAdmin>(HttpStatus.NOT_FOUND);
 		}
+		
 		return new ResponseEntity<AirlineAdmin>(newAirlineAdmin, HttpStatus.CREATED);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_AIRLINEADMIN')")
 	@PutMapping("/airlineadmins/updateProfile")
-	public ResponseEntity<String> updateProfile(@RequestBody AirlineAdmin admin) {
-		return airlineAdminDAO.updateProfile(admin);
+	public void updateProfile(@RequestBody AirlineAdmin admin) {
+		airlineAdminService.updateProfile(admin);
 	}
 }

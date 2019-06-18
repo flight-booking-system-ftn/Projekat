@@ -66,9 +66,9 @@ public class AirlineService {
 	public ResponseEntity<String> update(Airline airline) {
 		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
+		List<Destination> destinations = destinationRepository.findAll();
+		
 		if(airline.getName().equals(user.getAirline().getName())) {
-			List<Destination> destinations = destinationRepository.findAll();
-			
 			for(Destination destination : destinations)
 				if(destination.getName().equals(airline.getDestination().getName()) && destination.getAddress().equals(airline.getDestination().getAddress()) && destination.getCountry().equals(airline.getDestination().getCountry())
 						&& !airline.getDestination().getName().equals(user.getAirline().getDestination().getName()) && !airline.getDestination().getCountry().equals(user.getAirline().getDestination().getCountry()) && !airline.getDestination().getAddress().equals(user.getAirline().getDestination().getAddress()))
@@ -83,14 +83,18 @@ public class AirlineService {
 		Airline managedAirline = airlineRepository.getOne(user.getAirline().getId());
 		
 		managedAirline.setName(airline.getName());
-		managedAirline.setDestination(airline.getDestination());
+		managedAirline.getDestination().setAddress(airline.getDestination().getAddress());
+		managedAirline.getDestination().setName(airline.getDestination().getName());
+		managedAirline.getDestination().setCountry(airline.getDestination().getCountry());
+		managedAirline.getDestination().setLatitude(airline.getDestination().getLatitude());
+		managedAirline.getDestination().setLongitude(airline.getDestination().getLongitude());
 		managedAirline.setDescription(airline.getDescription());
 
 		return new ResponseEntity("Airline informations successfully updated.", HttpStatus.OK);
 	}
 	
 	public List<Airline> search(String airlineName) {
-		return airlineRepository.findByName(airlineName);
+		return airlineRepository.findByNameContaining(airlineName);
 	}
 	
 	public Set<Airport> getAirports(Integer id) {

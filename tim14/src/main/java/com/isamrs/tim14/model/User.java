@@ -67,7 +67,7 @@ public class User implements Serializable, UserDetails {
 	@Column(name = "password_changed")
 	private boolean passwordChanged;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "user_authority", 
 		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 		inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))

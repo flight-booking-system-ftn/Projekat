@@ -49,7 +49,7 @@ public class Vehicle {
 	@Column(name = "price")
 	private Double price;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "vehicle_id")
 	@JsonBackReference(value="vehicle-grades")
 	private Set<Grade> grades;
@@ -58,7 +58,7 @@ public class Vehicle {
     @JoinColumn(name = "rent_a_car_id")
 	private RentACar rentACar;
 	
-	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_office_id")
 	private BranchOffice branchOffice;
 	

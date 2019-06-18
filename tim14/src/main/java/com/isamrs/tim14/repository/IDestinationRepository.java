@@ -7,4 +7,5 @@ import com.isamrs.tim14.model.Destination;
 public interface IDestinationRepository extends JpaRepository<Destination, Integer>{
 
 	Destination findOneById(Integer id);
+	
 }

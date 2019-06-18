@@ -41,7 +41,7 @@ public class Room {
 	@Column(name = "price")
 	private Double price;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "room_id")
 	@JsonBackReference(value="room-grades")
 	private Set<Grade> grades;
