@@ -147,17 +147,18 @@ $(document).ready(function(){
 	        console.log("vehicle id: ", id);
 	        $.get({url:'/api/getGradeForVehicle/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
-	    		var i = 0;
+	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
 	    		console.log("AAAA", onStar);
-	    		$("ul li").each(function() {
+	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
-	    		$("ul li").each(function() {
-	    			if(i<onStar){
+	    		$("#stars li").each(function() {
+	    			if(k<onStar){
 	    				$(this).addClass('selected');
-	    				i++;}
+	    				k++;
+	    			}
 	    			else return false;
 	   		    })	    			
 	        $('#outDiv').css("display","block");
@@ -171,31 +172,6 @@ $(document).ready(function(){
         
 	})
     
-	
-		$(document).on('click','table button',function(e){
-		console.log(e.target.id);
-		if(e.target.id.startsWith("rateBtnF")){
-	        var id = e.target.id.substr(8);
-	        $("#entityID").val("flight"+id);
-	        console.log("flight id: ", id);
-	        $.get({url:'/flight/getGradeForFlight/'+id,
-	    		headers: createAuthorizationTokenHeader()}, function(data){
-	    		var i = 0;
-	    		var onStar = data;
-	    		var stars = $('.li.star');
-	    		$("ul li").each(function() {
-	    			$(this).removeClass('selected');
-	   		    })  
-	    		$("ul li").each(function() {
-	    			if(i<onStar){
-	    				$(this).addClass('selected');
-	    				i++;}
-	    			else return false;
-	   		    })	    			
-	        $('#outDiv').css("display","block");
-	       })
-		}
-	})
 	
 	$(document).on('click', "#allFlightsCancel", function(){
 		$("#flightHistContainer").css("display", "none");
@@ -221,7 +197,6 @@ $(document).ready(function(){
 				console.log("-->", red);
 				$('#roomsHistory tr:last').after(`<tr><td>${red.roomNumber}</td><td>${red.bedNumber}</td><td>${red.floor}</td><td>${red.hotel.name}</td><td><button id=${buttonID}>Rate</button></td></tr>`);
 			}
-			$('#outDiv').css("display","none");
 		})
 		$('#outDiv').css("display","none");
     });
@@ -234,17 +209,38 @@ $(document).ready(function(){
 	        console.log("room id: ", id);
 	        $.get({url:'/api/getGradeForRoom/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
-	    		var i = 0;
+	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
 	    		console.log("AAAA", onStar);
-	    		$("ul li").each(function() {
+	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
-	    		$("ul li").each(function() {
-	    			if(i<onStar){
+	    		$("#stars li").each(function() {
+	    			if(k<onStar){
 	    				$(this).addClass('selected');
-	    				i++;}
+	    				k++;}
+	    			else return false;
+	   		    })	    			
+	        $('#outDiv').css("display","block");
+	       })
+		}else if(e.target.id.startsWith("rateBtnF")){
+	        var id = e.target.id.substr(8);
+	        $("#entityID").val("flight"+id);
+	        console.log("flight id: ", id);
+	        $.get({url:'/flight/getGradeForFlight/'+id,
+	    		headers: createAuthorizationTokenHeader()}, function(data){
+	    		var k = 0;
+	    		var onStar = data;
+	    		console.log("fff", data);
+	    		var stars = $('.li.star');
+	    		$("#stars li").each(function() {
+	    			$(this).removeClass('selected');
+	   		    })  
+	    		$("#stars li").each(function() {
+	    			if(k<onStar){
+	    				$(this).addClass('selected');
+	    				k++;}
 	    			else return false;
 	   		    })	    			
 	        $('#outDiv').css("display","block");
@@ -400,7 +396,7 @@ $(document).ready(function(){
         var e = document.getElementById("startDestination");
 	    var startDest = e.options[e.selectedIndex].text;
 	    console.log('Rent: ', rentId ,'....', start, end, cars, motocycles, startDest);
-        renderVehicleTable(rentId, start, end, cars, motocycles,$('#vehicleSearchDayNumber').val(), startDest);
+        renderVehicleTable(rentId, start, end, cars, motocycles,parseInt($('#vehicleSearchDayNumber').val())+1, startDest);
     });
     
     $(document).on('click','#quitDialogHotelView',function(){
@@ -462,17 +458,17 @@ $(document).ready(function(){
 	        console.log("rent id: ", id);
 	        $.get({url:'/api/getGradeForRent/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
-	    		var i = 0;
+	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
 	    		console.log("AAAA", onStar);
-	    		$("ul li").each(function() {
+	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
-	    		$("ul li").each(function() {
-	    			if(i<onStar){
+	    		$("#stars li").each(function() {
+	    			if(k<onStar){
 	    				$(this).addClass('selected');
-	    				i++;}
+	    				k++;}
 	    			else return false;
 	   		    })	    			
 	        $('#outDiv').css("display","block");
@@ -485,17 +481,17 @@ $(document).ready(function(){
 	        console.log("airline id: ", id);
 	        $.get({url:'/api/getGradeForAirline/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
-	    		var i = 0;
+	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
 	    		console.log("AAAA", onStar);
-	    		$("ul li").each(function() {
+	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
-	    		$("ul li").each(function() {
-	    			if(i<onStar){
+	    		$("#stars li").each(function() {
+	    			if(k<onStar){
 	    				$(this).addClass('selected');
-	    				i++;}
+	    				k++;}
 	    			else return false;
 	   		    })	    			
 	        $('#outDiv').css("display","block");
@@ -507,17 +503,17 @@ $(document).ready(function(){
 	        console.log("hotel id: ", id);
 	        $.get({url:'/api/getGradeForHotel/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
-	    		var i = 0;
+	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
 	    		console.log("AAAA", onStar);
-	    		$("ul li").each(function() {
+	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
-	    		$("ul li").each(function() {
-	    			if(i<onStar){
+	    		$("#stars li").each(function() {
+	    			if(k<onStar){
 	    				$(this).addClass('selected');
-	    				i++;}
+	    				k++;}
 	    			else return false;
 	   		    })	    			
 	        $('#outDiv').css("display","block");
@@ -748,7 +744,7 @@ $(document).ready(function(){
             }
             var forGrade = `<section class='rating-widget'>
 				<div class='rating-stars text-center' style="float:left">
-				  <ul>
+				  <ul id=${red.id}Rent>
 				      <li class='star' title='Poor' data-value='1'>
 	    			  	<i class='fa fa-star fa-fw'></i>
 		   			 </li>
@@ -765,7 +761,7 @@ $(document).ready(function(){
 		        	 	<i class='fa fa-star fa-fw'></i>
 		     		 </li>
 	    		 </ul>
-				</div>`	;
+				</div></section>`;
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == data[i].id){
@@ -781,21 +777,22 @@ $(document).ready(function(){
             $(`<div class='listItem'><div class="imagePreview3"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
-	        }});
+			var k = 0;
 			var onStar = grade;
 	    	var stars = $('.li.star');
 	    	console.log("AAAA", onStar);
-	    	$("ul li").each(function() {
+	    	$("#"+red.id+"Rent li").each(function() {
 	    		$(this).removeClass('selected');
 	   		})  
-	    	$("ul li").each(function() {
-	    		if(i<onStar){
+	    	$("#"+red.id+"Rent li").each(function() {
+	    		if(k<onStar){
 	    			$(this).addClass('selected');
-	    			i++;
+	    			k++;
 	    		}
 	    		else
 	    			return false;
 	   		 })
+        }});	 
 	});
     
     $(document).on('click','#sortHotelBtn',function(){
@@ -825,7 +822,7 @@ $(document).ready(function(){
             }
             var forGrade = `<section class='rating-widget'>
 				<div class='rating-stars text-center' style="float:left">
-				  <ul>
+				  <ul id=${red.id}Hotel>
 				      <li class='star' title='Poor' data-value='1'>
 	    			  	<i class='fa fa-star fa-fw'></i>
 		   			 </li>
@@ -842,7 +839,7 @@ $(document).ready(function(){
 		        	 	<i class='fa fa-star fa-fw'></i>
 		     		 </li>
 	    		 </ul>
-				</div>`	;
+				</div></section>`;
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == hotels[i].id){
@@ -860,13 +857,14 @@ $(document).ready(function(){
             var onStar = grade;
  	    	var stars = $('.li.star');
  	    	console.log("AAAA", onStar);
- 	    	$("ul li").each(function() {
+ 	    	var k = 0;
+ 	    	$("#"+red.id+"Hotel li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})  
- 	    	$("ul li").each(function() {
- 	    		if(i<onStar){
+ 	    	$("#"+red.id+"Hotel li").each(function() {
+ 	    		if(k<onStar){
  	    			$(this).addClass('selected');
- 	    			i++;
+ 	    			k++;
  	    		}
  	    		else
  	    			return false;
@@ -924,7 +922,7 @@ $(document).ready(function(){
 	            }
 	            var forGrade = `<section class='rating-widget'>
 					<div class='rating-stars text-center' style="float:left">
-					  <ul>
+					  <ul id=${red.id}Airline>
 					      <li class='star' title='Poor' data-value='1'>
 		    			  	<i class='fa fa-star fa-fw'></i>
 			   			 </li>
@@ -941,7 +939,7 @@ $(document).ready(function(){
 			        	 	<i class='fa fa-star fa-fw'></i>
 			     		 </li>
 		    		 </ul>
-					</div>`	;
+					</div></section>`	;
 	            var check = 0;
 	            for(var k=0; k<reserved.length; k++){
 	            	if(reserved[k].id == airlines[i].id){
@@ -959,13 +957,14 @@ $(document).ready(function(){
 	            var onStar = grade;
 	 	    	var stars = $('.li.star');
 	 	    	console.log("AAAA", onStar);
-	 	    	$("ul li").each(function() {
+	 	    	$("#"+red.id+"Airline li").each(function() {
 	 	    		$(this).removeClass('selected');
 	 	   		})  
-	 	    	$("ul li").each(function() {
-	 	    		if(i<onStar){
+	 	   		var k = 0;
+	 	    	$("#"+red.id+"Airline li").each(function() {
+	 	    		if(k<onStar){
 	 	    			$(this).addClass('selected');
-	 	    			i++;
+	 	    			k++;
 	 	    		}
 	 	    		else
 	 	    			return false;
@@ -1135,7 +1134,7 @@ $(document).ready(function(){
 			return;
 		}
 		console.log("Selected vehicles: ", selected_vehicles);
-		var price = calculatePriceVehicle(selected_vehicles, $('#vehicleSearchDayNumber').val());
+		var price = calculatePriceVehicle(selected_vehicles, parseInt($('#vehicleSearchDayNumber').val())+1);
 		var link = '/api/branchOffice/'+$("#endDestination option:selected" ).val();
 		if(selected_vehicles.length == 0) {
 			showMessage("Select at least 1 vehicle!", "orange");
@@ -2548,12 +2547,13 @@ var renderAirlineTable = function(){
 var renderAirlineTableSearch = function(){
     var text = $('#airlineSearchInput').val();
     
-    if(text == ""){
+    /*if(text == ""){
         displayAirlines();
         return;
-    }
+    }*/
     
     $.get('/api/airlinesSearch/'+text, function(airlines){
+    	 globalAirline = ailines;	
     	 $('#serviceContainer').html('');
          $("#searchSortContainer").html('');
          $(`<div class="VelikiPregled">  <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
@@ -2580,7 +2580,7 @@ var renderAirlineTableSearch = function(){
              }
              var forGrade = `<section class='rating-widget'>
  				<div class='rating-stars text-center' style="float:left">
- 				  <ul>
+ 				  <ul id=${red.id}Airline>
  				      <li class='star' title='Poor' data-value='1'>
  	    			  	<i class='fa fa-star fa-fw'></i>
  		   			 </li>
@@ -2597,7 +2597,7 @@ var renderAirlineTableSearch = function(){
  		        	 	<i class='fa fa-star fa-fw'></i>
  		     		 </li>
  	    		 </ul>
- 				</div>`	;
+ 				</div></section>`	;
              var check = 0;
              for(var k=0; k<reserved.length; k++){
              	if(reserved[k].id == airlines[i].id){
@@ -2615,13 +2615,14 @@ var renderAirlineTableSearch = function(){
              var onStar = grade;
   	    	 var stars = $('.li.star');
   	    	 console.log("AAAA", onStar);
-  	    	 $("ul li").each(function() {
+  	    	 $("#"+red.id+"Airline li").each(function() {
   	    	 	$(this).removeClass('selected');
   	   		 })  
-  	    	 $("ul li").each(function() {
-  	    		if(i<onStar){
+  	   		 var k = 0;
+  	    	 $("#"+red.id+"Airline li").each(function() {
+  	    		if(k<onStar){
   	    			$(this).addClass('selected');
-  	    			i++;
+  	    			k++;
   	    		}
   	    		else
   	    			return false;
@@ -2716,7 +2717,7 @@ var renderHotelTableSearch = function(){
             }
             var forGrade = `<section class='rating-widget'>
 				<div class='rating-stars text-center' style="float:left">
-				  <ul>
+				  <ul id=${red.id}Hotel>
 				      <li class='star' title='Poor' data-value='1'>
 	    			  	<i class='fa fa-star fa-fw'></i>
 		   			 </li>
@@ -2733,7 +2734,7 @@ var renderHotelTableSearch = function(){
 		        	 	<i class='fa fa-star fa-fw'></i>
 		     		 </li>
 	    		 </ul>
-				</div>`;
+				</div></section>`;
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == hotels[i].id){
@@ -2751,13 +2752,14 @@ var renderHotelTableSearch = function(){
             var onStar = grade;
  	    	var stars = $('.li.star');
  	    	console.log("AAAA", onStar);
- 	    	$("ul li").each(function() {
+ 	    	$("#"+red.id+"Hotel li").each(function() {
  	    		$(this).removeClass('selected');
- 	   		})  
- 	    	$("ul li").each(function() {
- 	    		if(i<onStar){
+ 	   		})
+ 	   		var k = 0;
+ 	    	$("#"+red.id+"Hotel li").each(function() {
+ 	    		if(k<onStar){
  	    			$(this).addClass('selected');
- 	    			i++;
+ 	    			k++;
  	    		}
  	    		else
  	    			return false;
@@ -2862,7 +2864,7 @@ var renderRentACarTableSearch = function(){
             }
             var forGrade = `<section class='rating-widget'>
 				<div class='rating-stars text-center' style="float:left">
-				  <ul>
+				  <ul id=${red.id}Rent>
 				      <li class='star' title='Poor' data-value='1'>
 	    			  	<i class='fa fa-star fa-fw'></i>
 		   			 </li>
@@ -2879,7 +2881,7 @@ var renderRentACarTableSearch = function(){
 		        	 	<i class='fa fa-star fa-fw'></i>
 		     		 </li>
 	    		 </ul>
-				</div>`	
+				</div></section>`;	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == rents[i].id){
@@ -2897,13 +2899,14 @@ var renderRentACarTableSearch = function(){
             var onStar = grade;
  	    	var stars = $('.li.star');
  	    	console.log("AAAA", onStar);
- 	    	$("ul li").each(function() {
+ 	    	$("#"+red.id+"Rent li").each(function() {
  	    		$(this).removeClass('selected');
- 	   		})  
- 	    	$("ul li").each(function() {
- 	    		if(i<onStar){
+ 	   		})
+ 	   		var k = 0;
+ 	    	$("#"+red.id+"Rent li").each(function() {
+ 	    		if(k<onStar){
  	    			$(this).addClass('selected');
- 	    			i++;
+ 	    			k++;
  	    		}
  	    		else
  	    			return false;
@@ -2923,7 +2926,7 @@ var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, moto
             all_vehicles = vehicles;
         	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
             for(var i=0;i<vehicles.length;i++){
-                var red = vehicles[i];
+                var red = vehicles[i]; 
                 checkBoxID = "vehicleCheckbox"+ red.id;
                 $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price*num}</td><td>
                 <input type="checkbox" id=${checkBoxID}></td></tr>`);
@@ -3135,7 +3138,7 @@ var displayAirlines = function(){
             }
             var forGrade = `<section class='rating-widget'>
 				<div class='rating-stars text-center' style="float:left">
-				  <ul>
+				  <ul id=${red.id}Airline>
 				      <li class='star' title='Poor' data-value='1'>
 	    			  	<i class='fa fa-star fa-fw'></i>
 		   			 </li>
@@ -3152,7 +3155,7 @@ var displayAirlines = function(){
 		        	 	<i class='fa fa-star fa-fw'></i>
 		     		 </li>
 	    		 </ul>
-				</div>`	
+				</div></section>`;	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == airlines[i].id){
@@ -3167,16 +3170,17 @@ var displayAirlines = function(){
             $(`<div class='listItem'><div class="imagePreview"></div><div style="float: left; margin-left:15px;"><h2 style="margin-left:-15px;">${red.name}</h2><p>${red.destination.address} (${red.destination.name},
             ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
+            var k = 0;
             var onStar = grade;
  	    	var stars = $('.li.star');
  	    	console.log("AAAA", onStar);
- 	    	$("ul li").each(function() {
+ 	    	$("#"+red.id+"Airline li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})  
- 	    	$("ul li").each(function() {
- 	    		if(i<onStar){
+ 	    	$("#"+red.id+"Airline li").each(function() {
+ 	    		if(k<onStar){
  	    			$(this).addClass('selected');
- 	    			i++;
+ 	    			k++;
  	    		}
  	    		else
  	    			return false;
@@ -3241,7 +3245,7 @@ var displayHotels = function(){
             }
             var forGrade = `<section class='rating-widget'>
 				<div class='rating-stars text-center' style="float:left">
-				  <ul>
+				  <ul id=${red.id}Hotel>
 				      <li class='star' title='Poor' data-value='1'>
 	    			  	<i class='fa fa-star fa-fw'></i>
 		   			 </li>
@@ -3258,7 +3262,7 @@ var displayHotels = function(){
 		        	 	<i class='fa fa-star fa-fw'></i>
 		     		 </li>
 	    		 </ul>
-				</div>`	
+				</div></section>`;	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == hotels[i].id){
@@ -3275,16 +3279,17 @@ var displayHotels = function(){
                     ${red.destination.country})</p><p>${red.description}</p><p>${forGrade}</p></div><div class="mapButtonPreview">
                     <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
             }
+            var k = 0;
             var onStar = grade;
  	    	var stars = $('.li.star');
  	    	console.log("AAAA", onStar);
- 	    	$("ul li").each(function() {
+ 	    	$("#"+red.id+"Hotel li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})  
- 	    	$("ul li").each(function() {
- 	    		if(i<onStar){
+ 	    	$("#"+red.id+"Hotel li").each(function() {
+ 	    		if(k<onStar){
  	    			$(this).addClass('selected');
- 	    			i++;
+ 	    			k++;
  	    		}
  	    		else
  	    			return false;
@@ -3338,7 +3343,7 @@ var displayRents = function(){
             	grade = sum/red.grades.length;
             var forGrade = `<section class='rating-widget'>
 				<div class='rating-stars text-center' style="float:left">
-				  <ul>
+				  <ul id=${red.id}Rent>
 				      <li class='star' title='Poor' data-value='1'>
 	    			  	<i class='fa fa-star fa-fw'></i>
 		   			 </li>
@@ -3355,7 +3360,7 @@ var displayRents = function(){
 		        	 	<i class='fa fa-star fa-fw'></i>
 		     		 </li>
 	    		 </ul>
-				</div>`	
+				</div></section>`;	
             var check = 0;
             for(var k=0; k<reserved.length; k++){
             	if(reserved[k].id == rents[i].id){
@@ -3376,13 +3381,14 @@ var displayRents = function(){
             var onStar = grade;
  	    	var stars = $('.li.star');
  	    	console.log("AAAA", onStar);
- 	    	$("ul li").each(function() {
+ 	    	var k = 0;
+ 	    	$("#"+red.id+"Rent li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})  
- 	    	$("ul li").each(function() {
- 	    		if(i<onStar){
+ 	    	$("#"+red.id+"Rent li").each(function() {
+ 	    		if(k<onStar){
  	    			$(this).addClass('selected');
- 	    			i++;
+ 	    			k++;
  	    		}
  	    		else
  	    			return false;
