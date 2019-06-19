@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PessimisticLockException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -39,7 +42,7 @@ public class VehicleReservationService {
 	@Autowired
 	private IRentACarRepository rentACarRepository;
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public VehicleReservation save(VehicleReservation vehicleReservation) {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -62,7 +65,7 @@ public class VehicleReservationService {
 		vehicleReservationRepository.save(vehicleReservation);
 
 		for (Vehicle v : vehicleReservation.getVehicles()) {
-			Vehicle managedvehicleEntity = vehicleRepository.getOne(v.getId());
+			Vehicle managedvehicleEntity = vehicleRepository.findOneById(v.getId());
 
 			if (managedvehicleEntity.getReservations() == null)
 				managedvehicleEntity.setReservations(new HashSet<VehicleReservation>());
@@ -86,10 +89,10 @@ public class VehicleReservationService {
 		return result;
 	}
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = OptimisticLockException.class)
 	public VehicleReservation saveQuickVehicleReservation(String reservationID) {
 		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		VehicleReservation res = vehicleReservationRepository.getOne(Integer.parseInt(reservationID));
+		VehicleReservation res = vehicleReservationRepository.findOneById(Integer.parseInt(reservationID));
 
 		res.setRegisteredUser(user);
 

@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PessimisticLockException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +41,7 @@ public class RoomReservationService {
 	@Autowired
 	IRoomRepository roomRepository;
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public RoomReservation save(RoomReservation roomReservation) {
 		Hotel managedHotel = hotelRepository.findOneById(roomReservation.getHotel().getId());
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -77,7 +79,7 @@ public class RoomReservationService {
 		return result;
 	}
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = OptimisticLockException.class)
 	public RoomReservation saveQuick(String roomReservationID) {
 		RoomReservation managedReservation = roomReservationRepository.findOneById(Integer.parseInt(roomReservationID));
 		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -100,7 +102,7 @@ public class RoomReservationService {
 	}
 	
 	public RoomReservation getOneQuickReservation(Integer id) {
-		RoomReservation reservation = roomReservationRepository.findOneById(id);
+		RoomReservation reservation = roomReservationRepository.getReservationById(id);
 		return reservation;
 	}
 	

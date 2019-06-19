@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "flight_reservation")
@@ -68,6 +69,9 @@ public class FlightReservation {
 	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.REMOVE }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "vehicle_reservation")
 	private VehicleReservation vehicleReservation;
+	
+	@Version
+	private Long version;
 
 	public FlightReservation() {
 		super();
@@ -175,6 +179,14 @@ public class FlightReservation {
 
 	public void setVehicleReservation(VehicleReservation vehicleReservation) {
 		this.vehicleReservation = vehicleReservation;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 }
