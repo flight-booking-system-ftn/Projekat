@@ -18,7 +18,6 @@ $(document).ready(function() {
 		     	    		var i = 0;
 		     	    		var onStar = data;
 		     	    		var stars = $('.li.star');
-		     	    		console.log("AAAA", onStar);
 		     	    		$("#stars li").each(function() {
 		     	    			$(this).removeClass('selected');
 		     	   		    })  
@@ -29,7 +28,6 @@ $(document).ready(function() {
 		     	    			else return false;
 		     	   		    })
 		     	       })
-						console.log("Admin's rent: ", data);
 		                $('#pNameOfChosenRentRemove').text(data.name);
 		                $('#pDescriptionOfChosenRentRemove').text(data.description);
 		                $('#pDestinationOfChosenRentRemove').text(data.destination.name +
@@ -145,7 +143,6 @@ $(document).ready(function() {
     })
     
     $(document).on('click', '#showRentIncomes', function(){
-    	console.log("e");
     	var startCheck = $('#startIncomeRent').val();
     	var endCheck = $('#endIncomeRent').val();
     	if(startCheck == "" || endCheck == ""){
@@ -153,7 +150,6 @@ $(document).ready(function() {
     		return;
     	}
     	var start = stringToDate($('#startIncomeRent').val());
-    	console.log(start);
     	var end = stringToDate($('#endIncomeRent').val());
     	if(start>end){
     		showMessage("Start date must be later then end date", "orange");
@@ -163,7 +159,6 @@ $(document).ready(function() {
     	var end = stringToDate($('#endIncomeRent').val()) + 24*60*60*1000
     	$.get({url: '/api/getRentIncomes/'+start+'/'+end, 
 			headers: createAuthorizationTokenHeader()}, function(income){
-				console.log(income);
 				$("#rentIncomeVal").html(income);
 			})
     })
@@ -174,7 +169,6 @@ $(document).ready(function() {
     	if(type=="daily"){
     		$.get({url: '/api/getDailyVehicles', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -222,7 +216,6 @@ $(document).ready(function() {
     	}else if(type=="weekly"){
     		$.get({url: '/api/getWeeklyVehicles', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -266,7 +259,6 @@ $(document).ready(function() {
     	}else if(type=="monthly"){
     		$.get({url: '/api/getMonthlyVehicles', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -392,7 +384,6 @@ $(document).ready(function() {
 	$(document).on('click','table button',function(e){
         if(e.target.id.startsWith("removeVehicleID")){
             var id = e.target.id.substr(15);
-            console.log("vehicle id: ", id);
             $.ajax({
         		type: 'DELETE',
         		url: '/api/removeVehicle/'+id,
@@ -412,7 +403,6 @@ $(document).ready(function() {
         }
         else if(e.target.id.startsWith("editVehicleID")){
         	var id = e.target.id.substr(13);
-            console.log("vehicle ", id);
             $.ajax({
             	type: 'GET',
             	url: '/api/vehicle/' + id,
@@ -422,7 +412,6 @@ $(document).ready(function() {
             		$.get({url: '/api/rentBranchess', 
             			headers: createAuthorizationTokenHeader()}, function(branch){
             		var select = document.getElementById("vehicleBranchOfficeEdit");
-            		console.log(branch);
                     for(var i=0;i<branch.length;i++){
                         var red = branch[i];
                         select.options[select.options.length] = new Option(''+red.name,''+red.id);
@@ -458,19 +447,15 @@ $(document).ready(function() {
         	success: function(vehicle){
         		vehicle.price = parseInt(price);
         		var link = '/api/branchOffice/'+$("#vehicleBranchOfficeEdit option:selected" ).val();
-        		console.log(link);
         		$.get(link, function(branches){
-        			console.log(branches);
         			vehicle.branchOffice= branches;
         		})
-        		console.log("Vehicle: ", vehicle);
         		$.ajax({
         			type: 'PUT',
         			url: '/api/editVehicle',
         			headers: createAuthorizationTokenHeader(),
         			data : JSON.stringify(vehicle),
         			success: function(data){
-        				console.log(data);
         				showMessage('Vehicle is successfully changed!', 'green');
         				$('#dialogEditHRentVehicle').css('display', 'none');
         				renderTableAllRentVehicles();
@@ -499,14 +484,12 @@ $(document).ready(function() {
 	})
 	
 	$(document).on('click', '#makeQuickReservation', function() {
-			console.log("heeeej");
 			$('#dialogRentView').css('display', 'block');
 			$.ajax({
 	            type : 'GET',
 	            url : '/api/rentAdmin/rent',
 	            headers: createAuthorizationTokenHeader(),
 	            success: function(data){
-					console.log("Admin's rent: ", data);
 					$('#rentIdField').val(data.id);
 	                $('#pNameOfChosenRent').text(data.name);
 	                $('#pDescriptionOfChosenRent').text(data.description);
@@ -529,7 +512,6 @@ $(document).ready(function() {
 	                
 	        		var select = document.getElementById("startDestination");
 	        		var select2 = document.getElementById("endDestination");
-	        		console.log(data);
 	                for(var i=0;i<data.length;i++){
 	                    var red = data[i];
 	                    select.options[select.options.length] = new Option(''+red.name,''+red.id);
@@ -554,13 +536,11 @@ $(document).ready(function() {
 		    var motocycles = $('#vehicleMotocycles').prop('checked');
 		    var e = document.getElementById("startDestination");
 		    var startDest = e.options[e.selectedIndex].text
-		    console.log('Rent: ', rentId ,'....', start, end, cars, motocycles, startDest);
 	        renderVehicleTable(rentId, start, end, cars, motocycles,$('#vehicleSearchDayNumber').val(), startDest); });
 		
 		
 		$(document).on('click','#makeRentReservationBtn',function(){
 			selected_vehicles = [];
-			console.log("VOZILAAAA: ", all_vehicles);
 	        for(var i=0;i<all_vehicles.length;i++){
 				var red = all_vehicles[i];
 				if($('#vehicleCheckbox'+ red.id).prop('checked')){
@@ -571,7 +551,6 @@ $(document).ready(function() {
 			}
 			var start = stringToDate($('#vehicleSearchArrivalDate').val());
 			var end = start + ($('#vehicleSearchDayNumber').val()-1)*24*60*60*1000;	
-			console.log("Selected vehicles: ", selected_vehicles);
 			if($('#discountId').val() < 0 || $('#discountId').val() > 100){
 				showMessage("Discount must be between 0% and 100% ", 'orange');
 				return;
@@ -594,7 +573,6 @@ $(document).ready(function() {
 				"discount": discount,
 				"endBranchOffice" : office
 			};
-			console.log("Vehicle reservation: ", reservation);
 			$.ajax({
 				type : 'POST',
 				url : "/api/vehicleReservations",
@@ -616,7 +594,6 @@ $(document).ready(function() {
 				url : '/auth/getInfo',
 				headers: createAuthorizationTokenHeader(),
 				success: function(adminData){
-					console.log("Admin data: ", adminData);
 					$('#firstNameRentAdmin').val(adminData.firstName);
 					$('#lastNameRentAdmin').val(adminData.lastName);
 					$('#emailRentAdmin').val(adminData.email);
@@ -637,7 +614,6 @@ $(document).ready(function() {
 
 		$(document).on('click', '#editRentAdminProfile', function(){
 			var password = $('#passwordRentAdmin').val();
-			console.log(password, $('#rep_passwordRentAdmin').val());
 			if(password !== ""){
 				var repeat = $('#rep_passwordRentAdmin').val();
 				if(repeat !== password){
@@ -688,9 +664,7 @@ $(document).ready(function() {
 	var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, motocycles, num, startDest){
 	    var text = `/${rentId}/${arrivalDate}/${departureDate}/${cars}/${motocycles}/${startDest}`;
 	    var link = '/api/vehiclesSearch'+text;
-	    console.log(link);
 	    $.get(link, function(VehicleData){
-	            console.log("Vehicles: ", VehicleData);
 	            var vehicles = VehicleData;
 	            all_vehicles = vehicles;
 	        	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
@@ -709,7 +683,6 @@ $(document).ready(function() {
 			url: '/api/unreservedVehicles',
 			headers: createAuthorizationTokenHeader(),
 			success: function(vehicles){
-				console.log(vehicles)
 				$('#vehicleTableRemove').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th><th></th><th></th></tr>`);
 				for(var i=0;i<vehicles.length;i++){
 					var red = vehicles[i];
@@ -735,7 +708,6 @@ $(document).ready(function() {
 			url: '/api/allVehicles',
 			headers: createAuthorizationTokenHeader(),
 			success: function(vehicles){
-				console.log(vehicles)
 				$('#allVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Branch office</th><th>Grade</th><th>Price per day</th></tr>`);
 				for(var i=0;i<vehicles.length;i++){
 					var red = vehicles[i];
@@ -766,7 +738,6 @@ $(document).ready(function() {
 	     	    	var i = 0;
 	     	    	var onStar = data;
 	     	    	var stars = $('.li.star');
-	     	    	console.log("AAAA", onStar);
 	     	    	$("#"+red.id+" li").each(function() {
 	     	    		$(this).removeClass('selected');
 	     	   		})  
@@ -805,7 +776,6 @@ $(document).ready(function() {
 	function stringToDate(displayFormat){
 		myDate=displayFormat.split("-");
 		var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
-		console.log(newDate);
 		return new Date(newDate).getTime();
 	}
 
@@ -828,10 +798,8 @@ $(document).ready(function() {
 	}
 
 	function stringToDate(displayFormat){
-		console.log(displayFormat);
 		myDate=displayFormat.split("-");
 		var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
-		console.log(newDate);
 		return new Date(newDate).getTime();
 	}
 
@@ -846,7 +814,6 @@ $(document).ready(function() {
 		
 		$.get({url: '/api/branchOfficeByRentt',
 			headers: createAuthorizationTokenHeader()}, function(offices){
-	        console.log("Offices: ", offices);
 	        $('#RentBranchOfficeTable').html(`<tr><th>Name</th><th>Address</th><th>City</th><th>Country</th></tr>`);
 	        for(var i=0;i<offices.length;i++){
 	            var red = offices[i];

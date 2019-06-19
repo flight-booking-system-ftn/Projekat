@@ -21,7 +21,6 @@ $(document).ready(function() {
             "price" : price,
             "hotel": null
         };
-        console.log(data);
         $.ajax({
             type : 'POST',
             url : "/api/rooms",

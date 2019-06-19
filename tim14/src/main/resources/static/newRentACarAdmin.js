@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
     $.get('/api/rentacars', function(data){
-        console.log(data);
         var select = document.getElementById("rentRentAdmin");
         for(var i=0;i<data.length;i++){
             var red = data[i];
@@ -46,7 +45,6 @@ $(document).ready(function(){
 	                    "phoneNumber": phone,
 	                    "rentACar": rentData
 	                }
-	                console.log(data);
     				$.ajax({
                         url: '/auth/registerRentACarAdmin',
                         type: "POST",

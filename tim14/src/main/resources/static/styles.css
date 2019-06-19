@@ -353,7 +353,7 @@ table.searchResultTable {
 	margin-top: 100px;
 }
 
-div.seatDivForReservation {
+div.seatDivForReservation, div.seatDivInLegend, div.seatDivForEdit {
 	margin-top: 5px;
 	margin-left: 5px;
 	border-bottom-left-radius: 10px;
@@ -363,21 +363,7 @@ div.seatDivForReservation {
 	float: left;
 }
 
-div.seatDivForReservation:hover {
-	cursor: pointer;
-}
-
-div.seatDivForEdit {
-	margin-top: 5px;
-	margin-left: 5px;
-	border-bottom-left-radius: 10px;
-	border-bottom-right-radius: 10px;
-	width: 40px;
-	height: 50px;
-	float: left;
-}
-
-div.seatDivForEdit:hover {
+div.seatDivForReservation:hover, div.seatDivForEdit:hover {
 	cursor: pointer;
 }
 
@@ -434,4 +420,24 @@ div.seatDivForEdit:hover {
 
 p#searchMessage, p#requestsMessage {
 	text-align: center;
+}
+
+input[type=button], input[type=submit], div#friends button {
+	margin-left: 10px;
+	width: 180px;
+	height: 38px;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.6);
+	color: #e8e1de;
+	border: 1px solid #2b77b4;
+}
+
+input[type=button]:hover, input[type=submit]:hover, div#friends button:hover {
+	margin-left: 10px;
+	width: 180px;
+	height: 38px;
+	text-align: center;
+	background-color: #2b77b4;
+	color: #e8e1de;
+	border: 1px solid rgba(0, 0, 0, 0.6);
 }

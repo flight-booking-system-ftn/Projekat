@@ -75,7 +75,6 @@ $(document).ready(function() {
         url : '/api/hotelAdmin/hotel',
         headers: createAuthorizationTokenHeader(),
         success: function(data){
-			console.log("Admin's hotel: ", data);
 			$('#hiddenPForUserHotelID').val(data.id);
             $('#pNameOfChosenHotelRR').text(data.name);
             $('#pDescriptionOfChosenHotelRR').text(data.description);
@@ -125,7 +124,6 @@ $(document).ready(function() {
     });
     
     $(document).on('click', '#showHotelIncomes', function(){
-    	console.log("e");
     	var startCheck = $('#startIncomeHotel').val();
     	var endCheck = $('#endIncomeHotel').val();
     	if(startCheck == "" || endCheck == ""){
@@ -133,7 +131,6 @@ $(document).ready(function() {
     		return;
     	}
     	var start = stringToDate($('#startIncomeHotel').val());
-    	console.log(start);
     	var end = stringToDate($('#endIncomeHotel').val());
     	if(start>end){
     		showMessage("Start date must be later then end date", "orange");
@@ -146,14 +143,10 @@ $(document).ready(function() {
     		headers: createAuthorizationTokenHeader()
 		}, 
 		function(income){
-			console.log(income);
 			$("#hotelIncomeVal").html(income);
 		});
     });
     
-    
-    
-	
 	$('#quitDialogHotelViewRR').css('display','none');
 
 	$(document).on('click', '#addRoomBtn', function() {
@@ -176,7 +169,6 @@ $(document).ready(function() {
             url : '/api/hotelAdmin/hotel',
             headers: createAuthorizationTokenHeader(),
             success: function(data){
-				console.log("Admin's hotel: ", data);
 				$('#hotelIdField').val(data.id);
                 $('#pNameOfChosenHotel').text(data.name);
                 $('#pDescriptionOfChosenHotel').text(data.description);
@@ -200,7 +192,6 @@ $(document).ready(function() {
         var TwoBedRooms = $('#roomSearch2Bed').prop('checked');
         var ThreeBedRooms = $('#roomSearch3Bed').prop('checked');
         var FourBedRooms = $('#roomSearch4Bed').prop('checked');
-        console.log('Hotel id: ', hotelId ,'....', start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms);
 
         renderRoomTable(hotelId, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, $('#roomSearchDayNumber').val());
 	});
@@ -247,7 +238,6 @@ $(document).ready(function() {
 			"price": price,
 			discount
 		};
-		console.log("Hotel reservation: ", reservation);
 		$.ajax({
 			type : 'POST',
 			url : "/api/roomReservations",
@@ -273,7 +263,6 @@ $(document).ready(function() {
 			url : '/auth/getInfo',
 			headers: createAuthorizationTokenHeader(),
 			success: function(adminData){
-				console.log("Admin data: ", adminData);
 				$('#firstNameHotelAdmin').val(adminData.firstName);
 				$('#lastNameHotelAdmin').val(adminData.lastName);
 				$('#emailHotelAdmin').val(adminData.email);
@@ -294,7 +283,6 @@ $(document).ready(function() {
 	
 	$(document).on('click', '#editHotelAdminProfile', function(){
 		var password = $('#passwordHotelAdmin').val();
-		console.log(password, $('#rep_passwordHotelAdmin').val());
 		if(password !== ""){
 			var repeat = $('#rep_passwordHotelAdmin').val();
 			if(repeat !== password){
@@ -347,7 +335,6 @@ $(document).ready(function() {
             url : '/api/hotelAdmin/hotel',
             headers: createAuthorizationTokenHeader(),
             success: function(data){
-				console.log("Admin's hotel: ", data);
                 $('#pNameOfChosenHotelRR').text(data.name);
                 $('#pDescriptionOfChosenHotelRR').text(data.description);
                 $('#pDestinationOfChosenHotelRR').text(data.destination.name +
@@ -372,7 +359,6 @@ $(document).ready(function() {
 	$(document).on('click','table button',function(e){
         if(e.target.id.startsWith("removeRoomID")){
             var id = e.target.id.substr(12);
-            console.log("Selektovana je soba sa id-em: ", id);
             $.ajax({
         		type: 'DELETE',
         		url: '/api/removeRoom/'+id,
@@ -391,13 +377,11 @@ $(document).ready(function() {
         	});
         }else if(e.target.id.startsWith("editRoomID")){
         	var id = e.target.id.substr(10);
-            console.log("Selektovana je soba sa id-em: ", id);
             $.ajax({
             	type: 'GET',
             	url: '/api/room/' + id,
             	headers: createAuthorizationTokenHeader(),
             	success: function(data){
-            		console.log("Room: ", data);
             		$("#bedNumberEditRoom").html('');
             		var select = document.getElementById("bedNumberEditRoom");
             		var array = [2,3,4];
@@ -498,14 +482,12 @@ $(document).ready(function() {
         		if($('#hiddenPForUserName').val() != roomData.roomNumber){
         			roomData.floor = -1;
         		}
-        		console.log("ROOOOM: ", roomData);
         		$.ajax({
         			type: 'PUT',
         			url: '/api/changeRoom',
         			headers: createAuthorizationTokenHeader(),
         			data : JSON.stringify(roomData),
         			success: function(data){
-        				console.log(data);
         				showMessage('Room is successfully changed!', 'green');
         				$('#dialogEditHotelRoom').css('display', 'none');
         				renderTableAllRoomsAndServicesOfHotel();
@@ -537,7 +519,6 @@ $(document).ready(function() {
 	        url : '/api/hotelAdmin/hotel',
 	        headers: createAuthorizationTokenHeader(),
 	        success: function(data){
-				console.log("Admin's hotel: ", data);
 				$('#myPServiceSave').val(data.id);
 				$('#extraDiscountHotel').val(data.extraServiceDiscount);
 				$('#dialogNewHotelService').css("display", "block");
@@ -572,7 +553,6 @@ $(document).ready(function() {
 				discount
 			}),
 			success: function(data){
-				console.log(data);
 				showMessage('Room discount on extra services is changed!', 'green');
 				$('#dialogNewHotelService').hide();
 			},
@@ -604,7 +584,6 @@ $(document).ready(function() {
 			return;
 		}
 		var data = {price,name}
-		console.log(data);
 		$.ajax({
 			type: 'POST',
 			url: '/api/hotelService',
@@ -687,8 +666,6 @@ $(document).ready(function() {
 					success: function(data2){
 						showMessage('Hotel is successfully changed!', "green");
 						
-						console.log(data2);
-						
 						$("#pNameOfChosenHotelRR").text(data2.name);
 						$("#pDescriptionOfChosenHotelRR").text(data2.description);
 						$("#pDestinationOfChosenHotelRR").text(data2.destination.name + ", " + data2.destination.country);
@@ -723,7 +700,6 @@ $(document).ready(function() {
     		$.get({url: '/api/getDailyRooms', 
     			headers: createAuthorizationTokenHeader()},
     			function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -771,7 +747,6 @@ $(document).ready(function() {
     	}else if(type=="weekly"){
     		$.get({url: '/api/getWeeklyRooms', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -815,7 +790,6 @@ $(document).ready(function() {
     	}else if(type=="monthly"){
     		$.get({url: '/api/getMonthlyRooms', 
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("data", data);
 			    	var myChart = new Chart(ctx, {
 			    	  type: 'bar',
 			    	  data: {
@@ -870,7 +844,6 @@ $(document).ready(function() {
 
 var renderHotelServiceTable = function(hotelId){
     $.get('/api/hotelServicesSearch/'+hotelId, function(servicesData){
-        console.log("Hotel Services: ", servicesData);
 		var services = servicesData;
 		all_hotel_services = services;
         $('#selectedHotelServicesTable').html(`<tr><th>Name</th><th>Price</th><th>Select</th></tr>`);
@@ -887,7 +860,6 @@ var renderHotelServiceTable = function(hotelId){
 var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms, ThreeBedRooms, FourBedRooms, numDays){
     var text = `/${hotelId}/${arrivalDate}/${departureDate}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
     $.get('/api/roomsSearch'+text, function(RoomData){
-		console.log("Rooms: ", RoomData);
 		var rooms = RoomData;
 		all_rooms = rooms;
 		$('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
@@ -918,7 +890,6 @@ var renderTableAllRoomsAndServicesOfHotel = function(){
 			}
 			
 			$.get('/api/hotelServicesSearch/'+ $('#hiddenPForUserHotelID').val(), function(servicesData){
-		        console.log("Hotel Services: ", servicesData);
 				var services = servicesData;
 		        $('#hotelServicesTableRR').html(`<tr><th>Name</th><th>Price</th><th>Change</th></tr>`);
 		        for(var i=0;i<services.length;i++){
@@ -946,7 +917,6 @@ var renderTableHotelRooms = function(){
 		url: '/api/allRooms',
 		headers: createAuthorizationTokenHeader(),
 		success: function(rooms){
-			console.log("><>< ", rooms)
 			$('#allRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>`);
 			for(var i=0;i<rooms.length;i++){
 				var red = rooms[i];
@@ -1016,7 +986,6 @@ function formatDate(date) {
 function stringToDate(displayFormat){
 	myDate=displayFormat.split("-");
 	var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
-	console.log(newDate);
 	return new Date(newDate).getTime();
 }
 

@@ -74,8 +74,6 @@ public class HotelAdminRest {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HotelAdmin> saveHotelAdmin(@RequestBody HotelAdmin hotelAdmin) {
-		System.out.println(hotelAdmin.getFirstName());
-		System.out.println(hotelAdmin.getHotel().getName());
 		HotelAdmin newHotelAdmin = hotelAdminDAO.save(hotelAdmin);
 		if(newHotelAdmin == null) {
 			return new ResponseEntity<HotelAdmin>(HttpStatus.NOT_FOUND);

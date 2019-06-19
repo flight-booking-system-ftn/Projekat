@@ -164,7 +164,6 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 		List<FlightReservation> reservations = query.getResultList();
 		for(int i = 0; i<14; i++) {
 			start = sdf.parse(sdf.format(c.getTime()));
-			System.out.println(c.getTime());
 			String dateX = sdf.format(start);
 			graph.getX().add(dateX);
 			int sum = 0;
@@ -198,7 +197,6 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 		start = sdf.parse(sdf.format(c.getTime()));
 		c.add(Calendar.WEEK_OF_YEAR, 1);
 		end = sdf.parse(sdf.format(c.getTime()));
-		System.out.println("start " + start + "\n end "+ end);
 		AirlineAdmin admin = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Collection<Flight> flights = admin.getAirline().getFlights();
 		Query query = entityManager.createQuery("SELECT fr FROM FlightReservation fr");
@@ -206,7 +204,6 @@ public class FlightReservationDAOImpl implements FlightReservationDAO {
 		for(int i = 0; i<12; i++) {
 			start = end;
 			c.add(Calendar.DATE, 7);
-			System.out.println(c.getTime());
 			end = sdf.parse(sdf.format(c.getTime()));
 			int sum = 0;
 			for(Flight f: flights) {

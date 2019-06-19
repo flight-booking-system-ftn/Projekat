@@ -1,7 +1,6 @@
 $(document).ready(function(){
 	
 	$.get('/api/airlines', function(data){
-        console.log(data);
         var select = document.getElementById("airlineAirlineAdmin");
         for(var i=0;i<data.length;i++){
             var red = data[i];
@@ -46,7 +45,6 @@ $(document).ready(function(){
 	                    "phoneNumber": phone,
 	                    "airline": airlineData
 	                }
-	                console.log(data);
     				$.ajax({
                         url: '/auth/registerAirlineAdmin',
                         type: "POST",

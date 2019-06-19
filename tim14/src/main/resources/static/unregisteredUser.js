@@ -67,7 +67,6 @@ $(document).ready(function(){
         if(e.target.id.startsWith("hotelDetailsBtn")){
             var message = e.target.id.substr(15);
             $.get('/api/hotels/'+ message, function(data){
-                console.log("Selected hotel: ", data);
                 $('#hotelIdField').val(message);
                 $('#pNameOfChosenHotel').text(data.name);
                 $('#pDescriptionOfChosenHotel').text(data.description);
@@ -78,9 +77,7 @@ $(document).ready(function(){
             });
         }else if(e.target.id.startsWith("rentDetailsBtn")){
             var message = e.target.id.substr(14);
-            console.log("PORUKA JE ", message);
             $.get('/api/rentacars/'+ message, function(data){
-                console.log("Selected rent: ", data);
                 $('#rentIdField').val(message);
                 $('#pNameOfChosenRent').text(data.name);
                 $('#pDescriptionOfChosenRent').text(data.description);
@@ -92,7 +89,6 @@ $(document).ready(function(){
         }else if(e.target.id.startsWith("airlineDetailsBtn")){
             var message = e.target.id.substr(17);
             $.get('/api/airlines/'+ message, function(data){
-                console.log("Selected airline: ", data);
                 $('#airlineIdField').val(message);
                 $('#pNameOfChosenAirline').text(data.name);
                 $('#pDescriptionOfChosenAirline').text(data.description);
@@ -102,26 +98,20 @@ $(document).ready(function(){
             });
         }else if(e.target.id.startsWith("mapLocationAirline")){
             var id = e.target.id.substr(18);
-            console.log("PORUKA JE ", id);
             $.get('/api/airlines/'+ id, function(data){
-               console.log("Selected airline: ", data);
                initMap(data.destination.latitude, data.destination.longitude);
                $('#dialogMapView').show();
                
             });
         }else if(e.target.id.startsWith("mapLocationHotel")){
             var id = e.target.id.substr(16);
-            console.log("PORUKA JE ", id);
             $.get('/api/hotels/'+ id, function(data){
-               console.log("Selected hotel: ", data);
                initMap(data.destination.latitude, data.destination.longitude);
                $('#dialogMapView').show();
             });
         }else if(e.target.id.startsWith("mapLocationRent")){
             var id = e.target.id.substr(15);
-            console.log("PORUKA JE ", id);
             $.get('/api/rentacars/'+ id, function(data){
-               console.log("Selected rent: ", data);
                initMap(data.destination.latitude, data.destination.longitude);
                $('#dialogMapView').show();
             });
@@ -364,8 +354,6 @@ $(document).ready(function(){
     		"data": data
     	}
     	
-    	console.log(search);
-    	
     	$.ajax({
     		type: "POST",
     		url: "/flight/search",
@@ -466,7 +454,6 @@ var displayHotels = function(name, dest){
 
 var renderHotelServiceTable = function(hotelId){
     $.get('/api/hotelServicesSearch/'+hotelId, function(servicesData){
-        console.log("Hotel Services: ", servicesData);
 		var services = servicesData;
         $('#selectedHotelServicesTable').html(`<tr><th>Name</th><th>Price</th></tr>`);
         for(var i=0;i<services.length;i++){
@@ -480,7 +467,6 @@ var renderHotelServiceTable = function(hotelId){
 var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms, ThreeBedRooms, FourBedRooms, numDays){
     var text = `/${hotelId}/${arrivalDate}/${departureDate}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
     $.get('/api/roomsSearch'+text, function(RoomData){
-		console.log("Rooms: ", RoomData);
 		var rooms = RoomData;
 		$('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th></tr>`);
 		for(var i=0;i<rooms.length;i++){
@@ -492,9 +478,7 @@ var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms,
 
 var renderRoomTableMainView = function(hotelName, destination, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, minPrice, maxPrice){
     var text = `/${hotelName}/${destination}/${start}/${end}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}/${minPrice}/${maxPrice}`;
-    console.log('/api/allRoomsSearch' + text);
     $.get('/api/allRoomsSearch'+text, function(RoomData){
-		console.log("Searched rooms: ", RoomData);
 		var rooms = RoomData;
 		$('#selectedHotelRoomsTableFullSearch').html(`<tr><td>Hotel</td><td>City</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>`);
 		for(var i=0;i<rooms.length;i++){
@@ -513,7 +497,6 @@ var displayRents = function(name, dest){
 
 var renderVehicleTable = function(text,myID){
     $.get('/api/vehiclesSearch'+text, function(vehicles){
-        console.log("Vehicles: ", vehicles);
         $('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
             var red = vehicles[i];
@@ -527,11 +510,9 @@ var renderVehicleTable = function(text,myID){
 var renderBranchOfficesTable = function(text){
 	
 	$.get('/api/branchOfficeByRent/' + text, function(offices){
-        console.log("Offices: ", offices);
         $('#RentBranchOfficeTable').html(`<tr><th>Name</th><th>Address</th><th>City</th><th>Country</th></tr>`);
         for(var i=0;i<offices.length;i++){
             var red = offices[i];
-            console.log(red);
             $('#RentBranchOfficeTable tr:last').after(`<tr><td>${red.name}</td><td>${red.destination.address}</td><td>${red.destination.name}</td><td>${red.destination.country}</td></tr>`);
         }
         $('#dialogRentView').css("display","block");
@@ -540,9 +521,7 @@ var renderBranchOfficesTable = function(text){
 
 var renderVehicleTableMainView = function(rentName, destination, start, end, name, cars, motocycles, minPrice, maxPrice){
     var text = `/${rentName}/${destination}/${start}/${end}/${name}/${cars}/${motocycles}/${minPrice}/${maxPrice}`;
-    console.log(text);
     $.get('/api/allVehiclesSearch'+text, function(VehicleData){
-        console.log("Vehicles: ", VehicleData);
         var vehicles = VehicleData;
     	$('#selectedRentVehiclesTableFullSearch').html(`<tr><th>Rent-a-car</th><th>City</th><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
@@ -554,7 +533,6 @@ var renderVehicleTableMainView = function(rentName, destination, start, end, nam
 
 var renderAirportTable = function(id){
 	$.get('/api/airline/' + id +'/airports', function(airportsData){
-        console.log("Airports: ", airportsData);
     	$('#airlineAirportsTable').html(`<tr><th>Name</th><th>City</th><th>Country</th></tr>`);
         for(var i=0;i<airportsData.length;i++){
             var red = airportsData[i];
@@ -588,7 +566,6 @@ function getAirports(index) {
 
 
 var showHotels = function(hotels){
-	console.log("Hotels: ", hotels);
     $('#serviceContainer').html('');
     for(var i=0;i<hotels.length;i++){
         var red = hotels[i];
@@ -631,7 +608,6 @@ var showHotels = function(hotels){
         var j = 0;
         var onStar = grade;
     	var stars = $('.li.star');
-    	console.log("AAAA", onStar);
     	$("#"+red.id+"Rent li").each(function() {
     		$(this).removeClass('selected');
    		})  
@@ -649,7 +625,6 @@ var showHotels = function(hotels){
 
 
 var showRents = function(rents){
-	console.log("Rents: ", rents);
     $('#serviceContainer').html('');
     for(var i=0;i<rents.length;i++){
         var red = rents[i];
@@ -692,7 +667,6 @@ var showRents = function(rents){
         var j = 0;
         var onStar = grade;
     	var stars = $('.li.star');
-    	console.log("AAAA", onStar);
     	$("#"+red.id+"Rent li").each(function() {
     		$(this).removeClass('selected');
    		})  
@@ -714,7 +688,6 @@ var showAirlines = function(airlines, name, dest){
 	airlineCompanySelect.empty();
 	airlineCompanySelect.append($("<option id='-999'>Any</option>"));
 	
-    console.log("Airlines: ", airlines);
     $('#serviceContainer').html('');
     for(var i=0;i<airlines.length;i++){
         var red = airlines[i];
@@ -763,7 +736,6 @@ var showAirlines = function(airlines, name, dest){
         var j = 0;
         var onStar = grade;
     	var stars = $('.li.star');
-    	console.log("AAAA", onStar);
     	$("#"+red.id+"Rent li").each(function() {
     		$(this).removeClass('selected');
    		})  
@@ -806,7 +778,6 @@ function initMap(latitude = 20, longitude = 20) {
 function stringToDate(displayFormat){
 	myDate=displayFormat.split("-");
 	var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
-	console.log(newDate);
 	return new Date(newDate).getTime();
 }
 

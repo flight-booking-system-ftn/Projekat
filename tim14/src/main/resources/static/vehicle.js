@@ -3,7 +3,6 @@ $(document).ready(function() {
 			headers: createAuthorizationTokenHeader()}, function(data){
         
 		var select = document.getElementById("branch_office");
-		console.log(data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
             select.options[select.options.length] = new Option(''+red.name,''+red.id);
@@ -20,7 +19,6 @@ $(document).ready(function() {
         var price = $("#txt_vehicle_price").val();
         var link = '/api/branchOffice/'+$("#branch_office option:selected" ).val();
 		$.get(link, function(branches){
-             console.log("Branch DATA: ", branches);
              data = {
                  "brand": brand,
                  "model" : model,
@@ -32,7 +30,6 @@ $(document).ready(function() {
                  "rentACar" : null,
                  "branchOffice" : branches 
              };
-             console.log(data);
              $.ajax({
                  type : 'POST',
                  url : "/api/vehicles",

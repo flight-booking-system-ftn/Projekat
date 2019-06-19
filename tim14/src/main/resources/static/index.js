@@ -99,15 +99,11 @@ $(document).ready(function(){
 		</table></div>`).appendTo("#searchSortContainer");
     	 $.get({url:'/api/allUsedVehicles',
     			headers: createAuthorizationTokenHeader()}, function(data){
-    				console.log("all vehicles: ", data);	 
     				var vehicles = data;
-    				console.log("vehicle data",vehicles);
     				$('#vehiclesHistory').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Rate</th></tr>`);
     				for(var i=0;i<vehicles.length;i++){
     					var red = vehicles[i];
-    					console.log("-----------aaa->", red);
     					buttonID = "rateBtnV"+ red.id;
-    					console.log("-->", red);
     					$('#vehiclesHistory tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td><button id=${buttonID}>Rate</button></td></tr>`);
     				}
     				$('#iddd').css("display","none");
@@ -122,15 +118,11 @@ $(document).ready(function(){
 		</table></div>`).appendTo("#searchSortContainer");
    	$.get({url:'/api/allUsedFlights',
 		headers: createAuthorizationTokenHeader()}, function(data){
-			console.log("all flights: ", data);	 
 			var flights = data;
-			console.log("flight data",flights);
 			$('#flightsHistory').html(`<tr><th>From</th><th>To<th>Departure date</th><th>Arrival date</th><th>Rate</th></tr>`);
 			for(var i=0;i<flights.length;i++){
 				var red = flights[i];
-				console.log("-----------aaa->", red);
 				buttonID = "rateBtnF"+ red.id;
-				console.log("-->", red);
 				var start = formatDateDet(new Date(red.departureDate));
 				var end = formatDateDet(new Date(red.arrivalDate));
 				$('#flightsHistory tr:last').after(`<tr><td>${red.from.name}</td><td>${red.to.name}</td><td>${start}</td><td>${end}</td><td><button id=${buttonID}>Rate</button></td></tr>`);
@@ -140,17 +132,14 @@ $(document).ready(function(){
     });
     
     $(document).on('click','table button',function(e){
-		console.log(e.target.id);
 		if(e.target.id.startsWith("rateBtnV")){
 	        var id = e.target.id.substr(8);
 	        $("#entityID").val("vehicle"+id);
-	        console.log("vehicle id: ", id);
 	        $.get({url:'/api/getGradeForVehicle/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
-	    		console.log("AAAA", onStar);
 	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
@@ -186,15 +175,11 @@ $(document).ready(function(){
 		</table></div>`).appendTo("#searchSortContainer");
    	$.get({url:'/api/allUsedRooms',
 		headers: createAuthorizationTokenHeader()}, function(data){
-			console.log("all Rooms: ", data);	 
 			var rooms = data;
-			console.log("room data",rooms);
 			$('#roomsHistory').html(`<tr><th>Room number</th><th>Bed number</th><th>Floor</th><th>Hotel</th><th>Rate</th></tr>`);
 			for(var i=0;i<rooms.length;i++){
 				var red = rooms[i];
-				console.log("-----------aaa->", red);
 				buttonID = "rateBtnR"+ red.id;
-				console.log("-->", red);
 				$('#roomsHistory tr:last').after(`<tr><td>${red.roomNumber}</td><td>${red.bedNumber}</td><td>${red.floor}</td><td>${red.hotel.name}</td><td><button id=${buttonID}>Rate</button></td></tr>`);
 			}
 		})
@@ -202,17 +187,14 @@ $(document).ready(function(){
     });
     
     $(document).on('click','table button',function(e){
-		console.log(e.target.id);
 		if(e.target.id.startsWith("rateBtnR")){
 	        var id = e.target.id.substr(8);
 	        $("#entityID").val("room"+id);
-	        console.log("room id: ", id);
 	        $.get({url:'/api/getGradeForRoom/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
-	    		console.log("AAAA", onStar);
 	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
@@ -227,12 +209,10 @@ $(document).ready(function(){
 		}else if(e.target.id.startsWith("rateBtnF")){
 	        var id = e.target.id.substr(8);
 	        $("#entityID").val("flight"+id);
-	        console.log("flight id: ", id);
 	        $.get({url:'/flight/getGradeForFlight/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var k = 0;
 	    		var onStar = data;
-	    		console.log("fff", data);
 	    		var stars = $('.li.star');
 	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
@@ -288,7 +268,6 @@ $(document).ready(function(){
     }
     
     var entityID= $("#entityID").val();
-    console.log(entityID);
     if(entityID.startsWith("vehicle")){
     $.ajax({
 		type : 'POST',
@@ -313,17 +292,14 @@ $(document).ready(function(){
     		headers: createAuthorizationTokenHeader()})
         }
     else if(entityID.startsWith("hotel")){
-    	console.log(entityID.substring(5) + ">>>>>>> " + onStar);
         $.ajax({
     		type : 'GET',
     		url : "/api/setGradeForHotel/"+entityID.substring(5)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
     		success: function(){
-    			console.log("<<<<<<<<HOTEL>>>>>>>>");
     			displayHotels();
     			},
     		error : function(e){
-    			console.log(e);
     		}
         })
         }
@@ -333,7 +309,6 @@ $(document).ready(function(){
     		url : "/api/setGradeForAirline/"+entityID.substring(7)+"/"+onStar,
     		headers: createAuthorizationTokenHeader(),
     		success: function(){
-    			console.log("****AAA");
     			displayAirlines();
     		}})
         }
@@ -377,12 +352,9 @@ $(document).ready(function(){
         var hotelId = $('#hotelIdField').val();
         var start = stringToDate($('#roomSearchArrivalDate').val());
 		var end = start + $('#roomSearchDayNumber').val()*24*60*60*1000;
-		console.log(">>> " + start);
-		console.log(">>> " + end);
         var TwoBedRooms = $('#roomSearch2Bed').prop('checked');
         var ThreeBedRooms = $('#roomSearch3Bed').prop('checked');
         var FourBedRooms = $('#roomSearch4Bed').prop('checked');
-        console.log('Hotel id: ', hotelId ,'....', start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms);
 
         renderRoomTable(hotelId, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, parseInt($('#roomSearchDayNumber').val()) + 1);
     });
@@ -395,7 +367,6 @@ $(document).ready(function(){
         var motocycles = $('#vehicleMotocycles').prop('checked');
         var e = document.getElementById("startDestination");
 	    var startDest = e.options[e.selectedIndex].text;
-	    console.log('Rent: ', rentId ,'....', start, end, cars, motocycles, startDest);
         renderVehicleTable(rentId, start, end, cars, motocycles,parseInt($('#vehicleSearchDayNumber').val())+1, startDest);
     });
     
@@ -407,26 +378,20 @@ $(document).ready(function(){
     $(document).on('click','button',function(e){
        if(e.target.id.startsWith("mapLocationAirline")){
             var id = e.target.id.substr(18);
-            console.log("PORUKA JE ", id);
             $.get('/api/airlines/'+ id, function(data){
-               console.log("Selected airline: ", data);
                initMap(data.destination.latitude, data.destination.longitude);
                $('#dialogMapView').show();
                
             });
         }else if(e.target.id.startsWith("mapLocationHotel")){
             var id = e.target.id.substr(16);
-            console.log("PORUKA JE ", id);
             $.get('/api/hotels/'+ id, function(data){
-               console.log("Selected hotel: ", data);
                initMap(data.destination.latitude, data.destination.longitude);
                $('#dialogMapView').show();
             });
         }else if(e.target.id.startsWith("mapLocationRent")){
             var id = e.target.id.substr(15);
-            console.log("PORUKA JE ", id);
             $.get('/api/rentacars/'+ id, function(data){
-               console.log("Selected rent: ", data);
                initMap(data.destination.latitude, data.destination.longitude);
                $('#dialogMapView').show();
             });
@@ -443,25 +408,19 @@ $(document).ready(function(){
     
     $(document).on('click','#showReservationBtn',function(){
 		$('#reservationsDiv').show();
-		
-		console.log(bigReservation);
 	});
 
     
     ////rate
     $(document).on('click','button',function(e){
-		console.log(e.target.id);
 		if(e.target.id.startsWith("rateRent")){
 	        var id = e.target.id.substr(8);
-	        console.log("HEJHEJ");
 	        $("#entityID").val("rent"+id);
-	        console.log("rent id: ", id);
 	        $.get({url:'/api/getGradeForRent/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
-	    		console.log("AAAA", onStar);
 	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
@@ -478,13 +437,11 @@ $(document).ready(function(){
 		else if(e.target.id.startsWith("rateAirline")){
 	        var id = e.target.id.substr(11);
 	        $("#entityID").val("airline"+id);
-	        console.log("airline id: ", id);
 	        $.get({url:'/api/getGradeForAirline/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
-	    		console.log("AAAA", onStar);
 	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
@@ -500,13 +457,11 @@ $(document).ready(function(){
 		else if(e.target.id.startsWith("rateHotel")){
 	        var id = e.target.id.substr(9);
 	        $("#entityID").val("hotel"+id);
-	        console.log("hotel id: ", id);
 	        $.get({url:'/api/getGradeForHotel/'+id,
 	    		headers: createAuthorizationTokenHeader()}, function(data){
 	    		var k = 0;
 	    		var onStar = data;
 	    		var stars = $('.li.star');
-	    		console.log("AAAA", onStar);
 	    		$("#stars li").each(function() {
 	    			$(this).removeClass('selected');
 	   		    })  
@@ -524,9 +479,7 @@ $(document).ready(function(){
     $(document).on('click','button',function(e){
         if(e.target.id.startsWith("hotelDetailViewBtn")){
             var message = e.target.id.substr(18);
-            console.log("PORUKA JE ", message);
             $.get('/api/hotels/'+ message, function(data){
-                console.log("MY DATA: ", data);
                 $('#hotelIdField').val(message);
                 $('#pNameOfChosenHotel').text(data.name);
                 $('#pDescriptionOfChosenHotel').text(data.description);
@@ -545,7 +498,6 @@ $(document).ready(function(){
 	                	$('#roomSearchDayNumber').attr("disabled", "disabled");}
                 }
                 $.get('/api/quickRoomReservations/' + message, function(data){
-                	console.log("quick reservations: ", data);
                     renderHotelServiceTable(message);
                     renderQuickRoomReservations(data);
                 });
@@ -558,7 +510,6 @@ $(document).ready(function(){
         		url: '/api/getQuickReservation/' + message,
         		headers: createAuthorizationTokenHeader(),
     			success: function(reservation){
-    				console.log(reservation);
     				bigReservation.roomReservation = reservation;
     				bigReservation.roomReservationType = "quick";
     				
@@ -573,7 +524,6 @@ $(document).ready(function(){
     	    		showMessage('Room added to reservation list', "green");
     	    		$('#dialogHotelView').hide();
     	    		$('#selectedHotelRoomsTable').html('<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
-    	    		console.log("BIG RESERVATION : ", bigReservation);
     	    		$('#reservedRoomTable').html('<tr><th>Hotel</th><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Price</th></tr>');
     	    		for(var i=0; i<reservation.rooms.length;i++){
     	    			var red = reservation.rooms[i];
@@ -621,11 +571,7 @@ $(document).ready(function(){
     $(document).on('click','button',function(e){
         if(e.target.id.startsWith("rentDetailViewBtn")){
             var message = e.target.id.substr(17);
-            console.log("PORUKA JE ", message);
             $.get('/api/rentacars/'+ message, function(data){
-                console.log("MY DATA: ", data);
-                console.log("DEST", data.destination);
-                console.log("Selected rent: ", data);
                 $('#rentIdField').val(message);
                 $('#pNameOfChosenRent').text(data.name);
                 $('#pDescriptionOfChosenRent').text(data.description);
@@ -646,7 +592,6 @@ $(document).ready(function(){
 	                	$('#vehicleSearchDayNumber').attr("disabled", "disabled");
                 	}
                 }
-                console.log($("#rentIdField").val());
                 var link = '/api/rentBranches/'+$("#rentIdField").val();
                 $.get({url: link, 
         			headers: createAuthorizationTokenHeader()}, function(data){
@@ -655,14 +600,12 @@ $(document).ready(function(){
 		    		$('#endDestination').html('');
 		    		var select = document.getElementById("startDestination");
 		    		var select2 = document.getElementById("endDestination");
-		    		console.log(data);
 		            for(var i=0;i<data.length;i++){
 		                var red = data[i];
 		                select.options[select.options.length] = new Option(''+ red.name,''+red.id);
 		                select2.options[select2.options.length] = new Option(''+ red.name,''+red.id);
 		            }
 		            $.get('/api/quickVehicleReservations/' + message, function(data){
-		            	console.log("quick reservations: ", data);
 	                    renderQuickVehicleReservations(data);
 	                });
 		        });
@@ -675,7 +618,6 @@ $(document).ready(function(){
         		url: '/api/getQuickReservationRent/' + message,
         		headers: createAuthorizationTokenHeader(),
     			success: function(reservation){
-    				console.log(reservation);
     				bigReservation.vehicleReservation = reservation;
     				bigReservation.vehicleReservationType = "quick";
     				
@@ -689,7 +631,6 @@ $(document).ready(function(){
     	    		showMessage('Vehicle added to reservation list', "green");
     	    		$('#dialogRentView').hide();
     	    		$('#selectedRentVehiclesTable').html('<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
-    	    		console.log("BIG RESERVATION : ", bigReservation);
     	    		$('#reservedVehicleTable').html('<tr><th>Rent-a-car</th><th>Model</th><th>Brand</th><th>Type</th><th>Seats</th><th>Price</th></tr>');
     	    		for(var i=0; i<reservation.vehicles.length;i++){
     	    			var red = reservation.vehicles[i];
@@ -719,13 +660,11 @@ $(document).ready(function(){
 	
     $(document).on('click','#sortRentBtn',function(){
     	var criteria = $("#sortCriteriaRent").val();
-		console.log(criteria);
 		var data = globalRent;
 		if(criteria == "name")
 			data.sort((a, b) => (a.name > b.name) ? 1 : -1);
 		else
 			data.sort((a, b) => (a.destination.name > b.destination.name) ? 1 : -1);
-		console.log("vehicle data",data);
 		var rents = data;
 		$('#serviceContainer').html('');
 		$.get({url :"/api/reservedRents",
@@ -780,7 +719,6 @@ $(document).ready(function(){
 			var k = 0;
 			var onStar = grade;
 	    	var stars = $('.li.star');
-	    	console.log("AAAA", onStar);
 	    	$("#"+red.id+"Rent li").each(function() {
 	    		$(this).removeClass('selected');
 	   		})  
@@ -798,13 +736,11 @@ $(document).ready(function(){
     $(document).on('click','#sortHotelBtn',function(){
     	var criteria = $("#sortCriteriaHotel").val();
     	$('#serviceContainer').html('');
-		console.log(criteria);
 		var data = globalHotel;
 		if(criteria == "name")
 			data.sort((a, b) => (a.name > b.name) ? 1 : -1);
 		else
 			data.sort((a, b) => (a.destination.name > b.destination.name) ? 1 : -1);
-		console.log("hotel data",data);
 		var hotels = data;
 		$.get({url :"/api/reservedHotels",
             headers: createAuthorizationTokenHeader()},  function(reserved){
@@ -856,7 +792,6 @@ $(document).ready(function(){
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
             var onStar = grade;
  	    	var stars = $('.li.star');
- 	    	console.log("AAAA", onStar);
  	    	var k = 0;
  	    	$("#"+red.id+"Hotel li").each(function() {
  	    		$(this).removeClass('selected');
@@ -897,7 +832,6 @@ $(document).ready(function(){
     
 	 $(document).on('click','#sortAirlineBtn',function(){
     	var criteria = $("#sortCriteriaAirline").val();
-		console.log(criteria);
 		$('#serviceContainer').html('');
 		var data = globalAirline;
 		if(criteria == "name")
@@ -905,7 +839,6 @@ $(document).ready(function(){
 		else
 			data.sort((a, b) => (a.destination.name > b.destination.name) ? 1 : -1);
 		var airlines = data;
-		console.log("airlines",airlines);
 		 $.get({url :"/api/reservedAirlines",
 				headers: createAuthorizationTokenHeader()},  function(reserved){
 		 for(var i=0;i<airlines.length;i++){
@@ -956,7 +889,6 @@ $(document).ready(function(){
 	            <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
 	            var onStar = grade;
 	 	    	var stars = $('.li.star');
-	 	    	console.log("AAAA", onStar);
 	 	    	$("#"+red.id+"Airline li").each(function() {
 	 	    		$(this).removeClass('selected');
 	 	   		})  
@@ -1021,8 +953,6 @@ $(document).ready(function(){
 			showMessage("Cannot select past date", "orange");
 			return;
 		}
-		console.log("Selected rooms: ", selected_rooms);
-		console.log("Selected hotel services: ", selected_hotel_services);
 		if(selected_rooms.length == 0){
 			showMessage("Select at least 1 room!", "orange");
 			return;
@@ -1045,7 +975,6 @@ $(document).ready(function(){
 			"price": price,
 			"discount": 0
 		};
-		console.log("Hotel reservation: ", reservation);
 		
 		bigReservation.roomReservation = reservation;
 		bigReservation.roomReservationType = "regular";
@@ -1118,7 +1047,6 @@ $(document).ready(function(){
 	
 	$(document).on('click','#makeRentReservationBtn',function(){
 		selected_vehicles = [];
-		console.log("VOZILAAAA: ", all_vehicles);
         for(var i=0;i<all_vehicles.length;i++){
 			var red = all_vehicles[i];
 			if($('#vehicleCheckbox'+ red.id).prop('checked')){
@@ -1133,7 +1061,6 @@ $(document).ready(function(){
 			showMessage("Cannot select past date", "orange");
 			return;
 		}
-		console.log("Selected vehicles: ", selected_vehicles);
 		var price = calculatePriceVehicle(selected_vehicles, parseInt($('#vehicleSearchDayNumber').val())+1);
 		var link = '/api/branchOffice/'+$("#endDestination option:selected" ).val();
 		if(selected_vehicles.length == 0) {
@@ -1150,7 +1077,6 @@ $(document).ready(function(){
 			"discount": 0,
 			"endBranchOffice" : office
 		};
-		console.log("Vehicle reservation: ", reservation);
 		
 		bigReservation.vehicleReservation = reservation;
 		bigReservation.vehicleReservationType = "regular";
@@ -2487,7 +2413,6 @@ var flightReservationQUICK = function(){
 
 var renderHotelServiceTable = function(hotelId){
     $.get('/api/hotelServicesSearch/'+hotelId, function(servicesData){
-        console.log("Hotel Services: ", servicesData);
 		var services = servicesData;
 		all_hotel_services = services;
         $('#selectedHotelServicesTable').html(`<tr><th>Name</th><th>Price</th><th>Select</th></tr>`);
@@ -2502,9 +2427,7 @@ var renderHotelServiceTable = function(hotelId){
 
 var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms, ThreeBedRooms, FourBedRooms, numDays){
     var text = `/${hotelId}/${arrivalDate}/${departureDate}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
-    console.log(text);
     $.get('/api/roomsSearch'+text, function(RoomData){
-            console.log("Rooms: ", RoomData);
 			var rooms = RoomData;
 			all_rooms = rooms;
             $('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
@@ -2565,7 +2488,6 @@ var renderAirlineTableSearch = function(){
  			<button id="sortAirlineBtn">Sort</button></div>`).appendTo("#searchSortContainer");
          $.get({url :"/api/reservedAirlines",
  			headers: createAuthorizationTokenHeader()},  function(reserved){
- 		console.log(reserved);
          for(var i=0;i<airlines.length;i++){
              var red = airlines[i];
              var locationID = "mapLocationAirline" + red.id;
@@ -2614,7 +2536,6 @@ var renderAirlineTableSearch = function(){
              <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
              var onStar = grade;
   	    	 var stars = $('.li.star');
-  	    	 console.log("AAAA", onStar);
   	    	 $("#"+red.id+"Airline li").each(function() {
   	    	 	$(this).removeClass('selected');
   	   		 })  
@@ -2634,7 +2555,6 @@ var renderAirlineTableSearch = function(){
 var renderHotelTable = function(){
 	$('#hotelTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th></th><th></th></tr>`);
     $.get("/api/hotels", function(data){
-        console.log("Hotels: ", data);
         globalHotel = data;
         $.get({url :"/api/reservedHotels",
             headers: createAuthorizationTokenHeader()},  function(reserved){
@@ -2695,9 +2615,7 @@ var renderHotelTableSearch = function(){
 		checkOutTS = 0;
 	}
 	text = hotelName+"/"+hotelDestination+"/"+checkInTS+"/"+checkOutTS;
-	console.log('/api/hotelsSearch/'+text);
     $.get('/api/hotelsSearch/'+text, function(data){
-        console.log("Hotels: ", data);
         hotels = data;
         globalHotel = data;
         $.get({url :"/api/reservedHotels",
@@ -2751,7 +2669,6 @@ var renderHotelTableSearch = function(){
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
             var onStar = grade;
  	    	var stars = $('.li.star');
- 	    	console.log("AAAA", onStar);
  	    	$("#"+red.id+"Hotel li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})
@@ -2772,7 +2689,6 @@ var renderHotelTableSearch = function(){
 var renderRentACarTable = function(){
     $('#rentACarTable').html(`<tr><th>Name</th><th>Destination</th><th>Grade</th><th>Branche offices</th><th></th><th></th></tr>`);
     $.get("/api/rentacars", function(data){
-        console.log("Rent-a-cars: ", data);
         globalRent = data;
         data.sort((a, b) => (a.name > b.name) ? 1 : -1)
         $.get({url :"/api/reservedRents",
@@ -2810,7 +2726,6 @@ var renderRentACarTableSearch = function(){
     var checkIn = $('#rentSearchCheckIn').val();
     var checkOut = $('#rentSearchCheckOut').val();
     $("sortRentBtn").removeAttr("disabled");
-    console.log(checkIn, checkOut);
     if(rentName == ""){
         rentName = "NO_INPUT";
     }
@@ -2844,7 +2759,6 @@ var renderRentACarTableSearch = function(){
 	}
     text = rentName+"/"+rentDestination+"/"+checkInTS+"/"+checkOutTS;
     $.get('/api/rentsSearch/'+text, function(data){
-        console.log("Rent-a-cars: ", data);
         globalRent = data;
         rents = data;
         $.get({url :"/api/reservedRents",
@@ -2898,7 +2812,6 @@ var renderRentACarTableSearch = function(){
             <button id=${locationID}>Show on map</button><button id=${detailViewButtonID}>More details</button>${rate}</div></div>`).appendTo("#serviceContainer");
             var onStar = grade;
  	    	var stars = $('.li.star');
- 	    	console.log("AAAA", onStar);
  	    	$("#"+red.id+"Rent li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})
@@ -2919,9 +2832,7 @@ var renderRentACarTableSearch = function(){
 
 var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, motocycles,num, startDest){
     var text = `/${rentId}/${arrivalDate}/${departureDate}/${cars}/${motocycles}/${startDest}`;
-    console.log(text);
     $.get('/api/vehiclesSearch'+text, function(VehicleData){
-            console.log("Vehicles: ", VehicleData);
             var vehicles = VehicleData;
             all_vehicles = vehicles;
         	$('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Full price</th><th>Select</th></tr>`);
@@ -2935,7 +2846,6 @@ var renderVehicleTable = function(rentId, arrivalDate, departureDate, cars, moto
 }
 
 var renderQuickVehicleReservations = function(reservations){
-	console.log("quick vehicle res", reservations);
 	$('#quickVehicleReservationsTable').html(`<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Original price</th><th>Discount (%)</th><th>Start Destination</th><th>End Destination</th><th></th></tr>`);
     for(var i=0;i<reservations.length;i++){
         var red = reservations[i];
@@ -2950,21 +2860,13 @@ var renderQuickVehicleReservations = function(reservations){
         		motocycles ++;
         	}
         }
-        console.log(cars, motocycles);
         buttonID = "quickVehicleReservationNumber"+ red.id;
-        console.log("-->", red);
         var resStart = stringToDate(red.start);
         var resEnd = stringToDate(red.end);
         var searchStart = stringToDate($('#rentSearchCheckIn').val());
         var searchEnd = stringToDate($('#rentSearchCheckOut').val());
         var myPrice = Math.round(red.price);
         if(bigReservation.flightReservation != null){
-        	console.log(red.start);
-        	console.log($('#rentSearchCheckIn').val())
-        	console.log(red.start == $('#rentSearchCheckIn').val());
-        	console.log(red.end);
-        	console.log($('#rentSearchCheckOut').val())
-        	console.log(red.end == $('#rentSearchCheckOut').val());
         	if(resStart >= searchStart && resEnd <= searchEnd){
         		if(bigReservation.vehicleReservation != null){
         			if(bigReservation.vehicleReservation.id == red.id){
@@ -2985,7 +2887,6 @@ var renderQuickRoomReservations = function(reservations){
 	$('#quickRoomReservationsTable').html(`<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Original price</th><th>Sale (%)</th><th></th></tr>`);
     for(var i=0;i<reservations.length;i++){
         var red = reservations[i];
-        console.log(">>>>>>> RED: ", red);
         var bed2 = 0;
         var bed3 = 0;
         var bed4 = 0;
@@ -2999,17 +2900,11 @@ var renderQuickRoomReservations = function(reservations){
         		bed4 ++;
         	}
         }
-        console.log(bed2, bed3, bed4);
         buttonID = "quickRoomReservationNumber"+ red.id;
-        console.log("-->", red);
         var resStart = stringToDate(red.start);
         var resEnd = stringToDate(red.end);
         var searchStart = stringToDate($('#hotelSearchCheckIn').val());
         var searchEnd = stringToDate($('#hotelSearchCheckOut').val());
-        console.log("Res start: ", resStart);
-        console.log("Res end: ", resEnd);
-        console.log("Search start: ", searchStart);
-        console.log("Search end: ", searchEnd);
         var myPrice = Math.round(red.price);
         if(bigReservation.flightReservation != null){
         	if(resStart >= searchStart && resEnd <= searchEnd){
@@ -3061,7 +2956,6 @@ function formatDate(date) {
 function stringToDate(displayFormat){
 	myDate=displayFormat.split("-");
 	var newDate = myDate[1]+"/"+myDate[2]+"/"+myDate[0];
-	console.log(newDate);
 	return new Date(newDate).getTime();
 }
 
@@ -3087,15 +2981,12 @@ function openTab(evt, tabName) {
 
 function calculatePrice(rooms, services, days){
 	price = 0;
-	console.log("PRICE: ", rooms, services, days);
 	for(var i=0;i<rooms.length;i++){
 		price += (days * rooms[i].price);
 	}
-	console.log("PRICE AFTER ROOMS: ", price);
 	for(var i=0;i<services.length;i++){
 		price += services[i].price;
 	}
-	console.log("PRICE AFTER SERVICES: ", price);
 	return price;
 }
 
@@ -3109,9 +3000,7 @@ function calculatePriceVehicle(vehicles, days){
 
 
 var displayAirlines = function(){
-	console.log("Ejjj");
     $.get("/api/airlines", function(airlines){
-        console.log("Airlines: ", airlines);
         $('#serviceContainer').html('');
         $("#searchSortContainer").html('');
         $(`<div class="VelikiPregled">  <input type="text" id="airlineSearchInput"> <button id="airlineSearchBtn" value="Search airlines">Search</button>
@@ -3123,7 +3012,6 @@ var displayAirlines = function(){
 			<button id="sortAirlineBtn">Sort</button></div>`).appendTo("#searchSortContainer");
         $.get({url :"/api/reservedAirlines",
 			headers: createAuthorizationTokenHeader()},  function(reserved){
-		console.log(reserved);
         for(var i=0;i<airlines.length;i++){
             var red = airlines[i];
             var locationID = "mapLocationAirline" + red.id;
@@ -3173,7 +3061,6 @@ var displayAirlines = function(){
             var k = 0;
             var onStar = grade;
  	    	var stars = $('.li.star');
- 	    	console.log("AAAA", onStar);
  	    	$("#"+red.id+"Airline li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})  
@@ -3190,11 +3077,8 @@ var displayAirlines = function(){
 }
 
 var displayHotels = function(){
-	console.log(bigReservation);
     $.get("/api/hotels", function(hotels){
-        console.log("Hotels: ", hotels);
         globalHotel = hotels;
-        console.log(">>>>", bigReservation.flightReservation);
         $('#serviceContainer').html('');
         $('#searchSortContainer').html('');
         $(`<div class="VelikiPregled"> <input type="text" id="hotelNameSearchInput" placeholder="Hotel name">
@@ -3282,7 +3166,6 @@ var displayHotels = function(){
             var k = 0;
             var onStar = grade;
  	    	var stars = $('.li.star');
- 	    	console.log("AAAA", onStar);
  	    	$("#"+red.id+"Hotel li").each(function() {
  	    		$(this).removeClass('selected');
  	   		})  
@@ -3299,9 +3182,7 @@ var displayHotels = function(){
 }
 
 var displayRents = function(){
-	console.log(bigReservation);
     $.get("/api/rentacars", function(rents){
-        console.log("Rents: ", rents);
         globalRent = rents;
          $('#serviceContainer').html('');
         $('#searchSortContainer').html('');$('#serviceContainer').html('');
@@ -3380,7 +3261,6 @@ var displayRents = function(){
             
             var onStar = grade;
  	    	var stars = $('.li.star');
- 	    	console.log("AAAA", onStar);
  	    	var k = 0;
  	    	$("#"+red.id+"Rent li").each(function() {
  	    		$(this).removeClass('selected');
@@ -3400,7 +3280,6 @@ var displayRents = function(){
 
 var renderVehicleTable2 = function(text,myID){
     $.get('/api/vehiclesSearch'+text, function(vehicles){
-        console.log("Vehicles: ", vehicles);
         $('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
             var red = vehicles[i];
@@ -3414,7 +3293,6 @@ var renderVehicleTable2 = function(text,myID){
 var renderBranchOfficesTable = function(text){
 	
 	$.get('/api/branchOfficeByRent/' + text, function(offices){
-        console.log("Offices: ", offices);
         $('#RentBranchOfficeTable').html(`<tr><th>Name</th><th>Address</th><th>City</th><th>Country</th></tr>`);
         for(var i=0;i<offices.length;i++){
             var red = offices[i];

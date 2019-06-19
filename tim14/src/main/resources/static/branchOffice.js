@@ -2,7 +2,6 @@ $(document).ready(function() {
 	$.get('/api/destinations', function(data){
         
 		var select = document.getElementById("branchOfficeDestination");
-		console.log(data);
         for(var i=0;i<data.length;i++){
             var red = data[i];
             select.options[select.options.length] = new Option(''+red.address+'('+red.name+')',''+red.id);
@@ -13,8 +12,6 @@ $(document).ready(function() {
 		e.preventDefault();
 		var link = '/api/destinations/'+$("#branchOfficeDestination option:selected" ).val();
 		$.get(link, function(destinationData){
-			console.log(destinationData);
-			console.log($("#branchOfficeName").val());
 			name=  $("#branchOfficeName").val()
 			var branch = {
 				"name" : name,

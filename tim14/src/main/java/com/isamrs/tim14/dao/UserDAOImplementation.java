@@ -36,8 +36,6 @@ public class UserDAOImplementation implements UserDAO{
 		User ru =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		boolean check = false;
 		User managedUser = entityManager.find(User.class, ru.getId());
-		System.out.println(ru.getPassword());
-		System.out.println(this.userDetailsService.encodePassword(pass.getCurrentPassword()));
 		//if(ru.getPassword().equals(this.userDetailsService.encodePassword(pass.getCurrentPassword()))) {
 		managedUser.setPassword(this.userDetailsService.encodePassword(pass.getNewPassword()));
 		managedUser.setPasswordChanged(true);

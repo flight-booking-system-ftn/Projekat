@@ -66,9 +66,6 @@ public class RegisteredUserDAOImpl implements RegisteredUserDAO {
 			}
 		}
 		
-		for(RegisteredUser user : result)
-			System.out.println("PRONADJENI KORISNIK: " + user.getFirstName() + " " + user.getLastName());
-		
 		return new ResponseEntity<List<RegisteredUser>>(result, HttpStatus.OK);
 	}
 

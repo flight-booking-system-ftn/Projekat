@@ -1,15 +1,11 @@
 
 function rentacarProfil() {
-	console.log("profil");
-	
 	$.get("/users/test",function(data){
-		console.log(data);
 		renderProfile(data);
 	});
 }
 
 function renderProfile(user) {
-	console.log("render user profile");
 	var tabela = $('#tabeleProfile');
 	tabela
 			.append(
