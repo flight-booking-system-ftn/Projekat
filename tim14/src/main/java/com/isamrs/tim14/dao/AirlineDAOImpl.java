@@ -173,8 +173,6 @@ public class AirlineDAOImpl implements AirlineDAO {
 		Airline airline = entityManager.find(Airline.class, id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(Grade g : airline.getGrades()) {
-			System.out.println(g.getUser().getEmail());
-			System.out.println("****"+ru.getEmail());
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				return g.getGrade();
 			}

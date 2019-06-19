@@ -125,7 +125,6 @@ public class RoomReservationDAOImpl implements RoomReservationDAO {
 		Set<Room> rooms = admin.getHotel().getRooms();
 		for(int i = 0; i< 14; i++) {
 			start = sdf.parse(sdf.format(c.getTime()));
-			System.out.println(c.getTime());
 			String dateX = sdf.format(start);
 			graph.getX().add(dateX);
 			int sum = 0;
@@ -156,13 +155,11 @@ public class RoomReservationDAOImpl implements RoomReservationDAO {
 		start = sdf.parse(sdf.format(c.getTime()));
 		c.add(Calendar.WEEK_OF_YEAR, 1);
 		end = sdf.parse(sdf.format(c.getTime()));
-		System.out.println("start " + start + "\n end "+ end);
 		HotelAdmin admin = (HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Set<Room> rooms = admin.getHotel().getRooms();
 		for(int i = 0; i<12; i++) {
 			start = end;
 			c.add(Calendar.DATE, 7);
-			System.out.println(c.getTime());
 			end = sdf.parse(sdf.format(c.getTime()));
 			int sum = 0;
 			for(Room r: rooms) {

@@ -90,12 +90,10 @@ public class RentDAOImpl implements RentDAO {
 		Query query = entityManager.createQuery("SELECT rent FROM RentACar rent WHERE rent.name LIKE :rentName");
 		query.setParameter("rentName", "%" + rentName + "%");
 		List<RentACar> result1 = query.getResultList();
-		System.out.println("<<<<<<<<<<<"+rentDestination);
 		List<RentACar> result = new ArrayList<RentACar>();
 		if(!rentDestination.equals("")) {
 		for(RentACar r : result1) {
 			for(BranchOffice b : r.getOffices()) {
-				System.out.println(">>>>>>>>>>>>>" +b.getDestination().getName());
 				if(b.getDestination().getName().toLowerCase().contains(rentDestination.toLowerCase())) {
 					result.add(r);
 					break;
@@ -164,8 +162,6 @@ public class RentDAOImpl implements RentDAO {
 		RentACar rent = entityManager.find(RentACar.class, id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(Grade g : rent.getGrades()) {
-			System.out.println(g.getUser().getEmail());
-			System.out.println("****"+ru.getEmail());
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				return g.getGrade();
 			}

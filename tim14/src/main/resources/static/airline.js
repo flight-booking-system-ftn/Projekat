@@ -30,7 +30,6 @@ $(document).ready(function() {
 			destination,
 			services
 		}
-		console.log(data);
 		$.ajax({
 			type : 'POST',
 			url : "/api/airlines",

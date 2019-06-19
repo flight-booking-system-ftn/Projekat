@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
     $.get('/api/hotels', function(data){
-        console.log(data);
         var select = document.getElementById("hotelHotelAdmin");
         for(var i=0;i<data.length;i++){
             var red = data[i];
@@ -42,7 +41,6 @@ $(document).ready(function(){
 	                    "phoneNumber": phone,
 	                    "hotel": hotelData
 	                }
-	                console.log(data);
     				$.ajax({
                         url: '/auth/registerHotelAdmin',
                         type: "POST",

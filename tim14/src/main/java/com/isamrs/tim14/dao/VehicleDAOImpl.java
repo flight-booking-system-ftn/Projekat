@@ -57,7 +57,6 @@ public class VehicleDAOImpl implements VehicleDAO {
 			}
 			queryPlus += ")";
 		}
-		System.out.println(">>> " + queryPlus);
 		Query query = entityManager.createQuery("SELECT v FROM Vehicle v WHERE v.rentACar.id = :rentId" + queryPlus);
 		query.setParameter("rentId", rentID);
 		List<Vehicle> resultQuery = query.getResultList();
@@ -82,7 +81,6 @@ public class VehicleDAOImpl implements VehicleDAO {
 				}
 			}
 		}
-		System.out.println(result.size());
 		return result;
 	}
 	
@@ -144,7 +142,6 @@ public class VehicleDAOImpl implements VehicleDAO {
 		
 		Query query = entityManager.createQuery("SELECT v FROM Vehicle v WHERE " + queryPlus);
 		List<Vehicle> resultQuery = query.getResultList();
-		System.out.println("SIZE" + resultQuery.size() + " ... " + queryPlus);
 		List<Vehicle> result = new ArrayList<Vehicle>();
 		
 		if(name.equals("NO_INPUT")) {
@@ -182,8 +179,6 @@ public class VehicleDAOImpl implements VehicleDAO {
 		Vehicle vehicle = entityManager.find(Vehicle.class, id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(Grade g : vehicle.getGrades()) {
-			System.out.println(g.getUser().getEmail());
-			System.out.println("****"+ru.getEmail());
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				return g.getGrade();
 			}

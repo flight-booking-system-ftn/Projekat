@@ -160,7 +160,7 @@ $(document).ready(function() {
 					var ticketPriceFirstClass = $("<td>" + flight.ticketPriceFirstClass + "</td>");
 					var ticketPriceBusinessClass = $("<td>" + flight.ticketPriceBusinessClass + "</td>");
 					var ticketPriceEconomyClass = $("<td>" + flight.ticketPriceEconomyClass + "</td>");
-					var actions = $("<td><input type='button' class='edit' value='Edit seats'> &nbsp; &nbsp; &nbsp; &nbsp; <input type='button' class='makeQuickReservation' value='Make quick reservation'></td>");
+					var actions = $("<td><input type='button' class='edit' value='Edit seats'> </td> <td> <input type='button' class='makeQuickReservation' value='Make quick reservation'></td>");
 					var forGrade = $("<td width='10%'><section class='rating-widget'>" +
 							"<div class='rating-stars text-center' height='20' width='100'>" +
 								"<ul>" +

@@ -30,7 +30,6 @@ $(document).ready(function() {
 			services,
 			extraServiceDiscount: 0
 		}
-		console.log(data);
 		$.ajax({
 			type : 'POST',
 			url : "/api/hotels",

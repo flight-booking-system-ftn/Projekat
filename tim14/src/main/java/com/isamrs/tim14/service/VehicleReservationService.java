@@ -126,7 +126,6 @@ public class VehicleReservationService {
 		Set<Vehicle> vehicles = admin.getRentACar().getVehicles();
 		for (int i = 0; i < 14; i++) {
 			start = sdf.parse(sdf.format(c.getTime()));
-			System.out.println(c.getTime());
 			String dateX = sdf.format(start);
 			graph.getX().add(dateX);
 			int sum = 0;
@@ -162,7 +161,6 @@ public class VehicleReservationService {
 		for (int i = 0; i < 12; i++) {
 			start = end;
 			c.add(Calendar.DATE, 7);
-			System.out.println(c.getTime());
 			end = sdf.parse(sdf.format(c.getTime()));
 			int sum = 0;
 			for (Vehicle v : vehicles)

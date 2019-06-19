@@ -135,8 +135,6 @@ $(document).ready(function() {
     		"seats": seats
     	}
     	
-    	console.log(flight);
-    	
     	$.ajax({
     		type: "POST",
     		url: "/flight/new",

@@ -195,8 +195,6 @@ public class FlightDAOImpl implements FlightDAO {
 		Flight flight = entityManager.find(Flight.class, id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(Grade g : flight.getGrades()) {
-			System.out.println(g.getUser().getEmail());
-			System.out.println("****"+ru.getEmail());
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				return g.getGrade();
 			}

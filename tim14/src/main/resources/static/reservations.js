@@ -2,13 +2,11 @@ $(document).ready(function(){
 
 	 $.get({url:'/api/allVehicleReservations',
 			headers: createAuthorizationTokenHeader()}, function(data){
-                	console.log("all reservations: ", data);
                     renderVehicleReservations(data);
              });
 	 
 	 $.get({url:'/api/allRoomReservations',
 			headers: createAuthorizationTokenHeader()}, function(data){
-             	console.log("all room reservations: ", data);
              	renderRoomReservations(data);
           });
 	 
@@ -29,10 +27,8 @@ $(document).ready(function(){
 	     		bed4 ++;
 	     	}
 	     }
-	     console.log(bed2, bed3, bed4);
 	     buttonID = "roomReservationCancelBtn"+ red.id;
 	     cancel = "<button id='"+buttonID+"'>Cancel reservation</button>";
-	     console.log("-->", red);
 	     $('#roomReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${bed2}</td><td>${bed3}</td><td>${bed4}</td><td>${red.price}</td><td>${red.hotel.name}</td>
 	     <td>${cancel}</td></tr>`);
 	     }
@@ -53,12 +49,8 @@ $(document).ready(function(){
         	}
         	var price = price + red.vehicles[k].price;
         }
-        console.log(cars, motocycles);
         var now = new Date();
         var date = addDays(red.start, 2);
-        console.log(red.start);
-        console.log(date);
-        console.log(now);
         /*cancel = "";
         if(now>date){
         buttonID = "reservationCancelBtn"+ red.id;
@@ -67,16 +59,13 @@ $(document).ready(function(){
         }*/
         buttonID = "reservationCancelBtn"+ red.id;
         cancel = "<button id='"+buttonID+"'>Cancel reservation</button>";
-        console.log("-->", red);
         $('#vehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${price}</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
         <td>${red.rentACar.name}</td><td>${cancel}</td></tr>`);
         }
 };
 $(document).on('click','table button',function(e){
-	console.log(e.target.id);
     if(e.target.id.startsWith("reservationCancelBtn")){
         var id = e.target.id.substr(20);
-        console.log("vehicle reservation: ", id);
         $.ajax({
 		type: 'DELETE',
 		url: '/api/cancelVehicleReservation/'+id,
@@ -96,7 +85,6 @@ $(document).on('click','table button',function(e){
     }
     else if(e.target.id.startsWith("roomReservationCancelBtn")){
         var id = e.target.id.substr(24);
-        console.log("room reservation: ", id);
         $.ajax({
 		type: 'DELETE',
 		url: '/api/cancelRoomReservation/'+id,
@@ -143,9 +131,7 @@ for(var i=0;i<reservations.length;i++){
     		bed4 ++;
     	}
     }
-    console.log(bed2, bed3, bed4);
     buttonID = "quickRoomReservationNumber"+ red.id;
-    console.log("-->", red);
     $('#quickRoomReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${bed2}</td><td>${bed3}</td><td>${bed4}</td><td>${red.price}</td>
     <td><button id=${buttonID}>Reserve</button></td></tr>`);
 }

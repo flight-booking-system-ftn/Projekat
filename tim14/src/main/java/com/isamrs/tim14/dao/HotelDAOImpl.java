@@ -147,8 +147,6 @@ public class HotelDAOImpl implements HotelDAO {
 		Hotel hotel = entityManager.find(Hotel.class, id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(Grade g : hotel.getGrades()) {
-			System.out.println(g.getUser().getEmail());
-			System.out.println("****"+ru.getEmail());
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
 				return g.getGrade();
 			}

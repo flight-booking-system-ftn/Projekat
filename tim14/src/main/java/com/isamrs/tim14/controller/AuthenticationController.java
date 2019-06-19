@@ -122,9 +122,7 @@ public class AuthenticationController {
 		if(admin != null) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
 		}
-		System.out.println("HotelAdmin (" + hotelAdmin.getCity() + ") "+", hotel name: " + 
-				hotelAdmin.getPhoneNumber() +", hotel name: " + 
-				hotelAdmin.getHotel().getName());
+		
 		hotelAdmin.setPassword(this.userDetailsService.encodePassword(hotelAdmin.getPassword()));
 		List<Authority> authorities = new ArrayList<Authority>();
 		Authority a = new Authority();
@@ -156,8 +154,7 @@ public class AuthenticationController {
 		if(admin != null) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
 		}
-		System.out.println("RentAdmin (" + rentAdmin.getUsername() + ") " +", hotel name: " + 
-				rentAdmin.getRentACar().getName());
+		
 		rentAdmin.setPassword(this.userDetailsService.encodePassword(rentAdmin.getPassword()));
 		List<Authority> authorities = new ArrayList<Authority>();
 		Authority a = new Authority();
@@ -189,8 +186,7 @@ public class AuthenticationController {
 		if(admin != null) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
 		}
-		System.out.println("AirlineAdmin (" + airlineAdmin.getUsername() + ") " +", hotel name: " + 
-				airlineAdmin.getAirline().getName());
+		
 		airlineAdmin.setPassword(this.userDetailsService.encodePassword(airlineAdmin.getPassword()));
 		List<Authority> authorities = new ArrayList<Authority>();
 		Authority a = new Authority();
@@ -222,7 +218,7 @@ public class AuthenticationController {
 		if(admin != null) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.NOT_ACCEPTABLE);
 		}
-		System.out.println("SystemAdmin " + systemAdmin.getUsername());
+		
 		systemAdmin.setPassword(this.userDetailsService.encodePassword(systemAdmin.getPassword()));
 		List<Authority> authorities = new ArrayList<Authority>();
 		Authority a = new Authority();
@@ -262,11 +258,8 @@ public class AuthenticationController {
 
 		// Kreiraj token
 		User user = (User) authentication.getPrincipal();
-		System.out.println(user.getFirstName());
 		for(GrantedAuthority gt : user.getAuthorities()) {
 			Authority a = (Authority)gt;
-			System.out.println(a.getUserType());
-			
 		}
 		String jwt = tokenUtils.generateToken(user.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
@@ -298,7 +291,6 @@ public class AuthenticationController {
 			redirectionURL = "systemAdmin.html";
 		}
 		UserDetails ud = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println(ud.getAuthorities());
 		// Vrati token kao odgovor na uspesno autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, ut, redirectionURL));
 	}

@@ -21,7 +21,6 @@ function rentacarProfil() {
 	}
 
 function renderRentcar(rentacar) {
-	console.log(rentacar);
 	var tabela = $('#tabeleRent');
 	tabela
 			.append('<tr><th>Name</th><td><input type = "text" class = "field" value = "'

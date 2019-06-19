@@ -36,15 +36,11 @@ public class BranchOfficeDAOImpl implements BranchOfficeDAO {
 		RentACar rent =((RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getRentACar();
 		branch.setRentACar(rent);
 		rent.getOffices().add(branch);
-		System.out.println("++++++++"+ rent.getName());
 		Query query = entityManager.createQuery("SELECT branch FROM BranchOffice branch WHERE lower(branch.rentACar.name) LIKE :rentName");
 		query.setParameter("rentName", rent.getName());
-		System.out.println("Query: "+ query);
 		List<BranchOffice> result = query.getResultList();
-		System.out.println("VElicina :"+ result.size()+ "dest" + rent.getDestination());
 		if (result.size() != 0) {
 			for(BranchOffice b : result) {
-				System.out.println("EEEEEEEE");
 				if(b.getDestination().getLatitude().equals(bo.getDestination().getLatitude()) &&
 						b.getDestination().getLongitude().equals(bo.getDestination().getLongitude()))
 				return null;
