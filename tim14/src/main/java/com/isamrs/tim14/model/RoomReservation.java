@@ -15,10 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "room_reservation")
@@ -56,6 +54,9 @@ public class RoomReservation {
 	@ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
 	private Hotel hotel;
+	
+	@Version
+	private Long version;
 
 	public RoomReservation() {
 		super();
@@ -136,6 +137,14 @@ public class RoomReservation {
 
 	public void setServices(Set<HotelService> services) {
 		this.services = services;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 }

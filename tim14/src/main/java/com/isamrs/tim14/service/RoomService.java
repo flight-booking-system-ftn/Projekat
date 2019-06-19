@@ -96,7 +96,7 @@ public class RoomService {
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false) 
 	public void removeRoom(Integer id) {
-		Room managedRoom = roomRepository.findOneById(id);
+		Room managedRoom = roomRepository.getRoomById(id);
 		roomRepository.delete(managedRoom);
 	}
 	
@@ -137,7 +137,7 @@ public class RoomService {
 	}
 	
 	public Room getRoom(Integer id) {
-		return roomRepository.findOneById(id);
+		return roomRepository.getRoomById(id);
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false) 
@@ -145,7 +145,7 @@ public class RoomService {
 		if(room.getFloor() == -1 && roomRepository.findRoomByHotelIdAndRoomNumber(room.getHotel().getId(), room.getRoomNumber()) != null) {
 			return null;
 		}
-		Room managedRoom = roomRepository.findOneById(room.getId());
+		Room managedRoom = roomRepository.getRoomById(room.getId());
 		managedRoom.setRoomNumber(room.getRoomNumber());
 		managedRoom.setBedNumber(room.getBedNumber());
 		managedRoom.setPrice(room.getPrice());
@@ -153,7 +153,7 @@ public class RoomService {
 	}
 	
 	public Integer getGrade(Integer id) {
-		Room room = roomRepository.findOneById(id);
+		Room room = roomRepository.getRoomById(id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(Grade g : room.getGrades()) {
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
@@ -165,7 +165,7 @@ public class RoomService {
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false) 
 	public void setGrade(Integer id, Integer grade) {
-		Room room = roomRepository.findOneById(id);
+		Room room = roomRepository.getRoomById(id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		for(Grade g : room.getGrades()) {
@@ -190,7 +190,7 @@ public class RoomService {
 	
 	
 	public Integer getIntermediateGrade(Integer id) {
-		Room room = roomRepository.findOneById(id);
+		Room room = roomRepository.getRoomById(id);
 		int sum = 0;
 		int count = 0;
 		

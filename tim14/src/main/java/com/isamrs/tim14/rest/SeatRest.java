@@ -44,4 +44,5 @@ public class SeatRest {
 	public Seat getSeat(@PathVariable Integer id) {
 		return seatService.getSeat(id);
 	}
+	
 }

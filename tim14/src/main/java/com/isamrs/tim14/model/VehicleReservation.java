@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -59,6 +60,9 @@ public class VehicleReservation {
 	
 	@Column(name = "discount")
 	private Integer discount;
+	
+	@Version
+	private Long version;
 	
 	public VehicleReservation() {
 		super();
@@ -150,7 +154,13 @@ public class VehicleReservation {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	
-	
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 
 }

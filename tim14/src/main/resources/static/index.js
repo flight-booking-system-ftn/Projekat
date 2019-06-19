@@ -2213,7 +2213,7 @@ $(document).ready(function(){
 		}
 		//Postaviti novu max granicu za bonus poene i promeniti vrednost labele
 				
-		if(bigReservation.roomReservation != null) {
+		/*if(bigReservation.roomReservation != null) {
 			if(bigReservation.roomReservationType == "regular"){
 				roomReservationREGULAR();
 			}else{
@@ -2231,7 +2231,35 @@ $(document).ready(function(){
 			}else{
 				flightReservationQUICK();
 			}
-		}
+		}*/
+		
+		var reservations = {
+			"flightReservation": bigReservation.flightReservation,
+			"vehicleReservation": bigReservation.vehicleReservation,
+			"roomReservation": bigReservation.roomReservation,
+			"flightQuick": bigReservation.flightReservationType,
+			"vehicleQuick": bigReservation.vehicleReservationType,
+			"roomQuick": bigReservation.roomReservationType
+		};
+		
+		$.ajax({
+			type: "POST",
+			url: "/api/saveReservations",
+			headers: createAuthorizationTokenHeader(),
+			data: JSON.stringify(reservations),
+			success: function(data) {
+				showMessage("Reservations succesfully created", "green");
+				
+				$("div#reservationsDiv").hide();
+			},
+			error: function (jqXHR, exception) {
+				if (jqXHR.status == 401) {
+					showMessage('Login first!', "orange");
+				}else{
+					showMessage("Some of your reservations have already been taken", "red");
+				}
+			}
+		});
 	});
 	
     //----------------------------------------

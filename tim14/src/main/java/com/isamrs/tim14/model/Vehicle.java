@@ -161,6 +161,5 @@ public class Vehicle {
 	public void setReservations(Set<VehicleReservation> reservations) {
 		this.reservations = reservations;
 	}
-	
 
 }

@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.OptimisticLockException;
+import javax.persistence.PessimisticLockException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,14 +41,14 @@ public class FlightReservationService {
 	@Autowired
 	private EmailService mailService;
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public void saveReservation(List<FlightReservation> reservations) {
 		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		reservations.get(0).setUser(user);
 		reservations.get(0).setPassportNumber("123456789");
 		
 		for(FlightReservation reservation : reservations) {
-			Seat managedSeat = seatRepository.getOne(reservation.getSeat().getId());
+			Seat managedSeat = seatRepository.findOneById(reservation.getSeat().getId());
 			managedSeat.setBusy(true);
 			
 			int bonusPoints = user.getBonusPoints() + reservation.getFlight().getFlightLength()/25;
@@ -56,7 +59,14 @@ public class FlightReservationService {
 			
 			if(reservation.getUser() != null && reservation.getUser().getId() != user.getId())
 				try {
-					String message = "User " + reservations.get(0).getUser().getEmail() + " inviting you to the flight " + reservation.getFlight().getFrom().getDestination().getName() + " --> " + reservation.getFlight().getTo().getDestination().getName() + ".\n\nAccept invitation: http://localhost:5000/api/flightReservation/acceptInvitation/" + reservation.getId() + ".\nDecline invitation: http://localhost:5000/api/flightReservation/declineInvitation/" + reservation.getId();
+					String message = "User " + reservations.get(0).getUser().getEmail() + " inviting you to the flight.";
+					message += "Flight informations:\n";
+					message += reservation.getFlight().getFrom().getDestination().getName() + " --> " + reservation.getFlight().getTo().getDestination().getName() + "\n";
+					message += "Departure: " + reservation.getFlight().getDepartureDate() + "\n";
+					message += "Arrival: " + reservation.getFlight().getArrivalDate() + "\n";
+					message += "Duration: " + reservation.getFlight().getFlightDuration();
+					message += "\n\nAccept invitation: http://localhost:5000/api/flightReservation/acceptInvitation/" + reservation.getId() + ".\nDecline invitation: http://localhost:5000/api/flightReservation/declineInvitation/" + reservation.getId();
+					
 					mailService.sendNotificaitionAsync(reservation.getUser(), "Invitation on flight", message);
 				} catch (MailException e) {
 					// TODO Auto-generated catch block
@@ -82,9 +92,9 @@ public class FlightReservationService {
 		return flightReservationRepository.findQuickReservations(id);
 	}
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = OptimisticLockException.class)
 	public void buyQuickTicket(FlightReservation flightReservation) {
-		FlightReservation reservation = flightReservationRepository.getOne(flightReservation.getId());
+		FlightReservation reservation = flightReservationRepository.findOneById(flightReservation.getId());
 		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		reservation.setPassportNumber("123456789");
