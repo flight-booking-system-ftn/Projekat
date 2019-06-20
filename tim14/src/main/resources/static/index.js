@@ -53,7 +53,11 @@ $(document).ready(function(){
     });
     
     $(document).on('click','#allReservationsBtn',function(){
-        $(location).attr('href',"/reservations.html");
+        $('#reservationsDialogK').show();
+    });
+    
+    $(document).on('click','#cancelReservationsDivBtnForceR',function(){
+        $('#reservationsDialogK').hide();
     });
     
     $(document).on('click','#registrationBtn',function(){
@@ -94,6 +98,16 @@ $(document).ready(function(){
     $(document).on('click','#rentSearchBtn', function(){
         renderRentACarTableSearch();
     });
+    
+    
+    $(document).on('click','#friendListViewID', function(){
+        $("#friendsDialog").show();
+    });
+    
+    $(document).on('click','#cancelFriendDialog', function(){
+    	 $("#friendsDialog").hide();
+    });
+    
     
     $(document).on('click','#allVehiclesBtn',function(){
     	 $('#serviceContainer').html('');
@@ -2792,9 +2806,11 @@ var renderRentACarTableSearch = function(){
 		checkOutTS = 0;
 	}
     text = rentName+"/"+rentDestination+"/"+checkInTS+"/"+checkOutTS;
+    console.log(text);
     $.get('/api/rentsSearch/'+text, function(data){
         globalRent = data;
         rents = data;
+        console.log("RENT: ", rents);
         $.get({url :"/api/reservedRents",
             headers: createAuthorizationTokenHeader()},  function(reserved){
         $('#serviceContainer').html('');
@@ -3218,6 +3234,7 @@ var displayHotels = function(){
 var displayRents = function(){
     $.get("/api/rentacars", function(rents){
         globalRent = rents;
+        console.log(globalRent);
          $('#serviceContainer').html('');
         $('#searchSortContainer').html('');$('#serviceContainer').html('');
         $('#searchSortContainer').html('');
@@ -3247,6 +3264,7 @@ var displayRents = function(){
 	        headers: createAuthorizationTokenHeader()},  function(reserved){
         for(var i=0;i<rents.length;i++){
             var red = rents[i];
+            console.log(">>>", red);
             var locationID = "mapLocationRent" + red.id;
             var detailViewButtonID = "rentDetailViewBtn" + red.id;
             var grade = 0;
@@ -3315,10 +3333,6 @@ var displayRents = function(){
 var renderVehicleTable2 = function(text,myID){
     $.get('/api/vehiclesSearch'+text, function(vehicles){
         $('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
-        for(var i=0;i<vehicles.length;i++){
-            var red = vehicles[i];
-            $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
-        }
         renderBranchOfficesTable(myID);
     });
 }
