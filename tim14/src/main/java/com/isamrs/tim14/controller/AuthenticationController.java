@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,7 +39,6 @@ import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACarAdmin;
-import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.SystemAdmin;
 import com.isamrs.tim14.model.User;
@@ -104,11 +104,11 @@ public class AuthenticationController {
 		ru.setVehicleReservations(new HashSet<VehicleReservation>());
 		ru.setVerified(false);
 		userDetailsService.saveUser(ru);
-//		try {
-//			mailService.sendNotificaitionAsync(ru);
-//		} catch (MailException | InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			mailService.sendNotificaitionAsyncRegistration(ru);
+		} catch (MailException | InterruptedException e) {
+			e.printStackTrace();
+		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 	
@@ -268,9 +268,9 @@ public class AuthenticationController {
 		String redirectionURL = "#";
 		
 		if (user instanceof RegisteredUser) {
-//			if(!((RegisteredUser) user).isVerified()) {
-//				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
-//			}
+			if(!((RegisteredUser) user).isVerified()) {
+				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
+			}
 			ut = UserType.ROLE_REGISTEREDUSER;
 			redirectionURL = "registeredUser.html";
 			}
