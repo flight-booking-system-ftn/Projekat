@@ -3,7 +3,10 @@ package com.isamrs.tim14.repository;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.LockModeType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -19,5 +22,8 @@ public interface IRentACarRepository extends JpaRepository<RentACar, Integer>{
 	
 	@Query(value = "SELECT * FROM branch_office bo WHERE bo.rent_a_car_id = ?1", nativeQuery = true)
 	Set<BranchOffice> findByRent(Integer id);
+	
+	@Lock(LockModeType.OPTIMISTIC)
+	RentACar findOneById(Integer id);
 	
 }

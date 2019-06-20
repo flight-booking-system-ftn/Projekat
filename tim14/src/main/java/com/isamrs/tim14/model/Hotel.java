@@ -14,9 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "hotel")
@@ -59,6 +59,9 @@ public class Hotel {
 	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY, mappedBy = "hotel")
 	@JsonBackReference(value="hotel-admins")
 	private Set<HotelAdmin> admins;
+	
+	@Version
+	private Integer version;
 
 	public Hotel() {
 		this.destination = new Destination();
@@ -67,6 +70,7 @@ public class Hotel {
 		this.grades = new HashSet<Grade>();
 		this.reservations = new HashSet<RoomReservation>();
 		this.admins = new HashSet<HotelAdmin>();
+		this.version = 0;
 	}
 
 	public Integer getId() {
@@ -149,5 +153,14 @@ public class Hotel {
 	public void setAdmins(Set<HotelAdmin> admins) {
 		this.admins = admins;
 	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
 
 }

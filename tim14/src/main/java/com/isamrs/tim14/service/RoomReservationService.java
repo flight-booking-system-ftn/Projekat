@@ -59,7 +59,7 @@ public class RoomReservationService {
 		
 		List<Room> roomsInReservations = roomRepository.findAllRooms(rooms);
 		
-		Hotel managedHotel = hotelRepository.findOneById(roomReservation.getHotel().getId());
+		Hotel managedHotel = hotelRepository.getHotelById(roomReservation.getHotel().getId());
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		if(user instanceof RegisteredUser) {
@@ -91,7 +91,7 @@ public class RoomReservationService {
 	}
 	
 	public ArrayList<RoomReservation> getQuickRoomReservations(String hotelID) {
-		Hotel managedHotel = hotelRepository.findOneById(Integer.parseInt(hotelID));
+		Hotel managedHotel = hotelRepository.getHotelById(Integer.parseInt(hotelID));
 		ArrayList<RoomReservation> result = new ArrayList<RoomReservation>();
 		for(RoomReservation res : managedHotel.getReservations()) {
 			if(res.getRegisteredUser() == null) {
@@ -113,12 +113,12 @@ public class RoomReservationService {
 		ArrayList<Room> allRooms = new ArrayList<Room>();
 		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		for (RoomReservation rr : u.getRoomReservations()) {
-			//if (vr.getEnd().after(new Date(System.currentTimeMillis()))) {
+			if (rr.getEnd().after(new Date(System.currentTimeMillis()))) {
 				for (Room r: rr.getRooms()) {
 					if (!allRooms.contains(r))
 						allRooms.add(r);
 				}
-			//}
+			}
 		}
 		return allRooms;
 	}

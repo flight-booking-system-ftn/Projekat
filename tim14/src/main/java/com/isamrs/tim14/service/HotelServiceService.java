@@ -44,7 +44,7 @@ public class HotelServiceService {
 			return null;
 		}
 		
-		Hotel managedHotel = hotelRepository.findOneById(admin.getHotel().getId());
+		Hotel managedHotel = hotelRepository.getHotelById(admin.getHotel().getId());
 		service.setHotel(managedHotel);
 		service.setId(null);
 		hotelServiceRepository.save(service);

@@ -344,6 +344,12 @@ $(document).ready(function() {
         			data : JSON.stringify(data),
 					success: function(data2){
 						showMessage('Rent is successfully changed!', "green");
+						
+						$("#pNameOfChosenRentRemove").text(data2.name);
+						$("#pDescriptionOfChosenRentRemove").text(data2.description);
+						$("#pDestinationOfChosenRentRemove").text(data2.destination.name + ", " + data2.destination.country);
+						
+						
 						$('#dialogEditRentInformation').css('display','none');
 					},
 					error: function (jqXHR) {
@@ -351,6 +357,9 @@ $(document).ready(function() {
 							showMessage('Login as rent administrator!', "orange");
 						}else if(jqXHR.status == 406){
 							showMessage('Rent name must be unique!', "orange");
+						}else if(jqXHR.status == 500){
+							$('#dialogEditRentInformation').hide();
+							showMessage('Another admin already changed informations!', "orange");
 						}else{
 							showMessage('[' + jqXHR.status + "]  ", "red");
 						}

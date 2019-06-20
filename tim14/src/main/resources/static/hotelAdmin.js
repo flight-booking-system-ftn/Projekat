@@ -677,6 +677,9 @@ $(document).ready(function() {
 							showMessage('Login as hotel administrator!', "orange");
 						}else if(jqXHR.status == 406){
 							showMessage('Hotel name must be unique!', "orange");
+						}else if(jqXHR.status == 500){
+							$('#dialogEditHotelInformation').hide();
+							showMessage('Another admin already changed informations!', "orange");
 						}else{
 							showMessage('[' + jqXHR.status + "]  ", "red");
 						}

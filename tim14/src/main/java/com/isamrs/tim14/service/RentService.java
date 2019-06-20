@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.OptimisticLockException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.isamrs.tim14.model.BranchOffice;
+import com.isamrs.tim14.model.Destination;
 import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACar;
@@ -19,6 +22,7 @@ import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.RentACarService;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
+import com.isamrs.tim14.repository.IDestinationRepository;
 import com.isamrs.tim14.repository.IGradeRepository;
 import com.isamrs.tim14.repository.IRentACarRepository;
 
@@ -31,6 +35,9 @@ public class RentService {
 	
 	@Autowired
 	private IGradeRepository gradeRepository;
+	
+	@Autowired
+	private IDestinationRepository destinationRepository;
 	
 	public List<RentACar> findAll() {
 		return rentACarRepository.findAll();
@@ -164,19 +171,33 @@ public class RentService {
 		rent.getGrades().add(g);
 	}
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = OptimisticLockException.class)
 	public RentACar changeRent(RentACar rent) {
 		RentACarAdmin r = (RentACarAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		RentACar managedRent = rentACarRepository.getOne(rent.getId());
+		RentACar managedRent = rentACarRepository.findOneById(rent.getId());
 
 		RentACar result = rentACarRepository.findOneByName(rent.getName());
-		if (result != null && !rent.getName().equals(r.getRentACar().getName()))
+		if (result != null && !rent.getName().equals(r.getRentACar().getName())) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			return null;
+		}
+			
 
 		managedRent.setDescription(rent.getDescription());
-		managedRent.getDestination().setAddress(rent.getDestination().getAddress());
+		Destination managedDestination = destinationRepository.findOneById(rent.getDestination().getId());
+		managedDestination.setAddress(rent.getDestination().getAddress());
 		managedRent.setName(rent.getName());
 
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		return managedRent;
 	}
 	

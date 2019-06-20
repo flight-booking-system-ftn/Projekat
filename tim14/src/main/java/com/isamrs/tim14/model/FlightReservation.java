@@ -75,6 +75,7 @@ public class FlightReservation {
 
 	public FlightReservation() {
 		super();
+		this.version = (long) 0;
 	}
 
 	public Integer getId() {

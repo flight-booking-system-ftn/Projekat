@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -60,6 +61,9 @@ public class RentACar {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "rentACar")
 	@JsonBackReference(value="rent-reservations")
 	private Set<VehicleReservation> reservations;
+	
+	@Version
+	private Integer version;
 
 	public RentACar() {
 		super();
@@ -69,6 +73,7 @@ public class RentACar {
 		this.grades = new HashSet<Grade>();
 		this.admins = new HashSet<RentACarAdmin>();
 		this.reservations = new HashSet<VehicleReservation>();
+		this.version = 0;
 	}
 
 	public Integer getId() {
@@ -151,5 +156,15 @@ public class RentACar {
 	public void setReservations(Set<VehicleReservation> reservations) {
 		this.reservations = reservations;
 	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	
 	
 }

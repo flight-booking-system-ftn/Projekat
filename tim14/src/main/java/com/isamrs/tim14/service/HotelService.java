@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.OptimisticLockException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.isamrs.tim14.model.Destination;
 import com.isamrs.tim14.model.Grade;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
+import com.isamrs.tim14.repository.IDestinationRepository;
 import com.isamrs.tim14.repository.IGradeRepository;
 import com.isamrs.tim14.repository.IHotelRepository;
 
@@ -28,6 +32,9 @@ public class HotelService {
 	
 	@Autowired
 	private IGradeRepository gradeRepository;
+	
+	@Autowired
+	private IDestinationRepository destinationRepository;
 	
 	public List<Hotel> getHotels() {
 		return hotelRepository.findAll();
@@ -44,7 +51,7 @@ public class HotelService {
 	}
 	
 	public Hotel getHotel(int id) {
-		return hotelRepository.findOneById(id);
+		return hotelRepository.getHotelById(id);
 	}
 	
 	public List<Hotel> getHotelsSearch(String hotelName, String hotelDestination, long checkIn, long checkOut){
@@ -93,26 +100,38 @@ public class HotelService {
 		return fullResult;
 	}
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = OptimisticLockException.class)
 	public Hotel changeHotel(Hotel hotel) {
 		Hotel managedHotel = hotelRepository.findOneById(hotel.getId());
 		
 		if(hotel.getExtraServiceDiscount().intValue() == -1) {
 			if(hotelRepository.findOneByName(hotel.getName()) != null) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				return null;
 			}
 		}
 		
+		Destination managedDestination = destinationRepository.findOneById(hotel.getDestination().getId());
+		managedDestination.setAddress(hotel.getDestination().getAddress());
 		managedHotel.setDescription(hotel.getDescription());
-		managedHotel.getDestination().setAddress(hotel.getDestination().getAddress());
 		managedHotel.setName(hotel.getName());
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		return managedHotel;
 	}
 	
 	public Integer getGrade(Integer id) {
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Hotel hotel = hotelRepository.findOneById(id);
+		Hotel hotel = hotelRepository.getHotelById(id);
 		
 		for(Grade g : hotel.getGrades()) {
 			if(g.getUser().getEmail().equals(ru.getEmail())) {
@@ -126,7 +145,7 @@ public class HotelService {
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void setGrade(Integer id, Integer grade) {
-		Hotel hotel = hotelRepository.findOneById(id);
+		Hotel hotel = hotelRepository.getHotelById(id);
 		RegisteredUser ru =(RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		for(Grade g : hotel.getGrades()) {
@@ -158,7 +177,7 @@ public class HotelService {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Hotel setDiscount(int discount) {
 		HotelAdmin admin =(HotelAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Hotel managedHotel = hotelRepository.findOneById(admin.getHotel().getId());
+		Hotel managedHotel = hotelRepository.getHotelById(admin.getHotel().getId());
 		managedHotel.setExtraServiceDiscount(discount);
 		return managedHotel;
 	}

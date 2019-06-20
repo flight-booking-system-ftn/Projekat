@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.OptimisticLockException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +64,7 @@ public class AirlineService {
 		return airline;
 	}
 	
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	@Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = OptimisticLockException.class)
 	public ResponseEntity<String> update(Airline airline) {
 		AirlineAdmin user = (AirlineAdmin) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
@@ -71,25 +73,46 @@ public class AirlineService {
 		if(airline.getName().equals(user.getAirline().getName())) {
 			for(Destination destination : destinations)
 				if(destination.getName().equals(airline.getDestination().getName()) && destination.getAddress().equals(airline.getDestination().getAddress()) && destination.getCountry().equals(airline.getDestination().getCountry())
-						&& !airline.getDestination().getName().equals(user.getAirline().getDestination().getName()) && !airline.getDestination().getCountry().equals(user.getAirline().getDestination().getCountry()) && !airline.getDestination().getAddress().equals(user.getAirline().getDestination().getAddress()))
+						&& !airline.getDestination().getName().equals(user.getAirline().getDestination().getName()) && !airline.getDestination().getCountry().equals(user.getAirline().getDestination().getCountry()) && !airline.getDestination().getAddress().equals(user.getAirline().getDestination().getAddress())) {
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					return new ResponseEntity("Some object is already on this location. Please, enter another location.", HttpStatus.NOT_ACCEPTABLE);
+				}
 		} else {
 			Airline result = airlineRepository.findOneByNameAndNotName(airline.getName(), user.getAirline().getName());
 			
-			if(result != null)
+			if(result != null) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				return new ResponseEntity("Airline with same name already exists.", HttpStatus.NOT_ACCEPTABLE);
+			}
+				
 		}
 		
-		Airline managedAirline = airlineRepository.getOne(user.getAirline().getId());
+		Airline managedAirline = airlineRepository.findOneById(user.getAirline().getId());
+		
+		Destination managedDestination = destinationRepository.findOneById(managedAirline.getDestination().getId());
+		managedDestination.setAddress(airline.getDestination().getAddress());
+		managedDestination.setCountry(airline.getDestination().getCountry());
+		managedDestination.setLatitude(airline.getDestination().getLatitude());
+		managedDestination.setLongitude(airline.getDestination().getLongitude());
+		managedDestination.setName(airline.getDestination().getName());
 		
 		managedAirline.setName(airline.getName());
-		managedAirline.getDestination().setAddress(airline.getDestination().getAddress());
-		managedAirline.getDestination().setName(airline.getDestination().getName());
-		managedAirline.getDestination().setCountry(airline.getDestination().getCountry());
-		managedAirline.getDestination().setLatitude(airline.getDestination().getLatitude());
-		managedAirline.getDestination().setLongitude(airline.getDestination().getLongitude());
 		managedAirline.setDescription(airline.getDescription());
 
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		return new ResponseEntity("Airline informations successfully updated.", HttpStatus.OK);
 	}
 	

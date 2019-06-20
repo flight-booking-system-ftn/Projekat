@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -67,10 +68,13 @@ public class Airline {
 	@JsonIgnoreProperties("airline")
 	//@JsonBackReference(value="airline-services")
 	private Set<Luggage> luggagePricelist;
+	
+	@Version
+	private Integer version;
 
 	public Airline() {
 		super();
-		
+		this.version = 0;
 		this.flights = new HashSet<Flight>();
 		this.services = new HashSet<AirlineService>();
 		this.grades = new HashSet<Grade>();
@@ -157,5 +161,15 @@ public class Airline {
 	public void setLuggagePricelist(Set<Luggage> luggagePricelist) {
 		this.luggagePricelist = luggagePricelist;
 	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	
 
 }
