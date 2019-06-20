@@ -448,26 +448,27 @@ $(document).ready(function() {
         		vehicle.price = parseInt(price);
         		var link = '/api/branchOffice/'+$("#vehicleBranchOfficeEdit option:selected" ).val();
         		$.get(link, function(branches){
-        			vehicle.branchOffice= branches;
+        			vehicle.branchOffice = branches;
+        			
+        			$.ajax({
+            			type: 'PUT',
+            			url: '/api/editVehicle',
+            			headers: createAuthorizationTokenHeader(),
+            			data : JSON.stringify(vehicle),
+            			success: function(data){
+            				showMessage('Vehicle is successfully changed!', 'green');
+            				$('#dialogEditHRentVehicle').css('display', 'none');
+            				renderTableAllRentVehicles();
+            			},
+            			error: function (jqXHR) {
+                        	if (jqXHR.status == 401) {
+            					showMessage('Login as rent administrator!', "orange");
+            				}else{
+            					showMessage('[' + jqXHR.status + "]  ", "red");
+            				}
+                        }
+            		});
         		})
-        		$.ajax({
-        			type: 'PUT',
-        			url: '/api/editVehicle',
-        			headers: createAuthorizationTokenHeader(),
-        			data : JSON.stringify(vehicle),
-        			success: function(data){
-        				showMessage('Vehicle is successfully changed!', 'green');
-        				$('#dialogEditHRentVehicle').css('display', 'none');
-        				renderTableAllRentVehicles();
-        			},
-        			error: function (jqXHR) {
-                    	if (jqXHR.status == 401) {
-        					showMessage('Login as rent administrator!', "orange");
-        				}else{
-        					showMessage('[' + jqXHR.status + "]  ", "red");
-        				}
-                    }
-        		});
         	},
         	error: function (jqXHR) {
             	if (jqXHR.status == 401) {

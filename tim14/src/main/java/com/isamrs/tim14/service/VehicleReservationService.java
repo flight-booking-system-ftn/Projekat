@@ -20,12 +20,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.isamrs.tim14.dto.GraphsDTO;
+import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACar;
 import com.isamrs.tim14.model.RentACarAdmin;
 import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.Vehicle;
 import com.isamrs.tim14.model.VehicleReservation;
+import com.isamrs.tim14.repository.IFlightReservationRepository;
 import com.isamrs.tim14.repository.IRentACarRepository;
 import com.isamrs.tim14.repository.IVehicleRepository;
 import com.isamrs.tim14.repository.IVehicleReservationRepository;
@@ -42,6 +44,9 @@ public class VehicleReservationService {
 	
 	@Autowired
 	private IRentACarRepository rentACarRepository;
+	
+	@Autowired
+	private IFlightReservationRepository flightReservationRepository;
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public VehicleReservation save(VehicleReservation vehicleReservation) {
@@ -224,6 +229,39 @@ public class VehicleReservationService {
 		}
 
 		return graph;
+	}
+	
+	public Collection<VehicleReservation> getUserVehicleReservations() {
+		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		return u.getVehicleReservations();
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void cancelVehicleReservation(String reservationID) {
+		VehicleReservation res = vehicleReservationRepository.getOne(Integer.parseInt(reservationID));
+		
+		Iterator<VehicleReservation> iterator = null;
+		for (Vehicle v : res.getVehicles()) {
+			Vehicle vehicle = vehicleRepository.getOne(v.getId());
+			
+			iterator = vehicle.getReservations().iterator();
+			while(iterator.hasNext()) {
+				VehicleReservation reservation = iterator.next();
+				
+				if(reservation.getId() == Integer.parseInt(reservationID)) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+		
+		List<FlightReservation> flightReservations = flightReservationRepository.findReservationsByVehicleReservation(res.getId());
+		
+		for(FlightReservation flightReservation : flightReservations)
+			if(flightReservation.getVehicleReservation().getId() == res.getId())
+				flightReservation.setVehicleReservation(null);
+		
+		vehicleReservationRepository.delete(res);
 	}
 	
 }

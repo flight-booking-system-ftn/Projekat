@@ -21,4 +21,10 @@ public interface IFlightReservationRepository extends JpaRepository<FlightReserv
 	@Query(value = "select * from flight_reservation fr where fr.seat_id = ?1", nativeQuery = true)
 	FlightReservation findOneBySeat(Integer id);
 	
+	@Query(value = "select * from flight_reservation fr where fr.vehicle_reservation = ?1", nativeQuery = true)
+	List<FlightReservation> findReservationsByVehicleReservation(Integer id);
+	
+	@Query(value = "select * from flight_reservation fr where fr.room_reservation = ?1", nativeQuery = true)
+	List<FlightReservation> findReservationsByRoomReservation(Integer id);
+	
 }
