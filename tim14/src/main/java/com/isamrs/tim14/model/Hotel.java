@@ -70,7 +70,6 @@ public class Hotel {
 		this.grades = new HashSet<Grade>();
 		this.reservations = new HashSet<RoomReservation>();
 		this.admins = new HashSet<HotelAdmin>();
-		this.version = 0;
 	}
 
 	public Integer getId() {

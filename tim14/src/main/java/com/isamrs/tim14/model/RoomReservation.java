@@ -55,6 +55,9 @@ public class RoomReservation {
     @JoinColumn(name = "hotel_id")
 	private Hotel hotel;
 	
+	@Column(name = "quick")
+	private Boolean quick;
+	
 	@Version
 	private Long version;
 
@@ -65,7 +68,7 @@ public class RoomReservation {
 		this.services = new HashSet<HotelService>();
 		this.registeredUser = new RegisteredUser();
 		this.hotel = new Hotel();
-		this.version = (long) 0;
+		this.quick = false;
 	}
 	
 	public Date getStart() {
@@ -146,6 +149,14 @@ public class RoomReservation {
 
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public Boolean getQuick() {
+		return quick;
+	}
+
+	public void setQuick(Boolean quick) {
+		this.quick = quick;
 	}
 
 }

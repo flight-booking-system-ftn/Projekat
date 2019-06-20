@@ -74,7 +74,6 @@ public class Airline {
 
 	public Airline() {
 		super();
-		this.version = 0;
 		this.flights = new HashSet<Flight>();
 		this.services = new HashSet<AirlineService>();
 		this.grades = new HashSet<Grade>();

@@ -69,8 +69,11 @@ public class VehicleReservationService {
 		if (user instanceof RegisteredUser) {
 			RegisteredUser registered = (RegisteredUser) user;
 			vehicleReservation.setRegisteredUser(registered);
-		} else
+			vehicleReservation.setQuick(false);
+		} else {
 			vehicleReservation.setRegisteredUser(null);
+			vehicleReservation.setQuick(true);
+		}
 
 		for(Vehicle vehicle : vehicleReservation.getVehicles()) {
 			if(vehicleReservationRepository.getReservation(vehicle.getId(), vehicleReservation.getStart(), vehicleReservation.getEnd()) != null) {
@@ -261,7 +264,10 @@ public class VehicleReservationService {
 			if(flightReservation.getVehicleReservation().getId() == res.getId())
 				flightReservation.setVehicleReservation(null);
 		
-		vehicleReservationRepository.delete(res);
+		if(!res.getQuick())
+			vehicleReservationRepository.delete(res);
+		else
+			res.setRegisteredUser(null);
 	}
 	
 }
