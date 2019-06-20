@@ -19,3 +19,4 @@ Aplikacija se pokreće pokretanjem fajla /tim14/src/main/java/com/isamrs/tim14/T
 
 ## Pokretanje aplikacije koja se nalazi na Heroku
 Potrebno je otići na sledeći link: [Booking software](https://tim14ftn.herokuapp.com/)
+Link ka repozitorijumu koji se nalazi na Heroku: [repozitorijum](https://github.com/TheDoxa/Tim14ISAHeroku)
