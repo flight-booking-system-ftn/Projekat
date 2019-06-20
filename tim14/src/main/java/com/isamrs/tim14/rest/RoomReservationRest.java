@@ -119,6 +119,23 @@ private RoomReservationDAO roomReservationDAO;
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/allRoomReservations",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<RoomReservation>> getUserVehicleReservations(){
+		Collection<RoomReservation> result = roomReservationService.getUserRoomReservations();
+
+		return new ResponseEntity<Collection<RoomReservation>>(result, HttpStatus.OK);
+	}
 	
+	@RequestMapping(
+			value = "/cancelRoomReservation/{reservationID}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> cancelRoomReservation(@PathVariable String reservationID) {
+		roomReservationService.cancelRoomReservation(reservationID);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
 	
 }

@@ -61,6 +61,9 @@ public class VehicleReservation {
 	@Column(name = "discount")
 	private Integer discount;
 	
+	@Column(name = "quick")
+	private Boolean quick;
+	
 	@Version
 	private Long version;
 	
@@ -68,6 +71,7 @@ public class VehicleReservation {
 		super();
 		this.vehicles = new HashSet<Vehicle>();
 		this.services = new HashSet<RentACarService>();
+		this.quick = false;
 	}
 
 	public Integer getId() {
@@ -161,6 +165,14 @@ public class VehicleReservation {
 
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public Boolean getQuick() {
+		return quick;
+	}
+
+	public void setQuick(Boolean quick) {
+		this.quick = quick;
 	}
 
 }

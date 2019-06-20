@@ -20,12 +20,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.isamrs.tim14.dto.GraphsDTO;
+import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.User;
+import com.isamrs.tim14.repository.IFlightReservationRepository;
 import com.isamrs.tim14.repository.IHotelRepository;
 import com.isamrs.tim14.repository.IRoomRepository;
 import com.isamrs.tim14.repository.IRoomReservationRepository;
@@ -42,6 +44,9 @@ public class RoomReservationService {
 	
 	@Autowired
 	IRoomRepository roomRepository;
+	
+	@Autowired
+	IFlightReservationRepository flightReservationRepository;
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public RoomReservation save(RoomReservation roomReservation) {
@@ -64,8 +69,10 @@ public class RoomReservationService {
 		
 		if(user instanceof RegisteredUser) {
 			RegisteredUser registered = (RegisteredUser) user;
+			roomReservation.setQuick(false);
 			roomReservation.setRegisteredUser(registered);
 		}else {
+			roomReservation.setQuick(true);
 			roomReservation.setRegisteredUser(null);
 		}
 		
@@ -220,6 +227,42 @@ public class RoomReservationService {
 			c.add(Calendar.MONTH, 1);
 		}
 		return graph;
+	}
+	
+	public Collection<RoomReservation> getUserRoomReservations() {
+		RegisteredUser u = ((RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+		return u.getRoomReservations();
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void cancelRoomReservation(String reservationID) {
+		RoomReservation res = roomReservationRepository.getOne(Integer.parseInt(reservationID));
+		
+		Iterator<RoomReservation> iterator = null;
+		for (Room r : res.getRooms()) {
+			Room room = roomRepository.getOne(r.getId());
+			
+			iterator = room.getReservations().iterator();
+			while(iterator.hasNext()) {
+				RoomReservation reservation = iterator.next();
+				
+				if(reservation.getId() == Integer.parseInt(reservationID)) {
+					iterator.remove();
+					break;
+				}
+			}
+		}
+		
+		List<FlightReservation> flightReservations = flightReservationRepository.findReservationsByRoomReservation(Integer.parseInt(reservationID));
+		
+		for(FlightReservation flightReservation : flightReservations)
+			if(flightReservation.getRoomReservation().getId() == res.getId())
+				flightReservation.setRoomReservation(null);
+		
+		if(!res.getQuick())
+			roomReservationRepository.delete(res);
+		else
+			res.setRegisteredUser(null);
 	}
 	
 }

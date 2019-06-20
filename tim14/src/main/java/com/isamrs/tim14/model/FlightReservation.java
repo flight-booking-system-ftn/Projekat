@@ -70,11 +70,16 @@ public class FlightReservation {
 	@JoinColumn(name = "vehicle_reservation")
 	private VehicleReservation vehicleReservation;
 	
+	@Column(name = "quick")
+	private Boolean quick;
+	
 	@Version
 	private Long version;
 
 	public FlightReservation() {
 		super();
+		this.quick = false;
+
 	}
 
 	public Integer getId() {
@@ -187,6 +192,14 @@ public class FlightReservation {
 
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+	public Boolean getQuick() {
+		return quick;
+	}
+
+	public void setQuick(Boolean quick) {
+		this.quick = quick;
 	}
 
 }
