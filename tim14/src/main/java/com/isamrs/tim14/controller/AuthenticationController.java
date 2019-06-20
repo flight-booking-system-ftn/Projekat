@@ -1,12 +1,14 @@
 package com.isamrs.tim14.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,17 +41,18 @@ import com.isamrs.tim14.model.FlightReservation;
 import com.isamrs.tim14.model.HotelAdmin;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.RentACarAdmin;
-import com.isamrs.tim14.model.Room;
 import com.isamrs.tim14.model.RoomReservation;
 import com.isamrs.tim14.model.SystemAdmin;
 import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.UserTokenState;
 import com.isamrs.tim14.model.UserType;
 import com.isamrs.tim14.model.VehicleReservation;
+import com.isamrs.tim14.model.VerificationToken;
 import com.isamrs.tim14.security.TokenUtils;
 import com.isamrs.tim14.security.auth.JwtAuthenticationRequest;
 import com.isamrs.tim14.service.CustomUserDetailsService;
 import com.isamrs.tim14.service.EmailService;
+import com.isamrs.tim14.service.VerificationTokenService;
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
@@ -69,6 +73,9 @@ public class AuthenticationController {
 	
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private VerificationTokenService verificationService;
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@RequestBody RegisteredUser user) {
@@ -104,11 +111,21 @@ public class AuthenticationController {
 		ru.setVehicleReservations(new HashSet<VehicleReservation>());
 		ru.setVerified(false);
 		userDetailsService.saveUser(ru);
-//		try {
-//			mailService.sendNotificaitionAsync(ru);
-//		} catch (MailException | InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		
+		String token = UUID.randomUUID().toString();
+		VerificationToken verToken = new VerificationToken();
+		verToken.setId(null);
+		verToken.setToken(token);
+		verToken.setUser(user);
+		
+		try {
+			String message = "Confirm your registration on this link: \nhttp://localhost:5000/auth/confirm/" + verToken.getToken();
+			mailService.sendNotificaitionAsyncRegist(ru, "Confirmation of registration", message);
+		} catch (MailException | InterruptedException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			
+		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
 	
