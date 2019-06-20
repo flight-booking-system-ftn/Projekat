@@ -37,7 +37,6 @@ public class Destination {
 
 	public Destination() {
 		super();
-		this.version = 0;
 	}
 
 	public Integer getId() {
