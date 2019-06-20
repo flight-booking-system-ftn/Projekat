@@ -52,6 +52,10 @@ $(document).ready(function(){
         $(location).attr('href',"/login.html");
     });
     
+    $(document).on('click','#allReservationsBtn',function(){
+        $(location).attr('href',"/reservations.html");
+    });
+    
     $(document).on('click','#registrationBtn',function(){
         $(location).attr('href',"/registration.html");
     });

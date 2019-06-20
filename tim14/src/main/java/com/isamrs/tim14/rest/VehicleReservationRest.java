@@ -113,4 +113,23 @@ public class VehicleReservationRest {
 		return new ResponseEntity<GraphsDTO>(g, HttpStatus.OK);
 	}
 	
+	@RequestMapping(
+			value = "/allVehicleReservations",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<VehicleReservation>> getUserVehicleReservations(){
+		Collection<VehicleReservation> result = vehicleReservationService.getUserVehicleReservations();
+
+		return new ResponseEntity<Collection<VehicleReservation>>(result, HttpStatus.OK);
+	}
+	
+	@RequestMapping(
+			value = "/cancelVehicleReservation/{reservationID}",
+			method = RequestMethod.DELETE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> cancelVehicleReservation(@PathVariable String reservationID) {
+		vehicleReservationService.cancelVehicleReservation(reservationID);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
 }
