@@ -68,7 +68,6 @@ public class VehicleReservation {
 		super();
 		this.vehicles = new HashSet<Vehicle>();
 		this.services = new HashSet<RentACarService>();
-		this.version = (long) 0;
 	}
 
 	public Integer getId() {

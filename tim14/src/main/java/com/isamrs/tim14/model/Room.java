@@ -43,7 +43,6 @@ public class Room {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "room_id")
-	@JsonBackReference(value="room-grades")
 	private Set<Grade> grades;
 	
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)

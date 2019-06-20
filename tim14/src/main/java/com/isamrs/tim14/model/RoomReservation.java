@@ -65,7 +65,6 @@ public class RoomReservation {
 		this.services = new HashSet<HotelService>();
 		this.registeredUser = new RegisteredUser();
 		this.hotel = new Hotel();
-		this.version = (long) 0;
 	}
 	
 	public Date getStart() {

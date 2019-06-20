@@ -73,7 +73,6 @@ public class RentACar {
 		this.grades = new HashSet<Grade>();
 		this.admins = new HashSet<RentACarAdmin>();
 		this.reservations = new HashSet<VehicleReservation>();
-		this.version = 0;
 	}
 
 	public Integer getId() {
