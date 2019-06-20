@@ -1002,7 +1002,6 @@ $(document).ready(function(){
 		}
 		
 		showMessage('Room added to reservation list', "green");
-		$('#dialogHotelView').hide();
 		$('#selectedHotelRoomsTable').html('<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th><th>Select</th></tr>');
 		
 		$('#reservedRoomTable').html('<tr><th>Hotel</th><th>Room number</th><th>Floor number</th><th>Number of beds</th><th>Price</th></tr>');
@@ -1022,6 +1021,7 @@ $(document).ready(function(){
 			$('#reservedHotelServicesTable tr:last').after(`<tr><td>${red.name}</td><td>${myPrice}</td></tr>`);
 		}
 		
+		$('#dialogHotelView').hide();
 		$('#reservationsDiv').show();
 		
 		
@@ -1116,6 +1116,7 @@ $(document).ready(function(){
 			$('#reservedVehicleTable tr:last').after(`<tr><td>${reservation.rentACar.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${myPrice}</td></tr>`);
 		}
 		
+		$("div#dialogRentView").hide();
 		$('#reservationsDiv').show();
 		/*$.ajax({
 			type : 'POST',
@@ -1796,6 +1797,7 @@ $(document).ready(function(){
 		
 		$("label#totalPrice").text(flightTicketsPrice * (100 - parseInt($("label#bonusPointsDiscount").text())) / 100);
 		
+		$("div#dialogAirlineView").hide();
 		$("div#reservationsDiv").show();
 	});
 	

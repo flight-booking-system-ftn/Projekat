@@ -16,7 +16,8 @@ public interface IRoomRepository extends JpaRepository<Room, Integer>{
 	Room getRoomById(Integer id);
 	
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	Room findOneById(Integer id);
+	@Query("SELECT r FROM Room r WHERE r.id IN :ids")
+	List<Room> findAllRooms(Integer[] ids);
 	
 	@Query(value = "select * from room r where r.hotel_id = ?1 and r.room_number = ?2", nativeQuery = true)
 	Room findRoomByHotelIdAndRoomNumber(Integer hotelId, Integer roomNumber);
