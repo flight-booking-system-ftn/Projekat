@@ -2,7 +2,10 @@ package com.isamrs.tim14.repository;
 
 import java.util.List;
 
+import javax.persistence.LockModeType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import com.isamrs.tim14.model.Airline;
@@ -15,5 +18,8 @@ public interface IAirlineRepository extends JpaRepository<Airline, Integer>{
 	Airline findOneByNameAndNotName(String newName, String oldName);
 	
 	List<Airline> findByNameContaining(String airlineName);
+	
+	@Lock(LockModeType.OPTIMISTIC)
+	Airline findOneById(Integer id);
 	
 }

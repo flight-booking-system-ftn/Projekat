@@ -974,9 +974,16 @@ $(document).ready(function() {
         			
         			$("div#dialogEditAirline").hide();
         		},
-        		error: function(response) {
-        			showMessage(response.responseText, "red");
-        		}
+        		error: function (jqXHR) {
+	            	if (jqXHR.status == 401) {
+						showMessage('Login as airline administrator!', "orange");
+					}else if(jqXHR.status == 500){
+						$("div#dialogEditAirline").hide();
+						showMessage('Another admin already changed informations!', "orange");
+					}else{
+						showMessage('[' + jqXHR.status + "]  ", "red");
+					}
+	            }
 			});
 		}
 	});

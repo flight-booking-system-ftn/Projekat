@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "destination")
@@ -30,9 +31,13 @@ public class Destination {
 	
 	@Column(name = "address")
 	private String address;
+	
+	@Version
+	private Integer version;
 
 	public Destination() {
 		super();
+		this.version = 0;
 	}
 
 	public Integer getId() {
@@ -82,5 +87,15 @@ public class Destination {
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	
 
 }

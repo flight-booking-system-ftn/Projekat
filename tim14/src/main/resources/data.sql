@@ -1,73 +1,79 @@
-INSERT INTO `authorities` values (1, "ROLE_REGISTEREDUSER");
-INSERT INTO `authorities` values (2, "ROLE_AIRLINEADMIN");
-INSERT INTO `authorities` values (3, "ROLE_HOTELADMIN");
-INSERT INTO `authorities` values (4, "ROLE_RENTACARADMIN");
-INSERT INTO `authorities` values (5, "ROLE_SYSTEMADMIN");
 
-INSERT INTO `destination` VALUES (1,'Ulica 1','Serbia', 44.7866, 20.4489, 'Belgrade'); 
-INSERT INTO `destination` VALUES (2,'Ulica 2','Serbia', 44.7933, 20.4449, 'Belgrade'); 
-INSERT INTO `destination` VALUES (3,'Ulica 3','Serbia', 44.7333, 20.4499, 'Belgrade'); 
-INSERT INTO `destination` VALUES (4,'Ulica 4','Serbia', 44.7535, 20.4488, 'Belgrade'); 
-INSERT INTO `destination` VALUES (5,'Ulica 5','Serbia', 44.7835, 20.4477, 'Belgrade'); 
-INSERT INTO `destination` VALUES (6,'Ulica 6','Serbia', 44.7855, 20.4466, 'Belgrade'); 
-INSERT INTO `destination` VALUES (7,'Ulica 7','Serbia', 44.7866, 20.4455, 'Belgrade'); 
-INSERT INTO `destination` VALUES (8,'Ulica 8','Serbia', 44.7877, 20.4444, 'Belgrade'); 
-INSERT INTO `destination` VALUES (9,'Ulica 9','Serbia', 44.7888, 20.4433, 'Belgrade'); 
-INSERT INTO `destination` VALUES (10,'Ulica 10','Serbia', 44.7899, 20.4422, 'Belgrade'); 
-INSERT INTO `destination` VALUES (11,'Street 1','United Kingdom', 51.501, 0.1278, 'London'); 
-INSERT INTO `destination` VALUES (12,'Street 2','United Kingdom', 51.533, 0.1378, 'London'); 
-INSERT INTO `destination` VALUES (13,'Street 3','United Kingdom', 51.544, 0.1478, 'London'); 
-INSERT INTO `destination` VALUES (14,'Street 4','United Kingdom', 51.551, 0.1578, 'London'); 
-INSERT INTO `destination` VALUES (15,'Street 5','United Kingdom', 51.511, 0.1678, 'London'); 
-INSERT INTO `destination` VALUES (16,'Street 6','United Kingdom', 51.531, 0.1778, 'London'); 
-INSERT INTO `destination` VALUES (17,'Street 7','United Kingdom', 51.521, 0.1868, 'London'); 
-INSERT INTO `destination` VALUES (18,'Rue 1','France', 48.8500, 2.3556, 'Paris'); 
-INSERT INTO `destination` VALUES (19,'Rue 2','France', 48.8512, 2.3545, 'Paris'); 
-INSERT INTO `destination` VALUES (20,'Rue 3','France', 48.8534, 2.3534, 'Paris'); 
-INSERT INTO `destination` VALUES (21,'Rue 4','France', 48.8545, 2.3521, 'Paris'); 
-INSERT INTO `destination` VALUES (22,'Rue 5','France', 48.8577, 2.3511, 'Paris'); 
-INSERT INTO `destination` VALUES (23,'Strase 1','Germany', 50.1003, 8.7051, 'Frankfurt'); 
-INSERT INTO `destination` VALUES (24,'Strase 2','Germany', 50.1053, 8.7041, 'Frankfurt'); 
-INSERT INTO `destination` VALUES (25,'Strase 3','Germany', 50.1063, 8.7031, 'Frankfurt'); 
-INSERT INTO `destination` VALUES (26,'Strase 4','Germany', 50.1073, 8.7021, 'Frankfurt'); 
-INSERT INTO `destination` VALUES (27,'Strase 5','Germany', 50.1083, 8.7011, 'Frankfurt'); 
-INSERT INTO `destination` VALUES (28,'Strase 6','Germany', 50.1083, 8.7011, 'Frankfurt');
-INSERT INTO `destination` VALUES (29,'Calle 1','Spain', 40.4168, 3.7346, 'Madrid'); 
-INSERT INTO `destination` VALUES (30,'Calle 2','Spain', 40.4178, 3.7396, 'Madrid');
-INSERT INTO `destination` VALUES (31,'Calle 3','Spain', 40.4188, 3.7386, 'Madrid');
-INSERT INTO `destination` VALUES (32,'Calle 4','Spain', 40.4198, 3.7376, 'Madrid');
-INSERT INTO `destination` VALUES (33,'Calle 5','Spain', 40.4138, 3.7366, 'Madrid');
-INSERT INTO `destination` VALUES (34,'Calle 6','Spain', 40.4148, 3.7356, 'Madrid');
+INSERT INTO authorities (id, user_type)
+VALUES  (1, "ROLE_REGISTEREDUSER"),
+        (2, "ROLE_AIRLINEADMIN"),
+        (3, "ROLE_HOTELADMIN"),
+        (4, "ROLE_RENTACARADMIN"),
+        (5, "ROLE_SYSTEMADMIN");
+
+INSERT INTO destination (id, address, country, latitude, longitude, name, version) 
+VALUES  (1,'Ulica 1','Serbia', 44.7866, 20.4489, 'Belgrade', 0),
+        (2,'Ulica 2','Serbia', 44.7933, 20.4449, 'Belgrade', 0), 
+        (3,'Ulica 3','Serbia', 44.7333, 20.4499, 'Belgrade', 0), 
+        (4,'Ulica 4','Serbia', 44.7535, 20.4488, 'Belgrade', 0), 
+        (5,'Ulica 5','Serbia', 44.7835, 20.4477, 'Belgrade', 0), 
+        (6,'Ulica 6','Serbia', 44.7855, 20.4466, 'Belgrade', 0), 
+        (7,'Ulica 7','Serbia', 44.7866, 20.4455, 'Belgrade', 0), 
+        (8,'Ulica 8','Serbia', 44.7877, 20.4444, 'Belgrade', 0), 
+        (9,'Ulica 9','Serbia', 44.7888, 20.4433, 'Belgrade', 0), 
+        (10,'Ulica 10','Serbia', 44.7899, 20.4422, 'Belgrade', 0), 
+        (11,'Street 1','United Kingdom', 51.501, 0.1278, 'London', 0), 
+        (12,'Street 2','United Kingdom', 51.533, 0.1378, 'London', 0), 
+        (13,'Street 3','United Kingdom', 51.544, 0.1478, 'London', 0), 
+        (14,'Street 4','United Kingdom', 51.551, 0.1578, 'London', 0), 
+        (15,'Street 5','United Kingdom', 51.511, 0.1678, 'London', 0), 
+        (16,'Street 6','United Kingdom', 51.531, 0.1778, 'London', 0), 
+        (17,'Street 7','United Kingdom', 51.521, 0.1868, 'London', 0), 
+        (18,'Rue 1','France', 48.8500, 2.3556, 'Paris', 0), 
+        (19,'Rue 2','France', 48.8512, 2.3545, 'Paris', 0), 
+        (20,'Rue 3','France', 48.8534, 2.3534, 'Paris', 0), 
+        (21,'Rue 4','France', 48.8545, 2.3521, 'Paris', 0), 
+        (22,'Rue 5','France', 48.8577, 2.3511, 'Paris', 0), 
+        (23,'Strase 1','Germany', 50.1003, 8.7051, 'Frankfurt', 0), 
+        (24,'Strase 2','Germany', 50.1053, 8.7041, 'Frankfurt', 0), 
+        (25,'Strase 3','Germany', 50.1063, 8.7031, 'Frankfurt', 0), 
+        (26,'Strase 4','Germany', 50.1073, 8.7021, 'Frankfurt', 0), 
+        (27,'Strase 5','Germany', 50.1083, 8.7011, 'Frankfurt', 0), 
+        (28,'Strase 6','Germany', 50.1083, 8.7011, 'Frankfurt', 0),
+        (29,'Calle 1','Spain', 40.4168, 3.7346, 'Madrid', 0), 
+        (30,'Calle 2','Spain', 40.4178, 3.7396, 'Madrid', 0),
+        (31,'Calle 3','Spain', 40.4188, 3.7386, 'Madrid', 0),
+        (32,'Calle 4','Spain', 40.4198, 3.7376, 'Madrid', 0),
+        (33,'Calle 5','Spain', 40.4138, 3.7366, 'Madrid', 0),
+        (34,'Calle 6','Spain', 40.4148, 3.7356, 'Madrid', 0);
 
 
-INSERT INTO bookingdb.airline (`id`,`description`,`name`, `destination_id`) VALUES (1,"Expensive", "Jat Serbia", 1);
-INSERT INTO bookingdb.airline (`id`,`description`,`name`, `destination_id`) VALUES (2,"Luxury", "Air UK", 11);
-INSERT INTO bookingdb.airline (`id`,`description`,`name`, `destination_id`) VALUES (3,"Cheap", "Air France", 29);
-INSERT INTO bookingdb.airline (`id`,`description`,`name`, `destination_id`) VALUES (4,"The best", "Lufthansa", 23);
+INSERT INTO airline (id, description, name, destination_id, version) 
+VALUES  (1,"Expensive", "Jat Serbia", 1, 0),
+        (2,"Luxury", "Air UK", 11, 0),
+        (3,"Cheap", "Air France", 29, 0),
+        (4,"The best", "Lufthansa", 23, 0);
 
-INSERT INTO `airport` (`id`, `name`, `destination_id`) VALUES (1, "Nikola Tesla", 2);
-INSERT INTO `airport` (`id`, `name`, `destination_id`) VALUES (2, "Heathrow", 12);
-INSERT INTO `airport` (`id`, `name`, `destination_id`) VALUES (3, "Paris airport", 18);
-INSERT INTO `airport` (`id`, `name`, `destination_id`) VALUES (4, "Frankfurt airport", 24);
-INSERT INTO `airport` (`id`, `name`, `destination_id`) VALUES (5, "Suarez", 30);
+INSERT INTO airport (id, name, destination_id) 
+VALUES  (1, "Nikola Tesla", 2),
+        (2, "Heathrow", 12),
+        (3, "Paris airport", 18),
+        (4, "Frankfurt airport", 24),
+        (5, "Suarez", 30);
 
-insert into `airline_airport` values (1,1);
-insert into `airline_airport` values (1,2);
-insert into `airline_airport` values (1,3);
-insert into `airline_airport` values (1,4);
-insert into `airline_airport` values (1,5);
-insert into `airline_airport` values (2,1);
-insert into `airline_airport` values (2,2);
-insert into `airline_airport` values (2,3);
-insert into `airline_airport` values (2,5);
-insert into `airline_airport` values (3,2);
-insert into `airline_airport` values (3,3);
-insert into `airline_airport` values (3,4);
-insert into `airline_airport` values (3,5);
-insert into `airline_airport` values (4,2);
-insert into `airline_airport` values (4,3);
+insert into airline_airport (airline_id, airport_id) 
+VALUES  (1,1),
+        (1,2),
+        (1,3),
+        (1,4),
+        (1,5),
+        (2,1),
+        (2,2),
+        (2,3),
+        (2,5),
+        (3,2),
+        (3,3),
+        (3,4),
+        (3,5),
+        (4,2),
+        (4,3);
 
-INSERT INTO `flight` (`id`, `airline_id`, `start_airport_id`, `end_airport_id`, `departure_date`, `arrival_date`, `flight_duration`, `flight_length`, `luggage_quantity`, `ticket_price_first_class`, `ticket_price_business_class`, `ticket_price_economy_class`)
+INSERT INTO flight (id, airline_id, start_airport_id, end_airport_id, departure_date, arrival_date, flight_duration, flight_length, luggage_quantity, ticket_price_first_class, ticket_price_business_class, ticket_price_economy_class)
 VALUES (1, 1, 1, 2, "2019-06-29 10:00:00", "2019-06-30 10:00:00", 24, 500, 1, 300, 250, 200),
 	   (2, 1, 1, 2, "2019-06-30 10:00:00", "2019-07-01 10:00:00", 24, 600, 1, 400, 350, 300),
 	   (3, 1, 2, 3, "2019-07-02 10:00:00", "2019-07-03 10:00:00", 24, 700, 1, 300, 250, 200),
@@ -82,7 +88,7 @@ VALUES (1, 1, 1, 2, "2019-06-29 10:00:00", "2019-06-30 10:00:00", 24, 500, 1, 30
 	   (12, 4, 2, 3, "2019-07-03 10:00:00", "2019-07-04 10:00:00", 24, 700, 1, 400, 350, 300),
 	   (13, 4, 3, 2, "2019-07-05 10:00:00", "2019-07-06 10:00:00", 24, 650, 1, 400, 350, 300);
 
-INSERT INTO `seat` (`id`, `flight_id`, `busy`, `enabled`, `seat_row`, `number`, `type`) 
+INSERT INTO seat (id, flight_id, busy, enabled, seat_row, number, type) 
 VALUES (1, 1, b'0', b'1', 1, 1, "FIRST_CLASS"),
 	   (2, 1, b'0', b'1', 1, 2, "FIRST_CLASS"),
 	   (3, 1, b'0', b'1', 1, 3, "FIRST_CLASS"),
@@ -300,166 +306,161 @@ VALUES (1, 1, b'0', b'1', 1, 1, "FIRST_CLASS"),
 	   (215, 9, b'0', b'1', 6, 2, "ECONOMY"),
 	   (216, 9, b'0', b'1', 6, 3, "ECONOMY");
 	  
-INSERT INTO `sales` values (1, 5, "Discount based on bonus points");
+INSERT INTO sales (id, discount_percentage, name) VALUES (1, 5, "Discount based on bonus points");
 
-INSERT INTO `hotel` values (1, "Fancy, good for family trips", 0, "Hotel Jugoslavija", 3);
-INSERT INTO `hotel` values (2, "Near park", 0, "Hotel Srbija", 4);
-INSERT INTO `hotel` values (3, "Quite, near sea coast", 0, "Aqua", 13);
-INSERT INTO `hotel` values (4, "In center of London", 0, "Glux", 14);
-INSERT INTO `hotel` values (5, "All inclusive", 0, "Dior hotel", 19);
-INSERT INTO `hotel` values (6, "Quite, near music festival coast", 0, "Franx Hotel", 25);
-INSERT INTO `hotel` values (7, "In center of Madrid", 0, "Silvia Hotel", 31);
-INSERT INTO `hotel` values (8, "All inclusive", 0, "Carlos Hotel", 32);
+INSERT INTO hotel (id, description, extra_service_discount_percentage, name, destination_id, version) VALUES 
+        (1, "Fancy, good for family trips", 0, "Hotel Jugoslavija", 3, 0),
+        (2, "Near park", 0, "Hotel Srbija", 4, 0),
+        (3, "Quite, near sea coast", 0, "Aqua", 13, 0),
+        (4, "In center of London", 0, "Glux", 14, 0),
+        (5, "All inclusive", 0, "Dior hotel", 19, 0),
+        (6, "Quite, near music festival coast", 0, "Franx Hotel", 25, 0),
+        (7, "In center of Madrid", 0, "Silvia Hotel", 31, 0),
+        (8, "All inclusive", 0, "Carlos Hotel", 32, 0);
 
-INSERT INTO `hotel_service` values (1, "Pool", 5, 1);
-INSERT INTO `hotel_service` values (2, "Barbecue", 6, 1);
-INSERT INTO `hotel_service` values (3, "Air condition", 5, 1);
-INSERT INTO `hotel_service` values (4, "Coctail party", 7, 1);
-INSERT INTO `hotel_service` values (5, "Pool", 3, 2);
-INSERT INTO `hotel_service` values (6, "Barbecue", 4, 2);
-INSERT INTO `hotel_service` values (7, "Air condition", 6, 2);
-INSERT INTO `hotel_service` values (8, "Coctail party", 7, 3);
-INSERT INTO `hotel_service` values (9, "Pool", 7, 3);
-INSERT INTO `hotel_service` values (10, "Barbecue", 5, 3);
-INSERT INTO `hotel_service` values (11, "Air condition", 12, 4);
-INSERT INTO `hotel_service` values (12, "Pool", 11, 4);
-INSERT INTO `hotel_service` values (13, "Coctail party", 7, 5);
-INSERT INTO `hotel_service` values (14, "Pool", 7, 5);
-INSERT INTO `hotel_service` values (15, "Barbecue", 5, 5);
-INSERT INTO `hotel_service` values (16, "Air condition", 12, 6);
-INSERT INTO `hotel_service` values (17, "Pool", 11, 6);
-INSERT INTO `hotel_service` values (18, "Coctail party", 7, 7);
-INSERT INTO `hotel_service` values (19, "Pool", 7, 7);
-INSERT INTO `hotel_service` values (20, "Barbecue", 5, 7);
-INSERT INTO `hotel_service` values (21, "Air condition", 12, 8);
-INSERT INTO `hotel_service` values (22, "Pool", 11, 8);
+INSERT INTO hotel_service (id, name, price, hotel_id) VALUES 
+        (1, "Pool", 5, 1),
+        (2, "Barbecue", 6, 1),
+        (3, "Air condition", 5, 1),
+        (4, "Coctail party", 7, 1),
+        (5, "Pool", 3, 2),
+        (6, "Barbecue", 4, 2),
+        (7, "Air condition", 6, 2),
+        (8, "Coctail party", 7, 3),
+        (9, "Pool", 7, 3),
+        (10, "Barbecue", 5, 3),
+        (11, "Air condition", 12, 4),
+        (12, "Pool", 11, 4),
+        (13, "Coctail party", 7, 5),
+        (14, "Pool", 7, 5),
+        (15, "Barbecue", 5, 5),
+        (16, "Air condition", 12, 6),
+        (17, "Pool", 11, 6),
+        (18, "Coctail party", 7, 7),
+        (19, "Pool", 7, 7),
+        (20, "Barbecue", 5, 7),
+        (21, "Air condition", 12, 8),
+        (22, "Pool", 11, 8);
 
-INSERT INTO `room` values (1, 2, 1, 20, 101, 1);
-INSERT INTO `room` values (2, 2, 1, 20, 102, 1);
-INSERT INTO `room` values (3, 3, 1, 25, 103, 1);
-INSERT INTO `room` values (4, 3, 2, 25, 201, 1);
-INSERT INTO `room` values (5, 4, 2, 30, 202, 1);
-INSERT INTO `room` values (6, 2, 1, 15, 101, 2);
-INSERT INTO `room` values (7, 3, 1, 17, 102, 2);
-INSERT INTO `room` values (8, 3, 1, 17, 103, 2);
-INSERT INTO `room` values (9, 3, 1, 17, 104, 2);
-INSERT INTO `room` values (10, 4, 2, 22, 201, 2);
-INSERT INTO `room` values (11, 4, 2, 22, 202, 2);
-INSERT INTO `room` values (12, 2, 1, 15, 101, 3);
-INSERT INTO `room` values (13, 3, 2, 20, 201, 3);
-INSERT INTO `room` values (14, 4, 2, 25, 202, 3);
-INSERT INTO `room` values (15, 2, 1, 15, 101, 4);
-INSERT INTO `room` values (16, 2, 1, 15, 102, 4);
-INSERT INTO `room` values (17, 3, 1, 22, 103, 4);
-INSERT INTO `room` values (18, 2, 1, 20, 101, 5);
-INSERT INTO `room` values (19, 2, 1, 20, 102, 5);
-INSERT INTO `room` values (20, 3, 1, 25, 103, 5);
-INSERT INTO `room` values (21, 3, 2, 25, 201, 5);
-INSERT INTO `room` values (22, 4, 2, 30, 202, 5);
-INSERT INTO `room` values (23, 2, 1, 15, 101, 6);
-INSERT INTO `room` values (24, 3, 1, 17, 102, 6);
-INSERT INTO `room` values (25, 3, 1, 17, 103, 6);
-INSERT INTO `room` values (26, 3, 1, 17, 104, 6);
-INSERT INTO `room` values (27, 4, 2, 22, 201, 6);
-INSERT INTO `room` values (28, 4, 2, 22, 202, 6);
-INSERT INTO `room` values (29, 2, 1, 15, 101, 7);
-INSERT INTO `room` values (30, 3, 2, 20, 201, 7);
-INSERT INTO `room` values (31, 4, 2, 25, 202, 7);
-INSERT INTO `room` values (32, 2, 1, 15, 101, 8);
-INSERT INTO `room` values (33, 2, 1, 15, 102, 8);
-INSERT INTO `room` values (34, 3, 1, 22, 103, 8);
+INSERT INTO room (id, bed_number, floor, price, room_number, hotel_id) VALUES 
+        (1, 2, 1, 20, 101, 1),
+        (2, 2, 1, 20, 102, 1),
+        (3, 3, 1, 25, 103, 1),
+        (4, 3, 2, 25, 201, 1),
+        (5, 4, 2, 30, 202, 1),
+        (6, 2, 1, 15, 101, 2),
+        (7, 3, 1, 17, 102, 2),
+        (8, 3, 1, 17, 103, 2),
+        (9, 3, 1, 17, 104, 2),
+        (10, 4, 2, 22, 201, 2),
+        (11, 4, 2, 22, 202, 2),
+        (12, 2, 1, 15, 101, 3),
+        (13, 3, 2, 20, 201, 3),
+        (14, 4, 2, 25, 202, 3),
+        (15, 2, 1, 15, 101, 4),
+        (16, 2, 1, 15, 102, 4),
+        (17, 3, 1, 22, 103, 4),
+        (18, 2, 1, 20, 101, 5),
+        (19, 2, 1, 20, 102, 5),
+        (20, 3, 1, 25, 103, 5),
+        (21, 3, 2, 25, 201, 5),
+        (22, 4, 2, 30, 202, 5),
+        (23, 2, 1, 15, 101, 6),
+        (24, 3, 1, 17, 102, 6),
+        (25, 3, 1, 17, 103, 6),
+        (26, 3, 1, 17, 104, 6),
+        (27, 4, 2, 22, 201, 6),
+        (28, 4, 2, 22, 202, 6),
+        (29, 2, 1, 15, 101, 7),
+        (30, 3, 2, 20, 201, 7),
+        (31, 4, 2, 25, 202, 7),
+        (32, 2, 1, 15, 101, 8),
+        (33, 2, 1, 15, 102, 8),
+        (34, 3, 1, 22, 103, 8);
 
-INSERT INTO bookingdb.rent_a_car (`id`,`description`,`name`, `destination_id`) VALUES (1,"Widespread", "Fent Rent", 5);
-INSERT INTO bookingdb.rent_a_car (`id`,`description`,`name`, `destination_id`) VALUES (2,"Reliable", "Rent Rent", 6);
-INSERT INTO bookingdb.rent_a_car (`id`,`description`,`name`, `destination_id`) VALUES (3,"Cheap", "Deus Rent", 15);
-INSERT INTO bookingdb.rent_a_car (`id`,`description`,`name`, `destination_id`) VALUES (4,"Expensive", "Uni Rent", 20);
-INSERT INTO bookingdb.rent_a_car (`id`,`description`,`name`, `destination_id`) VALUES (5,"Cheap", "Gurkinen Rent", 26);
-INSERT INTO bookingdb.rent_a_car (`id`,`description`,`name`, `destination_id`) VALUES (6,"Expensive", "Espanol Rent",33);
+INSERT INTO rent_a_car (id, description, name, destination_id, version) VALUES 
+        (1,"Widespread", "Fent Rent", 5, 0),
+        (2,"Reliable", "Rent Rent", 6, 0),
+        (3,"Cheap", "Deus Rent", 15, 0),
+        (4,"Expensive", "Uni Rent", 20, 0),
+        (5,"Cheap", "Gurkinen Rent", 26, 0),
+        (6,"Expensive", "Espanol Rent",33, 0);
 
-INSERT INTO bookingdb.rent_a_car_service (`id`, `name`, `price`, `rent_a_car_id`, `vehicle_reservation_id`) values (1, 'Air conditioner', 10, 1, null);
-INSERT INTO bookingdb.rent_a_car_service (`id`, `name`, `price`, `rent_a_car_id`, `vehicle_reservation_id`) values (2, 'Sidecar', 100, 1, null);
+INSERT INTO rent_a_car_service (id, name, price, rent_a_car_id, vehicle_reservation_id) VALUES 
+        (1, 'Air conditioner', 10, 1, null),
+        (2, 'Sidecar', 100, 1, null);
 
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (1,"Fent Rent 1", 7,1); 
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (2, "Fent Rent 2", 8,1); 
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (3, "Rent Rent 1", 9,2);
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (4, "Rent Rent 2", 10,2); 
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (5, "Deus Rent 1", 16,3);  
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (6, "Deus Rent 2", 17,3); 
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (7, "Uni Rent 1", 21,4);
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (8, "Uni Rent 2", 22,4); 
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (9, "Gurkinen Rent 1", 27,5);
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (10,"Gurkinen Rent 2", 28,5); 
-INSERT INTO bookingdb.branch_office (`id`, name, `destination_id`,`rent_a_car_id`) VALUES (11, "Espanol Rent 1", 34,6);
+INSERT INTO branch_office (id, destination_id, rent_a_car_id, name) VALUES 
+        (1,7,1, "Branch 1"),
+        (2,8,1, "Branch 2"), 
+        (3,9,2, "Branch 3"),
+        (4,10,2, "Branch 4"), 
+        (5,16,3, "Branch 5"), 
+        (6,17,3, "Branch 6"), 
+        (7,21,4, "Branch 7"),
+        (8,22,4, "Branch 8"), 
+        (9,27,5, "Branch 9"),
+        (10,28,5, "Branch 10"), 
+        (11,34,6, "Branch 11");
 
-INSERT INTO `vehicle` (`id`, `brand`, `model`, `price`, `production_year`, `seats_number`, `type`, `branch_office_id`, `rent_a_car_id`) VALUES
-		(1, "BMW", "X5", 100, 2005, 4, "CAR", 1, 1),
-		(2, "Audi", "A7", 200, 2006, 4, "CAR", 1, 1),
-		(3, "Porsche", "Cayenne", 200, 2010, 4, "CAR", 2, 1),
-		(4, "Volkswagen", "Golf 6", 90, 2015, 4, "CAR", 2, 1),
-		(5, "Porsche", "Panamera", 170, 2009, 4, "CAR", 3, 2),
-		(6, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 3, 2),
-		(7, "Harley Davidson", "Iron 883", 170, 2019, 1, "MOTOCYCLE", 4, 2),
-		(8, "Yamaha", "N MAX 125", 70, 2015, 2, "MOTOCYCLE", 2, 1),
-		(9, "Citroen", "C5", 100, 2005, 4, "CAR", 5, 3),
-		(10, "Citroen", "C4", 200, 2006, 4, "CAR", 5, 3),
-		(11, "Fiat", "Punto", 200, 2010, 4, "CAR", 6, 3),
-		(12, "BMW", "i8", 90, 2015, 4, "CAR", 8, 4),
-		(13, "Porsche", "Panamera", 170, 2013, 4, "CAR", 7, 4),
-		(14, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 7, 4),
-		(15, "Yamaha", "R6", 170, 2019, 1, "MOTOCYCLE", 8, 4),
-		(16, "Yamaha", "R1", 100, 2015, 2, "MOTOCYCLE", 6, 3),
-		(17, "Audi", "R8", 100, 2018, 4, "CAR", 9, 5),
-		(18, "Audi", "A7", 200, 2016, 4, "CAR", 9, 5),
-		(19, "Fiat", "Bravo", 100, 2008, 4, "CAR", 9, 5),
-		(20, "Opel", "Corsa", 90, 2006, 4, "CAR", 10, 5),
-		(21, "Opel", "Antara", 170, 2009, 4, "CAR", 11, 6),
-		(22, "Honda", "CR-V", 260, 2017, 4, "CAR", 11, 6),
-		(23, "Honda", "Activa 5G", 100, 2019, 2, "MOTOCYCLE", 11, 6),
-		(24, "Honda", "Dio", 70, 2015, 2, "MOTOCYCLE", 10, 5);
+INSERT INTO vehicle (id, brand, model, price, production_year, seats_number, type, branch_office_id, rent_a_car_id) VALUES 
+        (1, "BMW", "X5", 100, 2005, 4, "CAR", 1, 1),  
+        (2, "Audi", "A7", 200, 2006, 4, "CAR", 2, 1),  
+        (3, "Porsche", "Cayenne", 200, 2010, 4, "CAR", 2, 1),  
+        (4, "Volkswagen", "Golf 6", 90, 2015, 4, "CAR", 3, 1),  
+        (5, "Porsche", "Panamera", 170, 2009, 4, "CAR", 4, 2),
+        (6, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 5, 2),
+        (7, "Harley Davidson", "Iron 883", 170, 2019, 1, "MOTOCYCLE", 4, 2),
+        (8, "Yamaha", "N MAX 125", 70, 2015, 2, "MOTOCYCLE", 1, 1);
 
-INSERT INTO `users` values ("SystemAdmin", 1, "Novi Sad", "sysadmin@gmail.com", b'1', "Lisa", "Tobias", '2019-06-10 00:00:01', "$2a$10$CCCR0ZK7vfrJsrKHKWeanuYpuchsLOaACUWIXmZFOl7Np3qAJHvX2", b'1', "021/542122", "system", 0, b'1', null,null,null);
-INSERT INTO `users` values ("RegisteredUser", 2, "Madrid", "isamrsproba1@gmail.com", b'1', "Rocky", "Balboa", '2019-06-10 04:00:01', "$2a$10$23uC9cD//AG1wBl3UBK8eO6fmisGo00jEOSp/xFLAOeaZ6ISkQ396", b'1', "021/35353", "user1", 0, b'1', null,null,null);
-INSERT INTO `users` values ("RegisteredUser", 3, "Beograd", "isamrsproba1@gmail.com", b'1', "Harry", "Potter", '2019-06-12 04:00:01', "$2a$10$5D0Ew/t/773X3k8We3PNWeTjC65GrhDS4uwLZEyr6MaiGU3mTTJca", b'1', "021/35353", "user2", 0, b'1', null,null,null);
-INSERT INTO `users` values ("RegisteredUser", 4, "New York", "isamrsproba1@gmail.com", b'1', "Frodo", "Baggins", '2019-06-12 04:00:01', "$2a$10$YsngqlDx/4aI7dx2kC2jROl53qD9MIbsK6.3KBhe8eluZwKi7ayvy", b'1', "021/35353", "user3", 0, b'1', null,null,null);
-INSERT INTO `users` values ("AirlineAdmin", 5, "Rome", "airlineadmin1@gmail.com", b'1', "Aleksa", "Aleksic", '2019-06-10 07:00:01', "$2a$10$A7Csp98n2w.UmhQMCnIe4ujgPKbahoBX1mBt2mRJ9TpXjL2uqIA7O", b'0', "021/75223", "airline1", 0, b'1', null,1,null);
-INSERT INTO `users` values ("AirlineAdmin", 6, "Berlin", "airlineadmin2@gmail.com", b'1', "Marko", "Markovic", '2019-06-12 07:00:01', "$2a$10$/5W6j.EO7WEm.nn19HdtPezGUtW1iFEfmjdd3tLHVAAl16J6oQG2i", b'0', "021/751324", "airline2", 0, b'1', null,1,null);
-INSERT INTO `users` values ("AirlineAdmin", 7, "Moscow", "airlineadmin3@gmail.com", b'1', "Dusan", "Bulat", '2019-06-12 07:00:01', "$2a$10$wtxa0A87Q3f.iGTMemOrcuNo4fyN1Dt4mKwpkRDgOvZ6O/lCiLgki", b'0', "021/123456", "airline3", 0, b'1', null,2,null);
+INSERT INTO users (dtype, id, city, email, enabled, first_name, last_name, last_password_reset_date, password, password_changed, phone_number, username, bonus_points, verified, rent_a_car_id, airline_id, hotel_id)  VALUES 
+    ("SystemAdmin", 1, "Novi Sad", "sysadmin@gmail.com", b'1', "Lisa", "Tobias", '2019-06-10 00:00:01', "$2a$10$CCCR0ZK7vfrJsrKHKWeanuYpuchsLOaACUWIXmZFOl7Np3qAJHvX2", b'1', "021/542122", "system", 0, b'1', null,null,null),
+    ("RegisteredUser", 2, "Madrid", "user1@gmail.com", b'1', "Rocky", "Balboa", '2019-06-10 04:00:01', "$2a$10$23uC9cD//AG1wBl3UBK8eO6fmisGo00jEOSp/xFLAOeaZ6ISkQ396", b'1', "021/35353", "user1", 0, b'1', null,null,null),
+    ("RegisteredUser", 3, "Beograd", "user2@gmail.com", b'1', "Harry", "Potter", '2019-06-12 04:00:01', "$2a$10$5D0Ew/t/773X3k8We3PNWeTjC65GrhDS4uwLZEyr6MaiGU3mTTJca", b'1', "021/35353", "user2", 0, b'1', null,null,null),
+    ("RegisteredUser", 4, "New York", "user3@gmail.com", b'1', "Frodo", "Baggins", '2019-06-12 04:00:01', "$2a$10$YsngqlDx/4aI7dx2kC2jROl53qD9MIbsK6.3KBhe8eluZwKi7ayvy", b'1', "021/35353", "user3", 0, b'1', null,null,null),
+    ("AirlineAdmin", 5, "Rome", "airlineadmin1@gmail.com", b'1', "Aleksa", "Aleksic", '2019-06-10 07:00:01', "$2a$10$A7Csp98n2w.UmhQMCnIe4ujgPKbahoBX1mBt2mRJ9TpXjL2uqIA7O", b'0', "021/75223", "airline1", 0, b'1', null,1,null),
+    ("AirlineAdmin", 6, "Berlin", "airlineadmin2@gmail.com", b'1', "Marko", "Markovic", '2019-06-12 07:00:01', "$2a$10$/5W6j.EO7WEm.nn19HdtPezGUtW1iFEfmjdd3tLHVAAl16J6oQG2i", b'0', "021/751324", "airline2", 0, b'1', null,1,null),
+    ("AirlineAdmin", 7, "Moscow", "airlineadmin3@gmail.com", b'1', "Dusan", "Bulat", '2019-06-12 07:00:01', "$2a$10$wtxa0A87Q3f.iGTMemOrcuNo4fyN1Dt4mKwpkRDgOvZ6O/lCiLgki", b'0', "021/123456", "airline3", 0, b'1', null,2,null),
 
-INSERT INTO `users` values ("HotelAdmin", 8, "Belgrade", "hoteladmin1@gmail.com", b'1', "Ivana", "Pilipovic", '2019-06-10 05:00:01', "$2a$10$hoq.VzmKG5MiNP.wUkOHOuR8JtZdoiHerw/xX1KT14C..mTJUVSee", b'0', "021/314341", "hotel1", 0, b'1', null,null,1);
-INSERT INTO `users` values ("HotelAdmin", 9, "Berlin", "hoteladmin2@gmail.com", b'1', "Didier", "Drogba", '2019-06-10 05:03:15', "$2a$10$O/x6gHNlvHh6zTNJ0Nk95elgPYSNihmzyDLb8FPxmD8QQ2Z06Oe3e", b'0', "021/25353", "hotel2", 0, b'1', null,null,2);
-INSERT INTO `users` values ("HotelAdmin", 10, "Berlin", "hoteladmin3@gmail.com", b'1', "Marko", "Rakic", '2019-06-10 05:04:15', "$2a$10$SWlbuvzJbdb02CVmdzwRhOKv9q54B/DDXg.HgAq8YzGRdd.7cv2We", b'0', "021/32422", "hotel3", 0, b'1', null,null,3);
-INSERT INTO `users` values ("HotelAdmin", 11, "Berlin", "hoteladmin4@gmail.com", b'1', "Matias", "Takic", '2019-06-10 05:03:15', "$2a$10$Ef0jsgAxDS2I3M/akIF/IOQEK5BKhneympIWPTUAI3x3YWjq0O/k2", b'0', "021/53252", "hotel4", 0, b'1', null,null,4);
-INSERT INTO `users` values ("HotelAdmin", 12, "Berlin", "hoteladmin5@gmail.com", b'1', "Lidija", "Makic", '2019-06-10 06:03:15', "$2a$10$zXJpyhlLUFsufuviS.BCiuZnFXLLXF0S3dRHR6s3RMb2PdCDbXrl.", b'0', "021/76575", "hotel5", 0, b'1', null,null,5);
-INSERT INTO `users` values ("HotelAdmin", 13, "Berlin", "hoteladmin6@gmail.com", b'1', "Sonja", "Bakic", '2019-06-10 07:03:15', "$2a$10$dZicaqStkk.DRidsgioXiOzPOUEb14a6wvEkxZAoafQ6VeSTbVtE.", b'0', "021/854333", "hotel6", 0, b'1', null,null,6);
-INSERT INTO `users` values ("HotelAdmin", 14, "Moscow", "hoteladmin7@gmail.com", b'1', "Milica", "Rubio", '2019-06-10 08:10:01', "$2a$10$skmxO1NqBLCKgtW9/BkL4OrJi0R2X8Ic.C7XaQ7RuwPreZZmBMWOW", b'0', "021/315111", "hotel7", 0, b'1', null,null,7);
-INSERT INTO `users` values ("HotelAdmin", 15, "Minsk", "hoteladmin8@gmail.com", b'1', "Ksenija", "Golsky", '2019-06-10 09:04:15', "$2a$10$dWH8WqUfpISc6HfiRe0lV.rVZGqjLJWgPpOWeXhJNduq4Ve92XAGi", b'0', "021/344444", "hotel8", 0, b'1', null,null,8);
-INSERT INTO `users` values ("HotelAdmin", 16, "Tokyo", "hoteladmin9@gmail.com", b'1', "Satoshi", "Ishii", '2019-06-10 10:04:15', "$2a$10$9sTCv7/UNQweelFYr55VWecDopBNzzYmddcozht8XRnq2cFJkR6Ky", b'0', "021/612133", "hotel9", 0, b'1', null,null,1);
+    ("HotelAdmin", 8, "Belgrade", "hoteladmin1@gmail.com", b'1', "Ivana", "Pilipovic", '2019-06-10 05:00:01', "$2a$10$hoq.VzmKG5MiNP.wUkOHOuR8JtZdoiHerw/xX1KT14C..mTJUVSee", b'0', "021/314341", "hotel1", 0, b'1', null,null,1),
+    ("HotelAdmin", 9, "Berlin", "hoteladmin2@gmail.com", b'1', "Didier", "Drogba", '2019-06-10 05:03:15', "$2a$10$O/x6gHNlvHh6zTNJ0Nk95elgPYSNihmzyDLb8FPxmD8QQ2Z06Oe3e", b'0', "021/25353", "hotel2", 0, b'1', null,null,2),
+    ("HotelAdmin", 10, "Berlin", "hoteladmin3@gmail.com", b'1', "Marko", "Rakic", '2019-06-10 05:04:15', "$2a$10$SWlbuvzJbdb02CVmdzwRhOKv9q54B/DDXg.HgAq8YzGRdd.7cv2We", b'0', "021/32422", "hotel3", 0, b'1', null,null,3),
+    ("HotelAdmin", 11, "Berlin", "hoteladmin4@gmail.com", b'1', "Matias", "Takic", '2019-06-10 05:03:15', "$2a$10$Ef0jsgAxDS2I3M/akIF/IOQEK5BKhneympIWPTUAI3x3YWjq0O/k2", b'0', "021/53252", "hotel4", 0, b'1', null,null,4),
+    ("HotelAdmin", 12, "Berlin", "hoteladmin5@gmail.com", b'1', "Lidija", "Makic", '2019-06-10 06:03:15', "$2a$10$zXJpyhlLUFsufuviS.BCiuZnFXLLXF0S3dRHR6s3RMb2PdCDbXrl.", b'0', "021/76575", "hotel5", 0, b'1', null,null,5),
+    ("HotelAdmin", 13, "Berlin", "hoteladmin6@gmail.com", b'1', "Sonja", "Bakic", '2019-06-10 07:03:15', "$2a$10$dZicaqStkk.DRidsgioXiOzPOUEb14a6wvEkxZAoafQ6VeSTbVtE.", b'0', "021/854333", "hotel6", 0, b'1', null,null,6),
+    ("HotelAdmin", 14, "Moscow", "hoteladmin7@gmail.com", b'1', "Milica", "Rubio", '2019-06-10 08:10:01', "$2a$10$skmxO1NqBLCKgtW9/BkL4OrJi0R2X8Ic.C7XaQ7RuwPreZZmBMWOW", b'0', "021/315111", "hotel7", 0, b'1', null,null,7),
+    ("HotelAdmin", 15, "Minsk", "hoteladmin8@gmail.com", b'1', "Ksenija", "Golsky", '2019-06-10 09:04:15', "$2a$10$dWH8WqUfpISc6HfiRe0lV.rVZGqjLJWgPpOWeXhJNduq4Ve92XAGi", b'0', "021/344444", "hotel8", 0, b'1', null,null,8),
+    ("HotelAdmin", 16, "Tokyo", "hoteladmin9@gmail.com", b'1', "Satoshi", "Ishii", '2019-06-10 10:04:15', "$2a$10$9sTCv7/UNQweelFYr55VWecDopBNzzYmddcozht8XRnq2cFJkR6Ky", b'0', "021/612133", "hotel9", 0, b'1', null,null,1),
 
-INSERT INTO `users` values ("RentACarAdmin", 17, "London", "rentadmin1@gmail.com", b'1', "Marko", "Markovic", '2019-06-10 06:00:01', "$2a$10$4m4AQOA/SYTP0vS134NlWecvMsK9ri8lM6DHi/nMshnPwaEN4QKCO", b'0', "021/123123", "rent1", 0, b'1', 1,null,null);
-INSERT INTO `users` values ("RentACarAdmin", 18, "Sydney", "rentadmin2@gmail.com", b'1', "Jovana", "Jovic", '2019-06-15 06:00:01', "$2a$10$N.OsAXfsAL/GjeAVDbtyy.sUu0k0MJsAyvmQtEtj/Kv1GUzZVGvsO", b'0', "021/461443", "rent2", 0, b'1', 2,null,null);
-INSERT INTO `users` values ("RentACarAdmin", 19, "Melbourne", "rentadmin3@gmail.com", b'1', "Marija", "Novakovic", '2019-06-10 06:00:01', "$2a$10$bCqhROVlKCZeei8hD584qe4BRtaSlbg9DvulMI95GswwcNzdje4qO", b'0', "021/116155", "rent3", 0, b'1', 3,null,null);
-INSERT INTO `users` values ("RentACarAdmin", 20, "Barcelona", "rentadmin4@gmail.com", b'1', "Dusan", "Antic", '2019-06-10 08:06:01', "$2a$10$SPAVswzgoaaWsx7a6iO69uT19Bvs5HpY6zAkyd4Ey9Eh8SPtLkkeC", b'0', "021/351611", "rent4", 0, b'1', 4,null,null);
-INSERT INTO `users` values ("RentACarAdmin", 21, "Mallorca", "rentadmin5@gmail.com", b'1', "Borko", "Batic", '2019-06-10 07:07:01', "$2a$10$No1ac96l8WG3cc7fB1gXLensViM.sFW7aVFe3N65YY9ztRs3cbLRe", b'0', "021/13411", "rent5", 0, b'1', 1,null,null);
+    ("RentACarAdmin", 17, "London", "rentadmin1@gmail.com", b'1', "Marko", "Markovic", '2019-06-10 06:00:01', "$2a$10$4m4AQOA/SYTP0vS134NlWecvMsK9ri8lM6DHi/nMshnPwaEN4QKCO", b'0', "021/123123", "rent1", 0, b'1', 1,null,null),
+    ("RentACarAdmin", 18, "Sydney", "rentadmin2@gmail.com", b'1', "Jovana", "Jovic", '2019-06-15 06:00:01', "$2a$10$N.OsAXfsAL/GjeAVDbtyy.sUu0k0MJsAyvmQtEtj/Kv1GUzZVGvsO", b'0', "021/461443", "rent2", 0, b'1', 2,null,null),
+    ("RentACarAdmin", 19, "Melbourne", "rentadmin3@gmail.com", b'1', "Marija", "Novakovic", '2019-06-10 06:00:01', "$2a$10$bCqhROVlKCZeei8hD584qe4BRtaSlbg9DvulMI95GswwcNzdje4qO", b'0', "021/116155", "rent3", 0, b'1', 3,null,null),
+    ("RentACarAdmin", 20, "Barcelona", "rentadmin4@gmail.com", b'1', "Dusan", "Antic", '2019-06-10 08:06:01', "$2a$10$SPAVswzgoaaWsx7a6iO69uT19Bvs5HpY6zAkyd4Ey9Eh8SPtLkkeC", b'0', "021/351611", "rent4", 0, b'1', 4,null,null),
+    ("RentACarAdmin", 21, "Mallorca", "rentadmin5@gmail.com", b'1', "Borko", "Batic", '2019-06-10 07:07:01', "$2a$10$No1ac96l8WG3cc7fB1gXLensViM.sFW7aVFe3N65YY9ztRs3cbLRe", b'0', "021/13411", "rent5", 0, b'1', 1,null,null);
 
 
-INSERT INTO `user_authority` values (1, 5);
-INSERT INTO `user_authority` values (2, 1);
-INSERT INTO `user_authority` values (3, 1);
-INSERT INTO `user_authority` values (4, 1);
-INSERT INTO `user_authority` values (5, 2);
-INSERT INTO `user_authority` values (6, 2);
-INSERT INTO `user_authority` values (7, 2);
-INSERT INTO `user_authority` values (8, 3);
-INSERT INTO `user_authority` values (9, 3);
-INSERT INTO `user_authority` values (10, 3);
-INSERT INTO `user_authority` values (11, 3);
-INSERT INTO `user_authority` values (12, 3);
-INSERT INTO `user_authority` values (13, 3);
-INSERT INTO `user_authority` values (14, 3);
-INSERT INTO `user_authority` values (15, 3);
-INSERT INTO `user_authority` values (16, 3);
-INSERT INTO `user_authority` values (17, 4);
-INSERT INTO `user_authority` values (18, 4);
-INSERT INTO `user_authority` values (19, 4);
-INSERT INTO `user_authority` values (20, 4);
-INSERT INTO `user_authority` values (21, 4);
+INSERT INTO user_authority (user_id, authority_id) VALUES 
+        (1, 5),
+        (2, 1),
+        (3, 1),
+        (4, 1),
+        (5, 2),
+        (6, 2),
+        (7, 2),
+        (8, 3),
+        (9, 3),
+        (10, 3),
+        (11, 3),
+        (12, 3),
+        (13, 3),
+        (14, 3),
+        (15, 3),
+        (16, 3),
+        (17, 4),
+        (18, 4),
+        (19, 4),
+        (20, 4),
+        (21, 4);
+        
+        
+       

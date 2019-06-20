@@ -25,7 +25,7 @@ public class DestinationService {
 	}
 	
 	public Destination getDestination(int id) {
-		return destinationRepository.findOneById(id);
+		return destinationRepository.getOne(id);
 	}
 	
 	public List<Destination> getDestinations(){
