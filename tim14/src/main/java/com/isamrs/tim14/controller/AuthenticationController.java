@@ -1,12 +1,14 @@
 package com.isamrs.tim14.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,10 +47,12 @@ import com.isamrs.tim14.model.User;
 import com.isamrs.tim14.model.UserTokenState;
 import com.isamrs.tim14.model.UserType;
 import com.isamrs.tim14.model.VehicleReservation;
+import com.isamrs.tim14.model.VerificationToken;
 import com.isamrs.tim14.security.TokenUtils;
 import com.isamrs.tim14.security.auth.JwtAuthenticationRequest;
 import com.isamrs.tim14.service.CustomUserDetailsService;
 import com.isamrs.tim14.service.EmailService;
+import com.isamrs.tim14.service.VerificationTokenService;
 
 //Kontroler zaduzen za autentifikaciju korisnika
 @RestController
@@ -69,6 +73,9 @@ public class AuthenticationController {
 	
 	@Autowired
 	private UserDAO userDAO;
+	
+	@Autowired
+	private VerificationTokenService verificationService;
 	
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ResponseEntity<?> register(@RequestBody RegisteredUser user) {

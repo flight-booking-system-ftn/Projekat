@@ -75,7 +75,7 @@ public class AirlineService {
 				if(destination.getName().equals(airline.getDestination().getName()) && destination.getAddress().equals(airline.getDestination().getAddress()) && destination.getCountry().equals(airline.getDestination().getCountry())
 						&& !airline.getDestination().getName().equals(user.getAirline().getDestination().getName()) && !airline.getDestination().getCountry().equals(user.getAirline().getDestination().getCountry()) && !airline.getDestination().getAddress().equals(user.getAirline().getDestination().getAddress())) {
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -86,7 +86,7 @@ public class AirlineService {
 			
 			if(result != null) {
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -108,7 +108,7 @@ public class AirlineService {
 		managedAirline.setDescription(airline.getDescription());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

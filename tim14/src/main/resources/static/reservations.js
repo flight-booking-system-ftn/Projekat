@@ -9,47 +9,69 @@ $(document).ready(function(){
 			headers: createAuthorizationTokenHeader()}, function(data){
           	renderRoomReservations(data);
 			});
+	 
+	 $.get({url:'/api/allFlightReservations',
+		 headers: createAuthorizationTokenHeader()}, function(data){
+			 renderFlightReservations(data);
+		 });
 
 	 $(document).on('click','table button',function(e){
 		    if(e.target.id.startsWith("reservationCancelBtn")){
 		        var id = e.target.id.substr(20);
 		        $.ajax({
-				type: 'DELETE',
-				url: '/api/cancelVehicleReservation/'+id,
-				headers: createAuthorizationTokenHeader(),
-				success: function(){
-					showMessage('Vehicle reservation successfully removed!', 'green');
-					//$(location).attr('href',"/registeredUser.html");
-				},
-				error: function (jqXHR, exception) {
-					if (jqXHR.status == 401) {
-						showMessage('Login first!', "orange");
-					}else{
-						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					type: 'DELETE',
+					url: '/api/cancelVehicleReservation/'+id,
+					headers: createAuthorizationTokenHeader(),
+					success: function(){
+						showMessage('Vehicle reservation successfully removed!', 'green');
+						//$(location).attr('href',"/registeredUser.html");
+					},
+					error: function (jqXHR, exception) {
+						if (jqXHR.status == 401) {
+							showMessage('Login first!', "orange");
+						}else{
+							showMessage('[' + jqXHR.status + "]  " + exception, "red");
+							}
 						}
-					}
 		        });
 		    } else if(e.target.id.startsWith("roomReservationCancelBtn")){
 		        var id = e.target.id.substr(24);
 		        $.ajax({
-				type: 'DELETE',
-				url: '/api/cancelRoomReservation/'+id,
-				headers: createAuthorizationTokenHeader(),
-				success: function(){
-					showMessage('Room reservation successfully removed!', 'green');
-					//$(location).attr('href',"/registeredUser.html");
-				},
-				error: function (jqXHR, exception) {
-					if (jqXHR.status == 401) {
-						showMessage('Login first!', "orange");
-					}else{
-						showMessage('[' + jqXHR.status + "]  " + exception, "red");
+					type: 'DELETE',
+					url: '/api/cancelRoomReservation/'+id,
+					headers: createAuthorizationTokenHeader(),
+					success: function(){
+						showMessage('Room reservation successfully removed!', 'green');
+						//$(location).attr('href',"/registeredUser.html");
+					},
+					error: function (jqXHR, exception) {
+						if (jqXHR.status == 401) {
+							showMessage('Login first!', "orange");
+						}else{
+							showMessage('[' + jqXHR.status + "]  " + exception, "red");
+						}
 					}
-				}
-			});
-		   }
-	 })
-})
+				});
+			 } else if(e.target.id.startsWith("flightReservationCancelBtn")){
+				 var id = parseInt(e.target.id.substr(26));
+			        $.ajax({
+					type: 'DELETE',
+					url: '/api/cancelFlightReservation/'+id,
+					headers: createAuthorizationTokenHeader(),
+					success: function(){
+						showMessage('Flight reservation successfully removed!', 'green');
+					},
+					error: function (jqXHR, exception) {
+						if (jqXHR.status == 401) {
+							showMessage('Login first!', "orange");
+						}else{
+							showMessage('[' + jqXHR.status + "]  " + exception, "red");
+						}
+					}
+		        });
+		 }
+	 });
+});
 
 var renderVehicleReservations = function(reservations){
 	$('#vehicleReservationsTable').html(`<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Price</th><th>Start Destination</th><th>End Destination</th><th>Rent-a-car</th><th></th></tr>`);
@@ -76,11 +98,14 @@ var renderVehicleReservations = function(reservations){
         
         }*/
         buttonID = "reservationCancelBtn"+ red.id;
-        cancel = "<button id='"+buttonID+"'>Cancel reservation</button>";
+        if((new Date(red.flight.departureDate) - new Date())/24/60/1000 < 48)
+    		cancel = "";
+    	else
+    		cancel = "<button id='"+buttonID+"'>Cancel reservation</button>";
         $('#vehicleReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${cars}</td><td>${motocycles}</td><td>${price}</td><td>${red.vehicles[0].branchOffice.destination.name}</td><td>${red.endBranchOffice.destination.name}</td>
         <td>${red.rentACar.name}</td><td>${cancel}</td></tr>`);
         }
-};
+}
 
 var renderRoomReservations = function(reservations){
 	 $('#roomReservationsTable').html(`<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Price</th><th>Hotel</th><th></th></tr>`);
@@ -100,15 +125,36 @@ var renderRoomReservations = function(reservations){
    	}
    }
    buttonID = "roomReservationCancelBtn"+ red.id;
-   cancel = "<button id='"+buttonID+"'>Cancel reservation</button>";
+   if((new Date(red.flight.departureDate) - new Date())/24/60/1000 < 48)
+		cancel = "";
+	else
+		cancel = "<button id='"+buttonID+"'>Cancel reservation</button>";
    $('#roomReservationsTable tr:last').after(`<tr><td>${displayDateFormat(red.start)}</td><td>${displayDateFormat(red.end)}</td><td>${bed2}</td><td>${bed3}</td><td>${bed4}</td><td>${red.price}</td><td>${red.hotel.name}</td>
    <td>${cancel}</td></tr>`);
    }
 }
 
-function displayDateFormat(date){
-	myDate=date.split("-");
-	return [myDate[2], myDate[1], myDate[0]].join('/');
+var renderFlightReservations = function(reservations){
+	$('#flightReservationsTable').html(`<tr><th>Departure Date</th><th>Arrival Date</th><th>From</th><th>To</th><th>Price</th><th>Airline</th><th></th></tr>`);
+	for(var i=0;i<reservations.length;i++){
+		var red = reservations[i];
+		var from = red.flight.from.name + " (" + red.flight.from.destination.name + ")";
+		var to = red.flight.to.name + " (" + red.flight.to.destination.name + ")";
+		buttonID = "flightReservationCancelBtn"+ red.id;
+		var cancel;
+		if((new Date(red.flight.departureDate) - new Date())/24/60/1000 < 3)
+			cancel = "";
+		else
+			cancel = "<button id='"+buttonID+"'>Cancel reservation</button>";
+		$('#flightReservationsTable tr:last').after(`<tr><td>${formatDateDet(new Date(red.flight.departureDate))}</td><td>${formatDateDet(new Date(red.flight.arrivalDate))}</td><td>${from}</td><td>${to}</td><td>${red.price}</td><td>${red.flight.airline.name}</td>
+		<td>${cancel}</td></tr>`);
+	}
+}
+
+var options = { weekday: "short", year: "numeric", month: "short", day: "numeric" };
+
+function formatDateDet(date) {
+	return date.toLocaleDateString("en", options) + " " + (date.getHours() < 10 ? "0" + (date.getHours()) : date.getHours()) + ":" + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
 }
 
 function addDays(date, days) {

@@ -79,6 +79,7 @@ public class FlightReservation {
 	public FlightReservation() {
 		super();
 		this.quick = false;
+
 	}
 
 	public Integer getId() {

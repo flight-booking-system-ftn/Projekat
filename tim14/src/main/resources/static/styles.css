@@ -407,16 +407,7 @@ div.seatDivForReservation:hover, div.seatDivForEdit:hover {
 	border-top: none;
 }
 
-#friends, #reservationsDiv {
-	background-color: rgba(0, 0, 0, 0.8);
-	padding: 30px;
-	border-radius: 10px;
-	/* float: right; */
-	position: fixed;
-	top: 0px;
-	right: 0px;
-	color: white !important;
-}
+
 
 p#searchMessage, p#requestsMessage {
 	text-align: center;

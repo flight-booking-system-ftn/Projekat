@@ -27,11 +27,14 @@
 		</div>
 		
 		<div class="menuDiv" style="height:35px;">
-			<button id="allReservationsBtn">Reservations</button>
 			<button id="allFlightsBtn">History of flights</button>
 			<button id="allRoomsBtn">History of rooms</button>
 			<button id="allVehiclesBtn">History of vehicles</button>
 			<button style="float: right; margin-right:210px; width:370px;" id="showReservationBtn">Show reservation</button>
+		</div>
+		<div class="menuDiv" style="height:35px;">
+			<button id="allReservationsBtn">Reservations</button>
+			<button id="friendListViewID">Friend view</button>
 		</div>
 		
 		<div id="dialogProfile" class="dialog">
@@ -135,6 +138,9 @@
 								<tbody>
 								</tbody>
 							</table>
+							<br>
+							<br>
+							<br>
 						</div>
 		
 						<div id="inviteFriendsContent" class="tabcontent">
@@ -161,9 +167,11 @@
 								<tr><td></td> <td><input type="button" id="nextPassenger" value="Next"></td></tr>
 							</table>
 						</div>
-						
+						<br>
 						<input type="button" id="makeFlightReservation" value="Add to current reservations" disabled="disabled">
+						<br><br><br>
 					</div>
+					<br><br><br>
 				</div>
 				
 				<br>
@@ -176,7 +184,9 @@
 					<tbody>
 					</tbody>
 				</table>
+				<br>
 	            <button id="saveTickets">Save tickets</button> <button id="quitDialogAirlineView">Close</button>
+	            <br>
 	        </div>
 	    </div>
 		
@@ -339,23 +349,59 @@
 				<table id="quickVehicleReservationsTable">
 					<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Original price</th><th>Discount (%)</th><th>Start Destination</th><th>End Destination</th><th></th></tr>
 				</table>
+				<br>
 				<button id="makeRentReservationBtn" disabled="disabled">Add to reservation list</button>
 	            <button id="quitDialogRentView">Close</button>
+	            <br>
 	        </div>
 		</div>
 		
-		<div id="friends">
-	    	<h1 style="color: white;">Search users</h1>
-	    	<br><br>
-	    	<input type="text" id="searchUsersInput" placeholder="Search"> &nbsp; &nbsp; <button id="searchUsersButton">Search</button>
-	    	<br><br>
-	    	<p id="searchMessage">No search results.</p>
-	    	<br>
-	    	<hr>
-	    	<h1 style="color: white;">Friendship requests</h1>
-	    	<br><br>
-	    	<p id="requestsMessage">No friendship requests.</p>
-	    </div>
+		
+		<div id="friendsDialog" class="dialog">
+	        <div class="dialogContent">
+				<div id="friends">
+			    	<h1 style="color: white;">Search users</h1>
+			    	<br><br>
+			    	<input type="text" id="searchUsersInput" placeholder="Search"> &nbsp; &nbsp; <button id="searchUsersButton">Search</button>
+			    	<br><br>
+			    	<p id="searchMessage">No search results.</p>
+			    	<br>
+			    	<hr>
+			    	<h1 style="color: white;">Friendship requests</h1>
+			    	<br><br>
+			    	<p id="requestsMessage">No friendship requests.</p>
+			    </div>
+			    <br>
+			    <button id="cancelFriendDialog">Back</button>
+			    <br><br>
+			</div>
+		</div>
+		
+		<div id="reservationsDialogK" class="dialog">
+	        <div class="dialogContent">
+				<div>
+					<h1>Vehicle reservations</h1>
+						<table id="vehicleReservationsTable">
+									<tr><th>Start Date</th><th>End Date</th><th>Cars</th><th>Motocycles</th><th>Price</th><th>Start Destination</th><th>End Destination</th><th>Rent-a-car</th><th></th></tr>
+						</table>
+				</div>
+				<div>
+					<h1>Hotel reservations</h1>
+						<table id="roomReservationsTable">
+									<tr><th>Arrival Date</th><th>Departure Date</th><th>2 bed rooms</th><th>3 bed rooms</th><th>4 bed rooms</th><th>Price</th><th>Hotel</th><th></th></tr>
+						</table>
+				</div>
+				<div>
+					<h1>Flight reservations</h1>
+					<table id="flightReservationsTable">
+								<tr><th>Departure Date</th><th>Arrival Date</th><th>From</th><th>To</th><th>Price</th><th>Airline</th><th></th></tr>
+					</table>
+				</div>
+				<br><br>
+				<button id="cancelReservationsDivBtnForceR">Back</button>
+				<br><br>
+			</div>
+		</div>
 	    
 	    <div id="reservationsDiv" class="dialog">
 	        <div class="dialogContent">
@@ -395,6 +441,8 @@
 		    	<br><br>
 		    	<button id="saveReservations">Save reservations</button>
 		    	<button id="quitViewReservationBtn">Close</button>
+		    	<br>
+		    	<br><br>
 	        </div>
 	    </div>
 	    

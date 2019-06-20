@@ -60,7 +60,7 @@ public class RentService {
 		return rentACarRepository.getOne(id);
 	}
 	
-	public List<RentACar> getRentSearch(String rentName, String rentDestination, Long checkIn, Long checkOut) {
+	public List<RentACar> getRentSearch(String rentName, String rentDestination, long checkIn, long checkOut) {
 		if(rentName.equals("NO_INPUT")) {
 			rentName = "";
 		}
@@ -68,7 +68,8 @@ public class RentService {
 			rentDestination = "";
 		}
 		
-		List<RentACar> result1 = rentACarRepository.findByNameContaining(rentName);
+		List<RentACar> result1 = rentACarRepository.findRentByNameContain(rentName);
+		System.out.println(result1.size());
 		List<RentACar> result = new ArrayList<RentACar>();
 		if (!rentDestination.equals("")) {
 			for (RentACar r : result1) {
@@ -87,15 +88,16 @@ public class RentService {
 		boolean check = true;
 		Date arrivalDate = new Date(checkIn);
 		Date departureDate = new Date(checkOut);
-
+		System.out.println(" ---> " + result.size());
 		for (RentACar rent : result) {
 			vehicles.clear();
 			for (Vehicle vehicle : rent.getVehicles()) {
 				check = true;
 				for (VehicleReservation reservation : vehicle.getReservations()) {
-					if (!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)
-							&& reservation.getRegisteredUser() != null) {
-						check = false;
+					if (!reservation.getEnd().before(arrivalDate) && !reservation.getStart().after(departureDate)) {
+						if(reservation.getRegisteredUser() != null) {
+							check = false;
+						}
 					}
 				}
 				if (check) {
@@ -107,7 +109,7 @@ public class RentService {
 				fullResult.add(rent);
 			}
 		}
-
+		System.out.println(">>>>    " + fullResult.size());
 		return fullResult;
 	}
 	
@@ -179,7 +181,7 @@ public class RentService {
 		RentACar result = rentACarRepository.findOneByName(rent.getName());
 		if (result != null && !rent.getName().equals(r.getRentACar().getName())) {
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -193,7 +195,7 @@ public class RentService {
 		managedRent.setName(rent.getName());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
