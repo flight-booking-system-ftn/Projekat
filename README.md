@@ -17,5 +17,5 @@ Unutar MySQL Workbench-a potrebno je kreirati korisnika sa korisničkim imenom `
 
 Aplikacija se pokreće pokretanjem fajla /tim14/src/main/java/com/isamrs/tim14/Tim14Application.java unutar Eclipse razvojnog okruženja. U browser-u je potrebno uneti sledeći link: http://localhost:5000/
 
-## Pokretanje aplikacije koja se nalazi n Heroku
+## Pokretanje aplikacije koja se nalazi na Heroku
 Potrebno je otići na sledeći link: [Booking software](https://tim14ftn.herokuapp.com/)
