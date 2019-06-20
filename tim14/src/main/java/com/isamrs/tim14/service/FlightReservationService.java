@@ -27,6 +27,7 @@ import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Seat;
 import com.isamrs.tim14.repository.IFlightReservationRepository;
 import com.isamrs.tim14.repository.ISeatRepository;
+import com.isamrs.tim14.repository.IUserRepository;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
@@ -39,35 +40,50 @@ public class FlightReservationService {
 	private ISeatRepository seatRepository;
 	
 	@Autowired
+	private IUserRepository userRepository;
+	
+	@Autowired
 	private EmailService mailService;
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public void saveReservation(List<FlightReservation> reservations) {
+		Integer[] seats = new Integer[reservations.size()];
+		for(int i = 0; i < reservations.size(); i++)
+			seats[i] = reservations.get(i).getSeat().getId();
+		
+		List<Seat> seatsInReservations = seatRepository.findAllSeats(seats);
+		
 		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		reservations.get(0).setUser(user);
+		RegisteredUser managedUser = userRepository.findOneById(user.getId());
+		
+		reservations.get(0).setUser(managedUser);
 		reservations.get(0).setPassportNumber("123456789");
 		
-		for(FlightReservation reservation : reservations) {
-			Seat managedSeat = seatRepository.findOneById(reservation.getSeat().getId());
-			managedSeat.setBusy(true);
+		int bonusPoints = 0;
+		
+		for(int i = 0; i < reservations.size(); i++) {
+			if(flightReservationRepository.findOneBySeat(reservations.get(i).getSeat().getId()) != null)
+				throw new PessimisticLockException();
 			
-			int bonusPoints = user.getBonusPoints() + reservation.getFlight().getFlightLength()/25;
-			user.setBonusPoints(bonusPoints);
-			reservation.setUserWhoReserved(user);
+			seatsInReservations.get(i).setBusy(true);
 			
-			flightReservationRepository.save(reservation);
+			bonusPoints += reservations.get(i).getFlight().getFlightLength() / 25;
+			reservations.get(i).setUserWhoReserved(managedUser);
 			
-			if(reservation.getUser() != null && reservation.getUser().getId() != user.getId())
+			flightReservationRepository.save(reservations.get(i));
+			
+			if(reservations.get(i).getUser() != null && reservations.get(i).getUser().getId() != managedUser.getId())
 				try {
-					String message = "User " + reservations.get(0).getUser().getEmail() + " inviting you to the flight.";
-					message += "Flight informations:\n";
-					message += reservation.getFlight().getFrom().getDestination().getName() + " --> " + reservation.getFlight().getTo().getDestination().getName() + "\n";
-					message += "Departure: " + reservation.getFlight().getDepartureDate() + "\n";
-					message += "Arrival: " + reservation.getFlight().getArrivalDate() + "\n";
-					message += "Duration: " + reservation.getFlight().getFlightDuration();
-					message += "\n\nAccept invitation: http://localhost:5000/api/flightReservation/acceptInvitation/" + reservation.getId() + ".\nDecline invitation: http://localhost:5000/api/flightReservation/declineInvitation/" + reservation.getId();
+					String message = "User " + reservations.get(0).getUser().getFirstName() + " " + reservations.get(0).getUser().getLastName() + " inviting you to the flight.\n";
+					message += "Flight informations:\n\n";
+					message += "Start destination: " + reservations.get(i).getFlight().getFrom().getDestination().getName() + ", " + reservations.get(i).getFlight().getFrom().getDestination().getCountry() + " (" + reservations.get(i).getFlight().getFrom().getName() + ")\n";
+					message += "End destination: " + reservations.get(i).getFlight().getTo().getDestination().getName() + ", " + reservations.get(i).getFlight().getTo().getDestination().getCountry() + " (" + reservations.get(i).getFlight().getTo().getName() + ")\n";
+					message += "Departure: " + reservations.get(i).getFlight().getDepartureDate() + "\n";
+					message += "Arrival: " + reservations.get(i).getFlight().getArrivalDate() + "\n";
+					message += "Duration: " + reservations.get(i).getFlight().getFlightDuration() + "h\n\n";
+					message += "Accept invitation: http://localhost:5000/api/flightReservation/acceptInvitation/" + reservations.get(i).getId() + ".\nDecline invitation: http://localhost:5000/api/flightReservation/declineInvitation/" + reservations.get(i).getId();
 					
-					mailService.sendNotificaitionAsync(reservation.getUser(), "Invitation on flight", message);
+					mailService.sendNotificaitionAsync(reservations.get(i).getUser(), "Invitation on flight", message);
 				} catch (MailException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -76,6 +92,8 @@ public class FlightReservationService {
 					e.printStackTrace();
 				}
 		}
+		
+		managedUser.setBonusPoints(managedUser.getBonusPoints() + bonusPoints);
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
@@ -96,6 +114,7 @@ public class FlightReservationService {
 	public void buyQuickTicket(FlightReservation flightReservation) {
 		FlightReservation reservation = flightReservationRepository.findOneById(flightReservation.getId());
 		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		RegisteredUser managedUser = userRepository.findOneById(user.getId());
 		
 		reservation.setPassportNumber("123456789");
 		reservation.setUser(user);
@@ -103,6 +122,8 @@ public class FlightReservationService {
 		reservation.setDateOfPurchase(new Timestamp(new Date().getTime()));
 		reservation.setRoomReservation(flightReservation.getRoomReservation());
 		reservation.setVehicleReservation(flightReservation.getVehicleReservation());
+		
+		managedUser.setBonusPoints(managedUser.getBonusPoints() + reservation.getFlight().getFlightLength() / 25);
 	}
 	
 	public FlightReservation getQuickReservation(Integer reservationID) {

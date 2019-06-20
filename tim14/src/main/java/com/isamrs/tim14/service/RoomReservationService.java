@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.OptimisticLockException;
@@ -43,13 +45,34 @@ public class RoomReservationService {
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public RoomReservation save(RoomReservation roomReservation) {
+		Integer[] rooms = new Integer[roomReservation.getRooms().size()];
+		
+		Iterator<Room> iterator = roomReservation.getRooms().iterator();
+		
+		int i = 0;
+		while(iterator.hasNext()) {
+			Room room = iterator.next();
+			
+			rooms[i] = room.getId();
+			i++;
+		}
+		
+		List<Room> roomsInReservations = roomRepository.findAllRooms(rooms);
+		
 		Hotel managedHotel = hotelRepository.findOneById(roomReservation.getHotel().getId());
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
 		if(user instanceof RegisteredUser) {
 			RegisteredUser registered = (RegisteredUser) user;
 			roomReservation.setRegisteredUser(registered);
 		}else {
 			roomReservation.setRegisteredUser(null);
+		}
+		
+		for(Room room : roomReservation.getRooms()) {
+			if(roomReservationRepository.getReservation(room.getId(), roomReservation.getStart(), roomReservation.getEnd()) != null) {
+				throw new PessimisticLockException();
+			}
 		}
 		
 		roomReservationRepository.save(roomReservation);
@@ -60,9 +83,8 @@ public class RoomReservationService {
 			registered.getRoomReservations().add(roomReservation);
 		}
 		
-		for(Room r : roomReservation.getRooms()) {
-			Room managedRoomEntity = roomRepository.findOneById(r.getId());
-			managedRoomEntity.getReservations().add(roomReservation);
+		for(Room r : roomsInReservations) {
+			r.getReservations().add(roomReservation);
 		}
 		
 		return roomReservation;

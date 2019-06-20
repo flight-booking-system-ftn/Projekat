@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.OptimisticLockException;
@@ -44,33 +45,46 @@ public class VehicleReservationService {
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public VehicleReservation save(VehicleReservation vehicleReservation) {
+		Integer[] vehicles = new Integer[vehicleReservation.getVehicles().size()];
+		
+		Iterator<Vehicle> iterator = vehicleReservation.getVehicles().iterator();
+		
+		int i = 0;
+		while(iterator.hasNext()) {
+			Vehicle vehicle = iterator.next();
+			
+			vehicles[i] = vehicle.getId();
+			i++;
+		}
+		
+		List<Vehicle> vehiclesInReservations = vehicleRepository.findAllVehicles(vehicles);
+		
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (vehicleReservation.getRentACar().getReservations() == null) {
-			vehicleReservation.getRentACar().setReservations(new HashSet<VehicleReservation>());
-		}
-
-		vehicleReservation.getRentACar().getReservations().add(vehicleReservation);
 		if (user instanceof RegisteredUser) {
 			RegisteredUser registered = (RegisteredUser) user;
-
-			if (registered.getVehicleReservations() == null)
-				registered.setVehicleReservations(new HashSet<VehicleReservation>());
-
-			registered.getVehicleReservations().add(vehicleReservation);
 			vehicleReservation.setRegisteredUser(registered);
 		} else
 			vehicleReservation.setRegisteredUser(null);
 
+		for(Vehicle vehicle : vehicleReservation.getVehicles()) {
+			if(vehicleReservationRepository.getReservation(vehicle.getId(), vehicleReservation.getStart(), vehicleReservation.getEnd()) != null) {
+				throw new PessimisticLockException();
+			}
+		}
+		
 		vehicleReservationRepository.save(vehicleReservation);
+		
+		if(user instanceof RegisteredUser) {
+			RegisteredUser registered = (RegisteredUser) user;
+			registered.getVehicleReservations().add(vehicleReservation);
+		}
+		
+		RentACar managedRent = rentACarRepository.getOne(vehicleReservation.getRentACar().getId());
+		managedRent.getReservations().add(vehicleReservation);
 
-		for (Vehicle v : vehicleReservation.getVehicles()) {
-			Vehicle managedvehicleEntity = vehicleRepository.findOneById(v.getId());
-
-			if (managedvehicleEntity.getReservations() == null)
-				managedvehicleEntity.setReservations(new HashSet<VehicleReservation>());
-
-			managedvehicleEntity.getReservations().add(vehicleReservation);
+		for (Vehicle v : vehiclesInReservations) {
+			v.getReservations().add(vehicleReservation);
 		}
 
 		return vehicleReservation;

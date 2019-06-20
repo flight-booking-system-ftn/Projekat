@@ -18,4 +18,7 @@ public interface IFlightReservationRepository extends JpaRepository<FlightReserv
 	@Lock(LockModeType.OPTIMISTIC)
 	FlightReservation findOneById(Integer id);
 	
+	@Query(value = "select * from flight_reservation fr where fr.seat_id = ?1", nativeQuery = true)
+	FlightReservation findOneBySeat(Integer id);
+	
 }
