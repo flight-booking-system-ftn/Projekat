@@ -403,15 +403,32 @@ INSERT INTO branch_office (id, destination_id, rent_a_car_id, name) VALUES
         (10,28,5, "Branch 10"), 
         (11,34,6, "Branch 11");
 
-INSERT INTO vehicle (id, brand, model, price, production_year, seats_number, type, branch_office_id, rent_a_car_id) VALUES 
-        (1, "BMW", "X5", 100, 2005, 4, "CAR", 1, 1),  
-        (2, "Audi", "A7", 200, 2006, 4, "CAR", 2, 1),  
-        (3, "Porsche", "Cayenne", 200, 2010, 4, "CAR", 2, 1),  
-        (4, "Volkswagen", "Golf 6", 90, 2015, 4, "CAR", 3, 1),  
-        (5, "Porsche", "Panamera", 170, 2009, 4, "CAR", 4, 2),
-        (6, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 5, 2),
-        (7, "Harley Davidson", "Iron 883", 170, 2019, 1, "MOTOCYCLE", 4, 2),
-        (8, "Yamaha", "N MAX 125", 70, 2015, 2, "MOTOCYCLE", 1, 1);
+
+INSERT INTO vehicle (id, brand, model, price, production_year, seats_number, type, branch_office_id, rent_a_car_id) VALUES
+		(1, "BMW", "X5", 100, 2005, 4, "CAR", 1, 1),
+		(2, "Audi", "A7", 200, 2006, 4, "CAR", 1, 1),
+		(3, "Porsche", "Cayenne", 200, 2010, 4, "CAR", 2, 1),
+		(4, "Volkswagen", "Golf 6", 90, 2015, 4, "CAR", 2, 1),
+		(5, "Porsche", "Panamera", 170, 2009, 4, "CAR", 3, 2),
+		(6, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 3, 2),
+		(7, "Harley Davidson", "Iron 883", 170, 2019, 1, "MOTOCYCLE", 4, 2),
+		(8, "Yamaha", "N MAX 125", 70, 2015, 2, "MOTOCYCLE", 2, 1),
+		(9, "Citroen", "C5", 100, 2005, 4, "CAR", 5, 3),
+		(10, "Citroen", "C4", 200, 2006, 4, "CAR", 5, 3),
+		(11, "Fiat", "Punto", 200, 2010, 4, "CAR", 6, 3),
+		(12, "BMW", "i8", 90, 2015, 4, "CAR", 8, 4),
+		(13, "Porsche", "Panamera", 170, 2013, 4, "CAR", 7, 4),
+		(14, "Porsche", "Targa 4S", 260, 2017, 4, "CAR", 7, 4),
+		(15, "Yamaha", "R6", 170, 2019, 1, "MOTOCYCLE", 8, 4),
+		(16, "Yamaha", "R1", 100, 2015, 2, "MOTOCYCLE", 6, 3),
+		(17, "Audi", "R8", 100, 2018, 4, "CAR", 9, 5),
+		(18, "Audi", "A7", 200, 2016, 4, "CAR", 9, 5),
+		(19, "Fiat", "Bravo", 100, 2008, 4, "CAR", 9, 5),
+		(20, "Opel", "Corsa", 90, 2006, 4, "CAR", 10, 5),
+		(21, "Opel", "Antara", 170, 2009, 4, "CAR", 11, 6),
+		(22, "Honda", "CR-V", 260, 2017, 4, "CAR", 11, 6),
+		(23, "Honda", "Activa 5G", 100, 2019, 2, "MOTOCYCLE", 11, 6),
+		(24, "Honda", "Dio", 70, 2015, 2, "MOTOCYCLE", 10, 5);
 
 INSERT INTO users (dtype, id, city, email, enabled, first_name, last_name, last_password_reset_date, password, password_changed, phone_number, username, bonus_points, verified, rent_a_car_id, airline_id, hotel_id)  VALUES 
     ("SystemAdmin", 1, "Novi Sad", "sysadmin@gmail.com", b'1', "Lisa", "Tobias", '2019-06-10 00:00:01', "$2a$10$CCCR0ZK7vfrJsrKHKWeanuYpuchsLOaACUWIXmZFOl7Np3qAJHvX2", b'1', "021/542122", "system", 0, b'1', null,null,null),

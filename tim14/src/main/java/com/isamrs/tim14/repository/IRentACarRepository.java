@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.isamrs.tim14.model.BranchOffice;
+import com.isamrs.tim14.model.Hotel;
 import com.isamrs.tim14.model.RentACar;
 
 @RepositoryRestResource(path = "rentacars")
@@ -25,5 +26,8 @@ public interface IRentACarRepository extends JpaRepository<RentACar, Integer>{
 	
 	@Lock(LockModeType.OPTIMISTIC)
 	RentACar findOneById(Integer id);
+	
+	@Query(value = "select * from rent_a_car r where r.name like %?1%", nativeQuery = true)
+	List<RentACar> findRentByNameContain(String name);
 	
 }
