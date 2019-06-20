@@ -111,20 +111,10 @@ public class AuthenticationController {
 		ru.setVehicleReservations(new HashSet<VehicleReservation>());
 		ru.setVerified(false);
 		userDetailsService.saveUser(ru);
-		
-		String token = UUID.randomUUID().toString();
-		VerificationToken verToken = new VerificationToken();
-		verToken.setId(null);
-		verToken.setToken(token);
-		verToken.setUser(user);
-		
 		try {
-			String message = "Confirm your registration on this link: \nhttp://localhost:5000/auth/confirm/" + verToken.getToken();
-			mailService.sendNotificaitionAsyncRegist(ru, "Confirmation of registration", message);
+			mailService.sendNotificaitionAsyncRegistration(ru);
 		} catch (MailException | InterruptedException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			
 		}
 		return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 	}
@@ -285,9 +275,9 @@ public class AuthenticationController {
 		String redirectionURL = "#";
 		
 		if (user instanceof RegisteredUser) {
-//			if(!((RegisteredUser) user).isVerified()) {
-//				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
-//			}
+			if(!((RegisteredUser) user).isVerified()) {
+				return new ResponseEntity<String>("verification",HttpStatus.NOT_ACCEPTABLE);
+			}
 			ut = UserType.ROLE_REGISTEREDUSER;
 			redirectionURL = "registeredUser.html";
 			}
