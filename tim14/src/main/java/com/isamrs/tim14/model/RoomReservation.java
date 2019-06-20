@@ -69,6 +69,7 @@ public class RoomReservation {
 		this.registeredUser = new RegisteredUser();
 		this.hotel = new Hotel();
 		this.quick = false;
+
 	}
 	
 	public Date getStart() {

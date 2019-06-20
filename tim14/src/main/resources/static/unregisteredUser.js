@@ -189,7 +189,7 @@ $(document).ready(function(){
         if(minPrice > maxPrice){
         	showMessage('Minimum price cannot be greater than maximum price!', 'orange');
         }
-	    renderVehicleTableMainView(rentName, destination, start, end, name, cars, motocycles, minPrice, maxPrice);
+	    renderVehicleTableMainView(rentName, destination, start, end, name, cars, motocycles, minPrice, maxPrice, parseInt($('#vehicleSearchDayNumberFullSearch').val()));
     });
     
     
@@ -237,7 +237,7 @@ $(document).ready(function(){
         	showMessage('Minimum price cannot be greater than maximum price!', 'orange');
         }
         
-        renderRoomTableMainView(hotelName, destination, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, minPrice, maxPrice);
+        renderRoomTableMainView(hotelName, destination, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, minPrice, maxPrice, parseInt($('#roomSearchDayNumberFullSearch').val()));
     });
     
     
@@ -466,24 +466,116 @@ var renderHotelServiceTable = function(hotelId){
 
 var renderRoomTable = function(hotelId, arrivalDate, departureDate, TwoBedRooms, ThreeBedRooms, FourBedRooms, numDays){
     var text = `/${hotelId}/${arrivalDate}/${departureDate}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}`;
+    numDays++;
     $.get('/api/roomsSearch'+text, function(RoomData){
 		var rooms = RoomData;
 		$('#selectedHotelRoomsTable').html(`<tr><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Full price</th></tr>`);
 		for(var i=0;i<rooms.length;i++){
 			var red = rooms[i];
-			$('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price*numDays}</td></tr>`);
+			
+			var grade = 0;
+	        var sum = 0;
+	        for(var j=0;j<red.grades.length;j++){
+	        	sum += red.grades[j].grade;
+	        }
+	        if(red.grades.length!=0){
+	        	grade = sum/red.grades.length;
+	        }
+	        
+	        var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul id="${red.id}Rent">
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div><section>`
+	        	
+			$('#selectedHotelRoomsTable tr:last').after(`<tr><td>${red.floor}</td><td>${red.bedNumber}</td><td>${forGrade}</td><td>${red.price*numDays}</td></tr>`);
+	        
+	        var j = 0;
+	        var onStar = grade;
+	    	var stars = $('.li.star');
+	    	$("#"+red.id+"Rent li").each(function() {
+	    		$(this).removeClass('selected');
+	   		})  
+	    	$("#"+red.id+"Rent li").each(function() {
+	    		if(j<onStar){
+	    			$(this).addClass('selected');
+	    			j++;
+	    		}
+	    		else
+	    			return false;
+	    	})
 		}
 	});
 }
 
-var renderRoomTableMainView = function(hotelName, destination, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, minPrice, maxPrice){
+var renderRoomTableMainView = function(hotelName, destination, start, end, TwoBedRooms, ThreeBedRooms, FourBedRooms, minPrice, maxPrice, numberOfDays){
     var text = `/${hotelName}/${destination}/${start}/${end}/${TwoBedRooms}/${ThreeBedRooms}/${FourBedRooms}/${minPrice}/${maxPrice}`;
+    numberOfDays++;
     $.get('/api/allRoomsSearch'+text, function(RoomData){
 		var rooms = RoomData;
 		$('#selectedHotelRoomsTableFullSearch').html(`<tr><td>Hotel</td><td>City</td><th>Floor number</th><th>Number of beds</th><th>Grade</th><th>Price</th></tr>`);
 		for(var i=0;i<rooms.length;i++){
 			var red = rooms[i];
-			$('#selectedHotelRoomsTableFullSearch tr:last').after(`<tr><td>${red.hotel.name}</td><td>${red.hotel.destination.name}</td><td>${red.floor}</td><td>${red.bedNumber}</td><td>-</td><td>${red.price}</td></tr>`);
+			var grade = 0;
+	        var sum = 0;
+	        for(var j=0;j<red.grades.length;j++){
+	        	sum += red.grades[j].grade;
+	        }
+	        if(red.grades.length!=0){
+	        	grade = sum/red.grades.length;
+	        }
+	        
+	        var forGrade = `<section class='rating-widget'>
+				<div class='rating-stars text-center' style="float:left">
+				  <ul id="${red.id}Rent">
+				      <li class='star' title='Poor' data-value='1'>
+	    			  	<i class='fa fa-star fa-fw'></i>
+		   			 </li>
+		     		 <li class='star' title='Fair' data-value='2'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Good' data-value='3'>
+		       			<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		     		 <li class='star' title='Excellent' data-value='4'>
+		        		<i class='fa fa-star fa-fw'></i>
+		      		 </li>
+		      		 <li class='star' title='WOW!!!' data-value='5'>
+		        	 	<i class='fa fa-star fa-fw'></i>
+		     		 </li>
+	    		 </ul>
+				</div><section>`
+			$('#selectedHotelRoomsTableFullSearch tr:last').after(`<tr><td>${red.hotel.name}</td><td>${red.hotel.destination.name}</td><td>${red.floor}</td><td>${red.bedNumber}</td><td>${forGrade}</td><td>${red.price*numberOfDays}</td></tr>`);
+	        
+	        var j = 0;
+	        var onStar = grade;
+	    	var stars = $('.li.star');
+	    	$("#"+red.id+"Rent li").each(function() {
+	    		$(this).removeClass('selected');
+	   		})  
+	    	$("#"+red.id+"Rent li").each(function() {
+	    		if(j<onStar){
+	    			$(this).addClass('selected');
+	    			j++;
+	    		}
+	    		else
+	    			return false;
+	    	})
 		}
 	});
 }
@@ -500,7 +592,53 @@ var renderVehicleTable = function(text,myID){
         $('#selectedRentVehiclesTable').html(`<tr><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
             var red = vehicles[i];
-            $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
+            var grade = 0;
+            var sum = 0;
+            for(var j=0;j<red.grades.length;j++){
+            	sum += red.grades[j].grade;
+            }
+            if(red.grades.length!=0){
+            	grade = sum/red.grades.length;
+            }
+            
+            var forGrade = `<section class='rating-widget'>
+    			<div class='rating-stars text-center' style="float:left">
+    			  <ul id="${red.id}Rent">
+    			      <li class='star' title='Poor' data-value='1'>
+        			  	<i class='fa fa-star fa-fw'></i>
+    	   			 </li>
+    	     		 <li class='star' title='Fair' data-value='2'>
+    	        		<i class='fa fa-star fa-fw'></i>
+    	      		 </li>
+    	     		 <li class='star' title='Good' data-value='3'>
+    	       			<i class='fa fa-star fa-fw'></i>
+    	      		 </li>
+    	     		 <li class='star' title='Excellent' data-value='4'>
+    	        		<i class='fa fa-star fa-fw'></i>
+    	      		 </li>
+    	      		 <li class='star' title='WOW!!!' data-value='5'>
+    	        	 	<i class='fa fa-star fa-fw'></i>
+    	     		 </li>
+        		 </ul>
+    			</div><section>`
+            
+            $('#selectedRentVehiclesTable tr:last').after(`<tr><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${forGrade}</td><td>${red.price}</td></tr>`);
+            
+            var j = 0;
+            var onStar = grade;
+        	var stars = $('.li.star');
+        	$("#"+red.id+"Rent li").each(function() {
+        		$(this).removeClass('selected');
+       		})  
+        	$("#"+red.id+"Rent li").each(function() {
+        		if(j<onStar){
+        			$(this).addClass('selected');
+        			j++;
+        		}
+        		else
+        			return false;
+        	})
+            
         }
         renderBranchOfficesTable(myID);
     });
@@ -519,14 +657,61 @@ var renderBranchOfficesTable = function(text){
     });
 }
 
-var renderVehicleTableMainView = function(rentName, destination, start, end, name, cars, motocycles, minPrice, maxPrice){
+var renderVehicleTableMainView = function(rentName, destination, start, end, name, cars, motocycles, minPrice, maxPrice, numOfDays){
     var text = `/${rentName}/${destination}/${start}/${end}/${name}/${cars}/${motocycles}/${minPrice}/${maxPrice}`;
+    numOfDays++;
     $.get('/api/allVehiclesSearch'+text, function(VehicleData){
         var vehicles = VehicleData;
     	$('#selectedRentVehiclesTableFullSearch').html(`<tr><th>Rent-a-car</th><th>City</th><th>Brand</th><th>Model</th><th>Type</th><th>Grade</th><th>Price</th></tr>`);
         for(var i=0;i<vehicles.length;i++){
             var red = vehicles[i];
-            $('#selectedRentVehiclesTableFullSearch tr:last').after(`<tr><td>${red.rentACar.name}</td><td>${red.rentACar.destination.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>-</td><td>${red.price}</td></tr>`);
+            var grade = 0;
+            var sum = 0;
+            for(var j=0;j<red.grades.length;j++){
+            	sum += red.grades[j].grade;
+            }
+            if(red.grades.length!=0){
+            	grade = sum/red.grades.length;
+            }
+            
+            var forGrade = `<section class='rating-widget'>
+    			<div class='rating-stars text-center' style="float:left">
+    			  <ul id="${red.id}Rent">
+    			      <li class='star' title='Poor' data-value='1'>
+        			  	<i class='fa fa-star fa-fw'></i>
+    	   			 </li>
+    	     		 <li class='star' title='Fair' data-value='2'>
+    	        		<i class='fa fa-star fa-fw'></i>
+    	      		 </li>
+    	     		 <li class='star' title='Good' data-value='3'>
+    	       			<i class='fa fa-star fa-fw'></i>
+    	      		 </li>
+    	     		 <li class='star' title='Excellent' data-value='4'>
+    	        		<i class='fa fa-star fa-fw'></i>
+    	      		 </li>
+    	      		 <li class='star' title='WOW!!!' data-value='5'>
+    	        	 	<i class='fa fa-star fa-fw'></i>
+    	     		 </li>
+        		 </ul>
+    			</div><section>`
+            	
+            $('#selectedRentVehiclesTableFullSearch tr:last').after(`<tr><td>${red.rentACar.name}</td><td>${red.rentACar.destination.name}</td><td>${red.brand}</td><td>${red.model}</td><td>${red.type}</td><td>${forGrade}</td><td>${red.price * numOfDays}</td></tr>`);
+       
+            var j = 0;
+            var onStar = grade;
+        	var stars = $('.li.star');
+        	$("#"+red.id+"Rent li").each(function() {
+        		$(this).removeClass('selected');
+       		})  
+        	$("#"+red.id+"Rent li").each(function() {
+        		if(j<onStar){
+        			$(this).addClass('selected');
+        			j++;
+        		}
+        		else
+        			return false;
+        	})
+            
         }
     });
 }

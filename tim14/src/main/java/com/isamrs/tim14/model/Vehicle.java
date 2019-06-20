@@ -51,7 +51,6 @@ public class Vehicle {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "vehicle_id")
-	@JsonBackReference(value="vehicle-grades")
 	private Set<Grade> grades;
 	
 	@ManyToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
