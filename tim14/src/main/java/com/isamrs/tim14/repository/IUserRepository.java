@@ -5,9 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.User;
 
-public interface IUserRepository extends JpaRepository<User, Long> {
+public interface IUserRepository extends JpaRepository<User, Integer> {
 	List<User> findAll();
 	User findByUsername(String username);
 	User findOneByUsername(String username);
@@ -19,4 +20,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 	
 	@Query(value = "select * from users u where u.username = %?1% or u.email = %?2%", nativeQuery = true)
 	List<User> findOneByUsernameOrEmail(String username, String email);
+	
+	RegisteredUser findOneById(Integer id);
 }

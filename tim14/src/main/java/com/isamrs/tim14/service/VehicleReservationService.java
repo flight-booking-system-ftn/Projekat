@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.OptimisticLockException;
@@ -45,6 +46,11 @@ public class VehicleReservationService {
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public VehicleReservation save(VehicleReservation vehicleReservation) {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Vehicle> vehicles = new ArrayList<Vehicle>();
+		for (Vehicle v : vehicleReservation.getVehicles()) {
+			vehicles.add(vehicleRepository.findOneById(v.getId()));
+		}
 
 		if (vehicleReservation.getRentACar().getReservations() == null) {
 			vehicleReservation.getRentACar().setReservations(new HashSet<VehicleReservation>());
@@ -64,13 +70,11 @@ public class VehicleReservationService {
 
 		vehicleReservationRepository.save(vehicleReservation);
 
-		for (Vehicle v : vehicleReservation.getVehicles()) {
-			Vehicle managedvehicleEntity = vehicleRepository.findOneById(v.getId());
+		for (Vehicle v : vehicles) {
+			if (v.getReservations() == null)
+				v.setReservations(new HashSet<VehicleReservation>());
 
-			if (managedvehicleEntity.getReservations() == null)
-				managedvehicleEntity.setReservations(new HashSet<VehicleReservation>());
-
-			managedvehicleEntity.getReservations().add(vehicleReservation);
+			v.getReservations().add(vehicleReservation);
 		}
 
 		return vehicleReservation;

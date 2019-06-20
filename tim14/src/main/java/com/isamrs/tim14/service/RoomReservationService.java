@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.OptimisticLockException;
@@ -45,6 +46,12 @@ public class RoomReservationService {
 	public RoomReservation save(RoomReservation roomReservation) {
 		Hotel managedHotel = hotelRepository.findOneById(roomReservation.getHotel().getId());
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		List<Room> rooms = new ArrayList<Room>();
+		for(Room r : roomReservation.getRooms()) {
+			rooms.add(roomRepository.findOneById(r.getId()));
+		}
+		
 		if(user instanceof RegisteredUser) {
 			RegisteredUser registered = (RegisteredUser) user;
 			roomReservation.setRegisteredUser(registered);
