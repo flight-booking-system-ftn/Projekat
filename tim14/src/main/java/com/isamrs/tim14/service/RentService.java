@@ -181,7 +181,7 @@ public class RentService {
 		RentACar result = rentACarRepository.findOneByName(rent.getName());
 		if (result != null && !rent.getName().equals(r.getRentACar().getName())) {
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -195,7 +195,7 @@ public class RentService {
 		managedRent.setName(rent.getName());
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

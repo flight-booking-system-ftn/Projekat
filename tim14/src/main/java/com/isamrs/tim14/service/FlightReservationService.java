@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PessimisticLockException;
@@ -23,6 +25,7 @@ import com.isamrs.tim14.dto.GraphsDTO;
 import com.isamrs.tim14.model.AirlineAdmin;
 import com.isamrs.tim14.model.Flight;
 import com.isamrs.tim14.model.FlightReservation;
+import com.isamrs.tim14.model.Luggage;
 import com.isamrs.tim14.model.RegisteredUser;
 import com.isamrs.tim14.model.Seat;
 import com.isamrs.tim14.repository.IFlightReservationRepository;
@@ -44,6 +47,12 @@ public class FlightReservationService {
 	
 	@Autowired
 	private EmailService mailService;
+	
+	@Autowired
+	private VehicleReservationService vehicleReservationService;
+	
+	@Autowired
+	private RoomReservationService roomReservationService;
 	
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = PessimisticLockException.class)
 	public void saveReservation(List<FlightReservation> reservations) {
@@ -140,6 +149,34 @@ public class FlightReservationService {
 			return;
 		
 		flightReservationRepository.delete(reservation);
+	}
+	
+	public Set<FlightReservation> getUserFlightReservations() {
+		RegisteredUser user = (RegisteredUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		return user.getFlightReservations();
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+	public void cancelFlightReservation(Integer id) {
+		FlightReservation reservation = flightReservationRepository.getOne(id);
+		
+		Iterator<Luggage> iterator = reservation.getLuggages().iterator();
+		while(iterator.hasNext())
+			iterator.remove();
+		
+		if(reservation.getRoomReservation() != null)
+			roomReservationService.cancelRoomReservation("" + reservation.getRoomReservation().getId());
+		if(reservation.getVehicleReservation() != null)
+			vehicleReservationService.cancelVehicleReservation("" + reservation.getVehicleReservation().getId());
+		
+		if(!reservation.getQuick())
+			flightReservationRepository.delete(reservation);
+		else {
+			reservation.setUser(null);
+			if(reservation.getUserWhoReserved().getId() == reservation.getUser().getId())
+				reservation.setUserWhoReserved(null);
+		}
 	}
 	
 	public Collection<Flight> getFlightHistory() {
